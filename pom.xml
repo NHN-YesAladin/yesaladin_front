@@ -4,6 +4,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <artifactId>front</artifactId>
   <build>
+    <finalName>front</finalName>
     <plugins>
       <plugin>
         <artifactId>spring-boot-maven-plugin</artifactId>
