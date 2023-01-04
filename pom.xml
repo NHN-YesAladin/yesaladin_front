@@ -1,66 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns="http://maven.apache.org/POM/4.0.0"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <artifactId>front</artifactId>
-  <build>
-    <finalName>front</finalName>
-    <plugins>
-      <plugin>
-        <artifactId>spring-boot-maven-plugin</artifactId>
-        <configuration>
-          <excludes>
-            <exclude>
-              <artifactId>lombok</artifactId>
-              <groupId>org.projectlombok</groupId>
-            </exclude>
-          </excludes>
-        </configuration>
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <artifactId>front</artifactId>
+    <build>
+        <finalName>front</finalName>
+        <plugins>
+            <plugin>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <artifactId>lombok</artifactId>
+                            <groupId>org.projectlombok</groupId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+                <groupId>org.springframework.boot</groupId>
+            </plugin>
+        </plugins>
+    </build>
+    <dependencies>
+        <dependency>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+            <groupId>org.springframework.boot</groupId>
+        </dependency>
+        <dependency>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <groupId>org.springframework.boot</groupId>
+        </dependency>
+
+        <dependency>
+            <artifactId>spring-boot-devtools</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <optional>true</optional>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <artifactId>lombok</artifactId>
+            <groupId>org.projectlombok</groupId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    <description>front</description>
+    <groupId>shop.yesaladin</groupId>
+    <modelVersion>4.0.0</modelVersion>
+    <name>front</name>
+    <parent>
+        <artifactId>spring-boot-starter-parent</artifactId>
         <groupId>org.springframework.boot</groupId>
-      </plugin>
-    </plugins>
-  </build>
-  <dependencies>
-    <dependency>
-      <artifactId>spring-boot-starter-thymeleaf</artifactId>
-      <groupId>org.springframework.boot</groupId>
-    </dependency>
-    <dependency>
-      <artifactId>spring-boot-starter-web</artifactId>
-      <groupId>org.springframework.boot</groupId>
-    </dependency>
+        <relativePath/>
+        <version>2.7.7</version> <!-- lookup parent from repository -->
+    </parent>
+    <properties>
+        <java.version>11</java.version>
+    </properties>
 
-    <dependency>
-      <artifactId>spring-boot-devtools</artifactId>
-      <groupId>org.springframework.boot</groupId>
-      <optional>true</optional>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <artifactId>lombok</artifactId>
-      <groupId>org.projectlombok</groupId>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
-      <artifactId>spring-boot-starter-test</artifactId>
-      <groupId>org.springframework.boot</groupId>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
-  <description>front</description>
-  <groupId>shop.yesaladin</groupId>
-  <modelVersion>4.0.0</modelVersion>
-  <name>front</name>
-  <parent>
-    <artifactId>spring-boot-starter-parent</artifactId>
-    <groupId>org.springframework.boot</groupId>
-    <relativePath/>
-    <version>2.7.7</version> <!-- lookup parent from repository -->
-  </parent>
-  <properties>
-    <java.version>11</java.version>
-  </properties>
-
-  <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1-SNAPSHOT</version>
 
 </project>
