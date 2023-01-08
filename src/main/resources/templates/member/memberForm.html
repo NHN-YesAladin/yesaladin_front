@@ -43,7 +43,7 @@
           <a href="." class="navbar-brand navbar-brand-autodark"><img src="./static/logo.svg"
                                                                       height="36" alt=""></a>
         </div>
-        <form class="signup-form" id="signup-form" action="./" method="post" autocomplete="off" novalidate="">
+        <form class="signup-form" id="signup-form" action="/web/members/signup" method="post" autocomplete="off" novalidate="">
           <div class="card-body">
             <h2 class="card-title text-center mb-4">YesAladin 회원 가입</h2>
             <div class="mb-3">
@@ -80,7 +80,7 @@
               <label class="form-label">휴대폰 번호</label>
               <input type="text" class="form-control" id="phone" placeholder="휴대폰 번호 ex) 01012345678" required>
               <div class="invalid-feedback">
-                휴대폰 번호를 - 없이 13자 입력해주세요.
+                휴대폰 번호를 - 없이 11자 입력해주세요.
               </div>
             </div>
             <div class="mb-3">
@@ -108,7 +108,7 @@
             <div class="mb-3">
               <label class="form-label">Password 확인</label>
               <div class="input-group input-group-flat">
-                <input type="password" class="form-control" id="password-check" placeholder="Password 확인"
+                <input type="password" class="form-control" id="passwordCheck" placeholder="Password 확인"
                        autocomplete="off" required>
                 <div class="invalid-feedback">
                   password는 최소 8자, 하나 이상의 문자와 하나의 숫자 및 하나의 특수 문자로 입력해주세요.
@@ -211,7 +211,7 @@
         }
 
         let passwordVal = document.getElementById('password').value;
-        let passwordCheckVal = document.getElementById('password-check').value;
+        let passwordCheckVal = document.getElementById('passwordCheck').value;
         if (!passwordRegex.test(passwordVal) || emptyRegex.test(passwordVal)) {
           alert('password는 최소 8자, 하나 이상의 문자와 하나의 숫자 및 하나의 특수 문자로 입력해주세요.')
           return false;
