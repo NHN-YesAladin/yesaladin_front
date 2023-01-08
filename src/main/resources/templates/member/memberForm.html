@@ -43,19 +43,21 @@
           <a href="." class="navbar-brand navbar-brand-autodark"><img src="./static/logo.svg"
                                                                       height="36" alt=""></a>
         </div>
-        <form class="signup-form" id="signup-form" action="/web/members/signup" method="post" autocomplete="off" novalidate="">
+        <form class="signup-form" id="signup-form" action="/web/members/signup" method="post"
+              autocomplete="off" novalidate="">
           <div class="card-body">
             <h2 class="card-title text-center mb-4">YesAladin 회원 가입</h2>
             <div class="mb-3">
               <label class="form-label">이름</label>
-              <input type="text" class="form-control" id="name" placeholder="이름" required>
+              <input type="text" class="form-control" id="name" th:name="name" placeholder="이름"
+                     required>
               <div class="invalid-feedback">
                 이름을 입력해주세요.
               </div>
             </div>
             <div class="mb-3">
               <label class="form-label">닉네임</label>
-              <input type="text" class="form-control" id="nickname"
+              <input type="text" class="form-control" id="nickname" th:name="nickname"
                      placeholder="닉네임은 한글 또는 영문으로 2자 이상 15자 이하만 가능합니다." required>
               <div class="invalid-feedback">
                 닉네임은 한글 또는 영문으로 2자 이상 15자 이하만 가능합니다.
@@ -63,7 +65,7 @@
             </div>
             <div class="mb-3">
               <label class="form-label">Login Id</label>
-              <input type="text" class="form-control" id="loginId"
+              <input type="text" class="form-control" id="loginId" th:name="loginId"
                      placeholder="아이디는 영문(필수)과 숫자(옵션) 순서로 8자 이상 15자 이하만 가능 합니다." required>
               <div class="invalid-feedback">
                 아이디는 영문(필수)과 숫자(옵션) 순서로 8자 이상 15자 이하만 가능 합니다.
@@ -71,14 +73,16 @@
             </div>
             <div class="mb-3">
               <label class="form-label">이메일 주소</label>
-              <input type="email" class="form-control" id="email" placeholder="이메일" required>
+              <input type="email" class="form-control" id="email" th:name="email" placeholder="이메일"
+                     required>
               <div class="invalid-feedback">
                 이메일 주소를 입력해주세요.
               </div>
             </div>
             <div class="mb-3">
               <label class="form-label">휴대폰 번호</label>
-              <input type="text" class="form-control" id="phone" placeholder="휴대폰 번호 ex) 01012345678" required>
+              <input type="text" class="form-control" id="phone" th:name="phone"
+                     placeholder="휴대폰 번호 ex) 01012345678" required>
               <div class="invalid-feedback">
                 휴대폰 번호를 - 없이 11자 입력해주세요.
               </div>
@@ -86,7 +90,8 @@
             <div class="mb-3">
               <label class="form-label">Password</label>
               <div class="input-group input-group-flat">
-                <input type="password" class="form-control" id="password" placeholder="Password"
+                <input type="password" class="form-control" id="password" th:name="password"
+                       placeholder="Password"
                        autocomplete="off" required>
                 <div class="invalid-feedback">
                   password는 최소 8자, 하나 이상의 문자와 하나의 숫자 및 하나의 특수 문자로 입력해주세요.
@@ -108,7 +113,8 @@
             <div class="mb-3">
               <label class="form-label">Password 확인</label>
               <div class="input-group input-group-flat">
-                <input type="password" class="form-control" id="passwordCheck" placeholder="Password 확인"
+                <input type="password" class="form-control" id="passwordCheck"
+                       th:name="passwordCheck" placeholder="Password 확인"
                        autocomplete="off" required>
                 <div class="invalid-feedback">
                   password는 최소 8자, 하나 이상의 문자와 하나의 숫자 및 하나의 특수 문자로 입력해주세요.
@@ -129,13 +135,14 @@
             </div>
             <div class="mb-3">
               <label class="form-label">생년월일</label>
-              <input type="text" class="form-control" id="birth" placeholder="예시: 20230101" required>
+              <input type="text" class="form-control" id="birth" placeholder="예시: 20230101"
+                     th:name="birth" required>
               <div class="invalid-feedback">
                 생년월일을 정확하게 입력해주세요.
               </div>
             </div>
             <div class="mb-3">
-              <label class="form-label">Date of birth</label>
+              <label class="form-label">성별</label>
               <div class="row g-2">
                 <div class="col-5">
                   <select name="gender" class="form-select" id="gender" required>
@@ -193,7 +200,7 @@
         }
 
         let nameVal = document.getElementById('name').value;
-        if(emptyRegex.test(nameVal)){
+        if (emptyRegex.test(nameVal)) {
           alert('이름을 올바르게 입력해주세요.')
           return false;
         }
@@ -228,7 +235,7 @@
         }
 
         let birthdayVal = document.getElementById('birth').value;
-        if(!birthdayRegex.test(birthdayVal) || emptyRegex.test(birthdayVal)) {
+        if (!birthdayRegex.test(birthdayVal) || emptyRegex.test(birthdayVal)) {
           alert('생년월일 8자를 - 없이 입력해주세요. ex) 20230101');
           return false;
         }

@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * 회원 등록을 위해 MemberController 에서 받는 요청 DTO 입니다.
@@ -17,6 +18,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class SignUpRequest {
