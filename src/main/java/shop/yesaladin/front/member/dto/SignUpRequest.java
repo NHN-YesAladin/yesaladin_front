@@ -53,12 +53,6 @@ public class SignUpRequest {
     private String password;
 
     @NotBlank
-    @Size(min = 8)
-    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$",
-            message = "최소 8자, 하나 이상의 문자와 하나의 숫자 및 하나의 특수 문자")
-    private String passwordCheck;
-
-    @NotBlank
     @Size(min = 8, max = 8)
     // TODO: 정규식 수정할 것
     @Pattern(regexp = "^[0-9]{8}")
