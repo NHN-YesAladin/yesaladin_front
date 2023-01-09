@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import shop.yesaladin.front.member.dto.SignUpRequest;
+import shop.yesaladin.front.member.dto.SignUpResponse;
 import shop.yesaladin.front.member.service.inter.CommandMemberService;
 
 /**
@@ -52,7 +53,8 @@ public class MemberWebController {
     public String signup(@Valid SignUpRequest request, BindingResult bindingResult, Model model) {
         log.info("dto={}", request);
 
-        commandMemberService.signUp(request);
+        SignUpResponse response = commandMemberService.signUp(request);
+        log.info("response={}", response);
 
         return "/member/signupSuccess";
     }

@@ -12,3 +12,6 @@ spring:
     url: jdbc:h2:mem:/test
     username: sa
     password:
+
+yesaladin:
+  gateway: http://api.yesaladin.shop:8072/yesaladin-shop
