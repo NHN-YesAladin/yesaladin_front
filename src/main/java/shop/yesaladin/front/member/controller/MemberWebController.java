@@ -55,6 +55,7 @@ public class MemberWebController {
 
         SignUpResponse response = commandMemberService.signUp(request);
         log.info("response={}", response);
+        model.addAttribute("response", response);
 
         return "/member/signupSuccess";
     }

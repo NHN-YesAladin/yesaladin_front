@@ -17,7 +17,6 @@ import shop.yesaladin.front.member.service.inter.CommandMemberService;
 
 /**
  * 회원 등록을 위한 service 입니다.
- * 추 후 추가되는 기능으로, RestTemplate을 통해 gateway 서버로 요청을 보냅니다.
  *
  * @author : 송학현
  * @since : 1.0
@@ -53,11 +52,10 @@ public class CommandMemberServiceImpl implements CommandMemberService {
                 gatewayConfig.getUrl() + "/v1/members/",
                 HttpMethod.POST,
                 entity,
-                SignUpResponse.class // Response DTO
+                SignUpResponse.class
         );
 
-        log.info("response={}", response);
-        // return responseDto 반환
+        log.info("response={}", response.getBody());
         return response.getBody();
     }
 }
