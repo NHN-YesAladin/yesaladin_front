@@ -3,6 +3,7 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+**/src/test/resources/application.yml
 
 ### STS ###
 .apt_generated
@@ -34,3 +35,6 @@ build/
 
 ### MAC OS ###
 .DS_Store
+
+### DEV ###
+application-dev.yml
