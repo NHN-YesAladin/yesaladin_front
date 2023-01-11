@@ -1,6 +1,7 @@
 package shop.yesaladin.front.member.controller;
 
 import javax.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,7 +9,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import shop.yesaladin.front.common.exception.ValidationFailedException;
 import shop.yesaladin.front.member.dto.SignUpRequest;
+import shop.yesaladin.front.member.dto.SignUpResponse;
+import shop.yesaladin.front.member.service.inter.CommandMemberService;
 
 /**
  * 회원 관련 페이지를 위한 Controller 입니다.
@@ -17,9 +21,12 @@ import shop.yesaladin.front.member.dto.SignUpRequest;
  * @since : 1.0
  */
 @Slf4j
+@RequiredArgsConstructor
 @Controller
 @RequestMapping("/web/members")
 public class MemberWebController {
+
+    private final CommandMemberService commandMemberService;
 
     /**
      * 회원 등록 폼 페이지를 view로 리턴시켜주기 위한 Get handler 입니다.
@@ -46,6 +53,14 @@ public class MemberWebController {
     @PostMapping("/signup")
     public String signup(@Valid SignUpRequest request, BindingResult bindingResult, Model model) {
         log.info("dto={}", request);
+
+        if (bindingResult.hasErrors()) {
+            throw new ValidationFailedException(bindingResult);
+        }
+
+        SignUpResponse response = commandMemberService.signUp(request);
+        log.info("response={}", response);
+        model.addAttribute("response", response);
 
         return "/member/signupSuccess";
     }
