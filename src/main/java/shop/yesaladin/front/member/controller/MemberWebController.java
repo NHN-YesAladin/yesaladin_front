@@ -9,6 +9,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import shop.yesaladin.front.common.exception.ValidationFailedException;
 import shop.yesaladin.front.member.dto.SignUpRequest;
 import shop.yesaladin.front.member.dto.SignUpResponse;
 import shop.yesaladin.front.member.service.inter.CommandMemberService;
@@ -52,6 +53,10 @@ public class MemberWebController {
     @PostMapping("/signup")
     public String signup(@Valid SignUpRequest request, BindingResult bindingResult, Model model) {
         log.info("dto={}", request);
+
+        if (bindingResult.hasErrors()) {
+            throw new ValidationFailedException(bindingResult);
+        }
 
         SignUpResponse response = commandMemberService.signUp(request);
         log.info("response={}", response);

@@ -50,6 +50,7 @@
             <div class="mb-3">
               <label class="form-label">이름</label>
               <input type="text" class="form-control" id="name" th:name="name" placeholder="이름"
+                     pattern="^.*(?=.*[가-힣a-z])(?=^.{2,200}).*$"
                      required>
               <div class="invalid-feedback">
                 이름을 입력해주세요.
@@ -58,14 +59,16 @@
             <div class="mb-3">
               <label class="form-label">닉네임</label>
               <input type="text" class="form-control" id="nickname" th:name="nickname"
-                     placeholder="닉네임은 한글 또는 영문으로 2자 이상 15자 이하만 가능합니다." required>
+                     pattern="^.*(?=.*[a-z])(?=.*[a-z\d])(?=.{2,8}).*$"
+                     placeholder="닉네임은 영문으로 2자 이상 15자 이하만 가능합니다." required>
               <div class="invalid-feedback">
-                닉네임은 한글 또는 영문으로 2자 이상 15자 이하만 가능합니다.
+                닉네임은 영문으로 2자 이상 15자 이하만 가능합니다.
               </div>
             </div>
             <div class="mb-3">
               <label class="form-label">Login Id</label>
               <input type="text" class="form-control" id="loginId" th:name="loginId"
+                     pattern="^.*(?=.*[a-z])(?=.*\d)(?=^.{8,15}).*$"
                      placeholder="아이디는 영문(필수)과 숫자(옵션) 순서로 8자 이상 15자 이하만 가능 합니다." required>
               <div class="invalid-feedback">
                 아이디는 영문(필수)과 숫자(옵션) 순서로 8자 이상 15자 이하만 가능 합니다.
@@ -74,6 +77,7 @@
             <div class="mb-3">
               <label class="form-label">이메일 주소</label>
               <input type="email" class="form-control" id="email" th:name="email" placeholder="이메일"
+                     pattern="^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$"
                      required>
               <div class="invalid-feedback">
                 이메일 주소를 입력해주세요.
@@ -82,6 +86,7 @@
             <div class="mb-3">
               <label class="form-label">휴대폰 번호</label>
               <input type="text" class="form-control" id="phone" th:name="phone"
+                     pattern="([0-9]{11})"
                      placeholder="휴대폰 번호 ex) 01012345678" required>
               <div class="invalid-feedback">
                 휴대폰 번호를 - 없이 11자 입력해주세요.
@@ -91,6 +96,7 @@
               <label class="form-label">Password</label>
               <div class="input-group input-group-flat">
                 <input type="password" class="form-control" id="password" th:name="password"
+                       pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$"
                        placeholder="Password"
                        autocomplete="off" required>
                 <div class="invalid-feedback">
@@ -115,6 +121,7 @@
               <div class="input-group input-group-flat">
                 <input type="password" class="form-control" id="passwordCheck"
                        th:name="passwordCheck" placeholder="Password 확인"
+                       pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$"
                        autocomplete="off" required>
                 <div class="invalid-feedback">
                   password는 최소 8자, 하나 이상의 문자와 하나의 숫자 및 하나의 특수 문자로 입력해주세요.
@@ -136,6 +143,7 @@
             <div class="mb-3">
               <label class="form-label">생년월일</label>
               <input type="text" class="form-control" id="birth" placeholder="예시: 20230101"
+                     pattern="([0-9]{8})"
                      th:name="birth" required>
               <div class="invalid-feedback">
                 생년월일을 정확하게 입력해주세요.
@@ -159,8 +167,8 @@
             <div class="mb-3">
               <label class="form-check">
                 <input type="checkbox" class="form-check-input">
-                <span class="form-check-label">Agree the <a href="./terms-of-service.html"
-                                                            tabindex="-1">terms and policy</a>.</span>
+                <!--                <span class="form-check-label">Agree the <a href="./terms-of-service.html"-->
+                <!--                                                            tabindex="-1">terms and policy</a>.</span>-->
               </label>
             </div>
             <div class="form-footer">
@@ -183,9 +191,9 @@
 <script>
   window.addEventListener('load', () => {
     const signupForm = document.getElementsByClassName('signup-form');
-    console.log('test');
 
     let emptyRegex = /\s/g;
+    let nameRegex = /^.*(?=.*[가-힣a-z])(?=^.{2,200}).*$/;
     let nicknameRegex = /^.*(?=.*[a-z])(?=.*[a-z\d])(?=.{2,8}).*$/;
     let loginIdRegex = /^.*(?=.*[a-z])(?=.*\d)(?=^.{8,15}).*$/;
     let passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/g
@@ -200,14 +208,14 @@
         }
 
         let nameVal = document.getElementById('name').value;
-        if (emptyRegex.test(nameVal)) {
+        if (!nameRegex.test(nameVal) || emptyRegex.test(nameVal)) {
           alert('이름을 올바르게 입력해주세요.')
           return false;
         }
 
         let nicknameVal = document.getElementById('nickname').value;
         if (!nicknameRegex.test(nicknameVal) || emptyRegex.test(nicknameVal)) {
-          alert('닉네임은 한글과 영문만 2자 이상 15자 이하만 가능합니다.');
+          alert('닉네임은 영문으로 2자 이상 15자 이하만 가능합니다.');
           return false;
         }
 
@@ -220,7 +228,7 @@
         let passwordVal = document.getElementById('password').value;
         let passwordCheckVal = document.getElementById('passwordCheck').value;
         if (!passwordRegex.test(passwordVal) || emptyRegex.test(passwordVal)) {
-          alert('password는 최소 8자, 하나 이상의 문자와 하나의 숫자 및 하나의 특수 문자로 입력해주세요.')
+          alert('Password는 최소 8자, 하나 이상의 문자와 하나의 숫자 및 하나의 특수 문자로 입력해주세요.')
           return false;
         } else {
           if (passwordCheckVal) {

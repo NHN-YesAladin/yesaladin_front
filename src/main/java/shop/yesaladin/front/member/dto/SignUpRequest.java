@@ -29,7 +29,7 @@ public class SignUpRequest {
 
     @NotBlank
     @Size(min = 2, max = 15)
-    @Pattern(regexp = "^[가-힣a-zA-Z]{2,15}$", message = "한글과 영문만 가능 합니다")
+    @Pattern(regexp = "^[a-zA-Z]{2,15}$", message = "영문만 가능 합니다")
     private String nickname;
 
     @NotBlank
