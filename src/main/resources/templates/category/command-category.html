@@ -1,0 +1,299 @@
+<!doctype html>
+<!--
+* Tabler - Premium and Open Source dashboard template with responsive and high quality UI.
+* @version 1.0.0-beta5
+* @link https://tabler.io
+* Copyright 2018-2022 The Tabler Authors
+* Copyright 2018-2022 codecalm.net Paweł Kuna
+* Licensed under MIT (https://github.com/tabler/tabler/blob/master/LICENSE)
+-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <title>Yes Aladin!</title>
+    <!-- CSS files -->
+    <link th:href="@{/css/tabler.min.css}" rel="stylesheet"/>
+    <link th:href="@{/css/tabler-flags.min.css}" rel="stylesheet"/>
+    <link th:href="@{/css/tabler-payments.min.css}" rel="stylesheet"/>
+    <link th:href="@{/css/tabler-vendors.min.css}" rel="stylesheet"/>
+    <link th:href="@{/css/demo.min.css}" rel="stylesheet"/>
+</head>
+<body>
+<!-- Libs JS -->
+<script type="text/javascript" th:src="@{/libs/apexcharts/dist/apexcharts.min.js}"></script>
+<!-- Tabler Core -->
+<script type="text/javascript" th:src="@{/js/tabler.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/demo.min.js}"></script>
+<div class="wrapper">
+
+
+    <!-- TODO 2 : NAV-BAR -->
+    <div th:replace="~{fragments/navbar-vertical :: fragment-nav-vertical}"></div>
+
+    <div class="page-wrapper">
+        <!-- TODO 1 : HEADER -->
+        <div th:replace="~{fragments/header :: fragment-header}"></div>
+        <div class="page-header d-print-none">
+          <div class="container-xl">
+            <div class="row g-2 align-items-center">
+              <div class="col">
+                <!-- Page pre-title -->
+                <div class="page-pretitle">
+                  카테고리
+                </div>
+                <h2 class="page-title">
+                  등록/수정/삭제
+                </h2>
+              </div>
+              <!-- Page title actions -->
+              <div class="col-auto ms-auto d-print-none">
+                <div class="btn-list">
+                <span class="d-none d-sm-inline">
+                  <a href="#" class="btn">
+                    카테고리 순서 관리
+                  </a>
+                </span>
+                  <!--   //TODO 카테고리 순서 관리 화면으로 넘김                -->
+                  <a href="#" class="btn btn-primary d-none d-sm-inline-block" data-bs-toggle="modal" data-bs-target="#modal-report">
+                    <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+                    카테고리 생성
+                  </a>
+                  <!--   //TODO 카테고리 생성 화면으로 넘김                -->
+                  <a href="#" class="btn btn-primary d-sm-none btn-icon" data-bs-toggle="modal" data-bs-target="#modal-report" aria-label="Create new category">
+                    <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TODO 3: BODY -->
+        <div class="page-body">
+            <div class="container-xl">
+                <div class="row row-deck row-cards">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header row">
+                                <h3 class="card-title col-md-2">카테고리 관리</h3>
+                                <div class="col-md-4">
+                                <select id="select-parent" th:name="parentCategory" class="form-select">
+                                  <option value="none" selected>선택</option>
+                                  <option th:each="parentCategory : ${parentCategories}"
+                                          th:value="${parentCategory.id}" th:text="${parentCategory.name}"></option>
+                                </select>
+                              </div>
+                            </div>
+
+                            <div class="card-body border-bottom py-3">
+                                <div class="d-flex row-cols-6">
+                                    <div class="text-muted col-md-3 p-sm-1">
+                                        페이징 개수
+                                        <div class="mx-2 d-inline-block">
+                                            <input type="text" class="form-control form-control-sm" value="8" size="3" aria-label="Categories count">
+                                        </div>
+                                        개
+                                    </div>
+                                  <div class=" col-md-2">
+                                    <a href="#" class="btn btn-outline-primary w-auto fs-6">
+                                      페이징 개수 변경
+                                    </a>
+                                  </div>
+                                </div>
+                            </div>
+                            <!--          //TODO 관리자 페이지 리스트 예시 -->
+                            <div class="table-responsive">
+                                <table class="table card-table table-vcenter text-nowrap datatable">
+                                    <thead>
+                                      <tr>
+                                          <th class="w-1">No. <!-- Download SVG icon from http://tabler-icons.io/i/chevron-up -->
+                                              <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-sm icon-thick" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><polyline points="6 15 12 9 18 15" /></svg>
+                                          </th>
+                                          <th>1차 카테고리 이름</th>
+                                          <th>2차 카테고리 이름</th>
+                                          <th>노출 여부</th>
+                                          <th>순서</th>
+                                          <th></th>
+                                          <th></th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr th:each="category : ${children}">
+                                          <td><span class="text-muted" th:text="${category.id}"></span></td>
+                                          <td th:text="${category.parentName}">국외도서</td>
+                                          <td th:text="${category.name}">소설</td>
+                                          <td>
+                                            <span class="badge bg-success me-1">Yes</span>
+                                          </td>
+                                          <td>1</td>
+                                          <td>
+    <!--                                            <input type="submit" value="수정" />-->
+                                            <a href="#" class="btn btn-dark btn-pill w-auto fs-5" data-bs-toggle="modal" data-bs-target="#modal-team">
+                                              수정
+                                            </a>
+                                          </td>
+                                          <td>
+                                            <a href="#" class="btn btn-secondary btn-pill w-auto fs-5">
+                                              삭제
+                                            </a>
+                                          </td>
+                                      </tr>
+                                    </tbody>
+                                </table>
+                              <div class="modal modal-blur fade" id="modal-team" tabindex="-1" style="display: none;" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h5 class="modal-title">Add a new team</h5>
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                      <div class="row mb-3 align-items-end">
+                                        <div class="col-auto">
+                                          <a href="#" class="avatar avatar-upload rounded">
+                                            <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                                            <span class="avatar-upload-text">Add</span>
+                                          </a>
+                                        </div>
+                                        <div class="col">
+                                          <label class="form-label">Name</label>
+                                          <input type="text" class="form-control">
+                                        </div>
+                                      </div>
+                                      <div class="mb-3">
+                                        <label class="form-label">Pick your team color</label>
+                                        <div class="row g-2">
+                                          <div class="col-auto">
+                                            <label class="form-colorinput">
+                                              <input name="color" type="radio" value="dark" class="form-colorinput-input">
+                                              <span class="form-colorinput-color bg-dark"></span>
+                                            </label>
+                                          </div>
+                                          <div class="col-auto">
+                                            <label class="form-colorinput form-colorinput-light">
+                                              <input name="color" type="radio" value="white" class="form-colorinput-input" checked="">
+                                              <span class="form-colorinput-color bg-white"></span>
+                                            </label>
+                                          </div>
+                                          <div class="col-auto">
+                                            <label class="form-colorinput">
+                                              <input name="color" type="radio" value="blue" class="form-colorinput-input">
+                                              <span class="form-colorinput-color bg-blue"></span>
+                                            </label>
+                                          </div>
+                                          <div class="col-auto">
+                                            <label class="form-colorinput">
+                                              <input name="color" type="radio" value="azure" class="form-colorinput-input">
+                                              <span class="form-colorinput-color bg-azure"></span>
+                                            </label>
+                                          </div>
+                                          <div class="col-auto">
+                                            <label class="form-colorinput">
+                                              <input name="color" type="radio" value="indigo" class="form-colorinput-input">
+                                              <span class="form-colorinput-color bg-indigo"></span>
+                                            </label>
+                                          </div>
+                                          <div class="col-auto">
+                                            <label class="form-colorinput">
+                                              <input name="color" type="radio" value="purple" class="form-colorinput-input">
+                                              <span class="form-colorinput-color bg-purple"></span>
+                                            </label>
+                                          </div>
+                                          <div class="col-auto">
+                                            <label class="form-colorinput">
+                                              <input name="color" type="radio" value="pink" class="form-colorinput-input">
+                                              <span class="form-colorinput-color bg-pink"></span>
+                                            </label>
+                                          </div>
+                                          <div class="col-auto">
+                                            <label class="form-colorinput">
+                                              <input name="color" type="radio" value="red" class="form-colorinput-input">
+                                              <span class="form-colorinput-color bg-red"></span>
+                                            </label>
+                                          </div>
+                                          <div class="col-auto">
+                                            <label class="form-colorinput">
+                                              <input name="color" type="radio" value="orange" class="form-colorinput-input">
+                                              <span class="form-colorinput-color bg-orange"></span>
+                                            </label>
+                                          </div>
+                                          <div class="col-auto">
+                                            <label class="form-colorinput">
+                                              <input name="color" type="radio" value="yellow" class="form-colorinput-input">
+                                              <span class="form-colorinput-color bg-yellow"></span>
+                                            </label>
+                                          </div>
+                                          <div class="col-auto">
+                                            <label class="form-colorinput">
+                                              <input name="color" type="radio" value="lime" class="form-colorinput-input">
+                                              <span class="form-colorinput-color bg-lime"></span>
+                                            </label>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div>
+                                        <label class="form-label">Additional info</label>
+                                        <textarea class="form-control"></textarea>
+                                      </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                      <button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
+                                      <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Add Team</button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="card-footer d-flex align-items-center">
+                                <p class="m-0 text-muted">Showing <span>1</span> to <span>8</span> of <span>16</span> entries</p>
+                               <
+                                <ul class="pagination m-0 ms-auto">
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                                            <!-- Download SVG icon from http://tabler-icons.io/i/chevron-left -->
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><polyline points="15 6 9 12 15 18" /></svg>
+                                            prev
+                                        </a>
+                                    </li>
+                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                    <li class="page-item active"><a class="page-link" href="#">2</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">4</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">5</a></li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="#">
+                                            next <!-- Download SVG icon from http://tabler-icons.io/i/chevron-right -->
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><polyline points="9 6 15 12 9 18" /></svg>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TODO 4 : footer -->
+        <div th:replace="~{fragments/footer :: fragment-footer}"></div>
+    </div>
+
+
+</div>
+<!-- DOMContentLoaded관련 Script import -->
+<div th:replace="~{fragments/script :: fragment-script}"></div>
+<script>
+  const t = document.getElementById('select-parent');
+  t.addEventListener('change', function (event) {
+    // alert(event.target.value);
+    const value = event.target.value;
+    location.href = '/categories/command?id=' + value;
+  });
+</script>
+</body>
+</html>
