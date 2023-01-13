@@ -24,3 +24,11 @@ yesaladin:
 server:
   port: 8081
 
+storage-token:
+  auth-url: https://api-identity.infrastructure.cloud.toast.com/v2.0
+  storage-url: https://api-storage.cloud.toast.com/v1
+  tenant-id: fcb81f74e379456b8ca0e091d351a7af
+  storage-account: AUTH_fcb81f74e379456b8ca0e091d351a7af
+  container-name: yesaladinTest
+  username: tidh1640@naver.com
+  password: yesaladin
