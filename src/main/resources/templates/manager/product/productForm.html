@@ -256,12 +256,12 @@
         return window.alert("File size : " + blob.size + " => 이미지 파일 최대 용량 초과");
       }
 
-      fetch(location.origin.toString() + "/web/files/file-upload",
+      fetch(location.origin.toString() + "/web/files/file-upload/product/description",
           {
             method: 'POST',
             body: formData})
       .then(res => res.json())
-      .then(data => callback(data.filename, document.getElementById('toastuiAltTextInput').getAttribute('value')))
+      .then(data => callback(data.url, document.getElementById('toastuiAltTextInput').getAttribute('value')))
       .catch(err => {
         window.alert(err);
       });
