@@ -12,6 +12,15 @@ spring:
     url: jdbc:h2:mem:/test
     username: sa
     password:
+  servlet:
+    multipart:
+      max-file-size: 128MB
+      max-request-size: 128MB
 
 yesaladin:
-  gateway: http://api.yesaladin.shop:8072/yesaladin-shop
+  gateway: http://localhost:8080
+#    gateway: https://test.yesaladin.shop:8072/yesaladin-shop
+
+server:
+  port: 8081
+
