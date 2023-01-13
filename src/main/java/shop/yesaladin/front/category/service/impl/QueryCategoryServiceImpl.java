@@ -63,11 +63,18 @@ public class QueryCategoryServiceImpl implements QueryCategoryService {
             PageRequestDto pageRequestDto,
             Long parentId
     ) {
+        log.info("{}", pageRequestDto);
         UriComponents uriComponents = UriComponentsBuilder.fromHttpUrl(
                         gatewayConfig.getUrl() + "/v1/categories")
                 .queryParam("parentId", parentId)
-//                .queryParam("page", pageRequestDto.getPage() == null ? 1 : pageRequestDto.getPage())
-//                .queryParam("size", pageRequestDto.getSize() == null ? 10 : pageRequestDto.getSize())
+                .queryParam(
+                        "page",
+                        pageRequestDto.getPage() == null ? 0 : pageRequestDto.getPage()
+                )
+                .queryParam(
+                        "size",
+                        pageRequestDto.getSize() == null ? 10 : pageRequestDto.getSize()
+                )
                 .build();
 
         ResponseEntity<PaginatedResponseDto<CategoryResponseDto>> responseEntity = restTemplate.exchange(
@@ -78,7 +85,7 @@ public class QueryCategoryServiceImpl implements QueryCategoryService {
         );
 
         if (log.isInfoEnabled()) {
-            log.info("body : {}", responseEntity.getBody());
+            log.info("body : {}", responseEntity.getBody().getDataList());
         }
         return responseEntity.getBody();
     }

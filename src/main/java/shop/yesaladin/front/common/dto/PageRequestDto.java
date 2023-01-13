@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 /**
  * pagination을 간편하게 하기 위한 dto
@@ -13,6 +14,7 @@ import lombok.NoArgsConstructor;
  */
 
 @Getter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class PageRequestDto {
