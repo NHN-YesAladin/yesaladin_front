@@ -4,7 +4,7 @@ package shop.yesaladin.front.category.service.inter;
 import shop.yesaladin.front.category.dto.*;
 
 /**
- * Create, Update, Delete 를 controller 단에서 사용하기 위해 서비스 인터페이스
+ * 카테고리 생성,수정,삭제를 위한 기능을 가지는 서비스
  *
  * @author 배수한
  * @since 1.0
