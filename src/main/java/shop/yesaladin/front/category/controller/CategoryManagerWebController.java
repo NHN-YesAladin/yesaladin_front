@@ -8,14 +8,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import shop.yesaladin.front.category.dto.CategorySaveRequest;
+import shop.yesaladin.front.category.dto.CategorySaveRequestDto;
 import shop.yesaladin.front.category.dto.CategoryResponseDto;
 import shop.yesaladin.front.category.service.inter.CommandCategoryService;
 import shop.yesaladin.front.category.service.inter.QueryCategoryService;
@@ -38,8 +36,17 @@ public class CategoryManagerWebController {
     private final QueryCategoryService queryCategoryService;
     private final CommandCategoryService commandCategoryService;
 
+    /**
+     * manger-categories.html 을 보여주기 위한 컨트롤러 메서드
+     *  페이징된 2차 카테고리 리스트 제공과 생성,수정,삭제를 위한 기반 화면이다.
+     * @param parentId 페이징된 2차 카테고리 리스트를 보기 위해서는 1차 카테고리의 id값이 있어야한다
+     * @param page 현재 페이지
+     * @param size 페이징 사이즈
+     * @param model
+     * @return category/manager-categories.html
+     */
     @GetMapping
-    public String commandCategory(
+    public String mangerCategories(
             @RequestParam(name = "id", required = false) Long parentId,
             @RequestParam(required = false) Integer page,
             @RequestParam(required = false) Integer size,
@@ -91,9 +98,16 @@ public class CategoryManagerWebController {
     }
 
 
+    /**
+     * 카테고리 생성 처리
+     *
+     * @param createRequest 이름, 노출여부, 부모id가 있는 dto
+     * @param bindingResult
+     * @return redirect:/manager/categories?id={부모id}
+     */
     @PostMapping
     public String registerCategory(
-            @Valid CategorySaveRequest createRequest,
+            @Valid CategorySaveRequestDto createRequest,
             BindingResult bindingResult
     ) {
         if (bindingResult.hasErrors()) {
@@ -109,10 +123,18 @@ public class CategoryManagerWebController {
         return "redirect:/manager/categories?id=" + responseDto.getParentId();
     }
 
+    /**
+     * 카테고리 수정 처리
+     *
+     * @param categoryId 수정하고자 하는 카테고리의 id
+     * @param modifyRequest 이름, 노출여부, 부모id가 있는 dto
+     * @param bindingResult
+     * @return redirect:/manager/categories?id={부모id}
+     */
     @PostMapping("/{categoryId}")
     public String modifyCategory(
             @PathVariable Long categoryId,
-            @Valid CategorySaveRequest modifyRequest,
+            @Valid CategorySaveRequestDto modifyRequest,
             BindingResult bindingResult
     ) {
         if (bindingResult.hasErrors()) {
@@ -129,6 +151,13 @@ public class CategoryManagerWebController {
         return "redirect:/manager/categories?id=" + responseDto.getParentId();
     }
 
+    /**
+     * 카테고리 삭제 처리
+     *   manager-categories.html 에서 javascript를 통해 페이지를 이동시킨다.
+     *
+     * @param categoryId 삭제하고자 하는 카테고리 id
+     * @return redirect:/manager/categories
+     */
     @PostMapping(params = "id")
     public String deleteCategory(@RequestParam("id") Long categoryId) {
         commandCategoryService.delete(categoryId);

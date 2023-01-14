@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
-import shop.yesaladin.front.category.dto.CategorySaveRequest;
+import shop.yesaladin.front.category.dto.CategorySaveRequestDto;
 import shop.yesaladin.front.category.dto.CategoryResponseDto;
 import shop.yesaladin.front.category.service.inter.CommandCategoryService;
 import shop.yesaladin.front.config.GatewayConfig;
@@ -28,7 +28,7 @@ public class CommandCategoryServiceImpl implements CommandCategoryService {
     private final RestTemplate restTemplate;
     private final GatewayConfig gatewayConfig;
     @Override
-    public CategoryResponseDto create(CategorySaveRequest createRequest) {
+    public CategoryResponseDto create(CategorySaveRequestDto createRequest) {
         log.info("{}", createRequest);
         UriComponents uriComponents = UriComponentsBuilder.fromHttpUrl(
                         gatewayConfig.getUrl() + "/v1/categories")
@@ -42,13 +42,13 @@ public class CommandCategoryServiceImpl implements CommandCategoryService {
     }
 
     @Override
-    public CategoryResponseDto modify(Long parentId, CategorySaveRequest modifyRequest) {
+    public CategoryResponseDto modify(Long id, CategorySaveRequestDto modifyRequest) {
         UriComponents uriComponents = UriComponentsBuilder.fromHttpUrl(
-                gatewayConfig.getUrl() + "/v1/categories").path("/" + parentId).build();
+                gatewayConfig.getUrl() + "/v1/categories").path("/" + id).build();
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<CategorySaveRequest> entity = new HttpEntity<>(modifyRequest, headers);
+        HttpEntity<CategorySaveRequestDto> entity = new HttpEntity<>(modifyRequest, headers);
 
         return restTemplate.exchange(
                 uriComponents.toUri(),

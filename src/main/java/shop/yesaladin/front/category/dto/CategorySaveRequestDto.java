@@ -9,7 +9,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
- * 카테고리 생성을 위한 Dto
+ * 카테고리 생성 및 수정을 위한 Dto
  *
  * parentId가 null일 경우 상위 카테고리
  * @author 배수한
@@ -21,7 +21,7 @@ import lombok.ToString;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategorySaveRequest {
+public class CategorySaveRequestDto {
 
     @NotBlank
     private String name;
