@@ -37,7 +37,7 @@ public class MemberWebController {
      */
     @GetMapping("/signup")
     public String signupForm() {
-        return "/member/signupForm";
+        return "member/signupForm";
     }
 
     /**
@@ -62,11 +62,11 @@ public class MemberWebController {
         log.info("response={}", response);
         model.addAttribute("response", response);
 
-        return "/member/signupSuccess";
+        return "member/signupSuccess";
     }
 
     @GetMapping("/login")
     public String loginForm() {
-        return "/member/loginForm";
+        return "member/loginForm";
     }
 }
