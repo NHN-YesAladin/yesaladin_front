@@ -90,7 +90,7 @@ public class QueryCategoryServiceImpl implements QueryCategoryService {
         return responseEntity.getBody();
     }
 
-    private static HttpEntity<String> getHttpEntity() {
+    private HttpEntity<String> getHttpEntity() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> entity = new HttpEntity<>(headers);

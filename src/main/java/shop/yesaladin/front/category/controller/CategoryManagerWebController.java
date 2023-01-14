@@ -1,25 +1,27 @@
 package shop.yesaladin.front.category.controller;
 
-import java.awt.print.Pageable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.IntStream;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import shop.yesaladin.front.category.dto.CategoryCreateRequest;
+import shop.yesaladin.front.category.dto.CategorySaveRequest;
 import shop.yesaladin.front.category.dto.CategoryResponseDto;
+import shop.yesaladin.front.category.service.inter.CommandCategoryService;
 import shop.yesaladin.front.category.service.inter.QueryCategoryService;
 import shop.yesaladin.front.common.dto.PageRequestDto;
 import shop.yesaladin.front.common.dto.PaginatedResponseDto;
+import shop.yesaladin.front.common.exception.ValidationFailedException;
 
 /**
  * 카테고리 관련 컨트롤러
@@ -30,12 +32,13 @@ import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 
 @RequiredArgsConstructor
 @Controller
-@RequestMapping("/categories")
-public class CategoryWebController {
+@RequestMapping("/manager/categories")
+public class CategoryManagerWebController {
 
     private final QueryCategoryService queryCategoryService;
+    private final CommandCategoryService commandCategoryService;
 
-    @GetMapping("/command")
+    @GetMapping
     public String commandCategory(
             @RequestParam(name = "id", required = false) Long parentId,
             @RequestParam(required = false) Integer page,
@@ -55,7 +58,6 @@ public class CategoryWebController {
 
         model.addAttribute("parentCategories", queryCategoryService.getParentCategories());
         model.addAttribute("id", parentId);
-
 
         if (Objects.nonNull(parentId)) {
             // 페이징 전용 dto를 리턴 받는다.
@@ -85,16 +87,51 @@ public class CategoryWebController {
         model.addAttribute("start", start);
         model.addAttribute("last", last);
         model.addAttribute("blockSize", blockSize);
-        return "category/command-category";
+        return "category/manager-categories";
     }
 
 
-
     @PostMapping
-    public String createCategory(@Valid @ModelAttribute CategoryCreateRequest createRequest) {
-        // 서비스에서 createRequest를 이용해서 서버와 통신 하도록 함
+    public String registerCategory(
+            @Valid CategorySaveRequest createRequest,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasErrors()) {
+            throw new ValidationFailedException(bindingResult);
+        }
+        CategoryResponseDto responseDto = commandCategoryService.create(createRequest);
+
+        if (Objects.isNull(responseDto.getParentId())) {
+            return "redirect:/manager/categories?id=" + responseDto.getId();
+        }
 
         // html 경로를 return
-        return null;
+        return "redirect:/manager/categories?id=" + responseDto.getParentId();
+    }
+
+    @PostMapping("/{categoryId}")
+    public String modifyCategory(
+            @PathVariable Long categoryId,
+            @Valid CategorySaveRequest modifyRequest,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasErrors()) {
+            throw new ValidationFailedException(bindingResult);
+        }
+
+        CategoryResponseDto responseDto = commandCategoryService.modify(categoryId, modifyRequest);
+
+        if (Objects.isNull(responseDto.getParentId())) {
+            return "redirect:/manager/categories?id=" + responseDto.getId();
+        }
+
+        // html 경로를 return
+        return "redirect:/manager/categories?id=" + responseDto.getParentId();
+    }
+
+    @PostMapping(params = "id")
+    public String deleteCategory(@RequestParam("id") Long categoryId) {
+        commandCategoryService.delete(categoryId);
+        return "redirect:/manager/categories";
     }
 }

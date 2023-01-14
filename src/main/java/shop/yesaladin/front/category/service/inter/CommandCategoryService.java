@@ -12,6 +12,9 @@ import shop.yesaladin.front.category.dto.*;
 
 public interface CommandCategoryService {
 
-    CategoryDto create(CategoryCreateRequest createRequest);
+    CategoryResponseDto create(CategorySaveRequest createRequest);
 
+    CategoryResponseDto modify(Long parentId, CategorySaveRequest modifyRequest);
+
+    void delete(Long id);
 }

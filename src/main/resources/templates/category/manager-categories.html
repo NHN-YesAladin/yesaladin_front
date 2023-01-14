@@ -1,0 +1,347 @@
+<!doctype html>
+<!--
+* Tabler - Premium and Open Source dashboard template with responsive and high quality UI.
+* @version 1.0.0-beta5
+* @link https://tabler.io
+* Copyright 2018-2022 The Tabler Authors
+* Copyright 2018-2022 codecalm.net Paweł Kuna
+* Licensed under MIT (https://github.com/tabler/tabler/blob/master/LICENSE)
+-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <title>Yes Aladin! - 카테고리 관리자 화면</title>
+    <!-- CSS files -->
+    <link th:href="@{/css/tabler.min.css}" rel="stylesheet"/>
+    <link th:href="@{/css/tabler-flags.min.css}" rel="stylesheet"/>
+    <link th:href="@{/css/tabler-payments.min.css}" rel="stylesheet"/>
+    <link th:href="@{/css/tabler-vendors.min.css}" rel="stylesheet"/>
+    <link th:href="@{/css/demo.min.css}" rel="stylesheet"/>
+</head>
+<body>
+<!-- Libs JS -->
+<script type="text/javascript" th:src="@{/libs/apexcharts/dist/apexcharts.min.js}"></script>
+<!-- Tabler Core -->
+<script type="text/javascript" th:src="@{/js/tabler.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/demo.min.js}"></script>
+<div class="wrapper">
+
+
+    <!-- TODO 2 : NAV-BAR -->
+    <div th:replace="~{fragments/navbar-vertical :: fragment-nav-vertical}"></div>
+
+    <div class="page-wrapper">
+        <!-- TODO 1 : HEADER -->
+        <div th:replace="~{fragments/header :: fragment-header}"></div>
+        <div class="page-header d-print-none">
+          <div class="container-xl">
+            <div class="row g-2 align-items-center">
+              <div class="col">
+                <!-- Page pre-title -->
+                <div class="page-pretitle">
+                  카테고리
+                </div>
+                <h2 class="page-title">
+                  등록/수정/삭제
+                </h2>
+              </div>
+              <!-- Page title actions -->
+              <div class="col-auto ms-auto d-print-none">
+                <div class="btn-list">
+                <span class="d-none d-sm-inline">
+                  <a href="#" class="btn">
+                    카테고리 순서 관리
+                  </a>
+                </span>
+                  <!--   //TODO 카테고리 순서 관리 화면으로 넘김                -->
+                  <a href="#" class="btn btn-primary d-none d-sm-inline-block" data-bs-toggle="modal" data-bs-target="#register-modal-report">
+                    <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+                    카테고리 생성
+                  </a>
+                  <!--   //TODO 카테고리 생성 화면으로 넘김                -->
+                  <a href="#" class="btn btn-primary d-sm-none btn-icon" data-bs-toggle="modal" data-bs-target="#modal-report" aria-label="Create new category">
+                    <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <!--   카테고리 생성 화면          -->
+            <div class="modal modal-blur fade" id="register-modal-report" tabindex="-1" style="display: none;" aria-hidden="true">
+              <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  <form method="post" action="/manager/categories">
+                    <div class="modal-header">
+                      <h5 class="modal-title">카테고리 생성</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <div class="mb-3">
+                        <label class="form-label">카테고리 이름</label>
+                        <input type="text" class="form-control" name="name" placeholder="이름">
+                      </div>
+                      <label class="row mb-3">
+                        <span class="col">노출 여부</span>
+                        <span class="col-auto">
+                          <label class="form-check form-check-single form-switch">
+                            <input class="form-check-input" name="isShown" type="checkbox"  checked="">
+                            <input type="hidden" name="_isShown" value="on">
+                          </label>
+                        </span>
+                      </label>
+                      <div class="row">
+                        <div class="col-lg-4">
+                          <div class="mb-3">
+                            <label class="form-label">1차 카테고리 지정</label>
+                            <select id="register-select-parent" th:name="parentId" class="form-select">
+                              <option value="">없음</option>
+                              <option th:each="parentCategory : ${parentCategories}"
+                                      th:value="${parentCategory.id}" th:text="${parentCategory.name}" th:selected="${parentCategory.id == id}"></option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <a href="#" class="btn btn-link link-secondary" data-bs-dismiss="modal">
+                        Cancel
+                      </a>
+                      <button type="submit" class="btn btn-primary">등록</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TODO 3: BODY -->
+        <div class="page-body">
+            <div class="container-xl">
+                <div class="row row-deck row-cards">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header row">
+                                <h3 class="card-title col-md-2">카테고리 관리</h3>
+                                <div class="col-md-4">
+                                <select id="select-parent" th:name="parentCategory" class="form-select">
+                                  <option value="none">선택</option>
+                                  <option th:each="parentCategory : ${parentCategories}"
+                                          th:value="${parentCategory.id}" th:text="${parentCategory.name}" th:selected="${parentCategory.id == id}"></option>
+                                </select>
+                              </div>
+                            </div>
+                            <!--          //TODO 관리자 페이지 리스트 예시 -->
+                            <div class="table-responsive">
+                                <table class="table card-table table-vcenter text-nowrap datatable">
+                                    <thead>
+                                      <tr>
+                                          <th class="w-1">No. <!-- Download SVG icon from http://tabler-icons.io/i/chevron-up -->
+                                              <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-sm icon-thick" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><polyline points="6 15 12 9 18 15" /></svg>
+                                          </th>
+                                          <th>1차 카테고리 이름</th>
+                                          <th>2차 카테고리 이름</th>
+                                          <th>노출 여부</th>
+                                          <th>순서</th>
+                                          <th></th>
+                                          <th></th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr th:each="category : ${dataList}">
+                                          <td><span class="text-muted" th:text="${category.id}"></span></td>
+                                          <td th:text="${category.parentName}">국외도서</td>
+                                          <td th:text="${category.name}">소설</td>
+                                          <td>
+                                            <span class="badge bg-success me-1" th:if="${category.isShown}">Yes</span>
+                                            <span class="badge bg-warning me-1" th:if="${!category.isShown}">No</span>
+                                          </td>
+                                          <td th:text="${#strings.isEmpty(category.order) ? '-' : category.order}"></td>
+                                          <td>
+                                            <a href="#" class="btn btn-dark btn-pill w-auto fs-5 btn-modal" data-bs-toggle="modal" data-bs-target="#modify-modal-report"
+                                               th:data-cat-parent-id="${id}" th:data-cat-id="${category.id}" th:data-cat-name="${category.name}" th:data-cat-shown="${category.isShown}">
+                                              수정
+                                            </a>
+
+                                          </td>
+
+                                          <td>
+                                            <button type="button" class="btn btn-secondary btn-pill w-auto fs-5 category-delete-button" th:value="${category.id}">
+                                              삭제
+                                            </button>
+                                          </td>
+                                      </tr>
+                                    </tbody>
+                                </table>
+                              <!--          카테고리 수정 폼 - 자바 스크립트로 동작시킴                     -->
+                              <div class="modal modal-blur fade " id="modify-modal-report" tabindex="-1" style="display: none;" aria-hidden="true">
+                                <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                                  <div class="modal-content">
+                                      <div class="modal-header">
+                                        <h5 class="modal-title">카테고리 수정</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                      </div>
+                                      <div class="modal-body">
+                                        <div class="mb-3">
+                                          <label class="form-label">카테고리 이름</label>
+                                          <input type="text" id="category-name" class="form-control"  name="name" >
+                                          <input type="hidden" name="id" id="category-id">
+                                        </div>
+                                        <label class="row mb-3">
+                                          <span class="col">노출 여부</span>
+                                          <span class="col-auto">
+                                              <label class="form-check form-check-single form-switch">
+                                                <input class="form-check-input" id="category-isShown" name="isShown" type="checkbox"  >
+                                                <input type="hidden" name="_isShown" value="on">
+                                              </label>
+                                            </span>
+                                        </label>
+                                        <div class="row">
+                                          <div class="col-lg-4">
+                                            <div class="mb-3">
+                                              <label class="form-label">1차 카테고리 지정</label>
+                                              <select id="modify-select-parent" th:name="parentId" class="form-select">
+                                                <option value="">없음</option>
+                                                <option th:each="parentCategory : ${parentCategories}"
+                                                        th:value="${parentCategory.id}" th:text="${parentCategory.name}" th:id="${parentCategory.id}"></option>
+                                              </select>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="modal-footer">
+                                        <a href="#" class="btn btn-link link-secondary" data-bs-dismiss="modal">
+                                          Cancel
+                                        </a>
+                                        <button type="submit" class="btn btn-primary" id="category-modify-button">등록</button>
+                                      </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="card-footer d-flex align-items-center">
+                                <ul class="pagination m-0 ms-auto">
+                                    <li class="page-item" th:if="${start > 1}">
+                                        <a class="page-link" th:href="@{/manager/categories(id=${id},size=${size},page=(${start}-${blockSize}))}" tabindex="-1" aria-disabled="true">
+                                            <!-- Download SVG icon from http://tabler-icons.io/i/chevron-left -->
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><polyline points="15 6 9 12 15 18" /></svg>
+                                            prev
+                                        </a>
+                                    </li>
+                                    <li class="page-item" th:each="page : ${#numbers.sequence(start,last)}">
+                                      <a class="page-link" th:classappend="${currentPage==page}?'active'" th:href="@{/manager/categories(id=${id},size=${size},page=${page}-1)}" th:text="${page}"></a>
+                                    </li>
+                                    <li class="page-item" th:if="${last < totalPage}">
+                                        <a class="page-link" th:href="@{/manager/categories(id=${id},size=${size},page=(${start}+${blockSize}-1))}">
+                                            next <!-- Download SVG icon from http://tabler-icons.io/i/chevron-right -->
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><polyline points="9 6 15 12 9 18" /></svg>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TODO 4 : footer -->
+        <div th:replace="~{fragments/footer :: fragment-footer}"></div>
+    </div>
+
+
+</div>
+<!-- DOMContentLoaded관련 Script import -->
+<div th:replace="~{fragments/script :: fragment-script}"></div>
+<script>
+  const t = document.getElementById('select-parent');
+  t.addEventListener('change', function (event) {
+    // alert(event.target.value);
+    const value = event.target.value;
+    location.href = '/manager/categories?id=' + value;
+  });
+  const modal = document.getElementById('modify-modal-report');
+  modal.addEventListener('show.bs.modal',function (event){
+    const button = event.relatedTarget
+    const categoryId = button.getAttribute('data-cat-id');
+    const parentId = button.getAttribute('data-cat-parent-id');
+    const name = button.getAttribute('data-cat-name');
+    const isShown = button.getAttribute('data-cat-shown');
+    // alert(categoryId + " " + parentId + " " + name+ " " + isShown);
+
+    const idTag = document.getElementById("category-id");
+    idTag.value = categoryId;
+
+    const nameTag = document.getElementById("category-name");
+    nameTag.value = name;
+    nameTag.text = name;
+
+    const shownTag = document.getElementById("category-isShown");
+    shownTag.checked = isShown;
+
+    const opTag = document.getElementById(parentId);
+    opTag.selected = true;
+
+  })
+
+  const modifyButton = document.getElementById("category-modify-button");
+  modifyButton.addEventListener('click',function (event){
+    const id = document.getElementById("category-id").value;
+    const name = document.getElementById("category-name").value;
+    const shown = document.getElementById("category-isShown").value;
+    const parentId = document.getElementById("modify-select-parent").value;
+
+    const newForm = document.createElement('form');
+    newForm.name = 'newForm';
+    newForm.method = 'post';
+    newForm.action = `/manager/categories/${id}`;
+
+    const input1 = document.createElement('input');
+    input1.setAttribute("type", "hidden");
+    input1.setAttribute("name", "name");
+    input1.setAttribute("value", name);
+
+    const input2 = document.createElement('input');
+    input2.setAttribute("type", "hidden");
+    input2.setAttribute("name", "isShown");
+    input2.setAttribute("value", shown);
+
+    const input3 = document.createElement('input');
+    input3.setAttribute("type", "hidden");
+    input3.setAttribute("name", "parentId");
+    input3.setAttribute("value", parentId);
+
+    newForm.appendChild(input1);
+    newForm.appendChild(input2);
+    newForm.appendChild(input3);
+
+    document.body.appendChild(newForm);
+
+    newForm.submit();
+  })
+
+  const deleteButtons = document.getElementsByClassName("category-delete-button");
+  for (const deleteButton of deleteButtons) {
+    deleteButton.addEventListener('click', function (event) {
+      const id = event.target.value;
+      const url = `/manager/categories?id=${id}`;
+      fetch(url, {
+        method: "POST"
+      }).then((resp) => {
+        console.log(resp);
+        const parentId = `${id.substring(0,2)}000`
+        location.href = `/manager/categories?id=${parentId}`;
+      });
+
+    });
+
+  }
+
+
+
+</script>
+</body>
+</html>

@@ -5,6 +5,8 @@ import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * 카테고리 생성을 위한 Dto
@@ -14,10 +16,12 @@ import lombok.NoArgsConstructor;
  * @since 1.0
  */
 
+@ToString
+@Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategoryCreateRequest {
+public class CategorySaveRequest {
 
     @NotBlank
     private String name;
