@@ -1,4 +1,4 @@
-package shop.yesaladin.front.file.service.inter;
+package shop.yesaladin.front.manager.file.service.inter;
 
 /**
  * Object Storage 인증 토큰을 발급받기 위한 Service Interface 입니다.

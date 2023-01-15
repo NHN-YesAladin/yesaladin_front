@@ -1,22 +1,22 @@
-package shop.yesaladin.front.publish.dto;
+package shop.yesaladin.front.manager.tag.dto;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * 저자 조회를 받아와 저장한 Dto 입니다.
+ * 태그 조회를 받아와 저장한 dto
  *
  * @author 이수정
  * @since 1.0
  */
 @Getter
 @Setter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class PublisherResponseDto {
-
-    private Long id;
+public class TagResponseDto {
+    private int id;
     private String name;
 }
