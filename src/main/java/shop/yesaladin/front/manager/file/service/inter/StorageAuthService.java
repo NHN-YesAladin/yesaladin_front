@@ -1,4 +1,4 @@
-package shop.yesaladin.front.file.service.inter;
+package shop.yesaladin.front.manager.file.service.inter;
 
 import org.json.simple.parser.ParseException;
 

@@ -1,4 +1,4 @@
-package shop.yesaladin.front.file.service.impl;
+package shop.yesaladin.front.manager.file.service.impl;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -10,8 +10,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import shop.yesaladin.front.file.dto.TokenRequest;
-import shop.yesaladin.front.file.service.inter.StorageAuthService;
+import shop.yesaladin.front.manager.file.dto.TokenRequest;
+import shop.yesaladin.front.manager.file.service.inter.StorageAuthService;
 
 @Service
 public class StorageAuthServiceImpl implements StorageAuthService {
