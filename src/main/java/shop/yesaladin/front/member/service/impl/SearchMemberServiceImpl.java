@@ -25,10 +25,18 @@ public class SearchMemberServiceImpl implements SearchMemberService {
     private final RestTemplate restTemplate;
     private final GatewayConfig gatewayConfig;
 
+    /**
+     * 검색할 회원의 로그인 아이디를 gateway로 보내고 받은 정보를 전송하는 메소드
+     *
+     * @param loginId 검색할 회원의 로그인 아이디
+     * @return 검색된 회원의 정보
+     * @author : 김선홍
+     * @since : 1.0
+     */
     @Override
     public List<SearchMemberManagerResponseDto> searchByLoginId(String loginId) {
         String uri = UriComponentsBuilder.fromHttpUrl(gatewayConfig.getUrl())
-                .path("/v2/members/search/loginid/{loginid}")
+                .path("/v1/members/search/loginid/{loginid}")
                 .buildAndExpand(loginId)
                 .toUriString();
         ResponseEntity<SearchMemberManagerResponseDto> response = restTemplate.getForEntity(
@@ -38,10 +46,18 @@ public class SearchMemberServiceImpl implements SearchMemberService {
         return List.of(Objects.requireNonNull(response.getBody()));
     }
 
+    /**
+     * 검색할 회원의 닉네임을 gateway로 보내고 받은 정보를 전송하는 메소드
+     *
+     * @param nickname 검색할 회원의 로그인 아이디
+     * @return 검색된 회원의 정보
+     * @author : 김선홍
+     * @since : 1.0
+     */
     @Override
     public List<SearchMemberManagerResponseDto> searchByNickname(String nickname) {
         String uri = UriComponentsBuilder.fromHttpUrl(gatewayConfig.getUrl())
-                .path("/v2/members/search/nickname/{nickname}")
+                .path("/v1/members/search/nickname/{nickname}")
                 .buildAndExpand(nickname)
                 .toUriString();
         ResponseEntity<SearchMemberManagerResponseDto> response = restTemplate.getForEntity(
@@ -51,10 +67,18 @@ public class SearchMemberServiceImpl implements SearchMemberService {
         return List.of(Objects.requireNonNull(response.getBody()));
     }
 
+    /**
+     * 검색할 회원의 핸드폰 번호를 gateway로 보내고 받은 정보를 전송하는 메소드
+     *
+     * @param phone 검색할 회원의 로그인 아이디
+     * @return 검색된 회원의 정보
+     * @author : 김선홍
+     * @since : 1.0
+     */
     @Override
     public List<SearchMemberManagerResponseDto> searchByPhone(String phone) {
         String uri = UriComponentsBuilder.fromHttpUrl(gatewayConfig.getUrl())
-                .path("/v2/members/search/phone/{phone}")
+                .path("/v1/members/search/phone/{phone}")
                 .buildAndExpand(phone)
                 .toUriString();
         ResponseEntity<SearchMemberManagerResponseDto> response = restTemplate.getForEntity(
@@ -64,10 +88,18 @@ public class SearchMemberServiceImpl implements SearchMemberService {
         return List.of(Objects.requireNonNull(response.getBody()));
     }
 
+    /**
+     * 검색할 회원의 이름을 gateway로 보내고 받은 정보를 전송하는 메소드
+     *
+     * @param name 검색할 회원의 로그인 아이디
+     * @return 검색된 회원의 정보
+     * @author : 김선홍
+     * @since : 1.0
+     */
     @Override
     public List<SearchMemberManagerResponseDto> searchByName(String name) {
         String uri = UriComponentsBuilder.fromHttpUrl(gatewayConfig.getUrl())
-                .path("/v2/members/search/name/{name}")
+                .path("/v1/members/search/name/{name}")
                 .buildAndExpand(name)
                 .toUriString();
         ResponseEntity<SearchMemberManagerResponseDto> response = restTemplate.getForEntity(
@@ -77,10 +109,18 @@ public class SearchMemberServiceImpl implements SearchMemberService {
         return List.of(Objects.requireNonNull(response.getBody()));
     }
 
+    /**
+     * 검색할 회원의 회원가입날을 gateway로 보내고 받은 정보를 전송하는 메소드
+     *
+     * @param signUpDate 검색할 회원의 로그인 아이디
+     * @return 검색된 회원의 정보
+     * @author : 김선홍
+     * @since : 1.0
+     */
     @Override
     public List<SearchMemberManagerResponseDto> searchBySignUpDate(LocalDate signUpDate) {
         String uri = UriComponentsBuilder.fromHttpUrl(gatewayConfig.getUrl())
-                .path("/v2/members/search/signupdate/{signupdate}")
+                .path("/v1/members/search/signupdate/{signupdate}")
                 .buildAndExpand(signUpDate)
                 .toUriString();
         ResponseEntity<SearchMemberManagerResponseDto> response = restTemplate.getForEntity(
