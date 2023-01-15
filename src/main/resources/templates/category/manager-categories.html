@@ -81,7 +81,7 @@
                     <div class="modal-body">
                       <div class="mb-3">
                         <label class="form-label">카테고리 이름</label>
-                        <input type="text" class="form-control" name="name" placeholder="이름">
+                        <input type="text" class="form-control" name="name" placeholder="이름" required>
                       </div>
                       <label class="row mb-3">
                         <span class="col">노출 여부</span>
@@ -139,9 +139,7 @@
                                 <table class="table card-table table-vcenter text-nowrap datatable">
                                     <thead>
                                       <tr>
-                                          <th class="w-1">No. <!-- Download SVG icon from http://tabler-icons.io/i/chevron-up -->
-                                              <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-sm icon-thick" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><polyline points="6 15 12 9 18 15" /></svg>
-                                          </th>
+                                          <th class="w-1">No.</th>
                                           <th>1차 카테고리 이름</th>
                                           <th>2차 카테고리 이름</th>
                                           <th>노출 여부</th>
@@ -187,7 +185,7 @@
                                       <div class="modal-body">
                                         <div class="mb-3">
                                           <label class="form-label">카테고리 이름</label>
-                                          <input type="text" id="category-name" class="form-control"  name="name" >
+                                          <input type="text" id="category-name" class="form-control"  name="name" required>
                                           <input type="hidden" name="id" id="category-id">
                                         </div>
                                         <label class="row mb-3">
@@ -263,6 +261,7 @@
     const value = event.target.value;
     location.href = '/manager/categories?id=' + value;
   });
+
   const modal = document.getElementById('modify-modal-report');
   modal.addEventListener('show.bs.modal',function (event){
     const button = event.relatedTarget
