@@ -1,4 +1,4 @@
-package shop.yesaladin.front.product.dto;
+package shop.yesaladin.front.manager.writing.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * 상품 유형 조회를 받아와 저장한 Dto 입니다.
+ * 저자 조회를 받아와 저장한 Dto 입니다.
  *
  * @author 이수정
  * @since 1.0
@@ -15,8 +15,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductTypeResponseDto {
+public class AuthorResponseDto {
 
-    private int id;
-    private String type;
+    private Long id;
+    private String name;
 }
