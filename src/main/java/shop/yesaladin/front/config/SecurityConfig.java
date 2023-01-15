@@ -30,6 +30,8 @@ public class SecurityConfig {
         http.formLogin().disable();
         http.logout().disable();
         http.csrf().disable();
+        //TODO cors().disable() not working
+        http.cors().disable();
         return http.build();
     }
 
