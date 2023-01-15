@@ -1,4 +1,4 @@
-package shop.yesaladin.front.file.dto;
+package shop.yesaladin.front.manager.file.dto;
 
 import lombok.Data;
 

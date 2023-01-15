@@ -1,4 +1,4 @@
-package shop.yesaladin.front.writing.dto;
+package shop.yesaladin.front.manager.publish.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,7 +15,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuthorResponseDto {
+public class PublisherResponseDto {
 
     private Long id;
     private String name;
