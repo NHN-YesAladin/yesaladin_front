@@ -25,8 +25,8 @@ import shop.yesaladin.front.member.service.inter.SearchMemberService;
 public class MemberSearchController {
 
     private final SearchMemberService searchMemberService;
-    private final String viewName = "member/manager-search-member-list";
-    private final String resultListName = "members";
+    private static final String VIEW_NAME = "member/manager-search-member-list";
+    private static final String MEMBERS = "members";
 
     /**
      * 회원으르 검색하는 뷰로 이동
@@ -37,7 +37,7 @@ public class MemberSearchController {
      */
     @GetMapping
     public String goView() {
-        return viewName;
+        return VIEW_NAME;
     }
 
     /**
@@ -50,8 +50,8 @@ public class MemberSearchController {
      */
     @GetMapping("/loginid/{loginid}")
     public ModelAndView searchByLoginId(@PathVariable(name = "loginid") String loginId) {
-        ModelAndView modelAndView = new ModelAndView(viewName);
-        modelAndView.addObject(resultListName, searchMemberService.searchByLoginId(loginId));
+        ModelAndView modelAndView = new ModelAndView(VIEW_NAME);
+        modelAndView.addObject(MEMBERS, searchMemberService.searchByLoginId(loginId));
         return modelAndView;
     }
 
@@ -65,8 +65,8 @@ public class MemberSearchController {
      */
     @GetMapping("/nickname/{nickname}")
     public ModelAndView searchByNickname(@PathVariable String nickname) {
-        ModelAndView modelAndView = new ModelAndView(viewName);
-        modelAndView.addObject(resultListName, searchMemberService.searchByNickname(nickname));
+        ModelAndView modelAndView = new ModelAndView(VIEW_NAME);
+        modelAndView.addObject(MEMBERS, searchMemberService.searchByNickname(nickname));
         return modelAndView;
     }
 
@@ -80,8 +80,8 @@ public class MemberSearchController {
      */
     @GetMapping("/phone/{phone}")
     public ModelAndView searchByPhone(@PathVariable String phone) {
-        ModelAndView modelAndView = new ModelAndView(viewName);
-        modelAndView.addObject(resultListName, searchMemberService.searchByPhone(phone));
+        ModelAndView modelAndView = new ModelAndView(VIEW_NAME);
+        modelAndView.addObject(MEMBERS, searchMemberService.searchByPhone(phone));
         return modelAndView;
     }
 
@@ -95,8 +95,8 @@ public class MemberSearchController {
      */
     @GetMapping("/name/{name}")
     public ModelAndView searchByName(@PathVariable String name) {
-        ModelAndView modelAndView = new ModelAndView(viewName);
-        modelAndView.addObject(resultListName, searchMemberService.searchByName(name));
+        ModelAndView modelAndView = new ModelAndView(VIEW_NAME);
+        modelAndView.addObject(MEMBERS, searchMemberService.searchByName(name));
         return modelAndView;
     }
 
@@ -110,8 +110,8 @@ public class MemberSearchController {
      */
     @GetMapping("/signupdate/{signupdate}")
     public ModelAndView searchBySignUpDate(@PathVariable(name = "signupdate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate signUpDate) {
-        ModelAndView modelAndView = new ModelAndView(viewName);
-        modelAndView.addObject(resultListName, searchMemberService.searchBySignUpDate(signUpDate));
+        ModelAndView modelAndView = new ModelAndView(VIEW_NAME);
+        modelAndView.addObject(MEMBERS, searchMemberService.searchBySignUpDate(signUpDate));
         return modelAndView;
     }
 }
