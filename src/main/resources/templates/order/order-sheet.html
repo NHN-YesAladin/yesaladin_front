@@ -1,7 +1,204 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-
 <body th:fragment="order-sheet">
+<form th:method="post">
+  <div class="container-narrow py-4">
+    <div class="text-center mb-4">
+      <h1 class="h-auto">주문서</h1>
+      <!--    <a href="." class="navbar-brand navbar-brand-autodark"><img src="./static/logo.svg" height="36" alt=""></a>-->
+    </div>
+    <div class="card card-md">
+      <div class="card-body">
+        <h3 class="card-title">주문자 정보 입력</h3>
+        <div class="card card-md">
+          <div class="card-body">
+            <!--        TODO 회원인지에 따라 배송지 선택 disabled 만들기-->
+            <label class="form-label required">주문인</label>
+            <input type="text" class="form-control" name="orderer"
+                   placeholder="홍길동">
+            <label class="form-label required">전화번호</label>
+            <input type="text" class="form-control" name="orderer-phone-number" id="phone-number"
+                   maxlength="11"
+                   data-mask="000 0000 0000" placeholder="띄어쓰기 없이 붙여주세요.(ex: 01012341234)"
+                   data-mask-visible="true"
+                   autocomplete="off">
+          </div>
+        </div>
+        <br>
+        <h3 class="card-title">배송 정보 입력</h3>
+        <div class="card card-md">
+          <div class="card-body">
+            <div>
+              <label class="form-label required d-lg-inline float-start">주소</label>
+              <!--              TODO 배송지 선택 버튼-->
+              </button>
+              <a href="#" class="btn btn-outline-secondary btn-sm float-end btn-modal"
+                 data-bs-toggle="modal" data-bs-target="#modal-report">
+                배송지 선택
+              </a>
+            </div>
+            <input type="text" class="form-control" name="orderer-address"
+                   placeholder="주소">
+            <label class="form-label required d-lg-inline float-start">희망배송날짜</label>
+            <input class="form-control mb-2" type="date" name="order-expected-date"
+                   th:min="${#calendars.format( #calendars.createNow(), 'yyyy-MM-dd')}"
+                   id="datepicker">
+          </div>
+        </div>
+        <br>
+        <h3 class="card-title">주문 상품 정보</h3>
+        <div class="card card-md">
+          <div class="table-responsive">
+            <table
+                class="table table-vcenter">
+              <thead>
+              <tr>
+                <th class="w-1"></th>
+                <th>상품번호</th>
+                <th>상품명</th>
+                <th>가격</th>
+                <th>적립예정포인트</th>
+                <th>수량</th>
+                <th>개별쿠폰 적용</th>
+              </tr>
+              </thead>
+              <tbody th:each="product:${orderProducts}">
+              <tr>
+                <td th:value="${productStat}"></td>
+                <td><span name="order-product" th:value="${product.id}"></span></td>
+                <td th:value="${product.title}"></td>
+                <td th:value="${product.price}"></td>
+                <td th:value="${product.point}"></td>
+                <td th:value="${product.quantity}"></td>
+                <td>
+                  <!--                  TODO 개별 쿠폰 적용하기-->
+                  <button type="button" class="btn btn-outline-secondary btn-sm float-end">쿠폰 적용
+                  </button>
+                  <span hidden="hidden">
+                    <button type="button"
+                            class="btn btn-outline-danger btn-sm float-end">쿠폰 취소</button>
+                    <span name="order-product-price">할인된 금액</span>
+                  </span>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="float-end"> 결제 예상 금액 : <span id="expected-purchase-amount">50000</span>원</div>
+        <br>
+        <h3 class="card-title">추가할인</h3>
+        <div class="card card-md">
+          <div class="card-body">
+            <div class="form-label">
+              <!--             TODO  전체/카테고리 쿠폰-->
+              전체/카테고리 쿠폰 적용
+              <button type="button" class="btn btn-outline-secondary btn-sm">쿠폰 선택</button>
+              <span class="float-end w-auto">
+                - <input class="form-control form-control-sm w-auto" style="display:inline"
+                         id="coupon-applied-amount" value="0" readonly type="text"> 원
+               </span>
+            </div>
+            <!--            TODO 사용한 쿠폰 목록 보여주기-->
+            <div id="used-coupons"></div>
+          </div>
+          <div class="card-body">
+            <div class="form-group mb-3 row">
+              <label class="form-label col-3 col-form-label">포인트 적용</label>
+              <div class="col text-end">
+                - <input class="form-control form-control-sm w-auto" style="display: inline"
+                         id="point-applied-amount" value="0" type="text" numberOnly
+                         oninput="pointOverCheck(this)"
+                         onchange="pointValidCheck(this)"> 원
+              </div>
+              <small class="float-end" style="color: #c13333" id="point-alert" hidden="hidden">
+                값을 입력해주세요.
+              </small>
+              <small style="float:right;" class="form-hint text-end">
+                사용가능한 포인트 :
+                <span id="owned_point" type="text" th:text="${userPoint}"></span> 원 (1000원 단위로 사용가능)
+              </small>
+            </div>
+          </div>
+        </div>
+        <br>
+        <h3 class="card-title">
+          총 상품 금액
+          <span style="float: right">원</span>
+          <span style="float: right" id="total-product-price">0</span>
+        </h3>
+        <div class="hr-text">결제 금액</div>
+        <div class="card-body border-0">
+          <small style="float:right;">배달비 : <span id="shipping-fee"></span> 원</small>
+        </div>
+        <div class="card-body border-0">
+          <span style="float: right">
+            <label class="form-check form-switch" style="display: inline">
+              <input class="form-check-input" id="wrapping-check" type="checkbox" value="0"
+                   style="display: inline">
+            </label>
+            <small class="float-end">포장비 : 3000원</small>
+          </span>
+        </div>
+        <br>
+        <h3 class="card-title">
+          총 결제 금액
+          <span style="float: right">원</span>
+          <span style="float: right" id="total-price">0</span>
+        </h3>
+      </div>
+    </div>
+    <!--    TODO 결제 uri 추가-->
+    <div class="mt-2">
+      <a href="#" class="btn btn-primary w-100">
+        결제
+      </a>
+    </div>
+  </div>
+</form>
+<div th:replace="~{order/address-modal :: adderss-modal}"></div>
+<script th:inline="javascript">
+  /*<![CDATA[*/
+  function pointOverCheck(e) {
+    const alert = document.getElementById("point-alert");
+    const expectedPrice = parseInt(document.getElementById("expected-purchase-amount").innerText);
+    const userPoint = /*[[${userPoint}]]*/;
+    var curPoint = parseInt(e.value);
+    alert.hidden = true;
+    if (e.value === "") {
+      alert.hidden = false;
+    }
+    if (curPoint > userPoint) {
+      curPoint = userPoint;
+    }
+    if (curPoint > expectedPrice) {
+      curPoint = expectedPrice;
+    }
+    e.value = curPoint;
+  }
 
+  function pointValidCheck(e) {
+    var amount = e.value;
+    if (e.value === "" || e.value < 0) {
+      amount = 0;
+      document.getElementById("point-alert").hidden = true;
+    } else if (e.value % 1000 > 0) {
+      amount = parseInt(e.value / 1000) * 1000;
+    }
+    e.value = amount;
+    setTotalPrice();
+  }
+
+  document.getElementById("wrapping-check").addEventListener('change', function () {
+    if (this.checked) {
+      this.value = 3000;
+    } else {
+      this.value = 0;
+    }
+    setTotalPrice();
+  });
+</script>
 </body>
+<script th:src="@{/js/tabler.min.js}"></script>
+<script th:src="@{/js/demo.min.js}"></script>
 </html>
