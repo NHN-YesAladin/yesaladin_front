@@ -35,6 +35,8 @@ import shop.yesaladin.front.member.jwt.JwtPayload;
 @RequiredArgsConstructor
 public class CustomAuthenticationManager implements AuthenticationManager {
 
+    private static final int BEARER_LENGTH = 7;
+
     @Value("${gatewayUrl}")
     private String gatewayUrl;
 
@@ -74,7 +76,7 @@ public class CustomAuthenticationManager implements AuthenticationManager {
 
         log.info("accessToken={}", accessToken);
 
-        List<SimpleGrantedAuthority> authorities = parseJwt(accessToken.substring(7)).stream()
+        List<SimpleGrantedAuthority> authorities = parseJwt(accessToken.substring(BEARER_LENGTH)).stream()
                 .map(SimpleGrantedAuthority::new)
                 .collect(toList());
 
