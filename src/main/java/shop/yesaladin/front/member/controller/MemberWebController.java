@@ -23,7 +23,7 @@ import shop.yesaladin.front.member.service.inter.CommandMemberService;
 @Slf4j
 @RequiredArgsConstructor
 @Controller
-@RequestMapping("/web/members")
+@RequestMapping("/members")
 public class MemberWebController {
 
     private final CommandMemberService commandMemberService;
@@ -65,6 +65,13 @@ public class MemberWebController {
         return "member/signupSuccess";
     }
 
+    /**
+     * 로그인 페이지를 view로 리턴시켜주기 위한 Get handler 입니다.
+     *
+     * @return loginForm view를 반환합니다.
+     * @author : 송학현
+     * @since : 1.0
+     */
     @GetMapping("/login")
     public String loginForm() {
         return "member/loginForm";
