@@ -12,6 +12,11 @@ spring:
     url: jdbc:h2:mem:/test
     username: sa
     password:
+  redis:
+    host: 133.186.151.141
+    port: 6379
+    password: "*N2vya7H@muDTwdNMR!"
+    database: 26
 
 yesaladin:
   gateway: http://api.yesaladin.shop:8072/yesaladin-shop
