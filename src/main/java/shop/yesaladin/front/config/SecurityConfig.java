@@ -35,6 +35,7 @@ public class SecurityConfig {
      */
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.authorizeRequests().anyRequest().permitAll();
         http.formLogin()
                 .loginPage("/login")
                 .loginProcessingUrl("/auth-login")
@@ -67,11 +68,24 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * AuthenticationManager를 custom한 manager를 Bean으로 등록하기 위한 기능입니다.
+     *
+     * @return AuthenticationManager를 custom한 manager를 반환합니다.
+     * @author : 송학현
+     * @since : 1.0
+     */
     @Bean
     public CustomAuthenticationManager customAuthenticationManager() {
         return new CustomAuthenticationManager(restTemplate);
     }
 
+    /**
+     * UsernamePasswordAuthenticationFilter를 대체하기 위해 custom한 filter 입니다.
+     * form login 요청 시 동작하는 filter 입니다.
+     *
+     * @return UsernamePasswordAuthenticationFilter를 대체하기 위해 custom한 filter 를 반환합니다.
+     */
     @Bean
     public CustomAuthenticationFilter customAuthenticationFilter() {
         CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(

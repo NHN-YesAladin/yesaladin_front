@@ -23,7 +23,7 @@ import shop.yesaladin.front.member.service.inter.CommandMemberService;
 @Slf4j
 @RequiredArgsConstructor
 @Controller
-@RequestMapping("/web/members")
+@RequestMapping("/members")
 public class MemberWebController {
 
     private final CommandMemberService commandMemberService;

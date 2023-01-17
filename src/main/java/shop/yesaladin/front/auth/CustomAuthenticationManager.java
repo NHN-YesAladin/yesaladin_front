@@ -26,7 +26,7 @@ import shop.yesaladin.front.member.dto.LoginRequest;
 import shop.yesaladin.front.member.jwt.JwtPayload;
 
 /**
- *
+ * AuthenticationManager를 custom한 Manager 입니다.
  *
  * @author : 송학현
  * @since : 1.0
@@ -41,10 +41,10 @@ public class CustomAuthenticationManager implements AuthenticationManager {
     private final RestTemplate restTemplate;
 
     /**
-     *
+     * Auth 서버에서 발급받은 JWT 토큰을 기반으로 UsernamePasswordAuthenticationToken을 만들어 반환합니다.
      *
      * @param authentication 인증 객체입니다.
-     * @return 인증 객체를 반환합니다.(?)
+     * @return 인증 객체를 반환합니다.
      * @throws AuthenticationException
      * @author : 송학현
      * @since : 1.0

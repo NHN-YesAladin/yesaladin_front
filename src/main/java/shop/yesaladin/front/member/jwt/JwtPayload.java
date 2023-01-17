@@ -6,6 +6,12 @@ import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+/**
+ * JWT의 Payload를 파싱하기 위한 클래스입니다.
+ *
+ * @author : 송학현
+ * @since : 1.0
+ */
 @Getter
 @NoArgsConstructor
 public class JwtPayload implements Serializable {
