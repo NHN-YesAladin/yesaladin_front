@@ -1,7 +1,5 @@
 package shop.yesaladin.front.member.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,16 +7,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import shop.yesaladin.front.common.exception.ValidationFailedException;
-import shop.yesaladin.front.member.dto.LoginRequest;
 import shop.yesaladin.front.member.dto.SignUpRequest;
 import shop.yesaladin.front.member.dto.SignUpResponse;
-import shop.yesaladin.front.member.service.inter.AuthService;
 import shop.yesaladin.front.member.service.inter.CommandMemberService;
-import shop.yesaladin.front.member.util.LoginRequestStatus;
 
 /**
  * 회원 관련 페이지를 위한 Controller 입니다.
@@ -33,7 +27,6 @@ import shop.yesaladin.front.member.util.LoginRequestStatus;
 public class MemberWebController {
 
     private final CommandMemberService commandMemberService;
-    private final AuthService authService;
 
     /**
      * 회원 등록 폼 페이지를 view로 리턴시켜주기 위한 Get handler 입니다.
@@ -72,25 +65,15 @@ public class MemberWebController {
         return "member/signupSuccess";
     }
 
+    /**
+     * 로그인 페이지를 view로 리턴시켜주기 위한 Get handler 입니다.
+     *
+     * @return loginForm view를 반환합니다.
+     * @author : 송학현
+     * @since : 1.0
+     */
     @GetMapping("/login")
     public String loginForm() {
         return "member/loginForm";
-    }
-
-    @PostMapping("/login")
-    public String doLogin(@ModelAttribute LoginRequest requestDto, HttpServletRequest request)
-            throws JsonProcessingException {
-        log.info("requestDto={}", requestDto);
-
-        // JWT 해독 후 user 정보를 기반으로 Authentication을 holder에 저장하는 logic 필요
-        LoginRequestStatus loginStatus = authService.login(requestDto, request.getSession());
-
-        log.info("status={}", loginStatus);
-
-        if (loginStatus == LoginRequestStatus.UNAUTHORIZED || loginStatus == LoginRequestStatus.WITHDRAW) {
-            return "redirect:/login";
-        }
-
-        return "/index";
     }
 }

@@ -1,11 +1,16 @@
 package shop.yesaladin.front.config;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.client.RestTemplate;
+import shop.yesaladin.front.auth.CustomAuthenticationFilter;
+import shop.yesaladin.front.auth.CustomAuthenticationManager;
 
 /**
  * Spring Security의 설정 Bean 등록 클래스입니다.
@@ -14,7 +19,10 @@ import org.springframework.security.web.SecurityFilterChain;
  * @since : 1.0
  */
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final RestTemplate restTemplate;
 
     /**
      * 현재는 사용하지 않아 기본 설정을 disable로 설정하였습니다.
@@ -27,8 +35,20 @@ public class SecurityConfig {
      */
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.formLogin().disable();
-        http.logout().disable();
+        http.formLogin()
+                .loginPage("/login")
+                .loginProcessingUrl("/auth-login")
+                .usernameParameter("loginId")
+                .passwordParameter("password")
+                .and()
+                .logout()
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/")
+                .and()
+                .addFilterAt(
+                        customAuthenticationFilter(),
+                        UsernamePasswordAuthenticationFilter.class
+                );
         http.csrf().disable();
         //TODO cors().disable() not working
         http.cors().disable();
@@ -45,5 +65,19 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public CustomAuthenticationManager customAuthenticationManager() {
+        return new CustomAuthenticationManager(restTemplate);
+    }
+
+    @Bean
+    public CustomAuthenticationFilter customAuthenticationFilter() {
+        CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(
+                "/auth-login");
+        customAuthenticationFilter.setAuthenticationManager(customAuthenticationManager());
+
+        return customAuthenticationFilter;
     }
 }

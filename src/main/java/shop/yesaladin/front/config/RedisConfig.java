@@ -17,6 +17,12 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
 import org.springframework.session.web.http.CookieSerializer;
 import org.springframework.session.web.http.DefaultCookieSerializer;
 
+/**
+ * Redis 설정 클래스 입니다.
+ *
+ * @author : 송학현
+ * @since : 1.0
+ */
 @EnableRedisHttpSession
 @Configuration
 public class RedisConfig implements BeanClassLoaderAware {
@@ -35,6 +41,13 @@ public class RedisConfig implements BeanClassLoaderAware {
 
     private ClassLoader classLoader;
 
+    /**
+     * Redis Connection 설정 Bean 입니다.
+     *
+     * @return Redis Connection 설정이 들어간 Factory
+     * @author : 송학현
+     * @since : 1.0
+     */
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
         RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration();
@@ -46,6 +59,13 @@ public class RedisConfig implements BeanClassLoaderAware {
         return new LettuceConnectionFactory(configuration);
     }
 
+    /**
+     * Redis에 key, value 등과 관련된 연산을 하기 위해 설정합니다.
+     *
+     * @return Redis에 get, put 등을 하기 위한 RedisTemplate
+     * @author : 송학현
+     * @since : 1.0
+     */
     @Bean
     public RedisTemplate<String, Object> redisTemplate() {
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
