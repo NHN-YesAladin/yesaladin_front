@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<!--
+* Tabler - Premium and Open Source dashboard template with responsive and high quality UI.
+* @version 1.0.0-beta5
+* @link https://tabler.io
+* Copyright 2018-2022 The Tabler Authors
+* Copyright 2018-2022 codecalm.net Paweł Kuna
+* Licensed under MIT (https://github.com/tabler/tabler/blob/master/LICENSE)
+-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+  <title>Yes Aladin!</title>
+  <!-- CSS files -->
+  <link th:href="@{/css/tabler.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-flags.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-payments.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-vendors.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/demo.min.css}" rel="stylesheet"/>
+</head>
+<body>
+  <!-- Libs JS -->
+  <script type="text/javascript" th:src="@{/libs/apexcharts/dist/apexcharts.min.js}"></script>
+  <!-- Tabler Core -->
+  <script type="text/javascript" th:src="@{/js/tabler.min.js}"></script>
+  <script type="text/javascript" th:src="@{/js/demo.min.js}"></script>
+
+  <div class="wrapper">
+
+    <!-- TODO 1 : HEADER -->
+    <div th:replace="~{fragments/header :: fragment-header}"></div>
+
+    <!-- TODO 2 : NAV-BAR -->
+    <div th:replace="~{fragments/navbar :: fragment-nav-bar}"></div>
+
+    <!-- TODO 3: BODY -->
+    <div class="page-body container-xl">
+      <div class="card">
+        <div class="card-header row">
+          <h3 class="card-title col-md-2">상품 유형</h3>
+          <div class="col-md-4">
+            <select id="select-type" th:name="productType" class="form-select" onchange="selectType(this.value)">
+              <option value="">전체</option>
+              <option th:each="type : ${types}" th:value="${type.id}" th:text="${type.type}" th:selected="${type.id == typeId}"></option>
+            </select>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <div class="row row-cards">
+            <div class="g-2 g-md-3 col" th:each="product, i : ${products}">
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title" th:text="|${i.count}. ${product.title}|"></h3>
+                  <span class="badge bg-warning me-1" th:if="${product.isOutOfStock}">품절</span>
+                </div>
+                <div class="card-body row g-2 g-md-3">
+                  <div class="col-4">
+                    <div class="img-responsive img-responsive-3x4 rounded-3 border"
+                         th:style="|background-image: url(${product.thumbnailFileUrl})|" width="300" height="400"></div>
+                  </div>
+                  <div class="col-8">
+                    <p th:text="|${product.authorLine} 저|"></p>
+                    <p th:text="|${product.publisher}|"></p>
+                    <p th:text="|출판일 : ${product.publishedDate}|"></p>
+                    <h3 th:text="|${product.sellingPrice}원 |" style="display: inline"></h3>
+                    <p class="page-pretitle" th:text="|(${product.discountRate}% 할인)|" style="display: inline"></p><br/>
+                    <span class="badge bg-azure-lt" th:each="tag : ${product.tags}" th:text="|#${tag}|" style="margin: 2px"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-footer d-flex align-items-center">
+          <ul class="pagination m-0 ms-auto">
+            <li class="page-item" th:if="${start > 1}">
+              <a class="page-link" th:if="${typeId} != ''" th:href="@{/products(typeId=${typeId}, size=${size}, page=(${start}-${blockSize}))}" tabindex="-1" aria-disabled="true">
+                <!-- Download SVG icon from http://tabler-icons.io/i/chevron-left -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><polyline points="15 6 9 12 15 18" /></svg>
+                이전
+              </a>
+              <a class="page-link" th:if="${typeId} == ''" th:href="@{/products(size=${size}, page=(${start}-${blockSize}))}" tabindex="-1" aria-disabled="true">
+                <!-- Download SVG icon from http://tabler-icons.io/i/chevron-left -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><polyline points="15 6 9 12 15 18" /></svg>
+                이전
+              </a>
+            </li>
+            <li class="page-item" th:each="page : ${#numbers.sequence(start,last)}">
+              <a class="page-link" th:if="${typeId} != ''" th:classappend="${currentPage==page}?'active'" th:href="@{/products(typeId=${typeId}, size=${size}, page=${page}-1)}" th:text="${page}"></a>
+              <a class="page-link" th:if="${typeId} == ''" th:classappend="${currentPage==page}?'active'" th:href="@{/products(size=${size}, page=${page}-1)}" th:text="${page}"></a>
+            </li>
+            <li class="page-item" th:if="${last < totalPage}">
+              <a class="page-link" th:if="${typeId} != ''" th:href="@{/products(typeId=${typeId}, size=${size}, page=(${start}+${blockSize}-1))}">
+                다음 <!-- Download SVG icon from http://tabler-icons.io/i/chevron-right -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><polyline points="9 6 15 12 9 18" /></svg>
+              </a>
+              <a class="page-link" th:if="${typeId} == ''" th:href="@{/products(size=${size}, page=(${start}+${blockSize}-1))}">
+                다음 <!-- Download SVG icon from http://tabler-icons.io/i/chevron-right -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><polyline points="9 6 15 12 9 18" /></svg>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- TODO 4 : footer -->
+    <div th:replace="~{fragments/footer :: fragment-footer}"></div>
+
+    </div>
+  </div>
+  <!-- DOMContentLoaded관련 Script import -->
+  <div th:replace="~{fragments/script :: fragment-script}"></div>
+  <script>
+    function selectType(typeId) {
+      if (typeId === '') {
+        window.location.href = '/products';
+      } else {
+        window.location.href = '/products?typeId=' + typeId;
+      }
+    }
+  </script>
+</body>
+</html>
