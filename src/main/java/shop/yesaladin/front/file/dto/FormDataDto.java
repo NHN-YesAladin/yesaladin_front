@@ -1,4 +1,4 @@
-package shop.yesaladin.front.manager.file.dto;
+package shop.yesaladin.front.file.dto;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
