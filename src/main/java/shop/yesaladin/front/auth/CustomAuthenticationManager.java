@@ -65,7 +65,7 @@ public class CustomAuthenticationManager implements AuthenticationManager {
 
         // TODO: gatewayUrl이 현재 shop 기준으로 되어 있어 실제 gateway + auth url로 변경해야 함.
         ResponseEntity<Void> exchange = restTemplate.exchange(
-                "http://localhost:8081/auth/login",
+                gatewayUrl + "/auth/login",
                 HttpMethod.POST,
                 entity,
                 Void.class
