@@ -1,8 +1,7 @@
-package shop.yesaladin.front.manager.file.service.impl;
-
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+package shop.yesaladin.front.file.service.impl;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -10,8 +9,9 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import shop.yesaladin.front.manager.file.dto.TokenRequest;
-import shop.yesaladin.front.manager.file.service.inter.StorageAuthService;
+import shop.yesaladin.front.file.dto.TokenJsonDto;
+import shop.yesaladin.front.file.dto.TokenRequest;
+import shop.yesaladin.front.file.service.inter.StorageAuthService;
 
 @Service
 public class StorageAuthServiceImpl implements StorageAuthService {
@@ -38,7 +38,7 @@ public class StorageAuthServiceImpl implements StorageAuthService {
     }
 
     @Override
-    public String getAuthToken() throws ParseException {
+    public String getAuthToken() {
         restTemplate = new RestTemplate();
 
         // 헤더 생성
@@ -50,12 +50,15 @@ public class StorageAuthServiceImpl implements StorageAuthService {
         // 토큰 요청
         ResponseEntity<String> response = restTemplate.exchange(authUrl + "/tokens", HttpMethod.POST, httpEntity, String.class);
 
-        JSONParser jsonParser = new JSONParser();
-        JSONObject result = (JSONObject) jsonParser.parse(response.getBody());
-        JSONObject access = (JSONObject) result.get("access");
-        JSONObject token = (JSONObject) access.get("token");
+        TokenJsonDto tokenJsonDto = null;
+        try {
+            ObjectMapper mapper = new JsonMapper();
+            tokenJsonDto = mapper.readValue(response.getBody(), TokenJsonDto.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
 
-        return token.get("id").toString();
+        return tokenJsonDto.getAccess().getToken().getId();
     }
 
 }
