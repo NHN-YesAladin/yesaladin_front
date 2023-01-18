@@ -16,7 +16,7 @@ public class RequestLoggingInterceptor implements HandlerInterceptor {
     ) throws Exception {
         log.info(
                 "[client-ip]: {} | [request-url]: {}",
-                request.getRemoteAddr(),
+                request.getHeader("x-forwarded-for"),
                 request.getServletPath()
         );
 
