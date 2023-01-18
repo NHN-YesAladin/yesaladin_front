@@ -1,4 +1,4 @@
-package shop.yesaladin.front.manager.file.controller;
+package shop.yesaladin.front.file.controller;
 
 import java.io.IOException;
 import java.util.Map;
