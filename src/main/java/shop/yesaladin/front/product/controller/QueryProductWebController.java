@@ -1,12 +1,15 @@
 package shop.yesaladin.front.product.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import lombok.Getter;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import shop.yesaladin.front.common.dto.PageRequestDto;
 import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.product.dto.ProductDetailResponseDto;
-import shop.yesaladin.front.product.dto.ProductTypeResponseDto;
 import shop.yesaladin.front.product.dto.ProductsResponseDto;
 import shop.yesaladin.front.product.service.inter.QueryProductService;
 import shop.yesaladin.front.product.service.inter.QueryProductTypeService;
@@ -24,7 +26,7 @@ import shop.yesaladin.front.product.service.inter.QueryProductTypeService;
 /**
  * 상품 조회 페이지를 위한 Controller 입니다.
  *
- * @author 이수정
+ * @author 이수정, 김선홍
  * @since 1.0
  */
 @Slf4j
@@ -35,21 +37,30 @@ public class QueryProductWebController {
 
     private final QueryProductService queryProductService;
     private final QueryProductTypeService queryProductTypeService;
+    private final ObjectMapper objectMapper;
+    public static final String COOKIENAME = "recently_product";
 
     /**
-     * [GET /products/{productId}] 상품 상세 조회 View를 반환합니다.
+     * [GET /products/{productId}] 상품 상세 조회 View를 반환합니다. 쿠키에 최근 본 상품을 등록합니다.
      *
      * @param model 뷰로 데이터 전달
      * @return 상품 상세 조회 form
-     * @author 이수정
+     * @author 이수정, 김선홍
      * @since 1.0
      */
     @GetMapping("/products/{productId}")
-    public String product(@PathVariable long productId, Model model) {
+    public String product(
+            @PathVariable long productId,
+            Model model,
+            HttpServletRequest request,
+            HttpServletResponse servletResponse
+    )
+            throws JsonProcessingException {
         ProductDetailResponseDto response = queryProductService.getProductDetail(productId);
 
         model.addAllAttributes(makeAttributeMap(response));
 
+        checkCookie(request, servletResponse, response);
         return "/user/product/product";
     }
 
@@ -58,9 +69,9 @@ public class QueryProductWebController {
      * [GET /products] 모든 사용자용 상품 전체 조회 View를 반환합니다.
      *
      * @param typeId 지정한 상품 유형 Id(없으면 전체 유형)
-     * @param page 현재 페이지 - 1
-     * @param size 페이지 크기
-     * @param model 뷰로 데이터 전달
+     * @param page   현재 페이지 - 1
+     * @param size   페이지 크기
+     * @param model  뷰로 데이터 전달
      * @return 모든 사용자용 상품 전체 조회 View
      * @author 이수정
      * @since 1.0
@@ -91,16 +102,15 @@ public class QueryProductWebController {
                 "types", queryProductTypeService.findAll()
         ));
 
-
         return "/user/product/products";
     }
 
     /**
      * Paging Bar에 필요한 정보를 계산하고 Map으로 저장하여 반환합니다.
      *
-     * @param size 페이지에 들어갈 오브젝트 개수
+     * @param size      페이지에 들어갈 오브젝트 개수
      * @param blockSize 한 블럭에 들어갈 페이지 수
-     * @param products 페이징된 정보를 담고있는 PaginatedResponseDto
+     * @param products  페이징된 정보를 담고있는 PaginatedResponseDto
      * @return Paging Bar에 필요한 정보를 담은 Map
      * @author 이수정
      * @since 1.0
@@ -134,9 +144,9 @@ public class QueryProductWebController {
      * [GET /manager/products] 관리자용 상품 전체 조회 View를 반환합니다.
      *
      * @param typeId 지정한 상품 유형 Id(없으면 전체 유형)
-     * @param page 현재 페이지 - 1
-     * @param size 페이지 크기
-     * @param model 뷰로 데이터 전달
+     * @param page   현재 페이지 - 1
+     * @param size   페이지 크기
+     * @param model  뷰로 데이터 전달
      * @return 관리자용 상품 전체 조회 View
      * @author 이수정
      * @since 1.0
@@ -180,7 +190,9 @@ public class QueryProductWebController {
      */
     private Map<String, Object> makeAttributeMap(ProductDetailResponseDto response) {
 
-        boolean isEbook = (Objects.nonNull(response.getEbookFileUrl()) && !response.getEbookFileUrl().isBlank()) ? true : false;
+        boolean isEbook =
+                (Objects.nonNull(response.getEbookFileUrl()) && !response.getEbookFileUrl()
+                        .isBlank()) ? true : false;
 
         return Map.ofEntries(
                 Map.entry("id", response.getId()),
@@ -201,5 +213,22 @@ public class QueryProductWebController {
                 Map.entry("contents", response.getContents()),
                 Map.entry("description", response.getDescription())
         );
+    }
+
+    public void checkCookie(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            ProductDetailResponseDto productDetailResponseDto
+    ) throws JsonProcessingException {
+        String value = objectMapper.writeValueAsString(productDetailResponseDto);
+        for (Cookie cookie : request.getCookies()) {
+            if (cookie.getName().equals(COOKIENAME)) {
+                cookie.setValue(cookie.getValue().concat(" " + value));
+                return;
+            }
+        }
+        Cookie cookie = new Cookie(COOKIENAME, value);
+        cookie.setMaxAge(30000);
+        response.addCookie(cookie);
     }
 }
