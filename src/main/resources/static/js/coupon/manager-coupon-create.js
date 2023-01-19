@@ -35,20 +35,26 @@ function addEventListenerToCouponType() {
       "#coupon-max-discount-price-div");
   const couponMinOrderPriceDiv = document.querySelector(
       "#coupon-min-order-price-div");
+  const couponBoundSelectDiv = document.querySelector(
+      "#coupon-bound-select-div");
   couponTypeRadioList.forEach(radio => radio.addEventListener("click", () => {
     couponDiscountTypeSelect.disabled = couponTypePointRadio.checked;
+    couponBoundSelectDiv.style.display = "";
     couponMinOrderPriceDiv.style.display = "";
     couponMaxDiscountPriceDiv.style.display = "none";
-    couponMinOrderPriceDiv.disabled = false;
-    couponMaxDiscountPriceDiv.disabled = true;
+    couponMinOrderPriceDiv.querySelector("input").disabled = false;
+    couponMaxDiscountPriceDiv.querySelector("input").disabled = true;
+    couponBoundSelectDiv.querySelector("select").disabled = false;
     if (couponTypePointRadio.checked) {
+      couponBoundSelectDiv.style.display = "none";
+      couponBoundSelectDiv.querySelector("select").disabled = true;
       couponMinOrderPriceDiv.style.display = "none";
-      couponMinOrderPriceDiv.disabled = true;
+      couponMinOrderPriceDiv.querySelector("input").disabled = true;
       couponMaxDiscountPriceDiv.style.display = "none";
-      couponMaxDiscountPriceDiv.disabled = true;
+      couponMaxDiscountPriceDiv.querySelector("input").disabled = true;
     } else if (couponTypeRateRadio.checked) {
       couponMaxDiscountPriceDiv.style.display = "";
-      couponMaxDiscountPriceDiv.disabled = false;
+      couponMaxDiscountPriceDiv.querySelector("input").disabled = false;
     }
   }));
 }
