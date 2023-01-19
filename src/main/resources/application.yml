@@ -19,4 +19,4 @@ spring:
     database: 26
 
 yesaladin:
-  gateway: http://api.yesaladin.shop:8072/yesaladin-shop
+  gateway: https://api.yesaladin.shop

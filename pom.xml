@@ -91,6 +91,20 @@
             <artifactId>spring-session-data-redis</artifactId>
             <version>2.6.3</version>
         </dependency>
+
+        <!-- Actuator -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+            <version>2.7.7</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.logstash.logback</groupId>
+            <artifactId>logstash-logback-encoder</artifactId>
+            <version>7.2</version>
+        </dependency>
+
     </dependencies>
     <description>front</description>
     <groupId>shop.yesaladin</groupId>
