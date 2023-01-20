@@ -11,6 +11,13 @@ import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
+
+/**
+ * 쿠폰 생성 요청을 받기 위한 DTO 클래스입니다.
+ *
+ * @author 김홍대
+ * @since 1.0
+ */
 @Getter
 @Setter
 @NoArgsConstructor

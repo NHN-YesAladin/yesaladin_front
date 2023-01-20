@@ -3,6 +3,13 @@ package shop.yesaladin.front.coupon.dto;
 import java.time.LocalDate;
 import lombok.Getter;
 
+
+/**
+ * 정률 할인 쿠폰 생성 요청을 위한 DTO 클래스입니다.
+ *
+ * @author 김홍대
+ * @since 1.0
+ */
 @Getter
 public class RateCouponCreateDto extends CouponCreateDto {
 
