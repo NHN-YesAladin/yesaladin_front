@@ -7,10 +7,12 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.client.RestTemplate;
 import shop.yesaladin.front.auth.CustomAuthenticationFilter;
 import shop.yesaladin.front.auth.CustomAuthenticationManager;
+import shop.yesaladin.front.auth.CustomFailureHandler;
 
 /**
  * Spring Security의 설정 Bean 등록 클래스입니다.
@@ -36,22 +38,18 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeRequests().anyRequest().permitAll();
-        http.formLogin()
-                .loginPage("/login")
-                .loginProcessingUrl("/auth-login")
-                .usernameParameter("loginId")
-                .passwordParameter("password")
-                .and()
-                .logout()
+        http.formLogin().disable();
+        http.logout()
                 .logoutUrl("/logout")
-                .logoutSuccessUrl("/")
-                .and()
-                .addFilterAt(
-                        customAuthenticationFilter(),
-                        UsernamePasswordAuthenticationFilter.class
-                );
+                .logoutSuccessUrl("/");
+
+        http.addFilterAt(
+                customAuthenticationFilter(),
+                UsernamePasswordAuthenticationFilter.class
+        );
+
+//        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.csrf().disable();
-        //TODO cors().disable() not working
         http.cors().disable();
         return http.build();
     }
@@ -81,8 +79,8 @@ public class SecurityConfig {
     }
 
     /**
-     * UsernamePasswordAuthenticationFilter를 대체하기 위해 custom한 filter 입니다.
-     * form login 요청 시 동작하는 filter 입니다.
+     * UsernamePasswordAuthenticationFilter를 대체하기 위해 custom한 filter 입니다. form login 요청 시 동작하는 filter
+     * 입니다.
      *
      * @return UsernamePasswordAuthenticationFilter를 대체하기 위해 custom한 filter 를 반환합니다.
      */
@@ -91,7 +89,13 @@ public class SecurityConfig {
         CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(
                 "/auth-login");
         customAuthenticationFilter.setAuthenticationManager(customAuthenticationManager());
+        customAuthenticationFilter.setAuthenticationFailureHandler(authenticationFailureHandler());
 
         return customAuthenticationFilter;
+    }
+
+    @Bean
+    public AuthenticationFailureHandler authenticationFailureHandler() {
+        return new CustomFailureHandler();
     }
 }
