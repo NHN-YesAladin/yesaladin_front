@@ -30,6 +30,18 @@ public class MemberWebController {
     private final CommandMemberService commandMemberService;
 
     /**
+     * 회원의 마이 페이지를 view로 리턴시켜주기 위한 Get Handler 입니다.
+     *
+     * @return 회원의 마이 페이지
+     * @author : 송학현
+     * @since : 1.0
+     */
+    @GetMapping
+    public String myPage() {
+        return "member";
+    }
+
+    /**
      * 회원 등록 폼 페이지를 view로 리턴시켜주기 위한 Get handler 입니다.
      *
      * @return 회원 등록 폼 페이지
