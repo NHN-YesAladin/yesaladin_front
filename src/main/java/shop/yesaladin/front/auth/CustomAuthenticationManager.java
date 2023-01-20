@@ -37,7 +37,7 @@ public class CustomAuthenticationManager implements AuthenticationManager {
 
     private static final int BEARER_LENGTH = 7;
 
-    @Value("${yesaladin.gateway}")
+    @Value("${yesaladin.gateway.base}")
     private String gatewayUrl;
 
     private final RestTemplate restTemplate;
