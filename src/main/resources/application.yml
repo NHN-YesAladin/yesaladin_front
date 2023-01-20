@@ -18,8 +18,8 @@ spring:
       max-request-size: 128MB
 
 yesaladin:
-  gateway: http://localhost:8080
-#    gateway: https://test.yesaladin.shop:8072/yesaladin-shop
+  gateway: https://네ㅑ.yesaladin.shop/shop/{api}
+  #  gateway: https://test.yesaladin.shop:8072/yesaladin-shop
 
 server:
   port: 8081
