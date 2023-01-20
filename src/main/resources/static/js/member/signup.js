@@ -9,12 +9,13 @@ function nicknameCheck() {
     fetch(url, {
       method: "GET"
     }).then((resp) => {
-      console.log(resp);
-      if (resp.ok) {
-        alert('사용 가능한 닉네임 입니다.');
-      } else {
-        alert('이미 사용 중인 닉네임 입니다.');
-      }
+      resp.json().then(resp => {
+        if (!resp.result) {
+          alert('사용 가능한 닉네임 입니다.');
+        } else {
+          alert('이미 사용 중인 닉네임 입니다.');
+        }
+      })
     });
   } else {
     alert('닉네임은 영문으로 2자 이상 15자 이하만 가능합니다.');
@@ -32,12 +33,13 @@ function loginIdCheck() {
     fetch(url, {
       method: "GET"
     }).then((resp) => {
-      console.log(resp);
-      if (resp.ok) {
-        alert('사용 가능한 아이디 입니다.');
-      } else {
-        alert('이미 사용 중인 아이디 입니다.');
-      }
+      resp.json().then(resp => {
+        if (!resp.result) {
+          alert('사용 가능한 아이디 입니다.');
+        } else {
+          alert('이미 사용 중인 아이디 입니다.');
+        }
+      })
     });
   } else {
     alert('로그인 아이디는 영문(필수)과 숫자(옵션) 순서로 8자 이상 15자 이하만 가능 합니다');
@@ -55,12 +57,13 @@ function emailCheck() {
     fetch(url, {
       method: "GET"
     }).then((resp) => {
-      console.log(resp);
-      if (resp.ok) {
-        alert('사용 가능한 이메일 입니다.');
-      } else {
-        alert('이미 사용 중인 이메일 입니다.');
-      }
+      resp.json().then(resp => {
+        if (!resp.result) {
+          alert('사용 가능한 이메일 입니다.');
+        } else {
+          alert('이미 사용 중인 이메일 입니다.');
+        }
+      })
     });
   } else {
     alert('이메일 양식에 맞춰 입력해주세요.');
@@ -78,12 +81,13 @@ function phoneCheck() {
     fetch(url, {
       method: "GET"
     }).then((resp) => {
-      console.log(resp);
-      if (resp.ok) {
-        alert('사용 가능한 휴대폰 번호 입니다.');
-      } else {
-        alert('이미 사용 중인 휴대폰 번호 입니다.');
-      }
+      resp.json().then(resp => {
+        if (!resp.result) {
+          alert('사용 가능한 휴대폰 번호 입니다.');
+        } else {
+          alert('이미 사용 중인 휴대폰 번호 입니다.');
+        }
+      })
     });
   } else {
     alert('휴대폰 번호를 - 없이 11자 입력해주세요.');
