@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <body th:fragment="fragment-header">
   <header class="navbar navbar-expand-md navbar-light d-print-none">
@@ -46,8 +48,12 @@
           <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown" aria-label="Open user menu">
             <span class="avatar avatar-sm" style="background-image: url(./static/avatars/000m.jpg)"></span>
             <div class="d-none d-xl-block ps-2">
-              <div>Paweł Kuna</div>
-              <div class="mt-1 small text-muted">UI Designer</div>
+              <div sec:authorize="!isAuthenticated()">
+                <span>😁</span>
+              </div>
+              <div sec:authorize="isAuthenticated()">
+                <span th:text="${userId}"></span> Logged In
+              </div>
             </div>
           </a>
           <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
@@ -56,9 +62,13 @@
             <a href="#" class="dropdown-item">Feedback</a>
             <div class="dropdown-divider"></div>
             <a href="#" class="dropdown-item">Settings</a>
-            <a href="/web/members/signup" class="dropdown-item">SignUp</a>
-            <a href="/web/members/login" class="dropdown-item">Login</a>
-            <a href="#" class="dropdown-item">Logout</a>
+            <div sec:authorize="!isAuthenticated()">
+              <a href="/members/signup" class="dropdown-item">SignUp</a>
+              <a href="/members/login" class="dropdown-item">Login</a>
+            </div>
+            <div sec:authorize="isAuthenticated()">
+              <a href="/logout" class="dropdown-item">Logout</a>
+            </div>
           </div>
         </div>
       </div>
