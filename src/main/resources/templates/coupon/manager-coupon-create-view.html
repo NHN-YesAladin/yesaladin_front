@@ -48,10 +48,14 @@
             </h2>
           </div>
         </div>
-      </div>
-      <form action="/manager/coupon/create" method="post" enctype="multipart/form-data"
-            th:object="${requestDto}">
-        <div class="container">
+        <form action="/manager/coupon/create" method="post" enctype="multipart/form-data"
+              th:object="${requestDto}">
+          <div class="container">
+          </div>
+          <div class="alert alert-primary mt-4" role="alert" th:if="${createdCouponName != null}"
+               th:text="|쿠폰  ${createdCouponName}가 생성되었습니다.|">
+            A simple primary alert—check it out!
+          </div>
           <div class="page-body row">
             <div class="col">
               <h2>쿠폰 정보</h2>
@@ -81,7 +85,7 @@
                 <input type="number" required id="coupon-quantity-input" class="form-control w-25"
                        min="1" name="quantity" th:field="*{quantity}">
                 <input type="checkbox" id="coupon-unlimited-quantity-check"
-                       class="form-check-input ms-3" name="isUnlimited" th:field="*{unlimited}">
+                       class="form-check-input ms-3" name="isUnlimited" th:field="*{isUnlimited}">
                 <label for="coupon-unlimited-quantity-check" class="col form-check-label">개수 제한
                   없음</label>
               </div>
@@ -89,7 +93,6 @@
                 <label for="coupon-trigger-select" class="col-sm-2 col-form-label">발행트리거</label>
                 <select id="coupon-trigger-select" class="form-select col-sm-2 w-50"
                         name="triggerCode" th:field="*{triggerCode}">
-                  <option value="" selected>지정 안함</option>
                   <option th:each="trigger: ${triggerTypeCodes}" th:value="${trigger.name()}"
                           th:text="${trigger.displayName}"></option>
                 </select>
@@ -180,7 +183,7 @@
               <button class="btn btn-secondary">취소</button>
             </div>
           </div>
-        </div>
+      </div>
       </form>
       <!-- TODO 4 : footer -->
       <div th:replace="~{fragments/footer :: fragment-footer}"></div>

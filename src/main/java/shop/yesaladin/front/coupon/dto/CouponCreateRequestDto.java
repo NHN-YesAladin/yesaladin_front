@@ -18,7 +18,7 @@ public class CouponCreateRequestDto {
 
     @NotBlank
     private String name;
-    private boolean isUnlimited;
+    private Boolean isUnlimited;
     @Positive
     private Integer quantity;
     private MultipartFile couponImage;

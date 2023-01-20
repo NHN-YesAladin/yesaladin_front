@@ -27,10 +27,10 @@ function addEventListenerToCouponDuration() {
 
 function addEventListenerToCouponType() {
   const couponTypeRadioList = document.querySelectorAll(".coupon-type-radio")
-  const couponTypePointRadio = document.querySelector("#coupon-type-point");
+  const couponTypePointRadio = document.querySelector("#POINT");
   const couponDiscountTypeSelect = document.querySelector(
       "#coupon-discount-type-select");
-  const couponTypeRateRadio = document.querySelector("#coupon-type-fix-rate");
+  const couponTypeRateRadio = document.querySelector("#FIXED_RATE");
   const couponMaxDiscountPriceDiv = document.querySelector(
       "#coupon-max-discount-price-div");
   const couponMinOrderPriceDiv = document.querySelector(
