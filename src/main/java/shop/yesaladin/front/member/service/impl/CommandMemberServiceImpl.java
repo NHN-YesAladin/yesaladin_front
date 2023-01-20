@@ -16,7 +16,7 @@ import shop.yesaladin.front.member.dto.SignUpResponse;
 import shop.yesaladin.front.member.service.inter.CommandMemberService;
 
 /**
- * 회원 등록을 위한 service 입니다.
+ * 회원 등록을 위한 service 구현체 입니다.
  *
  * @author : 송학현
  * @since : 1.0
@@ -31,13 +31,7 @@ public class CommandMemberServiceImpl implements CommandMemberService {
     private final GatewayConfig gatewayConfig;
 
     /**
-     * 회원 등록 데이터를 gateway 서버로 넘겨주기 위한 기능입니다.
-     * PasswordEncoder를 통해 비밀번호를 encoding 후 RestTemplate으로 Gateway 서버에 요청을 보냅니다.
-     *
-     * @param request controller에서 요청 받은 회원가입 사용자 입력 데이터 입니다.
-     * @return 회원 등록 API 호출 결과 입니다.
-     * @author : 송학현
-     * @since : 1.0
+     * {@inheritDoc}
      */
     @Override
     public SignUpResponse signUp(SignUpRequest request) {
@@ -58,4 +52,5 @@ public class CommandMemberServiceImpl implements CommandMemberService {
         log.info("response={}", response.getBody());
         return response.getBody();
     }
+
 }

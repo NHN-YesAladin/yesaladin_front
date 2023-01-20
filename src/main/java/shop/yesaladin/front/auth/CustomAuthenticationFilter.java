@@ -1,10 +1,12 @@
 package shop.yesaladin.front.auth;
 
 import java.io.IOException;
+import java.util.Objects;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -43,6 +45,10 @@ public class CustomAuthenticationFilter extends AbstractAuthenticationProcessing
     ) throws AuthenticationException, IOException, ServletException {
         String loginId = request.getParameter("loginId");
         String password = request.getParameter("password");
+
+        if (Objects.isNull(loginId) || Objects.isNull(password)) {
+            throw new AuthenticationServiceException("");
+        }
 
         return getAuthenticationManager().authenticate(new UsernamePasswordAuthenticationToken(loginId, password));
     }
