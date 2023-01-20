@@ -65,29 +65,14 @@
               <div class="mb-3 row">
                 <span class="col-sm-2">쿠폰타입</span>
                 <div class="col">
-                  <div class="form-check">
+                  <div class="form-check" th:each="typeCode: ${couponTypeCodes}">
                     <input class="form-check-input coupon-type-radio" type="radio"
                            name="couponTypeCode"
                            th:field="*{couponTypeCode}"
-                           value="FIXED_PRICE"
-                           id="coupon-type-fix-price" checked>
-                    <label class="form-check-label" for="coupon-type-fix-price">정액할인</label>
-                  </div>
-                  <div class="form-check">
-                    <input class="form-check-input coupon-type-radio" type="radio"
-                           name="couponTypeCode"
-                           th:field="*{couponTypeCode}"
-                           value="FIXED_RATE"
-                           id="coupon-type-fix-rate">
-                    <label class="form-check-label" for="coupon-type-fix-rate">정률할인</label>
-                  </div>
-                  <div class="form-check">
-                    <input class="form-check-input coupon-type-radio" type="radio"
-                           th:field="*{couponTypeCode}"
-                           name="couponTypeCode"
-                           value="POINT"
-                           id="coupon-type-point">
-                    <label class="form-check-label" for="coupon-type-point">포인트 충전</label>
+                           th:value="${typeCode.name()}"
+                           th:id="${typeCode.name()}" checked>
+                    <label class="form-check-label" th:for="${typeCode.name()}"
+                           th:text="${typeCode.displayName}">정액할인</label>
                   </div>
                 </div>
               </div>
@@ -101,8 +86,18 @@
                   없음</label>
               </div>
               <div class="mb-3 row">
+                <label for="coupon-trigger-select" class="col-sm-2 col-form-label">발행트리거</label>
+                <select id="coupon-trigger-select" class="form-select col-sm-2 w-50"
+                        name="triggerCode" th:field="*{triggerCode}">
+                  <option value="" selected>지정 안함</option>
+                  <option th:each="trigger: ${triggerTypeCodes}" th:value="${trigger.name()}"
+                          th:text="${trigger.displayName}"></option>
+                </select>
+              </div>
+              <div class="mb-3 row">
                 <label for="coupon-image-input" class="col-sm-2 col-form-label">쿠폰 이미지</label>
-                <input type="file" id="coupon-image-input" class="form-control w-50" th:field="*{couponImage}"
+                <input type="file" id="coupon-image-input" class="form-control w-50"
+                       th:field="*{couponImage}"
                        name="couponImage">
               </div>
             </div>
@@ -114,7 +109,8 @@
                 <select id="coupon-discount-type-select" class="form-select col-sm-2 w-25">
                   <option selected>정액/정률 할인</option>
                 </select>
-                <input type="number" required id="coupon-discount-value-input" name="discountAmount" th:field="*{discountAmount}"
+                <input type="number" required id="coupon-discount-value-input" name="discountAmount"
+                       th:field="*{discountAmount}"
                        class="form-control col-sm-2 w-25 ms-3" placeholder="할인율 또는 금액" min="1">
               </div>
               <div class="mb-3 row" id="coupon-max-discount-price-div" style="display: none">
@@ -140,9 +136,9 @@
                 <label for="coupon-bound-select" class="col-sm-2 col-form-label">사용가능상품</label>
                 <select id="coupon-bound-select" class="form-select col-sm-2 w-50"
                         name="couponBoundCode" th:field="*{couponBoundCode}">
-                  <option selected value="ALL">모든 상품</option>
-                  <option value="CATEGORY">지정 카테고리</option>
-                  <option value="PRODUCT">지정 상품</option>
+                  <option th:each="bound: ${couponBoundCodes}" th:value="${bound.name()}"
+                          th:text="${bound.displayName}" th:selected="${boundStat.first}">모든 상품
+                  </option>
                 </select>
               </div>
               <div class="mb-3 row">
