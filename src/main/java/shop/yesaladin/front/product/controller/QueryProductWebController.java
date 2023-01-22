@@ -1,6 +1,7 @@
 package shop.yesaladin.front.product.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ import shop.yesaladin.front.common.dto.PageRequestDto;
 import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.product.dto.ProductDetailResponseDto;
 import shop.yesaladin.front.product.dto.ProductsResponseDto;
+import shop.yesaladin.front.product.dto.WishlistResponseDto;
 import shop.yesaladin.front.product.service.inter.QueryProductService;
 import shop.yesaladin.front.product.service.inter.QueryProductTypeService;
 
@@ -215,19 +217,35 @@ public class QueryProductWebController {
         );
     }
 
+    /**
+     * 최근 본 상품을 쿠키에 등록합니다. 만약 쿠키가 없다면 새로 생성합니다.
+     *
+     * @param request 쿠키를 얻기위한 HttpServletRequest 객체
+     * @param response 생성한 혹은 추가한 쿠키를 저장하기 위한 HttpServletResponse 객체
+     * @param productDetailResponseDto WishlistResponseDto를 만들기 위한 Dto 객체
+     * @throws JsonProcessingException 파싱 Exception
+     * @author : 김선홍
+     * @since : 1.0
+     */
     public void checkCookie(
             HttpServletRequest request,
             HttpServletResponse response,
             ProductDetailResponseDto productDetailResponseDto
     ) throws JsonProcessingException {
-        String value = objectMapper.writeValueAsString(productDetailResponseDto);
         for (Cookie cookie : request.getCookies()) {
             if (cookie.getName().equals(COOKIENAME)) {
-                cookie.setValue(cookie.getValue().concat(" " + value));
+                List<WishlistResponseDto> list = objectMapper.readValue(
+                        cookie.getValue(), new TypeReference<List<WishlistResponseDto>>() {}
+                );
+                list.add(WishlistResponseDto.getWishlistResponseDto(productDetailResponseDto));
+                cookie.setValue(objectMapper.writeValueAsString(list));
+                response.addCookie(cookie);
                 return;
             }
         }
-        Cookie cookie = new Cookie(COOKIENAME, value);
+        List<WishlistResponseDto> list = List.of(WishlistResponseDto.getWishlistResponseDto(
+                productDetailResponseDto));
+        Cookie cookie = new Cookie(COOKIENAME, objectMapper.writeValueAsString(list));
         cookie.setMaxAge(30000);
         response.addCookie(cookie);
     }

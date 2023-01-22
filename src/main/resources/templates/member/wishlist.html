@@ -1,10 +1,99 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
   <title>Title</title>
+  <link th:href="@{/css/tabler.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-flags.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-payments.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-vendors.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/demo.min.css}" rel="stylesheet"/>
 </head>
 <body>
+<!-- Libs JS -->
+<script type="text/javascript" th:src="@{/libs/apexcharts/dist/apexcharts.min.js}"></script>
+<!-- Tabler Core -->
+<script type="text/javascript" th:src="@{/js/tabler.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/demo.min.js}"></script>
+<!-- TODO 1 : HEADER -->
+<div th:replace="~{fragments/header :: fragment-header}"></div>
 
+<!-- TODO 2 : NAV-BAR -->
+<div th:replace="~{fragments/navbar :: fragment-nav-bar}"></div>
+
+<!-- TODO 3: BODY -->
+<div class="page page-center">
+  <div class="container">
+    <h3>최근 본 상품</h3>
+    <div class="table-responsive">
+    <table class="table table-vcenter">
+      <thead>
+        <tr>
+          <th>이미지</th>
+          <th>상품명</th>
+          <th>방문 날짜</th>
+          <th>판매가</th>
+          <th>할인가</th>
+          <th>품절여부</th>
+          <th>작가</th>
+          <th>출판사</th>
+          <th>삭제</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="recent: ${recentList}">
+        </tr>
+      </tbody>
+    </table>
+    </div>
+    <hr>
+    <h3>위시 리스트</h3>
+    <div class="table-responsive">
+    <table class="table table-vcenter">
+      <thead>
+      <tr>
+        <th>이미지</th>
+        <th>상품명</th>
+        <th>등록 날짜</th>
+        <th>판매가</th>
+        <th>할인가</th>
+        <th>품절여부</th>
+        <th>작가</th>
+        <th>출판사</th>
+        <th>삭제</th>
+      </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    </div>
+    <hr>
+    <h3>재입고 알림</h3>
+    <div class="table-responsive">
+    <table class="table table-vcenter">
+      <thead>
+      <tr>
+        <th>이미지</th>
+        <th>상품명</th>
+        <th>등록 날짜</th>
+        <th>판매가</th>
+        <th>할인가</th>
+        <th>품절여부</th>
+        <th>작가</th>
+        <th>출판사</th>
+        <th>삭제</th>
+      </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    </div>
+  </div>
+  <hr>
+  <!-- TODO 4 : footer -->
+  <div th:replace="~{fragments/footer :: fragment-footer}"></div>
+  <!-- DOMContentLoaded관련 Script import -->
+  <div th:replace="~{fragments/script :: fragment-script}"></div>
+</div>
 </body>
 </html>
