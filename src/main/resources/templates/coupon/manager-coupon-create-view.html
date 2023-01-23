@@ -1,0 +1,214 @@
+<!doctype html>
+<!--
+* Tabler - Premium and Open Source dashboard template with responsive and high quality UI.
+* @version 1.0.0-beta5
+* @link https://tabler.io
+* Copyright 2018-2022 The Tabler Authors
+* Copyright 2018-2022 codecalm.net Paweł Kuna
+* Licensed under MIT (https://github.com/tabler/tabler/blob/master/LICENSE)
+-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+  <title>Yes Aladin! - 쿠폰 관리자 화면</title>
+  <!-- CSS files -->
+  <link th:href="@{/css/tabler.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-flags.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-payments.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-vendors.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/demo.min.css}" rel="stylesheet"/>
+
+  <style>
+    #category-select-div li {
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+<!-- Libs JS -->
+<script type="text/javascript" th:src="@{/libs/apexcharts/dist/apexcharts.min.js}"></script>
+<!-- Tabler Core -->
+<script type="text/javascript" th:src="@{/js/tabler.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/demo.min.js}"></script>
+<div class="wrapper">
+
+
+  <!-- TODO 2 : NAV-BAR -->
+  <div th:replace="~{fragments/navbar-vertical :: fragment-nav-vertical}"></div>
+
+  <div class="page-wrapper">
+    <!-- TODO 1 : HEADER -->
+    <div th:replace="~{fragments/header :: fragment-header}"></div>
+    <div class="page-header d-print-none">
+      <div class="container-xl">
+        <div class="row g-2 align-items-center">
+          <div class="col">
+            <!-- Page pre-title -->
+            <div class="page-pretitle">
+              쿠폰
+            </div>
+            <h2 class="page-title">
+              등록
+            </h2>
+          </div>
+        </div>
+        <form action="/manager/coupon/create" method="post" enctype="multipart/form-data"
+              id="coupon-create-form"
+              th:object="${requestDto}">
+          <div class="container">
+            <div class="alert alert-primary mt-4" id="coupon-created-alert" role="alert" style="display: none"></div>
+            <div class="alert alert-danger mt-4" id="error-alert" role="alert" style="display: none"></div>
+            <div class="page-body row">
+              <div class="col">
+                <h2>쿠폰 정보</h2>
+                <hr>
+                <div class="mb-3 row">
+                  <label for="coupon-name-input" class="col-sm-2 col-form-label">쿠폰명</label>
+                  <input type="text" required id="coupon-name-input" class="form-control w-50"
+                         th:field="*{name}"
+                         name="name">
+                </div>
+                <div class="mb-3 row">
+                  <span class="col-sm-2">쿠폰타입</span>
+                  <div class="col">
+                    <div class="form-check" th:each="typeCode: ${couponTypeCodes}">
+                      <input class="form-check-input coupon-type-radio" type="radio"
+                             name="couponTypeCode"
+                             th:field="*{couponTypeCode}"
+                             th:value="${typeCode.name()}"
+                             th:id="${typeCode.name()}" checked>
+                      <label class="form-check-label" th:for="${typeCode.name()}"
+                             th:text="${typeCode.displayName}">정액할인</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label for="coupon-name-input" class="col-sm-2 col-form-label">발행수량</label>
+                  <input type="number" required id="coupon-quantity-input" class="form-control w-25"
+                         min="1" name="quantity" th:field="*{quantity}">
+                  <input type="checkbox" id="coupon-unlimited-quantity-check"
+                         class="form-check-input ms-3" name="isUnlimited" th:field="*{isUnlimited}">
+                  <label for="coupon-unlimited-quantity-check" class="col form-check-label">개수 제한
+                    없음</label>
+                </div>
+                <div class="mb-3 row">
+                  <label for="coupon-trigger-select" class="col-sm-2 col-form-label">발행트리거</label>
+                  <select id="coupon-trigger-select" class="form-select col-sm-2 w-50"
+                          name="triggerCode" th:field="*{triggerCode}">
+                    <option th:each="trigger: ${triggerTypeCodes}" th:value="${trigger.name()}"
+                            th:text="${trigger.displayName}"></option>
+                  </select>
+                </div>
+                <div class="mb-3 row">
+                  <label for="coupon-image-input" class="col-sm-2 col-form-label">쿠폰 이미지</label>
+                  <input type="file" id="coupon-image-input" class="form-control w-50"
+                         th:field="*{couponImage}"
+                         name="couponImage">
+                </div>
+              </div>
+              <div class="col">
+                <h2>사용 정보</h2>
+                <hr>
+                <div class="mb-3 row">
+                  <label for="coupon-name-input" class="col-sm-2 col-form-label fs-5">할인금액/할인율</label>
+                  <select id="coupon-discount-type-select" class="form-select col-sm-2 w-25">
+                    <option selected>정액/정률 할인</option>
+                  </select>
+                  <input type="number" required id="coupon-discount-value-input"
+                         name="discountAmount"
+                         th:field="*{discountAmount}"
+                         class="form-control col-sm-2 w-25 ms-3" placeholder="할인율 또는 금액" min="1">
+                </div>
+                <div class="mb-3 row" id="coupon-max-discount-price-div" style="display: none">
+                  <label for="coupon-max-discount-price-input"
+                         class="col-sm-2 col-form-label">최대할인금액</label>
+                  <input type="number" id="coupon-max-discount-price-input"
+                         th:field="*{maxDiscountAmount}"
+                         name="maxDiscountAmount"
+                         class="form-control w-50"
+                         disabled
+                         min="1">
+                </div>
+                <div id="coupon-min-order-price-div" class="mb-3 row">
+                  <label for="coupon-min-order-price-input"
+                         class="col-sm-2 col-form-label">최소주문금액</label>
+                  <input type="number" required id="coupon-min-order-price-input"
+                         class="form-control w-50"
+                         th:field="*{minOrderAmount}"
+                         name="minOrderAmount"
+                         min="1">
+                </div>
+                <div class="mb-3 row" id="coupon-bound-select-div">
+                  <label for="coupon-bound-select" class="col-sm-2 col-form-label">사용가능상품</label>
+                  <select id="coupon-bound-select" class="form-select col-sm-2 w-50"
+                          name="couponBoundCode" th:field="*{couponBoundCode}">
+                    <option th:each="bound: ${couponBoundCodes}" th:value="${bound.name()}"
+                            th:text="${bound.displayName}" th:selected="${boundStat.first}">모든 상품
+                    </option>
+                  </select>
+                </div>
+                <div class="mb-3 card" id="category-select-div" style="display: none">
+                  <div class="row g-0">
+                    <ul class="list-group col" id="parent-category-group">
+                    </ul>
+                    <ul class="list-group col" id="children-category-group">
+                    </ul>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <span class="col-sm-2">만료일</span>
+                  <div class="col">
+                    <div class="form-check">
+                      <input class="form-check-input coupon-duration-type-radio" type="radio"
+                             name="coupon-duration-type-radio"
+                             id="coupon-duration-type-duration" checked>
+                      <label class="form-check-label" for="coupon-duration-type-duration">쿠폰이 발행된
+                        날부터
+                        <input type="text" id="coupon-duration-input"
+                               class="form-control form-control-sm w-4 d-inline-block"
+                               name="duration" th:field="*{duration}"> 일 후까지 사용 가능
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input coupon-duration-type-radio" type="radio"
+                             name="coupon-duration-type-radio"
+                             id="coupon-duration-type-date">
+                      <label class="form-check-label" for="coupon-duration-type-date">
+                        <input type="date" id="coupon-duration-start-date-input" disabled
+                               class="form-control form-control-sm w-25 d-inline-block"> ~
+                        <input type="date" id="coupon-duration-end-date-input" disabled
+                               name="expirationDate" th:field="*{expirationDate}"
+                               class="form-control form-control-sm w-25 d-inline-block">
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label for="coupon-can-be-duplicated-input"
+                         class="col-sm-2 col-form-label">사용옵션</label>
+                  <input type="checkbox" id="coupon-can-be-duplicated-input"
+                         name="canBeOverlapped"
+                         class="form-check-input col-sm-2" th:field="*{canBeOverlapped}">
+                  <span class="col-sm-2">중복 할인 가능</span>
+                </div>
+                <button type="submit" class="btn btn-primary">저장</button>
+                <button class="btn btn-secondary">취소</button>
+              </div>
+            </div>
+          </div>
+        </form>
+        <!-- TODO 4 : footer -->
+        <div th:replace="~{fragments/footer :: fragment-footer}"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="d-none" id="shop-server-url" th:text="${shopServerUrl}"></div>
+<div class="d-none" id="front-server-url" th:text="${frontServerUrl}"></div>
+<!-- DOMContentLoaded관련 Script import -->
+<div th:replace="~{fragments/script :: fragment-script}"></div>
+<script th:src="@{/js/coupon/manager-coupon-create.js}"></script>
+</body>
+</html>
