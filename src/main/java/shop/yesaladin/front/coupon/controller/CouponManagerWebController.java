@@ -9,11 +9,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.ResponseBody;
 import shop.yesaladin.coupon.trigger.CouponBoundCode;
 import shop.yesaladin.coupon.trigger.CouponTypeCode;
 import shop.yesaladin.coupon.trigger.TriggerTypeCode;
+import shop.yesaladin.front.config.FrontServerMetaConfig;
+import shop.yesaladin.front.config.GatewayConfig;
 import shop.yesaladin.front.coupon.dto.CouponCreateRequestDto;
+import shop.yesaladin.front.coupon.dto.CouponCreateResponseDto;
 import shop.yesaladin.front.coupon.service.inter.CommandCouponService;
 
 /**
@@ -28,27 +31,28 @@ import shop.yesaladin.front.coupon.service.inter.CommandCouponService;
 public class CouponManagerWebController {
 
     private final CommandCouponService commandCouponService;
+    private final FrontServerMetaConfig frontServerMetaConfig;
+    private final GatewayConfig gatewayConfig;
 
     @GetMapping("/create")
     public String couponTemplateCreateView(
-            Model model,
-            @RequestParam(required = false) String createdCouponName
+            Model model, @RequestParam(required = false) String createdCouponName
     ) {
         model.addAttribute("requestDto", new CouponCreateRequestDto());
         model.addAttribute("couponTypeCodes", CouponTypeCode.values());
         model.addAttribute("triggerTypeCodes", TriggerTypeCode.values());
         model.addAttribute("couponBoundCodes", CouponBoundCode.values());
         model.addAttribute("createdCouponName", createdCouponName);
+        model.addAttribute("frontServerUrl", frontServerMetaConfig.getFrontServerUrl());
+        model.addAttribute("shopServerUrl", gatewayConfig.getShopUrl());
         return "coupon/manager-coupon-create-view";
     }
 
     @PostMapping("/create")
-    public String createCouponTemplate(
-            @ModelAttribute @Valid CouponCreateRequestDto requestDto,
-            RedirectAttributes redirectAttributes
+    @ResponseBody
+    public CouponCreateResponseDto createCouponTemplate(
+            @ModelAttribute @Valid CouponCreateRequestDto requestDto
     ) {
-        String createdCouponName = commandCouponService.createCouponTemplate(requestDto);
-        redirectAttributes.addAttribute("createdCouponName", createdCouponName);
-        return "redirect:/manager/coupon/create";
+        return commandCouponService.createCouponTemplate(requestDto);
     }
 }

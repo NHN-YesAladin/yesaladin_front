@@ -1,8 +1,12 @@
 package shop.yesaladin.front.coupon.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import shop.yesaladin.coupon.trigger.CouponTypeCode;
 import shop.yesaladin.front.config.GatewayConfig;
@@ -21,18 +25,30 @@ public class CommandCouponServiceImpl implements CommandCouponService {
 
     private final RestTemplate restTemplate;
     private final GatewayConfig gatewayConfig;
+    private final ObjectMapper objectMapper;
 
     @Override
-    public String createCouponTemplate(CouponCreateRequestDto createDto) {
+    public CouponCreateResponseDto createCouponTemplate(CouponCreateRequestDto createDto) {
         CouponCreateDto requestDto = generateDtoFromRequestDto(createDto);
         String queryParamName = getQueryParamName(createDto);
-        ResponseEntity<CouponCreateResponseDto> mapResponseEntity = restTemplate.postForEntity(
-                gatewayConfig.getCouponUrl() + "/v1/coupons?" + queryParamName,
-                requestDto,
-                CouponCreateResponseDto.class
-        );
-        return mapResponseEntity.getBody().getName();
+        try {
+            ResponseEntity<CouponCreateResponseDto> mapResponseEntity = restTemplate.postForEntity(
+                    gatewayConfig.getCouponUrl() + "/v1/coupons?" + queryParamName,
+                    requestDto,
+                    CouponCreateResponseDto.class
+            );
+            return mapResponseEntity.getBody();
+        } catch (HttpClientErrorException e) {
+            return getResponseDtoWithErrorMessageList(e);
+        }
+    }
 
+    private CouponCreateResponseDto getResponseDtoWithErrorMessageList(HttpClientErrorException e) {
+        try {
+            return objectMapper.readValue(e.getResponseBodyAsString(), CouponCreateResponseDto.class);
+        } catch (JsonProcessingException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     private CouponCreateDto generateDtoFromRequestDto(CouponCreateRequestDto createDto) {
