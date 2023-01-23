@@ -2,6 +2,8 @@ package shop.yesaladin.front.coupon.dto;
 
 import java.time.LocalDate;
 import lombok.Getter;
+import org.springframework.core.io.Resource;
+import org.springframework.util.MultiValueMap;
 
 
 /**
@@ -26,7 +28,7 @@ public class RateCouponCreateDto extends CouponCreateDto {
             String name,
             Boolean isUnlimited,
             Integer quantity,
-            String fileUri,
+            Resource file,
             Integer duration,
             LocalDate expirationDate,
             String couponTypeCode,
@@ -43,7 +45,7 @@ public class RateCouponCreateDto extends CouponCreateDto {
                 name,
                 isUnlimited,
                 quantity,
-                fileUri,
+                file,
                 duration,
                 expirationDate,
                 couponTypeCode
@@ -55,5 +57,18 @@ public class RateCouponCreateDto extends CouponCreateDto {
         this.couponBoundCode = couponBoundCode;
         this.isbn = isbn;
         this.categoryId = categoryId;
+    }
+
+    @Override
+    public MultiValueMap<String, Object> toMap() {
+        MultiValueMap<String, Object> map = super.toMap();
+        map.add("minOrderAmount", minOrderAmount);
+        map.add("maxDiscountAmount", maxDiscountAmount);
+        map.add("discountRate", discountRate);
+        map.add("canBeOverlapped", canBeOverlapped);
+        map.add("couponBoundCode", couponBoundCode);
+        map.add("isbn", isbn);
+        map.add("categoryId", categoryId);
+        return map;
     }
 }
