@@ -44,22 +44,21 @@
       <div class="card card-md">
         <div class="card-body">
           <h2 class="h2 text-center mb-4">Login to your account</h2>
-          <form action="/auth-login" method="post" autocomplete="off" novalidate="">
+          <form action="/auth-login" id="login-form" method="post" autocomplete="off" novalidate="">
             <div class="mb-3">
               <label class="form-label">YesAladin 자사 Login ID</label>
-              <input type="email" class="form-control" placeholder="자사 회원 로그인 아이디를 입력해주세요"
-                     autocomplete="off">
+              <input type="text" name="loginId" id="loginId" class="form-control" placeholder="자사 회원 로그인 아이디를 입력해주세요"
+                     pattern="^.*(?=.*[a-z])(?=.*\d)(?=^.{8,15}).*$"
+                     autocomplete="off" required>
             </div>
             <div class="mb-2">
               <label class="form-label">
                 Password
-<!--                <span class="form-label-description">-->
-<!--                    <a href="./forgot-password.html">I forgot password</a>-->
-<!--                  </span>-->
               </label>
               <div class="input-group input-group-flat">
-                <input type="password" class="form-control" placeholder="password"
-                       autocomplete="off">
+                <input type="password" name="password" id="password" class="form-control" placeholder="password"
+                       pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$"
+                       autocomplete="off" required>
                 <span class="input-group-text">
                     <a href="#" class="link-secondary" data-bs-toggle="tooltip"
                        aria-label="Show password" data-bs-original-title="Show password"><!-- Download SVG icon from http://tabler-icons.io/i/eye -->
@@ -125,7 +124,7 @@
         </div>
       </div>
       <div class="text-center text-muted mt-3">
-        Don't have account yet? <a href="/web/members/signup" tabindex="-1">Sign up</a>
+        Don't have account yet? <a href="/members/signup" tabindex="-1">Sign up</a>
       </div>
     </div>
   </div>
@@ -135,5 +134,36 @@
 </div>
 <!-- DOMContentLoaded관련 Script import -->
 <div th:replace="~{fragments/script :: fragment-script}"></div>
+
+<script>
+  window.addEventListener('load', () => {
+    const signupForm = document.getElementsByClassName('login-form');
+
+    let emptyRegex = /\s/g;
+
+    Array.prototype.filter.call(signupForm, (signupForm) => {
+      signupForm.addEventListener('submit', function (event) {
+        if (signupForm.checkValidity() === false) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+
+        let loginIdVal = document.getElementById('loginId').value;
+        if (emptyRegex.test(loginIdVal)) {
+          alert('로그인 아이디를 입력해주세요.');
+          return false;
+        }
+
+        let passwordVal = document.getElementById('password').value;
+        if (emptyRegex.test(passwordVal)) {
+          alert('Password를 입력해주세요.')
+          return false;
+        }
+
+        signupForm.classList.add('was-validated');
+      }, false);
+    });
+  }, false);
+</script>
 </body>
 </html>

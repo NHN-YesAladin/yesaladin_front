@@ -19,4 +19,6 @@ spring:
     database: 26
 
 yesaladin:
-  gateway: http://api.yesaladin.shop:8072/yesaladin-shop
+  gateway:
+    base: https://api.yesaladin.shop
+    coupon: https://api.yesaladin.shop/coupon

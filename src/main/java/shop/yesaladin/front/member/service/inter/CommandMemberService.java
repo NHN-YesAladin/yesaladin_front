@@ -20,4 +20,5 @@ public interface CommandMemberService {
      * @since : 1.0
      */
     SignUpResponse signUp(SignUpRequest request);
+
 }

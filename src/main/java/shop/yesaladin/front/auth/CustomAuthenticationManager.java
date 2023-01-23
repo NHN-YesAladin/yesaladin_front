@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -37,7 +39,7 @@ public class CustomAuthenticationManager implements AuthenticationManager {
 
     private static final int BEARER_LENGTH = 7;
 
-    @Value("${yesaladin.gateway}")
+    @Value("${yesaladin.gateway.base}")
     private String gatewayUrl;
 
     private final RestTemplate restTemplate;
@@ -71,7 +73,12 @@ public class CustomAuthenticationManager implements AuthenticationManager {
                 Void.class
         );
 
+        // TODO: login시 입력 값이 비었거나, 유저 정보가 없다면 redirect도 안되고 여기서 NullPointerException 발생함.
         String accessToken = exchange.getHeaders().get("Authorization").get(0);
+        if (Objects.isNull(accessToken)) {
+            throw new AuthenticationServiceException("");
+        }
+
         // TODO: redis에 토큰 추가
 
         log.info("accessToken={}", accessToken);
