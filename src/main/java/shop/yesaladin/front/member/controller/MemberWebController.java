@@ -1,5 +1,6 @@
 package shop.yesaladin.front.member.controller;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +30,18 @@ public class MemberWebController {
     private final CommandMemberService commandMemberService;
 
     /**
+     * 회원의 마이 페이지를 view로 리턴시켜주기 위한 Get Handler 입니다.
+     *
+     * @return 회원의 마이 페이지
+     * @author : 송학현
+     * @since : 1.0
+     */
+    @GetMapping
+    public String myPage() {
+        return "member";
+    }
+
+    /**
      * 회원 등록 폼 페이지를 view로 리턴시켜주기 위한 Get handler 입니다.
      *
      * @return 회원 등록 폼 페이지
@@ -43,9 +56,9 @@ public class MemberWebController {
     /**
      * 회원 등록을 위한 Post handler 입니다.
      *
-     * @param request 사용자가 입력한 회원정보 등록 폼 데이터의 모음입니다.
+     * @param request       사용자가 입력한 회원정보 등록 폼 데이터의 모음입니다.
      * @param bindingResult @Valid 검증을 위한 파라미터입니다.
-     * @param model 등록 처리 이후 회원가입 성공 페이지로 넘어갈 때 필요한 데이터를 view에 넘겨주기 위한 객체 입니다.
+     * @param model         등록 처리 이후 회원가입 성공 페이지로 넘어갈 때 필요한 데이터를 view에 넘겨주기 위한 객체 입니다.
      * @return 회원 등록 성공 페이지 입니다.
      * @author : 송학현
      * @since : 1.0
@@ -73,7 +86,9 @@ public class MemberWebController {
      * @since : 1.0
      */
     @GetMapping("/login")
-    public String loginForm() {
+    public String loginForm(HttpServletRequest request, Model model) {
+        model.addAttribute("session", request.getSession().getId());
+        log.info("session={}", request.getSession().getId());
         return "member/loginForm";
     }
 }
