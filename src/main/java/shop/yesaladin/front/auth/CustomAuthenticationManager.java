@@ -2,10 +2,6 @@ package shop.yesaladin.front.auth;
 
 import static java.util.stream.Collectors.toList;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +21,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.client.RestTemplate;
 import shop.yesaladin.front.member.dto.LoginRequest;
-import shop.yesaladin.front.member.jwt.JwtPayload;
+import shop.yesaladin.front.member.dto.MemberResponse;
 
 /**
  * AuthenticationManager를 custom한 Manager 입니다.
@@ -45,7 +41,8 @@ public class CustomAuthenticationManager implements AuthenticationManager {
     private final RestTemplate restTemplate;
 
     /**
-     * Auth 서버에서 발급받은 JWT 토큰을 기반으로 UsernamePasswordAuthenticationToken을 만들어 반환합니다.
+     * Auth 서버에서 발급받은 JWT 토큰을 기반으로 Shop 서버에 유저 정보를 요청 한 뒤, UsernamePasswordAuthenticationToken을 만들어
+     * 반환합니다.
      *
      * @param authentication 인증 객체입니다.
      * @return 인증 객체를 반환합니다.
@@ -57,33 +54,37 @@ public class CustomAuthenticationManager implements AuthenticationManager {
     @Override
     public Authentication authenticate(Authentication authentication)
             throws AuthenticationException {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
         LoginRequest loginRequest = new LoginRequest(
                 (String) authentication.getPrincipal(),
                 (String) authentication.getCredentials()
         );
-        HttpEntity<LoginRequest> entity = new HttpEntity<>(loginRequest, headers);
-
-        // TODO: gatewayUrl이 현재 shop 기준으로 되어 있어 실제 gateway + auth url로 변경해야 함.
-        ResponseEntity<Void> exchange = restTemplate.exchange(
-                gatewayUrl + "/auth/login",
-                HttpMethod.POST,
-                entity,
-                Void.class
+        ResponseEntity<Void> exchange = getAccessToken(
+                loginRequest
         );
 
+        String uuid = exchange.getHeaders().get("UUID_HEADER").get(0);
+        log.info("uuid={}", uuid);
+
         // TODO: login시 입력 값이 비었거나, 유저 정보가 없다면 redirect도 안되고 여기서 NullPointerException 발생함.
-        String accessToken = exchange.getHeaders().get("Authorization").get(0);
-        if (Objects.isNull(accessToken)) {
-            throw new AuthenticationServiceException("");
+        String accessToken = extractAuthorizationHeader(exchange);
+
+        if (accessToken.startsWith("Bearer ")) {
+            accessToken = accessToken.substring(7);
         }
+
+        ResponseEntity<MemberResponse> memberResponse = getMemberInfo(
+                loginRequest,
+                accessToken
+        );
+
+        MemberResponse member = Objects.requireNonNull(memberResponse).getBody();
+        log.info("member={}", member);
 
         // TODO: redis에 토큰 추가
 
         log.info("accessToken={}", accessToken);
 
-        List<SimpleGrantedAuthority> authorities = parseJwt(accessToken.substring(BEARER_LENGTH)).stream()
+        List<SimpleGrantedAuthority> authorities = member.getRoles().stream()
                 .map(SimpleGrantedAuthority::new)
                 .collect(toList());
 
@@ -96,21 +97,58 @@ public class CustomAuthenticationManager implements AuthenticationManager {
         );
     }
 
+    private String extractAuthorizationHeader(ResponseEntity<Void> exchange) {
+        String accessToken = exchange.getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
+        if (Objects.isNull(accessToken)) {
+            throw new AuthenticationServiceException("AUTHORIZATION Header is empty");
+        }
+        return accessToken;
+    }
+
     /**
-     * JWT를 parsing 하기 위한 기능입니다.
+     * 로그인 과정에서 accessToken을 발급 받아 HTTP Header에 추가한 뒤, Shop 서버에 회원의 정보를 요청하는 기능입니다.
      *
-     * @param jwt JWT로 발급된 accessToken 입니다.
-     * @return JWT payload에 저장된 권한 정보를 반환합니다.
-     * @throws JsonProcessingException
+     * @param loginRequest 회원이 로그인 시 입력한 정보를 담은 DTO 입니다.
+     * @param accessToken  로그인 과정에서 Auth 서버에서 발급받은 JWT 형식의 accessToken 입니다.
+     * @return Shop 서버에 요청한 회원의 정보 DTO를 담은 결과 입니다.
+     * @author : 송학현
+     * @since : 1.0
      */
-    private List<String> parseJwt(String jwt) throws JsonProcessingException {
-        String[] jwtSection = jwt.split("\\.");
-        // JWT 는 header, payload, signature 가 "." 으로 연결됨 (header.payload.signature)
-        String jwtPayload = jwtSection[1];
+    private ResponseEntity<MemberResponse> getMemberInfo(
+            LoginRequest loginRequest,
+            String accessToken
+    ) {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setBearerAuth(accessToken);
 
-        byte[] decode = Base64.getDecoder().decode(jwtPayload);
-        JwtPayload payload = new ObjectMapper().readValue(new String(decode, StandardCharsets.UTF_8), JwtPayload.class);
+        return restTemplate.getForEntity(
+                gatewayUrl + "shop/v1/members/login/{loginId}",
+                MemberResponse.class,
+                loginRequest.getLoginId(),
+                httpHeaders
+        );
+    }
 
-        return payload.getRoles();
+    /**
+     * 로그인 과정에서 Auth 서버에서 인증된 JWT 형식의 accessToken을 받아오는 기능입니다.
+     *
+     * @param loginRequest 회원이 로그인 시 입력한 정보를 담은 DTO 입니다.
+     * @return Auth 서버에서 발급받은 JWT 형식의 accessToken 입니다.
+     * @author : 송학현
+     * @since : 1.0
+     */
+    private ResponseEntity<Void> getAccessToken(
+            LoginRequest loginRequest
+    ) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<LoginRequest> entity = new HttpEntity<>(loginRequest, headers);
+
+        return restTemplate.exchange(
+                gatewayUrl + "/auth/login",
+                HttpMethod.POST,
+                entity,
+                Void.class
+        );
     }
 }
