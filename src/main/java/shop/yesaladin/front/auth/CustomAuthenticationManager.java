@@ -41,8 +41,8 @@ public class CustomAuthenticationManager implements AuthenticationManager {
     private final RestTemplate restTemplate;
 
     /**
-     * Auth 서버에서 발급받은 JWT 토큰을 기반으로 Shop 서버에 유저 정보를 요청 한 뒤,
-     * UsernamePasswordAuthenticationToken을 만들어 반환합니다.
+     * Auth 서버에서 발급받은 JWT 토큰을 기반으로 Shop 서버에 유저 정보를 요청 한 뒤, UsernamePasswordAuthenticationToken을 만들어
+     * 반환합니다.
      *
      * @param authentication 인증 객체입니다.
      * @return 인증 객체를 반환합니다.
@@ -54,22 +54,19 @@ public class CustomAuthenticationManager implements AuthenticationManager {
     @Override
     public Authentication authenticate(Authentication authentication)
             throws AuthenticationException {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
         LoginRequest loginRequest = new LoginRequest(
                 (String) authentication.getPrincipal(),
                 (String) authentication.getCredentials()
         );
         ResponseEntity<Void> exchange = getAccessToken(
-                headers,
                 loginRequest
         );
 
+        String uuid = exchange.getHeaders().get("UUID_HEADER").get(0);
+        log.info("uuid={}", uuid);
+
         // TODO: login시 입력 값이 비었거나, 유저 정보가 없다면 redirect도 안되고 여기서 NullPointerException 발생함.
-        String accessToken = exchange.getHeaders().get("Authorization").get(0);
-        if (Objects.isNull(accessToken)) {
-            throw new AuthenticationServiceException("");
-        }
+        String accessToken = extractAuthorizationHeader(exchange);
 
         if (accessToken.startsWith("Bearer ")) {
             accessToken = accessToken.substring(7);
@@ -100,6 +97,23 @@ public class CustomAuthenticationManager implements AuthenticationManager {
         );
     }
 
+    private String extractAuthorizationHeader(ResponseEntity<Void> exchange) {
+        String accessToken = exchange.getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
+        if (Objects.isNull(accessToken)) {
+            throw new AuthenticationServiceException("AUTHORIZATION Header is empty");
+        }
+        return accessToken;
+    }
+
+    /**
+     * 로그인 과정에서 accessToken을 발급 받아 HTTP Header에 추가한 뒤, Shop 서버에 회원의 정보를 요청하는 기능입니다.
+     *
+     * @param loginRequest 회원이 로그인 시 입력한 정보를 담은 DTO 입니다.
+     * @param accessToken  로그인 과정에서 Auth 서버에서 발급받은 JWT 형식의 accessToken 입니다.
+     * @return Shop 서버에 요청한 회원의 정보 DTO를 담은 결과 입니다.
+     * @author : 송학현
+     * @since : 1.0
+     */
     private ResponseEntity<MemberResponse> getMemberInfo(
             LoginRequest loginRequest,
             String accessToken
@@ -108,17 +122,26 @@ public class CustomAuthenticationManager implements AuthenticationManager {
         httpHeaders.setBearerAuth(accessToken);
 
         return restTemplate.getForEntity(
-                gatewayUrl + "/shop/v1/members/login/{loginId}",
+                gatewayUrl + "shop/v1/members/login/{loginId}",
                 MemberResponse.class,
                 loginRequest.getLoginId(),
                 httpHeaders
         );
     }
 
+    /**
+     * 로그인 과정에서 Auth 서버에서 인증된 JWT 형식의 accessToken을 받아오는 기능입니다.
+     *
+     * @param loginRequest 회원이 로그인 시 입력한 정보를 담은 DTO 입니다.
+     * @return Auth 서버에서 발급받은 JWT 형식의 accessToken 입니다.
+     * @author : 송학현
+     * @since : 1.0
+     */
     private ResponseEntity<Void> getAccessToken(
-            HttpHeaders headers,
             LoginRequest loginRequest
     ) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<LoginRequest> entity = new HttpEntity<>(loginRequest, headers);
 
         return restTemplate.exchange(
