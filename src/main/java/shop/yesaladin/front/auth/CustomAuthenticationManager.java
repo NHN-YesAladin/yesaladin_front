@@ -41,7 +41,8 @@ public class CustomAuthenticationManager implements AuthenticationManager {
     private final RestTemplate restTemplate;
 
     /**
-     * Auth 서버에서 발급받은 JWT 토큰을 기반으로 UsernamePasswordAuthenticationToken을 만들어 반환합니다.
+     * Auth 서버에서 발급받은 JWT 토큰을 기반으로 Shop 서버에 유저 정보를 요청 한 뒤,
+     * UsernamePasswordAuthenticationToken을 만들어 반환합니다.
      *
      * @param authentication 인증 객체입니다.
      * @return 인증 객체를 반환합니다.
