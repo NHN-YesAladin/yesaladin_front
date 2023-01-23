@@ -111,6 +111,11 @@
             <version>7.2</version>
         </dependency>
         <dependency>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+            <groupId>io.micrometer</groupId>
+            <version>1.10.3</version>
+        </dependency>
+        <dependency>
             <groupId>com.github.NHN-YesAladin</groupId>
             <artifactId>yesaladin_coupon_utils</artifactId>
             <version>main-SNAPSHOT</version>
