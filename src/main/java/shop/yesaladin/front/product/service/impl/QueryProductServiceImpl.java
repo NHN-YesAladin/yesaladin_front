@@ -3,8 +3,6 @@ package shop.yesaladin.front.product.service.impl;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,15 +17,15 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import shop.yesaladin.front.common.dto.PageRequestDto;
 import shop.yesaladin.front.common.dto.PaginatedResponseDto;
-import shop.yesaladin.front.product.dto.ProductsResponseDto;
-import shop.yesaladin.front.product.service.inter.QueryProductService;
 import shop.yesaladin.front.product.dto.ProductDetailResponseDto;
 import shop.yesaladin.front.product.dto.ProductTypeResponseDto;
-import shop.yesaladin.front.tag.dto.TagResponseDto;
+import shop.yesaladin.front.product.dto.ProductsResponseDto;
+import shop.yesaladin.front.product.service.inter.QueryProductService;
 import shop.yesaladin.front.product.service.inter.QueryProductTypeService;
-import shop.yesaladin.front.tag.service.inter.QueryTagService;
 import shop.yesaladin.front.publish.dto.PublisherResponseDto;
 import shop.yesaladin.front.publish.service.inter.QueryPublisherService;
+import shop.yesaladin.front.tag.dto.TagResponseDto;
+import shop.yesaladin.front.tag.service.inter.QueryTagService;
 import shop.yesaladin.front.writing.dto.AuthorResponseDto;
 import shop.yesaladin.front.writing.service.inter.QueryAuthorService;
 
@@ -107,7 +105,7 @@ public class QueryProductServiceImpl implements QueryProductService {
      * 관리자용 상품 전체 조회를 요청하여 응답받습니다.
      *
      * @param pageRequestDto Pagination을 위한 Dto
-     * @param typeId 상품 유형 id
+     * @param typeId         상품 유형 id
      * @return 응답받은 상품 전체 조회 Dto
      */
     @Override
@@ -130,7 +128,8 @@ public class QueryProductServiceImpl implements QueryProductService {
                 uri,
                 HttpMethod.GET,
                 httpEntity,
-                new ParameterizedTypeReference<PaginatedResponseDto<ProductsResponseDto>>(){}
+                new ParameterizedTypeReference<PaginatedResponseDto<ProductsResponseDto>>() {
+                }
         );
 
         return products.getBody();
@@ -143,7 +142,7 @@ public class QueryProductServiceImpl implements QueryProductService {
      * @author 이수정
      * @since 1.0
      */
-    private static HttpEntity getHttpEntity() {
+    private HttpEntity getHttpEntity() {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
 

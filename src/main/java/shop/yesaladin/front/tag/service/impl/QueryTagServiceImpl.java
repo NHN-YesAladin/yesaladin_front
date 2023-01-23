@@ -24,11 +24,9 @@ import shop.yesaladin.front.tag.service.inter.QueryTagService;
 public class QueryTagServiceImpl implements QueryTagService {
 
     private final RestTemplate restTemplate;
-
+    private final String PATH = "/v1/tags";
     @Value("${yesaladin.gateway}")
     private String url;
-
-    private final String PATH = "/v1/tags";
 
     /**
      * 태그 전체 조회를 요청하여 응답을 받습니다.
@@ -43,7 +41,8 @@ public class QueryTagServiceImpl implements QueryTagService {
                 url + PATH,
                 HttpMethod.GET,
                 getHttpEntity(),
-                new ParameterizedTypeReference<List<TagResponseDto>>() {}
+                new ParameterizedTypeReference<List<TagResponseDto>>() {
+                }
         ).getBody();
     }
 
@@ -54,7 +53,7 @@ public class QueryTagServiceImpl implements QueryTagService {
      * @author 이수정
      * @since 1.0
      */
-    private static HttpEntity getHttpEntity() {
+    private HttpEntity getHttpEntity() {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
 

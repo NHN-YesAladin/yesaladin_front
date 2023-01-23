@@ -1,12 +1,9 @@
 package shop.yesaladin.front.file.controller;
 
-import static java.util.UUID.randomUUID;
-
 import java.io.IOException;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,9 +31,9 @@ public class FileWebController {
     /**
      * tui-editor에서 파일 업로드를 요청하면 파일을 등록하고 등록한 파일의 url을 반환합니다.
      *
-     * @param request tui-editor에서 요청한 파일을 담고 있는 MultipartHttpServletRequest
+     * @param request    tui-editor에서 요청한 파일을 담고 있는 MultipartHttpServletRequest
      * @param domainName 파일을 저장할 도메인 명
-     * @param typeName 파일을 저장할 이미지 타입 명
+     * @param typeName   파일을 저장할 파일 타입 명
      * @return 등록한 파일의 url
      * @author 이수정
      * @since 1.0
@@ -46,18 +43,16 @@ public class FileWebController {
             MultipartHttpServletRequest request,
             @PathVariable String domainName,
             @PathVariable String typeName
-    ) {
+    ) throws IOException {
         MultipartFile file = request.getFile("data");
 
-        FileUploadResponseDto responseDto = null;
-        try {
-            responseDto = fileStorageService.fileUpload(domainName, typeName, file);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        FileUploadResponseDto responseDto = fileStorageService.fileUpload(
+                domainName,
+                typeName,
+                file
+        );
 
         return ResponseEntity.ok().body(Map.of("url", responseDto.getUrl()));
-
     }
 
 }

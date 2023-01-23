@@ -16,5 +16,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductOnlyIdDto {
+
     private long id;
 }

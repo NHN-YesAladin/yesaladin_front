@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * shop에서 상품 싱세 정보를 응답받기 위한 DTO 입니다.
+ * shop에서 상품 싱세 정보를 응답받기 위한 Dto 입니다.
  *
  * @author 이수정
  * @since 1.0

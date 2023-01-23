@@ -3,10 +3,8 @@ package shop.yesaladin.front.product.controller;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import shop.yesaladin.front.common.dto.PageRequestDto;
 import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.product.dto.ProductDetailResponseDto;
-import shop.yesaladin.front.product.dto.ProductTypeResponseDto;
 import shop.yesaladin.front.product.dto.ProductsResponseDto;
 import shop.yesaladin.front.product.service.inter.QueryProductService;
 import shop.yesaladin.front.product.service.inter.QueryProductTypeService;
@@ -58,9 +55,9 @@ public class QueryProductWebController {
      * [GET /products] 모든 사용자용 상품 전체 조회 View를 반환합니다.
      *
      * @param typeId 지정한 상품 유형 Id(없으면 전체 유형)
-     * @param page 현재 페이지 - 1
-     * @param size 페이지 크기
-     * @param model 뷰로 데이터 전달
+     * @param page   현재 페이지 - 1
+     * @param size   페이지 크기
+     * @param model  뷰로 데이터 전달
      * @return 모든 사용자용 상품 전체 조회 View
      * @author 이수정
      * @since 1.0
@@ -83,7 +80,7 @@ public class QueryProductWebController {
         model.addAllAttributes(pageInfoMap);
 
         List<ProductsResponseDto> dataList = products.getDataList();
-        dataList.stream().forEach(data -> data.makeAuthorLine());
+        dataList.forEach(ProductsResponseDto::makeAuthorLine);
 
         model.addAllAttributes(Map.of(
                 "products", products.getDataList(),
@@ -91,16 +88,15 @@ public class QueryProductWebController {
                 "types", queryProductTypeService.findAll()
         ));
 
-
         return "/user/product/products";
     }
 
     /**
      * Paging Bar에 필요한 정보를 계산하고 Map으로 저장하여 반환합니다.
      *
-     * @param size 페이지에 들어갈 오브젝트 개수
+     * @param size      페이지에 들어갈 오브젝트 개수
      * @param blockSize 한 블럭에 들어갈 페이지 수
-     * @param products 페이징된 정보를 담고있는 PaginatedResponseDto
+     * @param products  페이징된 정보를 담고있는 PaginatedResponseDto
      * @return Paging Bar에 필요한 정보를 담은 Map
      * @author 이수정
      * @since 1.0
@@ -114,8 +110,8 @@ public class QueryProductWebController {
         long totalPage = products.getTotalPage();
 
         int block = (int) (currentPage / blockSize);
-        long start = block * blockSize + 1;
-        long last = ((start + blockSize - 1) < totalPage) ? (start + blockSize - 1) : totalPage;
+        long start = (long) block * blockSize + 1;
+        long last = Math.min((start + blockSize - 1), totalPage);
         if (start > last) {
             last = start;
         }
@@ -134,9 +130,9 @@ public class QueryProductWebController {
      * [GET /manager/products] 관리자용 상품 전체 조회 View를 반환합니다.
      *
      * @param typeId 지정한 상품 유형 Id(없으면 전체 유형)
-     * @param page 현재 페이지 - 1
-     * @param size 페이지 크기
-     * @param model 뷰로 데이터 전달
+     * @param page   현재 페이지 - 1
+     * @param size   페이지 크기
+     * @param model  뷰로 데이터 전달
      * @return 관리자용 상품 전체 조회 View
      * @author 이수정
      * @since 1.0
@@ -180,7 +176,8 @@ public class QueryProductWebController {
      */
     private Map<String, Object> makeAttributeMap(ProductDetailResponseDto response) {
 
-        boolean isEbook = (Objects.nonNull(response.getEbookFileUrl()) && !response.getEbookFileUrl().isBlank()) ? true : false;
+        boolean isEbook = Objects.nonNull(response.getEbookFileUrl()) && !response.getEbookFileUrl()
+                .isBlank();
 
         return Map.ofEntries(
                 Map.entry("id", response.getId()),

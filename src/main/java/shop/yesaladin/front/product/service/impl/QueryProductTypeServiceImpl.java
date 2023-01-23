@@ -10,11 +10,11 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import shop.yesaladin.front.product.service.inter.QueryProductTypeService;
 import shop.yesaladin.front.product.dto.ProductTypeResponseDto;
+import shop.yesaladin.front.product.service.inter.QueryProductTypeService;
 
 /**
- * 상품 유형 조회 요청을 위한 service 구현체 입니다.
+ * 상품 유형 조회 요청을 위한 Service 구현체 입니다.
  *
  * @author 이수정
  * @since 1.0
@@ -24,11 +24,9 @@ import shop.yesaladin.front.product.dto.ProductTypeResponseDto;
 public class QueryProductTypeServiceImpl implements QueryProductTypeService {
 
     private final RestTemplate restTemplate;
-
+    private final String PATH = "/v1/product-types";
     @Value("${yesaladin.gateway}")
     private String url;
-
-    private final String PATH = "/v1/product-types";
 
     /**
      * 상품 유형 전체 조회를 요청하여 응답을 받습니다.
@@ -43,7 +41,8 @@ public class QueryProductTypeServiceImpl implements QueryProductTypeService {
                 url + PATH,
                 HttpMethod.GET,
                 getHttpEntity(),
-                new ParameterizedTypeReference<List<ProductTypeResponseDto>>() {}
+                new ParameterizedTypeReference<List<ProductTypeResponseDto>>() {
+                }
         ).getBody();
     }
 
@@ -54,11 +53,10 @@ public class QueryProductTypeServiceImpl implements QueryProductTypeService {
      * @author 이수정
      * @since 1.0
      */
-    private static HttpEntity getHttpEntity() {
+    private HttpEntity getHttpEntity() {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
 
-        HttpEntity httpEntity = new HttpEntity(httpHeaders);
-        return httpEntity;
+        return new HttpEntity(httpHeaders);
     }
 }
