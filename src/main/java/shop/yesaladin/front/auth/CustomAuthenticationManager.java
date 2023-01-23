@@ -59,13 +59,9 @@ public class CustomAuthenticationManager implements AuthenticationManager {
                 (String) authentication.getPrincipal(),
                 (String) authentication.getCredentials()
         );
-        HttpEntity<LoginRequest> entity = new HttpEntity<>(loginRequest, headers);
-
-        ResponseEntity<Void> exchange = restTemplate.exchange(
-                gatewayUrl + "/auth/login",
-                HttpMethod.POST,
-                entity,
-                Void.class
+        ResponseEntity<Void> exchange = getAccessToken(
+                headers,
+                loginRequest
         );
 
         // TODO: login시 입력 값이 비었거나, 유저 정보가 없다면 redirect도 안되고 여기서 NullPointerException 발생함.
@@ -78,14 +74,9 @@ public class CustomAuthenticationManager implements AuthenticationManager {
             accessToken = accessToken.substring(7);
         }
 
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setBearerAuth(accessToken);
-
-        ResponseEntity<MemberResponse> memberResponse = restTemplate.getForEntity(
-                gatewayUrl + "/shop/v1/members/login/{loginId}",
-                MemberResponse.class,
-                loginRequest.getLoginId(),
-                httpHeaders
+        ResponseEntity<MemberResponse> memberResponse = getMemberInfo(
+                loginRequest,
+                accessToken
         );
 
         MemberResponse member = Objects.requireNonNull(memberResponse).getBody();
@@ -105,6 +96,35 @@ public class CustomAuthenticationManager implements AuthenticationManager {
                 authentication.getPrincipal().toString(),
                 null,
                 authorities
+        );
+    }
+
+    private ResponseEntity<MemberResponse> getMemberInfo(
+            LoginRequest loginRequest,
+            String accessToken
+    ) {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setBearerAuth(accessToken);
+
+        return restTemplate.getForEntity(
+                gatewayUrl + "/shop/v1/members/login/{loginId}",
+                MemberResponse.class,
+                loginRequest.getLoginId(),
+                httpHeaders
+        );
+    }
+
+    private ResponseEntity<Void> getAccessToken(
+            HttpHeaders headers,
+            LoginRequest loginRequest
+    ) {
+        HttpEntity<LoginRequest> entity = new HttpEntity<>(loginRequest, headers);
+
+        return restTemplate.exchange(
+                gatewayUrl + "/auth/login",
+                HttpMethod.POST,
+                entity,
+                Void.class
         );
     }
 }
