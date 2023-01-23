@@ -1,3 +1,10 @@
+const SHOP_SERVER = "http://localhost:8080";
+const FRONT_SERVER = "http://localhost:9090";
+
+const parentCategories = []
+const categories = {};
+let activeCategoryId;
+
 function addEventListenerToCouponDuration() {
   const couponDurationRadioList = document.querySelectorAll(
       ".coupon-duration-type-radio");
@@ -68,8 +75,129 @@ function addEventListenerToCouponQuantity() {
   })
 }
 
+function initActiveParentCategory() {
+  const parentCategoryItems = document.querySelectorAll(
+      ".parent-category-item");
+  parentCategoryItems.forEach(c => c.classList.remove("active"));
+}
+
+function initActiveChildCategory() {
+  const childCategoryItems = document.querySelectorAll(".child-category-item");
+  childCategoryItems.forEach(c => c.classList.remove("active"));
+}
+
+function addEventListenerToChildCategoryItems() {
+  const childCategoryItems = document.querySelectorAll(".child-category-item");
+  childCategoryItems.forEach(c => c.addEventListener('click', async () => {
+    initActiveChildCategory();
+    activeCategoryId = c.dataset['categoryId'];
+    c.classList.add("active");
+  }));
+}
+
+function addChildCategoryItemsToDiv(parentCategoryId) {
+  const childrenCategoryGroup = document.querySelector(
+      "#children-category-group");
+  childrenCategoryGroup.innerHTML = "";
+
+  categories[parentCategoryId].forEach(c => {
+    const item = document.createElement("li");
+    item.classList.add("list-group-item", "child-category-item");
+    item.textContent = c.name;
+    item.dataset['categoryId'] = c.id;
+    childrenCategoryGroup.appendChild(item);
+  })
+  addEventListenerToChildCategoryItems();
+}
+
+function addEventListenerToParentCategoryItems() {
+  const parentCategoryItems = document.querySelectorAll(
+      ".parent-category-item");
+  parentCategoryItems.forEach(c => c.addEventListener('click', async () => {
+    const parentCategoryId = c.dataset['categoryId'];
+    initActiveParentCategory();
+    initActiveChildCategory();
+    activeCategoryId = parentCategoryId;
+    c.classList.add("active");
+    if (!categories[parentCategoryId]) {
+      const response = await fetch(
+          `${SHOP_SERVER}/v1/categories/${parentCategoryId}/children`);
+      categories[parentCategoryId] = await response.json();
+    }
+    addChildCategoryItemsToDiv(parentCategoryId);
+  }));
+}
+
+function addParentCategoryItemsToDiv() {
+  const parentCategoryGroup = document.querySelector(
+      "#parent-category-group");
+  parentCategoryGroup.innerHTML = "";
+
+  parentCategories.forEach(c => {
+    const item = document.createElement("li");
+    item.classList.add("list-group-item", "parent-category-item");
+    item.textContent = c.name;
+    item.dataset['categoryId'] = c.id;
+    parentCategoryGroup.appendChild(item);
+  });
+  addEventListenerToParentCategoryItems();
+}
+
+async function initParentCategories() {
+  if (parentCategories.length > 0) {
+    addParentCategoryItemsToDiv()
+    return;
+  }
+  try {
+    const response = await fetch(
+        `${SHOP_SERVER}/v1/categories/parents`);
+    const parsedBody = await response.json();
+    parsedBody.forEach(c => parentCategories.push(c));
+    addParentCategoryItemsToDiv()
+  } catch (e) {
+    console.error(e);
+    alert("카테고리 목록을 불러올 수 없습니다.")
+  }
+}
+
+function addEventListenerToCouponBound() {
+  const couponBoundSelect = document.querySelector("#coupon-bound-select");
+  const categorySelectDiv = document.querySelector("#category-select-div");
+  couponBoundSelect.addEventListener("change", async () => {
+    if (couponBoundSelect.options[couponBoundSelect.selectedIndex].value
+        === 'CATEGORY') {
+      activeCategoryId = null;
+      await initParentCategories();
+      categorySelectDiv.style.display = '';
+    } else {
+      categorySelectDiv.style.display = 'none';
+    }
+  })
+}
+
+function handleSubmitEvent() {
+  const form = document.querySelector('#coupon-create-form');
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const formData = new FormData(form);
+    console.log(formData.get("couponBoundCode"));
+    if (formData.get("couponBoundCode") === "CATEGORY") {
+      if (!activeCategoryId) {
+        alert("카테고리가 선택되지 않았습니다.")
+        return;
+      }
+      formData.append("categoryId", activeCategoryId);
+    }
+
+    await fetch(`${FRONT_SERVER}/manager/coupon/create`,
+        {method: "POST", body: formData});
+  })
+}
+
 (function init() {
   addEventListenerToCouponQuantity();
   addEventListenerToCouponType();
   addEventListenerToCouponDuration();
+  addEventListenerToCouponBound();
+  handleSubmitEvent();
 })();
