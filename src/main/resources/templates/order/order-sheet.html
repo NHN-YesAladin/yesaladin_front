@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <body th:fragment="order-sheet">
+<script src="https://js.tosspayments.com/v1/payment"></script>
 <form th:method="post">
   <div class="container-narrow py-4">
     <div class="text-center mb-4">
@@ -150,7 +151,7 @@
     </div>
     <!--    TODO 결제 uri 추가-->
     <div class="mt-2">
-      <a href="#" class="btn btn-primary w-100">
+      <a href="#" class="btn btn-primary w-100" onclick="processPayment(this)">
         결제
       </a>
     </div>
@@ -197,8 +198,37 @@
     }
     setTotalPrice();
   });
+
+  function processPayment(e) {
+    // 주문, 배송 , 쿠폰 관련 form 데이터 전달
+
+    // 토스 페이먼츠 결제 시퀀스
+    let clientKey = "test_ck_YPBal2vxj81jnwPmEXA35RQgOAND"; // 상점을 구분하는 키
+    let tossPayments = TossPayments(clientKey); // SDK 초기화
+
+    tossPayments.requestPayment('카드', { // 결제 수단 파라미터
+      // 결제 정보 파라미터
+      amount: 15000,
+      orderId: 'zaIkFmBcYW4k_J9rOl0M2b7',
+      orderName: '토스 티셔츠 외 2건',
+      customerName: '박토스',
+      successUrl: 'http://localhost:8081/payments/success',
+      failUrl: 'http://localhost:8080/fail',
+    })
+    .catch(function (error) {
+      if (error.code === 'USER_CANCEL') {
+        // 결제 고객이 결제창을 닫았을 때 에러 처리
+        alert("cancel")
+      } else if (error.code === 'INVALID_CARD_COMPANY') {
+        // 유효하지 않은 카드 코드에 대한 에러 처리
+        alert("INVALID")
+      }
+    });
+  }
 </script>
+
 </body>
+
 <script th:src="@{/js/tabler.min.js}"></script>
 <script th:src="@{/js/demo.min.js}"></script>
 </html>
