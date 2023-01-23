@@ -11,5 +11,11 @@ import shop.yesaladin.front.publish.dto.PublisherResponseDto;
  */
 public interface QueryPublisherService {
 
+    /**
+     * 저자 조회를 받아와 저장한 Dto 입니다.
+     *
+     * @author 이수정
+     * @since 1.0
+     */
     List<PublisherResponseDto> findAll();
 }

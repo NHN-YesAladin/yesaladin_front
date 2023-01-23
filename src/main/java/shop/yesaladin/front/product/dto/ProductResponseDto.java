@@ -9,7 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import shop.yesaladin.front.file.dto.FileUploadResponseDto;
 
 /**
- * 사용자가 요청한 상품 등록 정보를 받아오기 위한 DTO 입니다.
+ * 사용자가 요청한 상품 등록 정보를 받아오기 위한 Dto 입니다.
  *
  * @author 이수정
  * @since 1.0
