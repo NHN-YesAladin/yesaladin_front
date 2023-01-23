@@ -15,9 +15,8 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import shop.yesaladin.front.file.dto.FileUploadResponseDto;
 import shop.yesaladin.front.file.service.inter.FileStorageService;
-import shop.yesaladin.front.file.service.inter.StorageAuthService;
-import shop.yesaladin.front.product.dto.ProductRequestDto;
 import shop.yesaladin.front.product.dto.ProductOnlyIdDto;
+import shop.yesaladin.front.product.dto.ProductRequestDto;
 import shop.yesaladin.front.product.dto.ProductResponseDto;
 import shop.yesaladin.front.product.service.inter.CommandProductService;
 
@@ -33,7 +32,6 @@ import shop.yesaladin.front.product.service.inter.CommandProductService;
 public class CommandProductServiceImpl implements CommandProductService {
 
     private final FileStorageService fileStorageService;
-    private final StorageAuthService storageAuthService;
 
     private final RestTemplate restTemplate;
 
@@ -55,7 +53,7 @@ public class CommandProductServiceImpl implements CommandProductService {
         FileUploadResponseDto thumbnailFileResponse = fileStorageService.fileUpload(
                 "product",
                 "thumbnail",
-                    thumbnailFile
+                thumbnailFile
         );
 
         MultipartFile ebookFile = productResponseDto.getEbookFile();
@@ -87,20 +85,16 @@ public class CommandProductServiceImpl implements CommandProductService {
         return response.getBody().getId();
     }
 
-    /**
-     * 상품 수정을 요청합니다.
-     *
-     * @param productResponseDto 상품 수정 요청 Dto
-     * @param productId 수정할 상품의 Id
-     * @author 이수정
-     * @since 1.0
-     */
-    @Override
-    public void modify(ProductResponseDto productResponseDto, long productId) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-    }
+//    /**
+//     * 상품 수정을 요청합니다.
+//     *
+//     * @param productResponseDto 상품 수정 요청 Dto
+//     * @param productId 수정할 상품의 Id
+//     * @author 이수정
+//     * @since 1.0
+//     */
+//    @Override
+//    public void modify(ProductResponseDto productResponseDto, long productId) {}
 
     /**
      * 상품 삭제를 요청합니다.
