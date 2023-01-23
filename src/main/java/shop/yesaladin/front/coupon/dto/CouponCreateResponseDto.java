@@ -1,5 +1,6 @@
 package shop.yesaladin.front.coupon.dto;
 
+import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -17,4 +18,5 @@ public class CouponCreateResponseDto {
     private String name;
     private String couponTypeCode;
 
+    private List<String> errorMessageList;
 }

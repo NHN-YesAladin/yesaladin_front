@@ -1,5 +1,6 @@
-const SHOP_SERVER = "http://localhost:8080";
-const FRONT_SERVER = "http://localhost:9090";
+let SHOP_SERVER;
+let FRONT_SERVER;
+const RESPONSE_KEY = "response";
 
 const parentCategories = []
 const categories = {};
@@ -180,7 +181,6 @@ function handleSubmitEvent() {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const formData = new FormData(form);
-    console.log(formData.get("couponBoundCode"));
     if (formData.get("couponBoundCode") === "CATEGORY") {
       if (!activeCategoryId) {
         alert("카테고리가 선택되지 않았습니다.")
@@ -189,15 +189,58 @@ function handleSubmitEvent() {
       formData.append("categoryId", activeCategoryId);
     }
 
-    await fetch(`${FRONT_SERVER}/manager/coupon/create`,
+    const response = await fetch(`${FRONT_SERVER}/manager/coupon/create`,
         {method: "POST", body: formData});
+    const parsedResponse = await response.json();
+    localStorage.setItem(RESPONSE_KEY, JSON.stringify(parsedResponse));
+    location.reload();
   })
 }
 
+function initConnectionInfo() {
+  SHOP_SERVER = document.querySelector("#shop-server-url").textContent
+  FRONT_SERVER = document.querySelector("#front-server-url").textContent
+}
+
+function showSuccessAlert(name) {
+  const alertDiv = document.querySelector("#coupon-created-alert");
+  alertDiv.textContent = `쿠폰 ${name}이(가) 생성되었습니다.`;
+  alertDiv.style.display = '';
+  localStorage.removeItem(RESPONSE_KEY);
+}
+
+function errorAlert(errorMessageList) {
+  const alertDiv = document.querySelector("#error-alert");
+  const ul = document.createElement("ul");
+  errorMessageList.forEach(em => {
+    const li = document.createElement("li");
+    li.textContent = em;
+    ul.appendChild(li);
+  })
+  alertDiv.appendChild(ul);
+  alertDiv.style.display = '';
+  localStorage.removeItem(RESPONSE_KEY);
+}
+
+function initAlert() {
+  const responseData = localStorage.getItem(RESPONSE_KEY);
+  if (!responseData) {
+    return;
+  }
+
+  const parsedResponseData = JSON.parse(responseData);
+  if (parsedResponseData.name) {
+    return showSuccessAlert(parsedResponseData.name);
+  }
+  return errorAlert(parsedResponseData.errorMessageList);
+}
+
 (function init() {
+  initAlert()
   addEventListenerToCouponQuantity();
   addEventListenerToCouponType();
   addEventListenerToCouponDuration();
   addEventListenerToCouponBound();
   handleSubmitEvent();
+  initConnectionInfo();
 })();

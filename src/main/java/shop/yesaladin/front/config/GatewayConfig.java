@@ -19,4 +19,7 @@ public class GatewayConfig {
 
     @Value("${yesaladin.gateway.coupon}")
     private String couponUrl;
+
+    @Value("${yesaladin.gateway.shop}")
+    private String shopUrl;
 }

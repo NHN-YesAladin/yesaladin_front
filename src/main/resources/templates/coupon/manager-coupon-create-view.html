@@ -58,10 +58,8 @@
               id="coupon-create-form"
               th:object="${requestDto}">
           <div class="container">
-            <div class="alert alert-primary mt-4" role="alert" th:if="${createdCouponName != null}"
-                 th:text="|쿠폰  ${createdCouponName}가 생성되었습니다.|">
-              A simple primary alert—check it out!
-            </div>
+            <div class="alert alert-primary mt-4" id="coupon-created-alert" role="alert" style="display: none"></div>
+            <div class="alert alert-danger mt-4" id="error-alert" role="alert" style="display: none"></div>
             <div class="page-body row">
               <div class="col">
                 <h2>쿠폰 정보</h2>
@@ -114,7 +112,7 @@
                 <h2>사용 정보</h2>
                 <hr>
                 <div class="mb-3 row">
-                  <label for="coupon-name-input" class="col-sm-2 col-form-label">할인금액/할인율</label>
+                  <label for="coupon-name-input" class="col-sm-2 col-form-label fs-5">할인금액/할인율</label>
                   <select id="coupon-discount-type-select" class="form-select col-sm-2 w-25">
                     <option selected>정액/정률 할인</option>
                   </select>
@@ -123,7 +121,7 @@
                          th:field="*{discountAmount}"
                          class="form-control col-sm-2 w-25 ms-3" placeholder="할인율 또는 금액" min="1">
                 </div>
-                <div class="mb-3" id="coupon-max-discount-price-div" style="display: none">
+                <div class="mb-3 row" id="coupon-max-discount-price-div" style="display: none">
                   <label for="coupon-max-discount-price-input"
                          class="col-sm-2 col-form-label">최대할인금액</label>
                   <input type="number" id="coupon-max-discount-price-input"
@@ -207,6 +205,8 @@
     </div>
   </div>
 </div>
+<div class="d-none" id="shop-server-url" th:text="${shopServerUrl}"></div>
+<div class="d-none" id="front-server-url" th:text="${frontServerUrl}"></div>
 <!-- DOMContentLoaded관련 Script import -->
 <div th:replace="~{fragments/script :: fragment-script}"></div>
 <script th:src="@{/js/coupon/manager-coupon-create.js}"></script>
