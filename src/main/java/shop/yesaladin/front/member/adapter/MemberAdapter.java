@@ -13,6 +13,12 @@ import shop.yesaladin.front.config.GatewayConfig;
 import shop.yesaladin.front.member.dto.LoginRequest;
 import shop.yesaladin.front.member.dto.MemberResponse;
 
+/**
+ * 회원 관련 로직을 처리하기 위해 Shop, Auth 서버에 RestTemplate으로 요청하기 위한 어댑터 입니다.
+ *
+ * @author : 송학현
+ * @since : 1.0
+ */
 @Slf4j
 @Component
 @RequiredArgsConstructor
