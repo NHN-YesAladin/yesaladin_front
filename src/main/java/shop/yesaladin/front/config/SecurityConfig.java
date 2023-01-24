@@ -9,10 +9,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.client.RestTemplate;
 import shop.yesaladin.front.auth.CustomAuthenticationFilter;
 import shop.yesaladin.front.auth.CustomAuthenticationManager;
 import shop.yesaladin.front.auth.CustomFailureHandler;
+import shop.yesaladin.front.member.adapter.MemberAdapter;
 
 /**
  * Spring Security의 설정 Bean 등록 클래스입니다.
@@ -24,7 +24,7 @@ import shop.yesaladin.front.auth.CustomFailureHandler;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final RestTemplate restTemplate;
+    private final MemberAdapter memberAdapter;
 
     /**
      * 현재는 사용하지 않아 기본 설정을 disable로 설정하였습니다.
@@ -75,7 +75,7 @@ public class SecurityConfig {
      */
     @Bean
     public CustomAuthenticationManager customAuthenticationManager() {
-        return new CustomAuthenticationManager(restTemplate);
+        return new CustomAuthenticationManager(memberAdapter);
     }
 
     /**

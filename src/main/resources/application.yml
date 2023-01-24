@@ -22,3 +22,4 @@ yesaladin:
   gateway:
     base: https://api.yesaladin.shop
     coupon: https://api.yesaladin.shop/coupon
+    auth: https://api.yesaladin.shop/auth
