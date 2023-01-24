@@ -149,7 +149,6 @@
         </h3>
       </div>
     </div>
-    <!--    TODO 결제 uri 추가-->
     <div class="mt-2">
       <a href="#" class="btn btn-primary w-100" onclick="processPayment(this)">
         결제
@@ -206,6 +205,7 @@
     let clientKey = "test_ck_YPBal2vxj81jnwPmEXA35RQgOAND"; // 상점을 구분하는 키
     let tossPayments = TossPayments(clientKey); // SDK 초기화
 
+    //TODO 결제 : successUrl, failUrl 해당 프로그램 경로 model에서 받아와야함
     tossPayments.requestPayment('카드', { // 결제 수단 파라미터
       // 결제 정보 파라미터
       amount: 15000,
