@@ -12,6 +12,10 @@ spring:
     url: jdbc:h2:mem:/test
     username: sa
     password:
+  servlet:
+    multipart:
+      max-file-size: 200MB
+      max-request-size: 200MB  
   redis:
     host: 133.186.151.141
     port: 6379
@@ -24,3 +28,15 @@ yesaladin:
     coupon: https://api.yesaladin.shop/coupon
     auth: https://api.yesaladin.shop/auth
     shop: https://api.yesaladin.shop/shop
+
+server:
+  port: 8081
+
+storage-token:
+  auth-url: https://api-identity.infrastructure.cloud.toast.com/v2.0/tokens
+  storage-url: https://api-storage.cloud.toast.com/v1
+  tenant-id: fcb81f74e379456b8ca0e091d351a7af
+  storage-account: AUTH_fcb81f74e379456b8ca0e091d351a7af
+  container-name: yesaladinTest
+  username: tidh1640@naver.com
+  password: yesaladin
