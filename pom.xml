@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xmlns="http://maven.apache.org/POM/4.0.0"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+        xmlns="http://maven.apache.org/POM/4.0.0"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <artifactId>front</artifactId>
     <build>
         <finalName>front</finalName>
@@ -20,6 +20,12 @@
             </plugin>
         </plugins>
     </build>
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
     <dependencies>
         <dependency>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
@@ -104,7 +110,16 @@
             <artifactId>logstash-logback-encoder</artifactId>
             <version>7.2</version>
         </dependency>
-
+        <dependency>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+            <groupId>io.micrometer</groupId>
+            <version>1.10.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.NHN-YesAladin</groupId>
+            <artifactId>yesaladin_coupon_utils</artifactId>
+            <version>main-SNAPSHOT</version>
+        </dependency>
     </dependencies>
     <description>front</description>
     <groupId>shop.yesaladin</groupId>

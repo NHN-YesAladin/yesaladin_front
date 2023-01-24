@@ -14,7 +14,12 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class GatewayConfig {
 
-    @Value("${yesaladin.gateway}")
+    @Value("${yesaladin.gateway.base}")
     private String url;
 
+    @Value("${yesaladin.gateway.coupon}")
+    private String couponUrl;
+
+    @Value("${yesaladin.gateway.shop}")
+    private String shopUrl;
 }
