@@ -48,8 +48,8 @@ public class QueryCategoryServiceImpl implements QueryCategoryService {
     @Override
     public List<CategoryResponseDto> getParentCategories() {
         UriComponents uriComponents = UriComponentsBuilder.fromHttpUrl(
-                        gatewayConfig.getUrl() + "/v1/categories")
-                .path("/parents")
+                        gatewayConfig.getShopUrl() + "/v1/categories")
+                .queryParam("cate","parents")
                 .build();
 
         ResponseEntity<List<CategoryResponseDto>> responseEntity = restTemplate.exchange(
@@ -78,7 +78,7 @@ public class QueryCategoryServiceImpl implements QueryCategoryService {
     ) {
         log.info("{}", pageRequestDto);
         UriComponents uriComponents = UriComponentsBuilder.fromHttpUrl(
-                        gatewayConfig.getUrl() + "/v1/categories")
+                        gatewayConfig.getShopUrl() + "/v1/categories")
                 .queryParam("parentId", parentId)
                 .queryParam(
                         "page",

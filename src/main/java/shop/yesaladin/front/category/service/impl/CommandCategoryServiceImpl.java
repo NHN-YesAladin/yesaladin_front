@@ -40,7 +40,7 @@ public class CommandCategoryServiceImpl implements CommandCategoryService {
     public CategoryResponseDto create(CategorySaveRequestDto createRequest) {
         log.info("{}", createRequest);
         UriComponents uriComponents = UriComponentsBuilder.fromHttpUrl(
-                        gatewayConfig.getUrl() + "/v1/categories")
+                        gatewayConfig.getShopUrl() + "/v1/categories")
                 .build();
 
         return restTemplate.postForObject(
@@ -60,7 +60,7 @@ public class CommandCategoryServiceImpl implements CommandCategoryService {
     @Override
     public CategoryResponseDto modify(Long id, CategorySaveRequestDto modifyRequest) {
         UriComponents uriComponents = UriComponentsBuilder.fromHttpUrl(
-                gatewayConfig.getUrl() + "/v1/categories").path("/" + id).build();
+                gatewayConfig.getShopUrl() + "/v1/categories").path("/" + id).build();
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -82,7 +82,7 @@ public class CommandCategoryServiceImpl implements CommandCategoryService {
     @Override
     public void delete(Long id) {
         UriComponents uriComponents = UriComponentsBuilder.fromHttpUrl(
-                gatewayConfig.getUrl() + "/v1/categories").path("/" + id).build();
+                gatewayConfig.getShopUrl() + "/v1/categories").path("/" + id).build();
         restTemplate.delete(uriComponents.toUri());
     }
 
