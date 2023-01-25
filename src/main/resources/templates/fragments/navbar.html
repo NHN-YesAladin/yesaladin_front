@@ -9,7 +9,7 @@
 <!-- TODO 0 : 관리자용 또는 사용자용으로 카테고리 항목 구분하기 -->
 <body th:fragment="fragment-nav-bar">
 <div class="navbar-expand-md">
-    <div class="collapse navbar-collapse" id="navbar-menu" th:data-url="${@environment.getProperty('yesaladin.gateway')}">
+    <div class="collapse navbar-collapse" id="navbar-menu" th:data-url="${@environment.getProperty('yesaladin.gateway.shop')}">
         <div class="navbar navbar-light">
             <div class="container-xl">
                 <ul id="header-list" class="navbar-nav">
@@ -35,19 +35,13 @@
         </div>
     </div>
 </div>
-<style>
-    /*.dropdown:hover .dropdown-menu {*/
-    /*    display: block;*/
-    /*    margin-top: 50px;*/
-    /*}*/
-
-</style>
 <script>
     let dropdownElementList = [].slice.call(document.querySelectorAll('.dropdown-toggle'))
     let dropdownList = dropdownElementList.map(function (dropdownToggleEl) {
         return new bootstrap.Dropdown(dropdownToggleEl)
     })
-
+    const parentCategories = [];
+    const categories = {};
 
     const navBar = document.getElementById("navbar-menu");
     const serverCategoryUrl = `${navBar.getAttribute("data-url")}/v1/categories`;
@@ -57,14 +51,18 @@
 
     //TODO async - await 공부 후 설명 필요
     async function setCategoryHeaderList() {
-        let data;
+
         try {
-            data = await getParentCategories();
+            if (parentCategories.length === 0) {
+                // TODO 데이터 존재하므로 다시 fetch 할 필요 없음
+                let data = await getParentCategories();
+                data.forEach(c => parentCategories.push(c));
+            }
 
             const headerList = document.getElementById("header-list");
-            for (let i = 0; i < data.length; i++) {
-                const id = data[i].id;
-                const name = data[i].name;
+            for (let i = 0; i < parentCategories.length; i++) {
+                const id = parentCategories[i].id;
+                const name = parentCategories[i].name;
 
                 const list = document.createElement("li");
                 const button = document.createElement("a");
@@ -91,10 +89,13 @@
                 menu.classList.add("dropdown-menu");
 
                 try {
-                    const childrenData = await getChildCategoriesByParentId(id);
-                    arrangeCategoryChildrenHeader(childrenData, menuColumns, menu);
+                    if (!categories[id]) {
+                        categories[id] = await getChildCategoriesByParentId(id);
+                    }
+                    arrangeCategoryChildrenHeader(categories[id], menuColumns, menu);
                 } catch (err){
                     console.error(err);
+                    alert("2차 카테고리 목록을 불러올 수 없습니다.");
                 }
 
                 list.classList.add("nav-item");
@@ -105,15 +106,16 @@
                 headerList.appendChild(list);
 
                 list.addEventListener('mouseover', hoverCategory());
-                list.addEventListener('mouseout',houtCategory())
+                list.addEventListener('mouseout',mouseOutCategory())
             }
         } catch (err) {
             console.error(err);
+            alert("카테고리 목록을 불러올 수 없습니다.");
         }
     }
 
     function getParentCategories() {
-        const responsePromise = fetch(serverCategoryUrl+"/parents", {
+        const responsePromise = fetch(serverCategoryUrl + "?cate=parents", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -123,7 +125,7 @@
     }
 
     function getChildCategoriesByParentId(parentId) {
-        const responsePromise = fetch(`${serverCategoryUrl}/${parentId}/children`, {
+        const responsePromise = fetch(`${serverCategoryUrl}/${parentId}?cate=children`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -133,8 +135,9 @@
     }
 
     function arrangeCategoryChildrenHeader(childrenData, menuColumns, menu) {
-        let size = 5;
-        let term = Math.floor(childrenData.length / size) + 1;
+        let size = 10;
+        let offset = (childrenData.length % size) === 0 ? 0 : 1;
+        let term = Math.floor(childrenData.length / size) + offset;
         for (let i = 0; i < term; i++) {
             let start = size * i;
             let last = Math.min(start + size, childrenData.length);
@@ -147,6 +150,7 @@
                 innerButton.href = "#"; //"상품페이지url/{categoryId}"
                 innerButton.text = childrenData[j].name;
 
+                menuColumn.style.fontSize = "10px"
                 menuColumn.appendChild(innerButton);
             }
             menuColumns.appendChild(menuColumn);
@@ -172,7 +176,7 @@
         };
     }
 
-    function houtCategory() {
+    function mouseOutCategory() {
         return function (event) {
             const target = event.currentTarget;
             const aTag = target.children[0];
