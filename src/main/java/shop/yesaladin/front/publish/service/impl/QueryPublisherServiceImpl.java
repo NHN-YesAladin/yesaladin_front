@@ -25,7 +25,7 @@ public class QueryPublisherServiceImpl implements QueryPublisherService {
 
     private final RestTemplate restTemplate;
     private final String PATH = "/v1/publishers";
-    @Value("${yesaladin.gateway}")
+    @Value("${yesaladin.gateway.shop}")
     private String url;
 
     /**

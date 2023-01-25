@@ -35,7 +35,7 @@ public class CommandProductServiceImpl implements CommandProductService {
 
     private final RestTemplate restTemplate;
 
-    @Value("${yesaladin.gateway}")
+    @Value("${yesaladin.gateway.shop}")
     private String url;
 
     /**

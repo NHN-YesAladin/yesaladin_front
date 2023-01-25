@@ -12,10 +12,6 @@ spring:
     url: jdbc:h2:mem:/test
     username: sa
     password:
-  servlet:
-    multipart:
-      max-file-size: 128MB
-      max-request-size: 128MB  
   redis:
     host: 133.186.151.141
     port: 6379

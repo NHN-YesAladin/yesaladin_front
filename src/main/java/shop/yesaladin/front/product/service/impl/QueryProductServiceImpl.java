@@ -49,7 +49,7 @@ public class QueryProductServiceImpl implements QueryProductService {
 
     private final RestTemplate restTemplate;
 
-    @Value("${yesaladin.gateway}")
+    @Value("${yesaladin.gateway.shop}")
     private String url;
 
     /**

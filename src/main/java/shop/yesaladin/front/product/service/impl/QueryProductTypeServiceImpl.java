@@ -25,7 +25,7 @@ public class QueryProductTypeServiceImpl implements QueryProductTypeService {
 
     private final RestTemplate restTemplate;
     private final String PATH = "/v1/product-types";
-    @Value("${yesaladin.gateway}")
+    @Value("${yesaladin.gateway.shop}")
     private String url;
 
     /**

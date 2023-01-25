@@ -37,14 +37,9 @@ import shop.yesaladin.front.file.service.inter.FileStorageService;
 @RequiredArgsConstructor
 public class FileStorageServiceImpl implements FileStorageService {
 
-    @Value("${yesaladin.gateway}")
+    private final RestTemplate restTemplate;
+    @Value("${yesaladin.gateway.shop}")
     private String url;
-    @Value("${storage-token.storage-url}")
-    private String storageUrl;
-    @Value("${storage-token.storage-account}")
-    private String storageAccount;
-    @Value("${storage-token.container-name}")
-    private String containerName;
 
     private final RestTemplate restTemplate;
 

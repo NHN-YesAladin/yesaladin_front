@@ -25,7 +25,7 @@ public class QueryAuthorServiceImpl implements QueryAuthorService {
 
     private final RestTemplate restTemplate;
     private final String PATH = "/v1/authors";
-    @Value("${yesaladin.gateway}")
+    @Value("${yesaladin.gateway.shop}")
     private String url;
 
     /**
