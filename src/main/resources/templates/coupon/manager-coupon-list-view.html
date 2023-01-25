@@ -1,0 +1,127 @@
+<!doctype html>
+<!--
+* Tabler - Premium and Open Source dashboard template with responsive and high quality UI.
+* @version 1.0.0-beta5
+* @link https://tabler.io
+* Copyright 2018-2022 The Tabler Authors
+* Copyright 2018-2022 codecalm.net Paweł Kuna
+* Licensed under MIT (https://github.com/tabler/tabler/blob/master/LICENSE)
+-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+  <meta content="ie=edge" http-equiv="X-UA-Compatible"/>
+  <title>Yes Aladin! - 쿠폰 관리자 화면</title>
+  <!-- CSS files -->
+  <link rel="stylesheet" th:href="@{/css/tabler.min.css}"/>
+  <link rel="stylesheet" th:href="@{/css/tabler-flags.min.css}"/>
+  <link rel="stylesheet" th:href="@{/css/tabler-payments.min.css}"/>
+  <link rel="stylesheet" th:href="@{/css/tabler-vendors.min.css}"/>
+  <link rel="stylesheet" th:href="@{/css/demo.min.css}"/>
+</head>
+<body>
+<!-- Libs JS -->
+<script th:src="@{/libs/apexcharts/dist/apexcharts.min.js}" type="text/javascript"></script>
+<!-- Tabler Core -->
+<script th:src="@{/js/tabler.min.js}" type="text/javascript"></script>
+<script th:src="@{/js/demo.min.js}" type="text/javascript"></script>
+<div class="wrapper">
+
+
+  <!-- TODO 2 : NAV-BAR -->
+  <div th:replace="~{fragments/navbar-vertical :: fragment-nav-vertical}"></div>
+
+  <div class="page-wrapper">
+    <!-- TODO 1 : HEADER -->
+    <div th:replace="~{fragments/header :: fragment-header}"></div>
+    <div class="page-header d-print-none">
+      <div class="container-xl">
+        <div class="row g-2 align-items-center">
+          <div class="col">
+            <!-- Page pre-title -->
+            <div class="page-pretitle">
+              쿠폰
+            </div>
+            <h2 class="page-title">
+              조회
+            </h2>
+          </div>
+          <div class="container">
+            <div class="row d-flex justify-content-between">
+              <h2 class="col">쿠폰 목록</h2>
+              <div class="row col-5 me-2">
+                <div class="col-3"></div>
+                <form class="row col me-2">
+                  <input class="form-control col me-2" placeholder="발행할 쿠폰 수" type="number">
+                  <button class="col-4 btn btn-primary" type="submit">추가 발행</button>
+                </form>
+                <a class="btn btn-secondary col-2" role="button"
+                   th:href="@{/manager/coupon/create}">등록하기</a>
+              </div>
+            </div>
+          </div>
+          <div class="container scroll-y" style="height: 25vw">
+            <table class="table">
+              <thead>
+              <tr>
+                <th scope="col">쿠폰명</th>
+                <th scope="col">발행 트리거</th>
+                <th scope="col">쿠폰 타입</th>
+                <th scope="col">사용 기간</th>
+                <th scope="col">등록일</th>
+                <th scope="col">선택</th>
+              </tr>
+              </thead>
+              <tbody class="table-group-divider">
+              <tr>
+                <td>테스트 쿠폰</td>
+                <td>회원가입</td>
+                <td>정률할인(20%)</td>
+                <td>발행일로부터 7일</td>
+                <td>2023-01-01</td>
+                <td><input class="form-check-input" type="checkbox"></td>
+              </tr>
+              <tr>
+                <td>테스트 쿠폰2</td>
+                <td>생일</td>
+                <td>정액할인(1000)</td>
+                <td>발행일로부터 5일</td>
+                <td>2023-01-02</td>
+                <td><input class="form-check-input" type="checkbox"></td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <nav>
+            <ul class="pagination justify-content-end">
+              <li class="page-item">
+                <a class="page-link" href="#">
+                  <span aria-hidden="true">&laquo;</span>
+                </a>
+              </li>
+              <li class="page-item"><a class="page-link" href="#">1</a></li>
+              <li class="page-item"><a class="page-link" href="#">2</a></li>
+              <li class="page-item"><a class="page-link" href="#">3</a></li>
+              <li class="page-item">
+                <a class="page-link" href="#">
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+      <!-- TODO 4 : footer -->
+      <div th:replace="~{fragments/footer :: fragment-footer}"></div>
+    </div>
+  </div>
+</div>
+</div>
+<div class="d-none" id="shop-server-url" th:text="${shopServerUrl}"></div>
+<div class="d-none" id="front-server-url" th:text="${frontServerUrl}"></div>
+<!-- DOMContentLoaded관련 Script import -->
+<div th:replace="~{fragments/script :: fragment-script}"></div>
+<script th:src="@{/js/coupon/manager-coupon-create.js}"></script>
+</body>
+</html>

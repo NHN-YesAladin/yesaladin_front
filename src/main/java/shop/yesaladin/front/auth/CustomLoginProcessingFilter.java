@@ -6,11 +6,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
+import shop.yesaladin.front.member.exception.InvalidLoginRequestException;
 
 /**
  * Form Login을 위해 UsernamePasswordAuthenticationFilter를 대체하여 custom한 filter 입니다.
@@ -19,9 +19,9 @@ import org.springframework.security.web.authentication.AbstractAuthenticationPro
  * @since : 1.0
  */
 @Slf4j
-public class CustomAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
+public class CustomLoginProcessingFilter extends AbstractAuthenticationProcessingFilter {
 
-    public CustomAuthenticationFilter(String processingUrl) {
+    public CustomLoginProcessingFilter(String processingUrl) {
         super(processingUrl);
     }
 
@@ -47,7 +47,7 @@ public class CustomAuthenticationFilter extends AbstractAuthenticationProcessing
         String password = request.getParameter("password");
 
         if (Objects.isNull(loginId) || Objects.isNull(password)) {
-            throw new AuthenticationServiceException("");
+            throw new InvalidLoginRequestException();
         }
 
         return getAuthenticationManager().authenticate(new UsernamePasswordAuthenticationToken(loginId, password));
