@@ -1,6 +1,8 @@
 package shop.yesaladin.front.auth;
 
 import static java.util.stream.Collectors.toList;
+import static shop.yesaladin.front.member.jwt.AuthUtil.JWT_CODE;
+import static shop.yesaladin.front.member.jwt.AuthUtil.UUID_CODE;
 
 import java.util.List;
 import java.util.Objects;
@@ -19,7 +21,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import shop.yesaladin.front.member.jwt.AuthUtil;
 import shop.yesaladin.front.common.exception.InvalidHttpHeaderException;
 import shop.yesaladin.front.member.adapter.MemberAdapter;
 import shop.yesaladin.front.member.dto.LoginRequest;
@@ -78,7 +79,7 @@ public class CustomAuthenticationManager implements AuthenticationManager {
 
         HttpServletResponse servletResponse = Objects.requireNonNull(((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())).getResponse();
 
-        Cookie cookie = new Cookie(AuthUtil.UUID, uuid);
+        Cookie cookie = new Cookie(UUID_CODE.getValue(), uuid);
         cookie.setHttpOnly(true);
         cookie.setPath("/");
 
@@ -89,7 +90,7 @@ public class CustomAuthenticationManager implements AuthenticationManager {
 
         AuthInfo authInfo = new AuthInfo(memberResponse.getBody(), accessToken, authorities);
         log.info("authInfo={}", authInfo);
-        redisTemplate.opsForHash().put(uuid, AuthUtil.JWT, authInfo);
+        redisTemplate.opsForHash().put(uuid, JWT_CODE.getValue(), authInfo);
 
         return new UsernamePasswordAuthenticationToken(
                 authentication.getPrincipal().toString(),

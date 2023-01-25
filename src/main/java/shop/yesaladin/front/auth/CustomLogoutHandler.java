@@ -1,5 +1,8 @@
 package shop.yesaladin.front.auth;
 
+import static shop.yesaladin.front.member.jwt.AuthUtil.JWT_CODE;
+import static shop.yesaladin.front.member.jwt.AuthUtil.UUID_CODE;
+
 import java.util.Objects;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -12,7 +15,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
-import shop.yesaladin.front.member.jwt.AuthUtil;
 import shop.yesaladin.front.member.exception.InvalidLogoutRequestException;
 
 /**
@@ -52,7 +54,7 @@ public class CustomLogoutHandler implements LogoutHandler {
 
         String uuid = getUUID(request.getCookies());
         log.info("uuid={}", uuid);
-        redisTemplate.opsForHash().delete(uuid, AuthUtil.JWT);
+        redisTemplate.opsForHash().delete(uuid, JWT_CODE.getValue());
 
         SecurityContext context = SecurityContextHolder.getContext();
         SecurityContextHolder.clearContext();
@@ -73,7 +75,7 @@ public class CustomLogoutHandler implements LogoutHandler {
         }
 
         for (Cookie cookie : cookies) {
-            if (Objects.equals(AuthUtil.UUID, cookie.getName())) {
+            if (Objects.equals(UUID_CODE.getValue(), cookie.getName())) {
                 return cookie.getValue();
             }
         }
