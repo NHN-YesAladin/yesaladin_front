@@ -14,7 +14,7 @@
             <div class="container-xl">
                 <ul id="header-list" class="navbar-nav">
                     <!-- TODO 1 : HOME  -->
-                    <li class="nav-item active">
+                    <li class="nav-item">
                         <a class="nav-link"
                            href="/">
                             <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -28,6 +28,16 @@
                                 </svg>
                             </span>
                             <span class="nav-link-title">Home</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link"
+                           href="/products">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-books" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                <path d="M5 4m0 1a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1zm4 -1m0 1a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1zm-4 3h4m0 8h4m.803 -11.44l2.184 -.53c.562 -.135 1.133 .19 1.282 .732l3.695 13.418a1.02 1.02 0 0 1 -.634 1.219l-.133 .041l-2.184 .53c-.562 .135 -1.133 -.19 -1.282 -.732l-3.695 -13.418a1.02 1.02 0 0 1 .634 -1.219l.133 -.041zm.197 4.44l4 -1m-2 8l3.923 -.98"></path>
+                            </svg>
+                            <span class="nav-link-title">전체 도서</span>
                         </a>
                     </li>
                 </ul>
@@ -193,8 +203,21 @@
             }
         };
     }
-
-
+</script>
+<script>
+    window.addEventListener('DOMContentLoaded', function()
+    {
+        const li = document.getElementsByClassName('nav-item');
+        for (let i = 0; i < li.length; i++) {
+            const item = li.item(i);
+            if (item.classList.contains('active')) {
+                item.classList.remove('active');
+            }
+            if (item.firstElementChild.href === window.location.href.split('?')[0]) {
+                item.classList.add('active');
+            }
+        }
+    });
 </script>
 </body>
 
