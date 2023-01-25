@@ -28,8 +28,7 @@ public interface QueryCategoryService {
      * @param parentId 1차 카테고리 id
      * @return 페이징 정보 및 데이터 리스트를 담고있는 dto
      */
-    PaginatedResponseDto<CategoryResponseDto>
-    getChildCategoriesByParentId(
+    PaginatedResponseDto<CategoryResponseDto> getChildCategoriesByParentId(
             PageRequestDto pageRequestDto,
             Long parentId
     );
