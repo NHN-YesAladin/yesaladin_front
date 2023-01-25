@@ -30,14 +30,8 @@ import shop.yesaladin.front.file.service.inter.FileStorageService;
 public class FileStorageServiceImpl implements FileStorageService {
 
     private final RestTemplate restTemplate;
-    @Value("${yesaladin.gateway}")
+    @Value("${yesaladin.gateway.shop}")
     private String url;
-    @Value("${storage-token.storage-url}")
-    private String storageUrl;
-    @Value("${storage-token.storage-account}")
-    private String storageAccount;
-    @Value("${storage-token.container-name}")
-    private String containerName;
 
     /**
      * shop에 파일 업로드를 요청하여 응답받은 Dto를 반환합니다.

@@ -84,6 +84,7 @@
                 <th>노출여부</th>
                 <th></th>
                 <th></th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -104,6 +105,11 @@
                   <span class="badge bg-warning me-1" th:if="${!product.isShown}">No</span>
                 </td>
 
+                <td>
+                  <a th:href="|/products/${product.id}|" class="btn btn-dark btn-pill w-auto fs-5">
+                    조회
+                  </a>
+                </td>
                 <td>
                   <a th:href="|/manager/products/${product.id}|" class="btn btn-dark btn-pill w-auto fs-5">
                     수정
