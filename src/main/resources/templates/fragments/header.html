@@ -54,7 +54,7 @@
               <span>😁</span>
             </div>
             <div sec:authorize="isAuthenticated()">
-              <span th:text="${userId}"></span> Logged In
+              <span th:text="${#authentication.name}"></span> Logged In
             </div>
           </div>
         </a>

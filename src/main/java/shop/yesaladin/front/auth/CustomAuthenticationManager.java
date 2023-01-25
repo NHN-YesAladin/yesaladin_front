@@ -4,9 +4,12 @@ import static java.util.stream.Collectors.toList;
 
 import java.util.List;
 import java.util.Objects;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,10 +17,14 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import shop.yesaladin.front.member.jwt.AuthUtil;
 import shop.yesaladin.front.common.exception.InvalidHttpHeaderException;
 import shop.yesaladin.front.member.adapter.MemberAdapter;
 import shop.yesaladin.front.member.dto.LoginRequest;
 import shop.yesaladin.front.member.dto.MemberResponse;
+import shop.yesaladin.front.member.jwt.AuthInfo;
 
 /**
  * AuthenticationManager를 custom한 Manager 입니다.
@@ -30,10 +37,11 @@ import shop.yesaladin.front.member.dto.MemberResponse;
 public class CustomAuthenticationManager implements AuthenticationManager {
 
     private final MemberAdapter memberAdapter;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     /**
-     * Auth 서버에서 발급받은 JWT 토큰을 기반으로 Shop 서버에 유저 정보를 요청 한 뒤, UsernamePasswordAuthenticationToken을 만들어
-     * 반환합니다.
+     * Auth 서버에서 발급받은 JWT 토큰을 기반으로 Shop 서버에 유저 정보를 요청 한 뒤,
+     * UsernamePasswordAuthenticationToken을 만들어 반환합니다.
      *
      * @param authentication 인증 객체입니다.
      * @return 인증 객체를 반환합니다.
@@ -68,12 +76,20 @@ public class CustomAuthenticationManager implements AuthenticationManager {
 
         log.info("accessToken={}", accessToken);
 
-        // TODO: redis에 토큰 추가
-        // uuid를 기준으로 accessToken, user정보 넣기
-        // 이후 cookie에 uuid를 넣는다.
+        HttpServletResponse servletResponse = Objects.requireNonNull(((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())).getResponse();
+
+        Cookie cookie = new Cookie(AuthUtil.UUID, uuid);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+
+        servletResponse.addCookie(cookie);
 
         List<SimpleGrantedAuthority> authorities = getAuthorities(memberResponse);
         log.info("authorities={}", authorities);
+
+        AuthInfo authInfo = new AuthInfo(memberResponse.getBody(), accessToken, authorities);
+        log.info("authInfo={}", authInfo);
+        redisTemplate.opsForHash().put(uuid, AuthUtil.JWT, authInfo);
 
         return new UsernamePasswordAuthenticationToken(
                 authentication.getPrincipal().toString(),

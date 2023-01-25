@@ -1,6 +1,7 @@
 package shop.yesaladin.front.auth;
 
 import java.util.Objects;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -11,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
+import shop.yesaladin.front.member.jwt.AuthUtil;
 import shop.yesaladin.front.member.exception.InvalidLogoutRequestException;
 
 /**
@@ -48,10 +50,34 @@ public class CustomLogoutHandler implements LogoutHandler {
 
         session.invalidate();
 
-        // TODO: Redis에 uuid로 들어가 있는 정보 무효화
+        String uuid = getUUID(request.getCookies());
+        log.info("uuid={}", uuid);
+        redisTemplate.opsForHash().delete(uuid, AuthUtil.JWT);
 
         SecurityContext context = SecurityContextHolder.getContext();
         SecurityContextHolder.clearContext();
         context.setAuthentication(null);
+    }
+
+    /**
+     * cookie에 들어있는 uuid를 반환하기 위한 기능입니다.
+     *
+     * @param cookies 브라우저에 존재하는 Cookie의 목록입니다.
+     * @return login 시 발급 받아 쿠키에 저장한 uuid 값을 반환합니다.
+     * @author : 송학현
+     * @since : 1.0
+     */
+    private String getUUID(Cookie[] cookies) {
+        if (Objects.isNull(cookies)) {
+            return null;
+        }
+
+        for (Cookie cookie : cookies) {
+            if (Objects.equals(AuthUtil.UUID, cookie.getName())) {
+                return cookie.getValue();
+            }
+        }
+
+        return null;
     }
 }
