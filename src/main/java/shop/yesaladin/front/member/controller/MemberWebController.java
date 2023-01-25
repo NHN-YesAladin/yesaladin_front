@@ -1,6 +1,5 @@
 package shop.yesaladin.front.member.controller;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -74,9 +73,7 @@ public class MemberWebController {
      * @since : 1.0
      */
     @GetMapping("/login")
-    public String loginForm(HttpServletRequest request, Model model) {
-        model.addAttribute("session", request.getSession().getId());
-        log.info("session={}", request.getSession().getId());
+    public String loginForm() {
         return "member/loginForm";
     }
 }

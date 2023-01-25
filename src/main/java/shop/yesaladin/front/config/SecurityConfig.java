@@ -78,7 +78,7 @@ public class SecurityConfig {
      */
     @Bean
     public CustomAuthenticationManager customAuthenticationManager() {
-        return new CustomAuthenticationManager(memberAdapter);
+        return new CustomAuthenticationManager(memberAdapter, redisTemplate);
     }
 
     /**
