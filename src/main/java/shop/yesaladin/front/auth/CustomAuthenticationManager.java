@@ -37,7 +37,7 @@ public class CustomAuthenticationManager implements AuthenticationManager {
      *
      * @param authentication 인증 객체입니다.
      * @return 인증 객체를 반환합니다.
-     * @throws AuthenticationException
+     * @throws AuthenticationException 인증 실패 시 발생 하는 예외 입니다.
      * @author : 송학현
      * @since : 1.0
      */
@@ -66,17 +66,13 @@ public class CustomAuthenticationManager implements AuthenticationManager {
                 accessToken
         );
 
-        MemberResponse member = Objects.requireNonNull(memberResponse).getBody();
-        log.info("member={}", member);
-
-        // TODO: redis에 토큰 추가
-
         log.info("accessToken={}", accessToken);
 
-        List<SimpleGrantedAuthority> authorities = member.getRoles().stream()
-                .map(SimpleGrantedAuthority::new)
-                .collect(toList());
+        // TODO: redis에 토큰 추가
+        // uuid를 기준으로 accessToken, user정보 넣기
+        // 이후 cookie에 uuid를 넣는다.
 
+        List<SimpleGrantedAuthority> authorities = getAuthorities(memberResponse);
         log.info("authorities={}", authorities);
 
         return new UsernamePasswordAuthenticationToken(
@@ -86,6 +82,31 @@ public class CustomAuthenticationManager implements AuthenticationManager {
         );
     }
 
+    /**
+     * Shop 서버에서 제공 받은 회원 정보를 바탕으로 권한 정보를 추출하는 기능입니다.
+     *
+     * @param memberResponse Shop 서버에서 제공받은 회원 정보 결과 입니다.
+     * @return token을 만들기 위해 권한 정보를 담은 List<SimpleGrantedAuthority>를 반환합니다.
+     * @author : 송학현
+     * @since : 1.0
+     */
+    private List<SimpleGrantedAuthority> getAuthorities(ResponseEntity<MemberResponse> memberResponse) {
+        MemberResponse member = Objects.requireNonNull(memberResponse).getBody();
+        log.info("member={}", member);
+
+        return member.getRoles().stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(toList());
+    }
+
+    /**
+     * 로그인 시 Auth 서버에서 제공 받은 응답 헤더를 추출하는 기능입니다.
+     *
+     * @param exchange Auth 서버에서 제공받은 응답 헤더입니다.
+     * @return Http Response Header의 Authorization에 들어있는 accessToken을 추출하여 반환합니다.
+     * @author : 송학현
+     * @since : 1.0
+     */
     private String extractAuthorizationHeader(ResponseEntity<Void> exchange) {
         String accessToken = exchange.getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
         if (Objects.isNull(accessToken)) {
