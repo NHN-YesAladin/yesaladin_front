@@ -16,15 +16,15 @@ public class IndexController {
         String userId = (String) authentication.getPrincipal();
 
         model.addAttribute("userId", userId);
-        return "index";
+        return "main/index";
     }
 
     @GetMapping("/mypage")
     public String mypage() {
-        return "mypage/page/main";
+        return "mypage/index";
     }
     @GetMapping("/manager")
     public String manager() {
-        return "manager";
+        return "manager/index";
     }
 }
