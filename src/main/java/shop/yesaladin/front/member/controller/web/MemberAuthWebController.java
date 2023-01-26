@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import shop.yesaladin.front.common.exception.ValidationFailedException;
 import shop.yesaladin.front.member.dto.SignUpRequest;
 import shop.yesaladin.front.member.dto.SignUpResponse;
@@ -23,6 +24,7 @@ import shop.yesaladin.front.member.service.inter.CommandMemberService;
 @Slf4j
 @RequiredArgsConstructor
 @Controller
+@RequestMapping("/members")
 public class MemberAuthWebController {
 
     private final CommandMemberService commandMemberService;
@@ -36,7 +38,7 @@ public class MemberAuthWebController {
      */
     @GetMapping("/signup")
     public String signupForm() {
-        return "member/signupForm";
+        return "auth/signup-form";
     }
 
     /**
@@ -61,7 +63,9 @@ public class MemberAuthWebController {
         log.info("response={}", response);
         model.addAttribute("response", response);
 
-        return "member/signupSuccess";
+        // TODO: redirect 관련 코드리뷰 반영해야함.
+
+        return "auth/signup-success";
     }
 
     /**
@@ -75,6 +79,6 @@ public class MemberAuthWebController {
     public String loginForm(HttpServletRequest request, Model model) {
         model.addAttribute("session", request.getSession().getId());
         log.info("session={}", request.getSession().getId());
-        return "member/loginForm";
+        return "auth/login-form";
     }
 }
