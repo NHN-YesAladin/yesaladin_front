@@ -51,7 +51,7 @@ public class PointHistoryMemberWebController {
         model.addAttribute("totalDataCount", response.getTotalDataCount());
         model.addAttribute("dataList", response.getDataList());
 
-        return "mypage/page/point-history";
+        return "mypage/point/point-history";
     }
 
     @GetMapping("/point-history/test")
@@ -78,7 +78,7 @@ public class PointHistoryMemberWebController {
         model.addAttribute("totalPage", totalPage);
         model.addAttribute("totalDataCount", totalDataCount);
         model.addAttribute("dataList", dataList);
-        return "mypage/page/point-history";
+        return "mypage/point/point-history";
     }
 
 }
