@@ -1,5 +1,6 @@
-package shop.yesaladin.front.member.controller;
+package shop.yesaladin.front.member.controller.web;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,7 +9,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import shop.yesaladin.front.common.exception.ValidationFailedException;
 import shop.yesaladin.front.member.dto.SignUpRequest;
 import shop.yesaladin.front.member.dto.SignUpResponse;
@@ -23,8 +23,7 @@ import shop.yesaladin.front.member.service.inter.CommandMemberService;
 @Slf4j
 @RequiredArgsConstructor
 @Controller
-@RequestMapping("/members")
-public class MemberWebController {
+public class MemberAuthWebController {
 
     private final CommandMemberService commandMemberService;
 
@@ -73,7 +72,9 @@ public class MemberWebController {
      * @since : 1.0
      */
     @GetMapping("/login")
-    public String loginForm() {
+    public String loginForm(HttpServletRequest request, Model model) {
+        model.addAttribute("session", request.getSession().getId());
+        log.info("session={}", request.getSession().getId());
         return "member/loginForm";
     }
 }

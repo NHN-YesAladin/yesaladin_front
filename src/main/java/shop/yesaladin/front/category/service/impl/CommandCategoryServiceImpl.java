@@ -31,10 +31,8 @@ public class CommandCategoryServiceImpl implements CommandCategoryService {
     private final GatewayConfig gatewayConfig;
 
     /**
-     * 카테고리 생성 기능
+     * {@inheritDoc}
      *
-     * @param createRequest 이름, 노출여부, 부모id가 있는 dto
-     * @return CategoryResponseDto 카테고리의 일부 정보가 있는 dto
      */
     @Override
     public CategoryResponseDto create(CategorySaveRequestDto createRequest) {
@@ -51,11 +49,8 @@ public class CommandCategoryServiceImpl implements CommandCategoryService {
     }
 
     /**
-     * 카테고리 수정 기능
+     * {@inheritDoc}
      *
-     * @param id 수정하고자 하는 카테고리의 id
-     * @param modifyRequest 이름, 노출여부, 부모id가 있는 dto
-     * @return CategoryResponseDto 카테고리의 일부 정보가 있는 dto
      */
     @Override
     public CategoryResponseDto modify(Long id, CategorySaveRequestDto modifyRequest) {
@@ -75,9 +70,8 @@ public class CommandCategoryServiceImpl implements CommandCategoryService {
     }
 
     /**
-     * 카테고리 삭제 기능
+     * {@inheritDoc}
      *
-     * @param id 삭제하고자 하는 카테고리 id
      */
     @Override
     public void delete(Long id) {

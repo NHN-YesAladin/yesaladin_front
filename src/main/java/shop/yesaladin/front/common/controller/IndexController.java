@@ -1,4 +1,4 @@
-package shop.yesaladin.front.controller;
+package shop.yesaladin.front.common.controller;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,6 +19,10 @@ public class IndexController {
         return "index";
     }
 
+    @GetMapping("/mypage")
+    public String mypage() {
+        return "mypage/page/main";
+    }
     @GetMapping("/manager")
     public String manager() {
         return "manager";
