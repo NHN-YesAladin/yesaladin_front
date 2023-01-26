@@ -9,14 +9,14 @@
 <!-- TODO 0 : 관리자용 또는 사용자용으로 카테고리 항목 구분하기 -->
 <body th:fragment="fragment-nav-bar">
 <div class="navbar-expand-md">
-    <div class="collapse navbar-collapse" id="navbar-menu" th:data-url="${@environment.getProperty('yesaladin.gateway.shop')}">
+    <div class="collapse navbar-collapse" id="navbar-menu" th:data-url="${@environment.getProperty('yesaladin.front.url')}">
         <div class="navbar navbar-light">
             <div class="container-xl">
-                <ul id="header-list" class="navbar-nav">
+                <ul id="header-list" class="navbar-nav fs-3">
                     <!-- TODO 1 : HOME  -->
                     <li class="nav-item">
                         <a class="nav-link"
-                           href="/">
+                           href="/static">
                             <span class="nav-link-icon d-md-none d-lg-inline-block">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
                                      viewBox="0 0 24 24"
@@ -54,7 +54,7 @@
     const categories = {};
 
     const navBar = document.getElementById("navbar-menu");
-    const serverCategoryUrl = `${navBar.getAttribute("data-url")}/v1/categories`;
+    const innerCategoryUrl = `${navBar.getAttribute("data-url")}/api/categories`;
     window.onload = function () {
         setCategoryHeaderList();
     };
@@ -125,7 +125,7 @@
     }
 
     function getParentCategories() {
-        const responsePromise = fetch(serverCategoryUrl + "?cate=parents", {
+        const responsePromise = fetch(innerCategoryUrl + "?cate=parents", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -135,7 +135,7 @@
     }
 
     function getChildCategoriesByParentId(parentId) {
-        const responsePromise = fetch(`${serverCategoryUrl}/${parentId}?cate=children`, {
+        const responsePromise = fetch(`${innerCategoryUrl}/${parentId}?cate=children`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -160,7 +160,7 @@
                 innerButton.href = "#"; //"상품페이지url/{categoryId}"
                 innerButton.text = childrenData[j].name;
 
-                menuColumn.style.fontSize = "10px"
+                menuColumn.style.fontSize = "14px"
                 menuColumn.appendChild(innerButton);
             }
             menuColumns.appendChild(menuColumn);

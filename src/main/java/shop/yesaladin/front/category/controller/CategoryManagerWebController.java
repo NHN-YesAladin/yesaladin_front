@@ -94,7 +94,7 @@ public class CategoryManagerWebController {
         model.addAttribute("start", start);
         model.addAttribute("last", last);
         model.addAttribute("blockSize", blockSize);
-        return "category/manager-categories";
+        return "manager/category/manager-categories";
     }
 
 

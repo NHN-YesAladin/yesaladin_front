@@ -28,29 +28,27 @@
 <script type="text/javascript" th:src="@{/js/demo.min.js}"></script>
 
 <div class="wrapper">
-
-
+    <!-- TODO 1 : Head -->
+    <div th:replace="~{mypage/fragments/header :: fragment-header}"></div>
     <!-- TODO 2 : NAV-BAR -->
-    <!-- TODO: 일반 회원 용 nav-vertical로 변경 -->
-<!--    <div th:replace="~{fragments/navbar-vertical :: fragment-nav-vertical}"></div>-->
+    <div th:replace="~{mypage/fragments/navbar :: fragment-nav-bar}"></div>
 
     <div class="page-wrapper">
-        <!-- TODO 1 : HEADER -->
-        <div th:replace="~{fragments/header :: fragment-header}"></div>
-<!--        <div th:replace="~{fragments/manager-header :: fragment-manager-header}"></div>-->
-
-        <!-- TODO 3: BODY -->
-        <div class="page-body">
-            <h1>마이 페이지</h1>
+        <div class="main-container">
+            <div class="container-sm">
+                <div class="row justify-content-around mt-3 mt-lg-5">
+                    <div class="col-xl-3 col-lg-3 mb-4 bg-secondary-lt" >
+                        <div th:replace="~{mypage/fragments/sidebar :: fragment-side-bar}"></div>
+                    </div>
+                    <div class="col-md-9 col-lg-8">
+                        <!--        TODO 3 :  Body          -->
+                    </div>
+                </div>
+            </div>
         </div>
-
         <!-- TODO 4 : footer -->
         <div th:replace="~{fragments/footer :: fragment-footer}"></div>
     </div>
-
-
 </div>
-<!-- DOMContentLoaded관련 Script import -->
-<div th:replace="~{fragments/script :: fragment-script}"></div>
 </body>
 </html>
