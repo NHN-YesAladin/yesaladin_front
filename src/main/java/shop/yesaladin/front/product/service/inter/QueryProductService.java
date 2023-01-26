@@ -1,10 +1,11 @@
 package shop.yesaladin.front.product.service.inter;
 
-import java.util.Map;
 import shop.yesaladin.front.common.dto.PageRequestDto;
 import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.product.dto.ProductDetailResponseDto;
 import shop.yesaladin.front.product.dto.ProductsResponseDto;
+
+import java.util.Map;
 
 /**
  * 상품 조회 요청을 위한 Service Interface 입니다.
@@ -35,6 +36,18 @@ public interface QueryProductService {
 
     /**
      * 관리자용 상품 전체 조회를 요청하여 응답받습니다.
+     *
+     * @param pageRequestDto Pagination을 위한 Dto
+     * @param typeId         상품 유형 id
+     * @return 응답받은 상품 전체 조회 Dto
+     */
+    PaginatedResponseDto<ProductsResponseDto> findAllForManager(
+            PageRequestDto pageRequestDto,
+            Integer typeId
+    );
+
+    /**
+     * 모든 사용자용 상품 전체 조회를 요청하여 응답받습니다.
      *
      * @param pageRequestDto Pagination을 위한 Dto
      * @param typeId         상품 유형 id
