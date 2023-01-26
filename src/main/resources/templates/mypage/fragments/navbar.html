@@ -9,12 +9,12 @@
 <!-- TODO 0 : 관리자용 또는 사용자용으로 카테고리 항목 구분하기 -->
 <body th:fragment="fragment-nav-bar">
 <div class="navbar-expand-md">
-    <div class="collapse navbar-collapse" id="navbar-menu" th:data-url="${@environment.getProperty('yesaladin.front.url')}">
+    <div class="collapse navbar-collapse" id="navbar-menu" th:data-url="${@environment.getProperty('yesaladin.gateway')}">
         <div class="navbar navbar-light">
             <div class="container-xl">
-                <ul id="header-list" class="navbar-nav fs-3">
+                <ul id="header-list" class="navbar-nav">
                     <!-- TODO 1 : HOME  -->
-                    <li class="nav-item">
+                    <li class="nav-item active">
                         <a class="nav-link"
                            href="/">
                             <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -30,16 +30,6 @@
                             <span class="nav-link-title">Home</span>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link"
-                           href="/products">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-books" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                <path d="M5 4m0 1a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1zm4 -1m0 1a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1zm-4 3h4m0 8h4m.803 -11.44l2.184 -.53c.562 -.135 1.133 .19 1.282 .732l3.695 13.418a1.02 1.02 0 0 1 -.634 1.219l-.133 .041l-2.184 .53c-.562 .135 -1.133 -.19 -1.282 -.732l-3.695 -13.418a1.02 1.02 0 0 1 .634 -1.219l.133 -.041zm.197 4.44l4 -1m-2 8l3.923 -.98"></path>
-                            </svg>
-                            <span class="nav-link-title">전체 도서</span>
-                        </a>
-                    </li>
                 </ul>
             </div>
         </div>
@@ -50,29 +40,24 @@
     let dropdownList = dropdownElementList.map(function (dropdownToggleEl) {
         return new bootstrap.Dropdown(dropdownToggleEl)
     })
-    const parentCategories = [];
-    const categories = {};
+
 
     const navBar = document.getElementById("navbar-menu");
-    const innerCategoryUrl = `${navBar.getAttribute("data-url")}/api/categories`;
+    const serverCategoryUrl = `${navBar.getAttribute("data-url")}/v1/categories`;
     window.onload = function () {
         setCategoryHeaderList();
     };
 
     //TODO async - await 공부 후 설명 필요
     async function setCategoryHeaderList() {
-
+        let data;
         try {
-            if (parentCategories.length === 0) {
-                // TODO 데이터 존재하므로 다시 fetch 할 필요 없음
-                let data = await getParentCategories();
-                data.forEach(c => parentCategories.push(c));
-            }
+            data = await getParentCategories();
 
             const headerList = document.getElementById("header-list");
-            for (let i = 0; i < parentCategories.length; i++) {
-                const id = parentCategories[i].id;
-                const name = parentCategories[i].name;
+            for (let i = 0; i < data.length; i++) {
+                const id = data[i].id;
+                const name = data[i].name;
 
                 const list = document.createElement("li");
                 const button = document.createElement("a");
@@ -99,13 +84,10 @@
                 menu.classList.add("dropdown-menu");
 
                 try {
-                    if (!categories[id]) {
-                        categories[id] = await getChildCategoriesByParentId(id);
-                    }
-                    arrangeCategoryChildrenHeader(categories[id], menuColumns, menu);
+                    const childrenData = await getChildCategoriesByParentId(id);
+                    arrangeCategoryChildrenHeader(childrenData, menuColumns, menu);
                 } catch (err){
                     console.error(err);
-                    alert("2차 카테고리 목록을 불러올 수 없습니다.");
                 }
 
                 list.classList.add("nav-item");
@@ -116,16 +98,15 @@
                 headerList.appendChild(list);
 
                 list.addEventListener('mouseover', hoverCategory());
-                list.addEventListener('mouseout',mouseOutCategory())
+                list.addEventListener('mouseout',houtCategory())
             }
         } catch (err) {
             console.error(err);
-            alert("카테고리 목록을 불러올 수 없습니다.");
         }
     }
 
     function getParentCategories() {
-        const responsePromise = fetch(innerCategoryUrl + "?cate=parents", {
+        const responsePromise = fetch(serverCategoryUrl+"/parents", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -135,7 +116,7 @@
     }
 
     function getChildCategoriesByParentId(parentId) {
-        const responsePromise = fetch(`${innerCategoryUrl}/${parentId}?cate=children`, {
+        const responsePromise = fetch(`${serverCategoryUrl}/${parentId}/children`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -145,9 +126,8 @@
     }
 
     function arrangeCategoryChildrenHeader(childrenData, menuColumns, menu) {
-        let size = 10;
-        let offset = (childrenData.length % size) === 0 ? 0 : 1;
-        let term = Math.floor(childrenData.length / size) + offset;
+        let size = 5;
+        let term = Math.floor(childrenData.length / size) + 1;
         for (let i = 0; i < term; i++) {
             let start = size * i;
             let last = Math.min(start + size, childrenData.length);
@@ -160,7 +140,6 @@
                 innerButton.href = "#"; //"상품페이지url/{categoryId}"
                 innerButton.text = childrenData[j].name;
 
-                menuColumn.style.fontSize = "14px"
                 menuColumn.appendChild(innerButton);
             }
             menuColumns.appendChild(menuColumn);
@@ -186,7 +165,7 @@
         };
     }
 
-    function mouseOutCategory() {
+    function houtCategory() {
         return function (event) {
             const target = event.currentTarget;
             const aTag = target.children[0];
@@ -203,21 +182,8 @@
             }
         };
     }
-</script>
-<script>
-    window.addEventListener('DOMContentLoaded', function()
-    {
-        const li = document.getElementsByClassName('nav-item');
-        for (let i = 0; i < li.length; i++) {
-            const item = li.item(i);
-            if (item.classList.contains('active')) {
-                item.classList.remove('active');
-            }
-            if (item.firstElementChild.href === window.location.href.split('?')[0]) {
-                item.classList.add('active');
-            }
-        }
-    });
+
+
 </script>
 </body>
 
