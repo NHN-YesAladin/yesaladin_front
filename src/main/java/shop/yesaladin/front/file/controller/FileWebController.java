@@ -22,7 +22,7 @@ import java.util.Map;
  * @since 1.0
  */
 @Slf4j
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/files")
 public class FileWebController {
