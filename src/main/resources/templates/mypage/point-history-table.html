@@ -21,7 +21,7 @@
             <div class="d-flex">
               <div class="text-muted">
                 <input type="radio" name="code" onclick="location.href='/mypage/point-history/test'"
-                       th:checked="${param.code == null}"> 전체
+                       th:checked="${param.code == null || #strings.equals(param.code, '')}"> 전체
                 <input type="radio" name="code"
                        onclick="location.href='/mypage/point-history/test?code=USE'"
                        th:checked="${(param.code != null) && (#strings.equals(param.code,'USE'))}"> 사용
@@ -70,7 +70,7 @@
               </li>
               <li class="page-item" th:each="num: ${#numbers.sequence(start, last)}"
                   th:classappend="${currentPage + 1 == num ? 'disabled': ''}">
-                <a class="page-link" th:href="@{/mypage/point-history/test(page=${num})}"
+                <a class="page-link" th:href="@{'/mypage/point-history/test?page=' + ${num} + ${code == null ? '' : '&code=' + code}}"
                    th:text="${num}"></a>
               </li>
               <li class="page-item"

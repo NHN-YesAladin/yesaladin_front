@@ -35,7 +35,7 @@ public class PointHistoryMemberWebController {
     @GetMapping("/point-history")
     public String showPointHistory(
             @PageableDefault Pageable pageable,
-            @RequestParam Optional<String> code,
+            @RequestParam(required = false) String code,
             Authentication authentication,
             Model model
     ) {
@@ -43,7 +43,7 @@ public class PointHistoryMemberWebController {
 
         PaginatedResponseDto<PointHistoryResponseDto> response =
                 (code.isEmpty()) ? queryPointHistoryService.getAllPointHistories(pageable, loginId)
-                        : queryPointHistoryService.getPointHistories(pageable, loginId, code.get());
+                        : queryPointHistoryService.getPointHistories(pageable, loginId, code);
 
         model.addAttribute("currentPage", response.getCurrentPage());
         model.addAttribute("totalPage", response.getTotalPage());
@@ -54,7 +54,7 @@ public class PointHistoryMemberWebController {
     }
 
     @GetMapping("/point-history/test")
-    public String test(Model model, @PageableDefault Pageable pageable) {
+    public String test(Model model, @RequestParam(required = false) String code, @PageableDefault Pageable pageable) {
         int currentPage = pageable.getPageNumber() == 0 ? 0 : pageable.getPageNumber() - 1;
         int totalPage = 15;
         int totalDataCount = 149;
@@ -72,6 +72,7 @@ public class PointHistoryMemberWebController {
             ));
         }
 
+        model.addAttribute("code", code);
         model.addAttribute("currentPage", currentPage);
         model.addAttribute("totalPage", totalPage);
         model.addAttribute("totalDataCount", totalDataCount);
