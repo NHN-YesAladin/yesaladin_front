@@ -122,7 +122,7 @@ function addEventListenerToParentCategoryItems() {
     c.classList.add("active");
     if (!categories[parentCategoryId]) {
       const response = await fetch(
-          `${SHOP_SERVER}/v1/categories/${parentCategoryId}/children`);
+          `${SHOP_SERVER}/v1/categories/${parentCategoryId}?cate=children`);
       categories[parentCategoryId] = await response.json();
     }
     addChildCategoryItemsToDiv(parentCategoryId);
@@ -151,7 +151,7 @@ async function initParentCategories() {
   }
   try {
     const response = await fetch(
-        `${SHOP_SERVER}/v1/categories/parents`);
+        `${SHOP_SERVER}/v1/categories?cate=parents`);
     const parsedBody = await response.json();
     parsedBody.forEach(c => parentCategories.push(c));
     addParentCategoryItemsToDiv()
@@ -165,8 +165,11 @@ function addEventListenerToCouponBound() {
   const couponBoundSelect = document.querySelector("#coupon-bound-select");
   const categorySelectDiv = document.querySelector("#category-select-div");
   couponBoundSelect.addEventListener("change", async () => {
+    console.log(
+        couponBoundSelect.options[couponBoundSelect.selectedIndex].value)
     if (couponBoundSelect.options[couponBoundSelect.selectedIndex].value
         === 'CATEGORY') {
+      console.log('category')
       activeCategoryId = null;
       await initParentCategories();
       categorySelectDiv.style.display = '';

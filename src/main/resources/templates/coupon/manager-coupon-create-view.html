@@ -58,8 +58,10 @@
               id="coupon-create-form"
               th:object="${requestDto}">
           <div class="container">
-            <div class="alert alert-primary mt-4" id="coupon-created-alert" role="alert" style="display: none"></div>
-            <div class="alert alert-danger mt-4" id="error-alert" role="alert" style="display: none"></div>
+            <div class="alert alert-primary mt-4" id="coupon-created-alert" role="alert"
+                 style="display: none"></div>
+            <div class="alert alert-danger mt-4" id="error-alert" role="alert"
+                 style="display: none"></div>
             <div class="page-body row">
               <div class="col">
                 <h2>쿠폰 정보</h2>
@@ -112,7 +114,8 @@
                 <h2>사용 정보</h2>
                 <hr>
                 <div class="mb-3 row">
-                  <label for="coupon-name-input" class="col-sm-2 col-form-label fs-5">할인금액/할인율</label>
+                  <label class="col-sm-2 col-form-label fs-5"
+                         for="coupon-name-input">할인금액/할인율</label>
                   <select id="coupon-discount-type-select" class="form-select col-sm-2 w-25">
                     <option selected>정액/정률 할인</option>
                   </select>
@@ -149,12 +152,17 @@
                     </option>
                   </select>
                 </div>
-                <div class="mb-3 card" id="category-select-div" style="display: none">
+                <div class="mb-3 card" id="category-select-div"
+                     style="display: none;">
                   <div class="row g-0">
-                    <ul class="list-group col" id="parent-category-group">
-                    </ul>
-                    <ul class="list-group col" id="children-category-group">
-                    </ul>
+                    <div class="col" style="height: 20rem; overflow-y: scroll">
+                      <ul class="list-group" id="parent-category-group">
+                      </ul>
+                    </div>
+                    <div class="col" style="overflow-y: scroll; height: 20rem">
+                      <ul class="list-group" id="children-category-group">
+                      </ul>
+                    </div>
                   </div>
                 </div>
                 <div class="mb-3 row">
