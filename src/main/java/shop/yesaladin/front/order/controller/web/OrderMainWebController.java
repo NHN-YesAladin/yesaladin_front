@@ -1,6 +1,5 @@
-package shop.yesaladin.front.order.controller;
+package shop.yesaladin.front.order.controller.web;
 
-import javax.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,11 +7,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/order")
-public class OrderController {
+public class OrderMainWebController {
     @GetMapping
     public String getOrderSheet(Model model) {
         model.addAttribute("userPoint", 5000);
-        return "order/order-page";
+        return "/main/order/order-page";
     }
 
 }

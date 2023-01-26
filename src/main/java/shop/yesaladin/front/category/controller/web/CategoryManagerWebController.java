@@ -1,4 +1,4 @@
-package shop.yesaladin.front.category.controller;
+package shop.yesaladin.front.category.controller.web;
 
 import java.util.ArrayList;
 import java.util.List;
