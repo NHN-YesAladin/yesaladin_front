@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/order")
 public class OrderMainWebController {
+
     @GetMapping
     public String getOrderSheet(Model model) {
         model.addAttribute("userPoint", 5000);

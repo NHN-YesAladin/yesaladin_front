@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import shop.yesaladin.front.category.dto.CategorySaveRequestDto;
 import shop.yesaladin.front.category.dto.CategoryResponseDto;
+import shop.yesaladin.front.category.dto.CategorySaveRequestDto;
 import shop.yesaladin.front.category.service.inter.CommandCategoryService;
 import shop.yesaladin.front.category.service.inter.QueryCategoryService;
 import shop.yesaladin.front.common.dto.PageRequestDto;
@@ -37,11 +37,11 @@ public class CategoryManagerWebController {
     private final CommandCategoryService commandCategoryService;
 
     /**
-     * manger-categories.html 을 보여주기 위한 컨트롤러 메서드
-     *  페이징된 2차 카테고리 리스트 제공과 생성,수정,삭제를 위한 기반 화면이다.
+     * manger-categories.html 을 보여주기 위한 컨트롤러 메서드 페이징된 2차 카테고리 리스트 제공과 생성,수정,삭제를 위한 기반 화면이다.
+     *
      * @param parentId 페이징된 2차 카테고리 리스트를 보기 위해서는 1차 카테고리의 id값이 있어야한다
-     * @param page 현재 페이지
-     * @param size 페이징 사이즈
+     * @param page     현재 페이지
+     * @param size     페이징 사이즈
      * @param model
      * @return category/manager-categories.html
      */
@@ -126,7 +126,7 @@ public class CategoryManagerWebController {
     /**
      * 카테고리 수정 처리
      *
-     * @param categoryId 수정하고자 하는 카테고리의 id
+     * @param categoryId    수정하고자 하는 카테고리의 id
      * @param modifyRequest 이름, 노출여부, 부모id가 있는 dto
      * @param bindingResult
      * @return redirect:/manager/categories?id={부모id}
@@ -152,8 +152,7 @@ public class CategoryManagerWebController {
     }
 
     /**
-     * 카테고리 삭제 처리
-     *   manager-categories.html 에서 javascript를 통해 페이지를 이동시킨다.
+     * 카테고리 삭제 처리 manager-categories.html 에서 javascript를 통해 페이지를 이동시킨다.
      *
      * @param categoryId 삭제하고자 하는 카테고리 id
      * @return redirect:/manager/categories

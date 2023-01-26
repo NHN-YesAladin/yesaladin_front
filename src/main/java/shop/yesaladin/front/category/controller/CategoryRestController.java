@@ -34,8 +34,7 @@ public class CategoryRestController {
     }
 
     /**
-     * 해당하는 1차 카테고리 id를 통해 2차 카테고리를 모두 조회하는 기능
-     *   페이징 size를 크게하여 조회함
+     * 해당하는 1차 카테고리 id를 통해 2차 카테고리를 모두 조회하는 기능 페이징 size를 크게하여 조회함
      *
      * @param parentId
      * @return

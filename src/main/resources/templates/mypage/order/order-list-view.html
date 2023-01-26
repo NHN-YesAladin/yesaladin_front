@@ -94,12 +94,12 @@
                                     <table class="table text-center">
                                         <thead>
                                             <tr>
-                                                <th class="w-auto" scope="col">주문번호</th>
-                                                <th class="w-5" scope="col">주문일자</th>
+                                                <th class="w-5" scope="col">주문번호</th>
+                                                <th class="w-auto" scope="col">주문일자</th>
                                                 <th class="w-25" scope="col">주문내역</th>
                                                 <th class="w-auto" scope="col">주문금액</th>
                                                 <th class="w-auto" scope="col">주문상태</th>
-                                                <th class="w-auto" scope="col">주문자</th>
+                                                <th class="w-5" scope="col">주문자</th>
                                                 <th class="w-5" scope="col">조회</th>
                                             </tr>
                                         </thead>
@@ -134,99 +134,15 @@
                                                 <td class="fw-bold" th:text="${data.getOrderMember()}"></td>
                                                 <td>
                                                     <div>
-                                                        <a href="#" th:value="${data.getOrderId()}" class="btn btn-outline-dark w-full fs-5 fw-bolder">
+                                                        <a href="#" th:value="${data.getOrderId()}" class="btn btn-outline-dark w-full fs-5 fw-bolder m-1">
                                                             주문상세조회
                                                         </a>
-                                                        <a href="#" th:value="${data.getOrderId()}" class="btn btn-outline-dark w-full fs-5 fw-bolder">
+                                                        <a href="#" th:value="${data.getOrderId()}" class="btn btn-outline-dark w-full fs-5 fw-bolder m-1">
                                                             배송조회
                                                         </a>
                                                     </div>
                                                 </td>
                                             </tr>
-<!--                                            <tr>-->
-<!--                                                <td>-->
-<!--                                                    <span>1233332222222</span>-->
-<!--                                                </td>-->
-<!--                                                <td><span>2022.08.19</span></td>-->
-<!--                                                <td class="text-start">-->
-<!--                                                    <div class="row-cols-2">-->
-<!--                                                        <span>-->
-<!--                                                            <p class="col-12 d-inline-block text-truncate " style="max-width: 140px;">-->
-<!--                                                                자바의정석112222211111111111111111111111111111111111-->
-<!--                                                            </p>-->
-<!--                                                            <p class="col-12  d-inline-block text-truncate " style="max-width: 140px;" >-->
-<!--                                                                <span>등</span>&nbsp;-->
-<!--                                                                <span>228</span>-->
-<!--                                                                <span>종</span>&nbsp;-->
-<!--                                                                <span>2445</span>-->
-<!--                                                                <span>권</span>-->
-<!--                                                            </p>-->
-<!--                                                        </span>-->
-
-<!--                                                    </div>-->
-
-<!--                                                </td>-->
-<!--                                                <td><span class="d-inline-block text-truncate" style="max-width: 100px;">222,500</span></td>-->
-<!--                                                <td>-->
-<!--                                                    <span class="text-orange">배송완료</span>-->
-<!--                                                </td>-->
-<!--                                                <td>-->
-<!--                                                    <span class="fw-bold">배수한1233</span>-->
-<!--                                                </td>-->
-<!--                                                <td>-->
-<!--                                                    <div>-->
-<!--                                                        <a href="#" class="btn btn-outline-dark w-full fs-5 fw-bolder">-->
-<!--                                                            주문상세조회-->
-<!--                                                        </a>-->
-<!--                                                        <a href="#" class="btn btn-outline-dark w-full fs-5 fw-bolder">-->
-<!--                                                            배송조회-->
-<!--                                                        </a>-->
-<!--                                                    </div>-->
-<!--                                                </td>-->
-
-<!--                                            </tr>-->
-<!--                                            <tr>-->
-<!--                                            <td>-->
-<!--                                                <span>91233332222222</span>-->
-<!--                                            </td>-->
-<!--                                            <td><span>2022.08.19</span></td>-->
-<!--                                            <td class="text-start">-->
-<!--                                                <div class="row-cols-2">-->
-<!--                                                        <span>-->
-<!--                                                            <p class="col-12 d-inline-block text-truncate " style="max-width: 140px;">-->
-<!--                                                                코틀린의정석112222211111111111111111111111111111111111-->
-<!--                                                            </p>-->
-<!--                                                            <p class="col-12  d-inline-block text-truncate " style="max-width: 140px;" >-->
-<!--                                                                <span>등</span>&nbsp;-->
-<!--                                                                <span>228</span>-->
-<!--                                                                <span>종</span>&nbsp;-->
-<!--                                                                <span>2445</span>-->
-<!--                                                                <span>권</span>-->
-<!--                                                            </p>-->
-<!--                                                        </span>-->
-
-<!--                                                </div>-->
-
-<!--                                            </td>-->
-<!--                                            <td><span class="d-inline-block text-truncate" style="max-width: 100px;">222,500</span></td>-->
-<!--                                            <td>-->
-<!--                                                <span class="text-orange">배송완료</span>-->
-<!--                                            </td>-->
-<!--                                            <td>-->
-<!--                                                <span class="fw-bold">배수한1233</span>-->
-<!--                                            </td>-->
-<!--                                            <td>-->
-<!--                                                <div>-->
-<!--                                                    <a href="#" class="btn btn-outline-dark w-full fs-5 fw-bolder">-->
-<!--                                                        주문상세조회-->
-<!--                                                    </a>-->
-<!--                                                    <a href="#" class="btn btn-outline-dark w-full fs-5 fw-bolder">-->
-<!--                                                        배송조회-->
-<!--                                                    </a>-->
-<!--                                                </div>-->
-<!--                                            </td>-->
-
-<!--                                        </tr>-->
                                         </tbody>
                                     </table>
                                 </div>
