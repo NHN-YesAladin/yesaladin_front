@@ -41,9 +41,8 @@ public class QueryCategoryServiceImpl implements QueryCategoryService {
             = new ParameterizedTypeReference<>() {};
 
     /**
-     * 모든 1차 카테고리를 조회하는 기능
+     * {@inheritDoc}
      *
-     * @return 카테고리의 일부 정보를 담고있는 dto 리스트
      */
     @Override
     public List<CategoryResponseDto> getParentCategories() {
@@ -65,11 +64,8 @@ public class QueryCategoryServiceImpl implements QueryCategoryService {
     }
 
     /**
-     * 1차 카테고리 id를 통해서 자식 카테고리(=2차 카테고리)를 페이징하여 조회하는 기능
+     * {@inheritDoc}
      *
-     * @param pageRequestDto page와 size를 담고있는 dto
-     * @param parentId 1차 카테고리 id
-     * @return 페이징 정보 및 데이터 리스트를 담고있는 dto
      */
     @Override
     public PaginatedResponseDto<CategoryResponseDto> getChildCategoriesByParentId(

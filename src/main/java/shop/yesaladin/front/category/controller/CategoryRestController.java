@@ -23,13 +23,25 @@ public class CategoryRestController {
 
     private final QueryCategoryService queryCategoryService;
 
+    /**
+     * 1차 카테고리 전체를 조회하는 기능
+     *
+     * @return 카테고리 일부 정보 리스트
+     */
     @GetMapping(params = "cate=parents")
     public List<CategoryResponseDto> getParentCategories() {
         return queryCategoryService.getParentCategories();
     }
 
+    /**
+     * 해당하는 1차 카테고리 id를 통해 2차 카테고리를 모두 조회하는 기능
+     *   페이징 size를 크게하여 조회함
+     *
+     * @param parentId
+     * @return
+     */
     @GetMapping(value = "/{parentId}", params = "cate=children")
-    public List<CategoryResponseDto> getChildCategories(@PathVariable Long parentId) {
+    public List<CategoryResponseDto> getChildCategoriesByParentId(@PathVariable Long parentId) {
         return queryCategoryService.getChildCategoriesByParentId(
                 new PageRequestDto(0, 200),
                 parentId
