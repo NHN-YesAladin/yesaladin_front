@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<body th:fragment="adderss-modal(url, param)" >
+<body th:fragment="paging(url, param)" >
 <div class="card-footer d-flex align-items-center">
   <ul class="pagination m-0 ms-auto"
       th:with="start=${(currentPage/5)*5 + 1},
                     last=(${start + 4 < totalPage ? start + 4 : totalPage})">
     <li class="page-item" th:classappend="${currentPage < 5 ? 'disabled' : ''}">
       <a class="page-link"
-         th:href="@{'/mypage/point-history/test' + '?page=' + ${(currentPage / 5 - 1) * 5 + 1}}"
+         th:href="@{url + '?page=' + ${(currentPage / 5 - 1) * 5 + 1} + param}"
          tabindex="-1">
         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
              viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
@@ -20,13 +20,13 @@
     </li>
     <li class="page-item" th:each="num: ${#numbers.sequence(start, last)}"
         th:classappend="${currentPage + 1 == num ? 'disabled': ''}">
-      <a class="page-link" th:href="@{'/mypage/point-history/test' + '?page=' + ${num} + ${code == null ? '' : '&code=' + code}}"
+      <a class="page-link" th:href="@{url + '?page=' + ${num} + param}"
          th:text="${num}"></a>
     </li>
     <li class="page-item"
         th:classappend="${currentPage / 5 == (totalPage - 1) / 5 ? 'disabled' : ''}">
       <a class="page-link"
-         th:href="@{/mypage/point-history/test(page=${ (currentPage / 5 + 1) * 5 + 1})}">
+         th:href="@{url + '?page=' + ${(currentPage / 5 + 1) * 5 + 1} + param}">
         next
         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
              viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
