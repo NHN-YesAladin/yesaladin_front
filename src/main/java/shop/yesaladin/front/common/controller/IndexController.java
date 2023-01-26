@@ -38,4 +38,9 @@ public class IndexController {
     public String manager() {
         return "manager/index";
     }
+
+    @GetMapping("/member")
+    public String myPage() {
+        return "member";
+    }
 }

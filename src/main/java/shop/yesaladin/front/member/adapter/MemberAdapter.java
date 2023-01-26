@@ -42,7 +42,7 @@ public class MemberAdapter {
         HttpEntity<LoginRequest> entity = new HttpEntity<>(loginRequest, headers);
 
         return restTemplate.exchange(
-                gatewayConfig.getAuthUrl() + "/login",
+                gatewayConfig.getAuthUrl() + "/auth/login",
                 HttpMethod.POST,
                 entity,
                 Void.class
