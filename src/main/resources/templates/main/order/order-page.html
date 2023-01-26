@@ -30,17 +30,17 @@
 </script>
 <div class="wrapper">
   <!-- TODO 1 : HEADER -->
-  <div th:replace="~{fragments/header :: fragment-header}"></div>
+  <div th:replace="~{common/fragments/header :: fragment-header}"></div>
 
   <!-- TODO 2 : NAV-BAR -->
-  <div th:replace="~{fragments/navbar :: fragment-nav-bar}"></div>
+  <div th:replace="~{common/fragments/navbar :: fragment-nav-bar}"></div>
 
   <div class="page-wrapper">
-    <div th:replace="~{order/order-sheet :: order-sheet}"></div>
+    <div th:replace="~{main/order/order-sheet :: order-sheet}"></div>
   </div>
 
   <!-- TODO 4 : footer -->
-  <div th:replace="~{fragments/footer :: fragment-footer}"></div>
+  <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
 </div>
 </body>
 <script>
