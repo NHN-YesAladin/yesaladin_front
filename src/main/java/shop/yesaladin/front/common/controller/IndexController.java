@@ -1,4 +1,4 @@
-package shop.yesaladin.front.controller;
+package shop.yesaladin.front.common.controller;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
