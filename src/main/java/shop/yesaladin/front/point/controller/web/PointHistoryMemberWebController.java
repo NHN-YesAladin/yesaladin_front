@@ -3,6 +3,7 @@ package shop.yesaladin.front.point.controller.web;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +43,7 @@ public class PointHistoryMemberWebController {
         String loginId = ((UserDetails) authentication.getPrincipal()).getUsername();
 
         PaginatedResponseDto<PointHistoryResponseDto> response =
-                (code.isEmpty()) ? queryPointHistoryService.getAllPointHistories(pageable, loginId)
+                (Objects.isNull(code) || Objects.equals(code, "")) ? queryPointHistoryService.getAllPointHistories(pageable, loginId)
                         : queryPointHistoryService.getPointHistories(pageable, loginId, code);
 
         model.addAttribute("currentPage", response.getCurrentPage());
