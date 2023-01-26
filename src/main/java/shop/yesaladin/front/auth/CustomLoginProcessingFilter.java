@@ -19,9 +19,9 @@ import shop.yesaladin.front.member.exception.InvalidLoginRequestException;
  * @since : 1.0
  */
 @Slf4j
-public class CustomAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
+public class CustomLoginProcessingFilter extends AbstractAuthenticationProcessingFilter {
 
-    public CustomAuthenticationFilter(String processingUrl) {
+    public CustomLoginProcessingFilter(String processingUrl) {
         super(processingUrl);
     }
 
