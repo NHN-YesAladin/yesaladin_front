@@ -1,10 +1,6 @@
 package shop.yesaladin.front.file.dto;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 /**
  * 업로드할 파일 정보를 받아와 저장한 Dto 입니다.

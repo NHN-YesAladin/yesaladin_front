@@ -30,11 +30,11 @@
   <div class="wrapper">
 
   <!-- TODO 1 : NAV-BAR -->
-  <div th:replace="~{fragments/navbar-vertical :: fragment-nav-vertical}"></div>
+  <div th:replace="~{manager/fragments/navbar-vertical :: fragment-nav-vertical}"></div>
 
   <!-- TODO 2 : HEADER -->
   <div class="page-wrapper">
-    <div th:replace="~{fragments/header :: fragment-header}"></div>
+    <div th:replace="~{common/fragments/header :: fragment-header}"></div>
     <div class="page-header d-print-none container-xl">
       <div class="row g-2 align-items-center">
         <div class="col">
@@ -169,16 +169,11 @@
     </div>
 
     <!-- TODO 4 : footer -->
-    <div th:replace="~{fragments/footer :: fragment-footer}"></div>
+    <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
 
     </div>
   </div>
-  <!-- DOMContentLoaded관련 Script import -->
-  <div th:replace="~{fragments/script :: fragment-script}"></div>
   <script>
-    function deleteProduct(productId) {
-    }
-
     function selectType(typeId) {
       if (typeId === '') {
         window.location.href = '/manager/products';
