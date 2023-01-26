@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequiredArgsConstructor
 @Controller
 @RequestMapping("/mypage")
-public class MemberMemberWebController {
+public class MemberMyPageWebController {
 
 
 }
