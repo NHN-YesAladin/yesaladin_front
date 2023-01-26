@@ -23,4 +23,9 @@ public class IndexController {
     public String manager() {
         return "manager";
     }
+
+    @GetMapping("/member")
+    public String myPage() {
+        return "member";
+    }
 }

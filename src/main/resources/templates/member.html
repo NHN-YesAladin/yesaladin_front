@@ -31,18 +31,115 @@
 
 
     <!-- TODO 2 : NAV-BAR -->
-    <!-- TODO: 일반 회원 용 nav-vertical로 변경 -->
-<!--    <div th:replace="~{fragments/navbar-vertical :: fragment-nav-vertical}"></div>-->
+    <div th:replace="~{fragments/header :: fragment-header}"></div>
+    <div th:replace="~{fragments/navbar :: fragment-nav-bar}"></div>
 
     <div class="page-wrapper">
-        <!-- TODO 1 : HEADER -->
-        <div th:replace="~{fragments/header :: fragment-header}"></div>
-<!--        <div th:replace="~{fragments/manager-header :: fragment-manager-header}"></div>-->
-
         <!-- TODO 3: BODY -->
-        <div class="page-body">
-            <h1>마이 페이지</h1>
+        <div class="main-container">
+            <div class="container-sm">
+                <div class="row justify-content-around mt-3 mt-lg-4">
+                    <!--        TODO  마이페이지 사이드 메뉴바            -->
+                    <div th:replace="~{fragments/mypage-sidebar-vertical :: fragment-sidebar-vertical}"></div>
+                    <!--        TODO  마이페이지 본 문           -->
+                    <div class="col-md-9 col-lg-8">
+                        <div>
+                            <h2 class="display-6 fw-bold">전체 주문 조회</h2>
+                        </div>
+                        <div class="page-header d-print-none">
+                            <div class="card p-3">
+                                <!--   TODO 주문 조회 상단 기간 설정 헤더                          -->
+                                <div class="card-header">
+                                    <form class="row g-3 align-items-center">
+                                        <div class="col-auto">
+                                            <span class="form-label d-lg-inline fs-3">기간별 조회</span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <div class="btn-group w-100" role="group">
+                                                <input type="radio" class="btn-check" name="btn-radio-basic" id="btn-radio-basic-1" autocomplete="off" checked="">
+                                                <label for="btn-radio-basic-1" type="button" class="btn">1주일</label>
+                                                <input type="radio" class="btn-check" name="btn-radio-basic" id="btn-radio-basic-2" autocomplete="off">
+                                                <label for="btn-radio-basic-2" type="button" class="btn">15일</label>
+                                                <input type="radio" class="btn-check" name="btn-radio-basic" id="btn-radio-basic-3" autocomplete="off">
+                                                <label for="btn-radio-basic-3" type="button" class="btn">1달</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <label class="form-label d-lg-inline fs-1 "> </label>
+                                        </div>
+                                        <div class="col-auto ">
+                                            <label class="form-label d-lg-inline fs-3">지정 일자 조회</label>
+                                        </div>
+                                        <div class="col-auto">
+                                            <input class="form-control fs-6" type="date" name="order-expected-date"
+                                                   th:min="${#calendars.format( #calendars.createNow(), 'yyyy-MM-dd')}"
+                                                   id="datepicker-pre">
+                                        </div>
+                                        <div class="col-auto">
+                                            <span class="form-label d-lg-inline fs-3">~</span>
+                                        </div>
+                                        <div class="col-auto">
+                                            <input class="form-control fs-6" type="date" name="order-expected-date"
+                                                   th:min="${#calendars.format( #calendars.createNow(), 'yyyy-MM-dd')}"
+                                                   id="datepicker-fut">
+                                        </div>
+                                        <div class="col-auto">
+                                            <a href="#" class="btn btn-vk w-100">
+                                                검색
+                                            </a>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="card-body">
+                                    <table class="table">
+                                        <thead>
+                                        <tr>
+                                            <th scope="col">쿠폰명</th>
+                                            <th scope="col">발행 트리거</th>
+                                            <th scope="col">쿠폰 타입</th>
+                                            <th scope="col">사용 기간</th>
+                                            <th scope="col">등록일</th>
+                                            <th scope="col">선택</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody class="table-group-divider">
+                                        <tr>
+                                            <td>테스트 쿠폰</td>
+                                            <td>회원가입</td>
+                                            <td>정률할인(20%)</td>
+                                            <td>발행일로부터 7일</td>
+                                            <td>2023-01-01</td>
+                                            <td>
+                                                <a href="#" class="btn btn-outline-dark w-50">
+                                                    Dark
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>테스트 쿠폰2</td>
+                                            <td>생일</td>
+                                            <td>정액할인(1000)</td>
+                                            <td>발행일로부터 5일</td>
+                                            <td>2023-01-02</td>
+                                            <td>
+                                                <a href="#" class="btn btn-outline-dark w-50">
+                                                    Dark
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
+
+
 
         <!-- TODO 4 : footer -->
         <div th:replace="~{fragments/footer :: fragment-footer}"></div>
