@@ -36,12 +36,7 @@ public class CommandProductServiceImpl implements CommandProductService {
     private String url;
 
     /**
-     * 상품을 등록을 요청하여 등록된 상품정보를 반환합니다.
-     *
-     * @param productResponseDto 상품 등록 요청 Dto
-     * @return 등록 후 응답받은 상품의 Id
-     * @author 이수정
-     * @since 1.0
+     * {@inheritDoc}
      */
     @Override
     public long register(ProductResponseDto productResponseDto) throws IOException {
@@ -94,11 +89,7 @@ public class CommandProductServiceImpl implements CommandProductService {
 //    public void modify(ProductResponseDto productResponseDto, long productId) {}
 
     /**
-     * 상품 삭제를 요청합니다.
-     *
-     * @param productId 삭제할 상품의 Id
-     * @author 이수정
-     * @since 1.0
+     * {@inheritDoc}
      */
     @Override
     public void softDelete(long productId) {
@@ -106,7 +97,31 @@ public class CommandProductServiceImpl implements CommandProductService {
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         HttpEntity httpEntity = new HttpEntity(headers);
-        restTemplate.postForEntity(url + "/v1/products/" + productId, httpEntity, String.class);
+        restTemplate.postForEntity(url + "/v1/products/" + productId, httpEntity, Void.class);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void changeIsSale(long productId) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity httpEntity = new HttpEntity(headers);
+        restTemplate.exchange(url + "/v1/products/" + productId + "/is-sale", HttpMethod.POST, httpEntity, Void.class);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void changeIsForcedOutOfStock(long productId) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity httpEntity = new HttpEntity(headers);
+        restTemplate.exchange(url + "/v1/products/" + productId + "/is-forced-out-of-stock", HttpMethod.POST, httpEntity, Void.class);
     }
 
 }
