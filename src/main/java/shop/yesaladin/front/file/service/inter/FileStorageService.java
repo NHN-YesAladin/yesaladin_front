@@ -1,8 +1,9 @@
 package shop.yesaladin.front.file.service.inter;
 
-import java.io.IOException;
 import org.springframework.web.multipart.MultipartFile;
 import shop.yesaladin.front.file.dto.FileUploadResponseDto;
+
+import java.io.IOException;
 
 /**
  * 파일 업로드/다운로드를 요청하는 Service Interface 입니다.
