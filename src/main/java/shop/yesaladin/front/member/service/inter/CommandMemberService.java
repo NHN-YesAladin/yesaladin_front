@@ -21,4 +21,12 @@ public interface CommandMemberService {
      */
     SignUpResponse signUp(SignUpRequest request);
 
+    /**
+     * 회원 탈퇴를 위한 기능입니다.
+     *
+     * @param loginId 탈퇴 대상 계정의 loginId 입니다.
+     * @author : 송학현
+     * @since : 1.0
+     */
+    void withdraw(String loginId);
 }

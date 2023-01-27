@@ -34,10 +34,10 @@
 
 <div class="wrapper">
   <!-- TODO 1 : HEADER -->
-  <div th:replace="~{fragments/header :: fragment-header}"></div>
+  <div th:replace="~{common/fragments/header :: fragment-header}"></div>
 
   <!-- TODO 2 : NAV-BAR -->
-  <div th:replace="~{fragments/navbar :: fragment-nav-bar}"></div>
+  <div th:replace="~{common/fragments/navbar :: fragment-nav-bar}"></div>
 
   <!-- TODO 3: BODY -->
   <div class="page-body">
@@ -261,9 +261,7 @@
 
   <!-- TODO 4 : footer -->
 </div>
-<div th:replace="~{fragments/footer :: fragment-footer}"></div>
-<!-- DOMContentLoaded관련 Script import -->
-<div th:replace="~{fragments/script :: fragment-script}"></div>
+<div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
 
 <script>
   function changeDisplay(target) {
