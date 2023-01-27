@@ -51,9 +51,15 @@ public class PointHistoryMemberWebController {
         model.addAttribute("totalDataCount", response.getTotalDataCount());
         model.addAttribute("dataList", response.getDataList());
 
-        return "mypage/page/point-history";
+        return "mypage/point/point-history";
     }
 
+    /**
+     * 페이지 화면 테스트용입니다.
+     *
+     * @author 최예린
+     * @since 1.0
+     */
     @GetMapping("/point-history/test")
     public String test(Model model, @RequestParam(required = false) String code, @PageableDefault Pageable pageable) {
         int currentPage = pageable.getPageNumber() == 0 ? 0 : pageable.getPageNumber() - 1;
@@ -78,7 +84,7 @@ public class PointHistoryMemberWebController {
         model.addAttribute("totalPage", totalPage);
         model.addAttribute("totalDataCount", totalDataCount);
         model.addAttribute("dataList", dataList);
-        return "mypage/page/point-history";
+        return "mypage/point/point-history";
     }
 
 }
