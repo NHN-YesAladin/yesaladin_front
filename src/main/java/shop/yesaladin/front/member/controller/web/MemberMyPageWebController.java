@@ -35,6 +35,6 @@ public class MemberMyPageWebController {
         log.info("loginId={}", loginId);
         commandMemberService.withdraw(loginId);
 
-        return "redirect:/main/index";
+        return "redirect:/";
     }
 }
