@@ -14,7 +14,8 @@
           * img 태그에 src 작성하기 -->
     <h1 class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3">
       <a href="/">
-        <img src="" width="110" height="32" alt="YesAladin!" class="navbar-brand-image">
+        <img th:src="@{~/img/logo/logo.png}" height="32" class="navbar-brand-image d-inline w-auto">
+        <span class="text-primary d-inline">Yes! Aladin</span>
       </a>
     </h1>
     <div class="navbar-nav flex-row order-md-last">
@@ -48,7 +49,7 @@
         <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown"
            aria-label="Open user menu">
           <span class="avatar avatar-sm"
-                style="background-image: url(./static/avatars/000m.jpg)"></span>
+                style="background-image: url(./static/img/logo/logo.png)"></span>
           <div class="d-none d-xl-block ps-2">
             <div sec:authorize="!isAuthenticated()">
               <span>😁</span>

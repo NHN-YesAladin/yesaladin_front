@@ -19,10 +19,21 @@ public class IndexController {
         return "main/index";
     }
 
+    /**
+     * 마이페이지를 반환시켜줍니다.
+     *
+     * @return 마이페이지
+     * @author 최예린
+     * @since 1.0
+     */
     @GetMapping("/mypage")
     public String mypage() {
+        //회원 등급 조회
+        //회원 포인트 조회
+        //회원 쿠폰 개수 조회
         return "mypage/index";
     }
+
     @GetMapping("/manager")
     public String manager() {
         return "manager/index";
