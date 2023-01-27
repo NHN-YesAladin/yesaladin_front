@@ -156,7 +156,7 @@ public class QueryProductWebController {
         model.addAllAttributes(pageInfoMap);
 
         List<ProductsResponseDto> dataList = products.getDataList();
-        dataList.stream().forEach(data -> data.makeAuthorLine());
+        dataList.forEach(ProductsResponseDto::makeAuthorLine);
 
         model.addAllAttributes(Map.of(
                 "products", products.getDataList(),
