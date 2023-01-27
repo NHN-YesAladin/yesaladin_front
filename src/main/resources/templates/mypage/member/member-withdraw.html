@@ -9,16 +9,16 @@
 -->
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
-    <title>Yes Aladin!</title>
-    <!-- CSS files -->
-    <link th:href="@{/css/tabler.min.css}" rel="stylesheet"/>
-    <link th:href="@{/css/tabler-flags.min.css}" rel="stylesheet"/>
-    <link th:href="@{/css/tabler-payments.min.css}" rel="stylesheet"/>
-    <link th:href="@{/css/tabler-vendors.min.css}" rel="stylesheet"/>
-    <link th:href="@{/css/demo.min.css}" rel="stylesheet"/>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+  <title>Yes Aladin!</title>
+  <!-- CSS files -->
+  <link th:href="@{/css/tabler.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-flags.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-payments.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-vendors.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/demo.min.css}" rel="stylesheet"/>
 </head>
 <body>
 <!-- Libs JS -->
@@ -28,48 +28,67 @@
 <script type="text/javascript" th:src="@{/js/demo.min.js}"></script>
 
 <div class="wrapper">
-    <!-- TODO 1 : Head -->
-    <div th:replace="~{common/fragments/header :: fragment-header}"></div>
-    <!-- TODO 2 : NAV-BAR -->
+  <!-- TODO 1 : Head -->
+  <div th:replace="~{common/fragments/header :: fragment-header}"></div>
+  <!-- TODO 2 : NAV-BAR -->
+  <div th:replace="~{common/fragments/navbar :: fragment-nav-bar}"></div>
 
-    <div th:replace="~{common/fragments/navbar :: fragment-nav-bar}"></div>
-
-    <div class="page-wrapper">
-        <div class="main-container">
-            <div class="container-sm">
-                <div class="row justify-content-around mt-3 mt-lg-5">
-                    <div class="col-xl-3 col-lg-3 mb-4 bg-secondary-lt" >
-                        <div th:replace="~{mypage/fragments/sidebar :: fragment-side-bar}"></div>
-                    </div>
-                    <div class="col-md-9 col-lg-8">
-                        <h1>회원 탈퇴</h1>
-                        <div>
-<!--                            계정: <span th:text="${#authentication.name}"></span>-->
-                            <br>
-                            <span>회원 탈퇴 시 아이디 재사용 및 복구 불가</span>
-                            <br>
-                            <span>사용하고 계신 계정을 탈퇴하시면 재사용 및 복구가 불가하오니 신중하게 선택하세요.</span>
-                        </div>
-                        <div>
-                            <form action="/mypage/withdraw" id="withdraw-form" method="post" autocomplete="off" novalidate="">
-                                <div class="mb-3">
-                                    계정
-                                    <input type="text" name="loginId" id="loginId" class="form-control w-auto" disabled
-                                           th:value="${#authentication.name}"
-                                           autocomplete="off" required>
-                                </div>
-                                <div class="form-footer">
-                                    <button type="submit" class="btn btn-primary w-auto">회원 탈퇴</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  <div class="page-wrapper">
+    <div class="page-header d-print-none">
+      <div class="container-xl">
+        <div class="row g-2 align-items-center">
+          <div class="col">
+            <h2 class="page-title">
+              마이 페이지
+            </h2>
+          </div>
         </div>
-        <!-- TODO 4 : footer -->
-        <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
+      </div>
     </div>
+    <div class="page-body">
+      <div class="container-xl">
+        <div class="card">
+          <div class="row g-0">
+            <div class="col-xl-3 col-lg-3 bg-secondary-lt">
+              <div class="card-body">
+                <div th:replace="~{mypage/fragments/sidebar :: fragment-side-bar}"></div>
+              </div>
+            </div>
+            <div class="col-md-9 col-lg-8">
+              <div class="card-body">
+                <h1 class="fw-bold">회원 탈퇴</h1>
+                <div>
+                  <!--                            계정: <span th:text="${#authentication.name}"></span>-->
+                  <br>
+                  <span>회원 탈퇴 시 아이디 재사용 및 복구 불가</span>
+                  <br>
+                  <span>사용하고 계신 계정을 탈퇴하시면 재사용 및 복구가 불가하오니 신중하게 선택하세요.</span>
+                </div>
+                <div>
+                  <form action="/mypage/withdraw" id="withdraw-form" method="post"
+                        autocomplete="off" novalidate="">
+                    <div class="mb-3">
+                      계정
+                      <input type="text" name="loginId" id="loginId" class="form-control w-auto"
+                             disabled
+                             th:value="${#authentication.name}"
+                             autocomplete="off" required>
+                    </div>
+                    <div class="form-footer">
+                      <button type="submit" class="btn btn-primary w-auto">회원 탈퇴</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <!-- TODO 4 : footer -->
+  <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
 </div>
 </body>
 </html>
