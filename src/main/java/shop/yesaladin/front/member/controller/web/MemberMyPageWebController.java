@@ -2,6 +2,7 @@ package shop.yesaladin.front.member.controller.web;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,10 +31,14 @@ public class MemberMyPageWebController {
 
     @PostMapping("/withdraw")
     public String doWithdraw() {
-        String loginId = SecurityContextHolder.getContext().getAuthentication().getName();
+        SecurityContext context = SecurityContextHolder.getContext();
+        String loginId = context.getAuthentication().getName();
 
         log.info("loginId={}", loginId);
         commandMemberService.withdraw(loginId);
+
+        SecurityContextHolder.clearContext();
+        context.setAuthentication(null);
 
         return "redirect:/";
     }
