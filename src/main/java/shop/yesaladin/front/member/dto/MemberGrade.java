@@ -3,7 +3,12 @@ package shop.yesaladin.front.member.dto;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-
+/**
+ * 회원의 등급입니다.
+ *
+ * @author 최예린
+ * @since 1.0
+ */
 @Getter
 @RequiredArgsConstructor
 public enum MemberGrade {
