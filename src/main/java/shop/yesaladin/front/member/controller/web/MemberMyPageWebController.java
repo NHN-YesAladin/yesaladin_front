@@ -20,6 +20,13 @@ import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.member.dto.MemberGrade;
 import shop.yesaladin.front.member.dto.MemberGradeHistoryResponseDto;
 import shop.yesaladin.front.member.service.inter.QueryMemberGradeHistoryService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import shop.yesaladin.front.member.service.inter.CommandMemberService;
 
 /**
  * 마이페이지 관련 회원 Controller입니다.
@@ -27,12 +34,15 @@ import shop.yesaladin.front.member.service.inter.QueryMemberGradeHistoryService;
  * @author 최예린
  * @since 1.0
  */
+@Slf4j
 @RequiredArgsConstructor
 @Controller
 @RequestMapping("/mypage")
 public class MemberMyPageWebController {
 
     private final QueryMemberGradeHistoryService queryMemberGradeHistoryService;
+    
+    private final CommandMemberService commandMemberService;
 
     private final LocalDate DEFAULT_START_DATE = LocalDate.of(2023, 1, 1);
 
@@ -114,5 +124,20 @@ public class MemberMyPageWebController {
 
         return "mypage/member/grade-history";
     }
+   
 
+    @GetMapping("/withdraw")
+    public String withdraw() {
+        return "mypage/member/member-withdraw";
+    }
+
+    @PostMapping("/withdraw")
+    public String doWithdraw() {
+        String loginId = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        log.info("loginId={}", loginId);
+        commandMemberService.withdraw(loginId);
+
+        return "redirect:/";
+    }
 }

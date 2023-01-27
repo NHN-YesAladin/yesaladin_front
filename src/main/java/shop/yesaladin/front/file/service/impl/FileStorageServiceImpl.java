@@ -1,15 +1,10 @@
 package shop.yesaladin.front.file.service.impl;
 
-import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -17,6 +12,8 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import shop.yesaladin.front.file.dto.FileUploadResponseDto;
 import shop.yesaladin.front.file.service.inter.FileStorageService;
+
+import java.io.IOException;
 
 /**
  * 파일 업로드/다운로드를 요청하는 Service 구현체 입니다.

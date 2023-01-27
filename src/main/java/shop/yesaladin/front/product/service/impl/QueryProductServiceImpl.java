@@ -1,17 +1,10 @@
 package shop.yesaladin.front.product.service.impl;
 
-import java.net.URI;
-import java.util.List;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -28,6 +21,10 @@ import shop.yesaladin.front.tag.dto.TagResponseDto;
 import shop.yesaladin.front.tag.service.inter.QueryTagService;
 import shop.yesaladin.front.writing.dto.AuthorResponseDto;
 import shop.yesaladin.front.writing.service.inter.QueryAuthorService;
+
+import java.net.URI;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 상품 조회 요청을 위한 service 구현체 입니다.
@@ -53,12 +50,7 @@ public class QueryProductServiceImpl implements QueryProductService {
     private String url;
 
     /**
-     * 상품 상세 조회를 요청하여 응답을 받습니다.
-     *
-     * @param productId 찾고자 하는 상품의 Id
-     * @return 응답받은 상품 상세 정보를 담은 Dto
-     * @author 이수정
-     * @since 1.0
+     * {@inheritDoc}
      */
     @Override
     public ProductDetailResponseDto getProductDetail(long productId) {
@@ -80,11 +72,7 @@ public class QueryProductServiceImpl implements QueryProductService {
     }
 
     /**
-     * 상품 연관관계의 도메인을 각각 조회한 Dto를 담은 Map을 반환합니다.
-     *
-     * @return 도메인별 Dto를 담은 Map
-     * @author 이수정
-     * @since 1.0
+     * {@inheritDoc}
      */
     @Override
     public Map<String, Object> getProductRelatedDtoMap() {
@@ -102,11 +90,37 @@ public class QueryProductServiceImpl implements QueryProductService {
     }
 
     /**
-     * 관리자용 상품 전체 조회를 요청하여 응답받습니다.
-     *
-     * @param pageRequestDto Pagination을 위한 Dto
-     * @param typeId         상품 유형 id
-     * @return 응답받은 상품 전체 조회 Dto
+     * {@inheritDoc}
+     */
+    @Override
+    public PaginatedResponseDto<ProductsResponseDto> findAllForManager(
+            PageRequestDto pageRequestDto,
+            Integer typeId
+    ) {
+        URI uri = UriComponentsBuilder
+                .fromUriString(url)
+                .path(PATH + "/manager")
+                .queryParam("typeId", typeId)
+                .queryParam("page", pageRequestDto.getPage())
+                .queryParam("size", pageRequestDto.getSize())
+                .encode()
+                .build()
+                .toUri();
+
+        HttpEntity httpEntity = getHttpEntity();
+        ResponseEntity<PaginatedResponseDto<ProductsResponseDto>> products = restTemplate.exchange(
+                uri,
+                HttpMethod.GET,
+                httpEntity,
+                new ParameterizedTypeReference<PaginatedResponseDto<ProductsResponseDto>>() {
+                }
+        );
+
+        return products.getBody();
+    }
+
+    /**
+     * {@inheritDoc}
      */
     @Override
     public PaginatedResponseDto<ProductsResponseDto> findAll(

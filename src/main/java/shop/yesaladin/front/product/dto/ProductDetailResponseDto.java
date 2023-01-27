@@ -1,11 +1,12 @@
 package shop.yesaladin.front.product.dto;
 
 
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 /**
  * shop에서 상품 싱세 정보를 응답받기 위한 Dto 입니다.

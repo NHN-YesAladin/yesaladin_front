@@ -1,6 +1,5 @@
 package shop.yesaladin.front.product.service.impl;
 
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -12,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import shop.yesaladin.front.product.dto.ProductTypeResponseDto;
 import shop.yesaladin.front.product.service.inter.QueryProductTypeService;
+
+import java.util.List;
 
 /**
  * 상품 유형 조회 요청을 위한 Service 구현체 입니다.
