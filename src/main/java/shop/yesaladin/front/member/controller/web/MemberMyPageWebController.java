@@ -3,6 +3,7 @@ package shop.yesaladin.front.member.controller.web;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -33,6 +34,8 @@ public class MemberMyPageWebController {
 
     private final QueryMemberGradeHistoryService queryMemberGradeHistoryService;
 
+    private final LocalDate DEFAULT_START_DATE = LocalDate.of(2023, 1, 1);
+
     /**
      * 마이페이지에서 회원의 등급 변경내역 페이지를 반환합니다.
      *
@@ -52,6 +55,8 @@ public class MemberMyPageWebController {
             Model model
     ) {
         String loginId = ((UserDetails) authentication.getPrincipal()).getUsername();
+
+        startDate = Objects.isNull(startDate) ? DEFAULT_START_DATE : startDate;
 
         PaginatedResponseDto<MemberGradeHistoryResponseDto> response = queryMemberGradeHistoryService.getMemberGradeHsitoryHistories(
                 pageable,
@@ -95,7 +100,7 @@ public class MemberMyPageWebController {
                     (long) i,
                     LocalDate.now(),
                     amount,
-                    MemberGrade.values()[random.nextInt() % 4],
+                    MemberGrade.values()[(int) Math.random() * 4],
                     "test"
             ));
         }
