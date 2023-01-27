@@ -38,7 +38,7 @@ import shop.yesaladin.front.member.service.inter.QueryMemberGradeHistoryService;
 public class MemberMyPageWebController {
 
     private final QueryMemberGradeHistoryService queryMemberGradeHistoryService;
-
+    
     private final CommandMemberService commandMemberService;
 
     private final LocalDate DEFAULT_START_DATE = LocalDate.of(2023, 1, 1);
