@@ -1,8 +1,5 @@
 package shop.yesaladin.front.product.controller;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -17,6 +14,10 @@ import shop.yesaladin.front.product.dto.ProductDetailResponseDto;
 import shop.yesaladin.front.product.dto.ProductsResponseDto;
 import shop.yesaladin.front.product.service.inter.QueryProductService;
 import shop.yesaladin.front.product.service.inter.QueryProductTypeService;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * 상품 조회 페이지를 위한 Controller 입니다.
@@ -47,7 +48,7 @@ public class QueryProductWebController {
 
         model.addAllAttributes(makeAttributeMap(response));
 
-        return "/user/product/product";
+        return "/main/product/product";
     }
 
 
@@ -66,7 +67,7 @@ public class QueryProductWebController {
     public String products(
             @RequestParam(required = false) Integer typeId,
             @RequestParam(required = false, defaultValue = "0") Integer page,
-            @RequestParam(required = false, defaultValue = "20") Integer size,
+            @RequestParam(required = false, defaultValue = "30") Integer size,
             Model model
     ) {
         int blockSize = 10;
@@ -88,7 +89,7 @@ public class QueryProductWebController {
                 "types", queryProductTypeService.findAll()
         ));
 
-        return "/user/product/products";
+        return "main/product/products";
     }
 
     /**
@@ -146,7 +147,7 @@ public class QueryProductWebController {
     ) {
         int blockSize = 10;
 
-        PaginatedResponseDto<ProductsResponseDto> products = queryProductService.findAll(
+        PaginatedResponseDto<ProductsResponseDto> products = queryProductService.findAllForManager(
                 new PageRequestDto(page, size),
                 typeId
         );

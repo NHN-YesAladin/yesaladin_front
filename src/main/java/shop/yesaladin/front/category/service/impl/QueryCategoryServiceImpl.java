@@ -1,6 +1,5 @@
 package shop.yesaladin.front.category.service.impl;
 
-import java.awt.print.Pageable;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,24 +30,23 @@ import shop.yesaladin.front.config.GatewayConfig;
 @Service
 public class QueryCategoryServiceImpl implements QueryCategoryService {
 
+    private static final ParameterizedTypeReference<List<CategoryResponseDto>> CATEGORIES_LIST_TYPE
+            = new ParameterizedTypeReference<>() {
+    };
+    private static final ParameterizedTypeReference<PaginatedResponseDto<CategoryResponseDto>> PAGING_CATEGORIES_TYPE
+            = new ParameterizedTypeReference<>() {
+    };
     private final RestTemplate restTemplate;
     private final GatewayConfig gatewayConfig;
 
-    private static final ParameterizedTypeReference<List<CategoryResponseDto>> CATEGORIES_LIST_TYPE
-            = new ParameterizedTypeReference<>() {};
-
-    private static final ParameterizedTypeReference<PaginatedResponseDto<CategoryResponseDto>> PAGING_CATEGORIES_TYPE
-            = new ParameterizedTypeReference<>() {};
-
     /**
      * {@inheritDoc}
-     *
      */
     @Override
     public List<CategoryResponseDto> getParentCategories() {
         UriComponents uriComponents = UriComponentsBuilder.fromHttpUrl(
                         gatewayConfig.getShopUrl() + "/v1/categories")
-                .queryParam("cate","parents")
+                .queryParam("cate", "parents")
                 .build();
 
         ResponseEntity<List<CategoryResponseDto>> responseEntity = restTemplate.exchange(
@@ -65,7 +63,6 @@ public class QueryCategoryServiceImpl implements QueryCategoryService {
 
     /**
      * {@inheritDoc}
-     *
      */
     @Override
     public PaginatedResponseDto<CategoryResponseDto> getChildCategoriesByParentId(
