@@ -1,7 +1,6 @@
 package shop.yesaladin.front.product.controller;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,9 +24,8 @@ import java.util.Objects;
  * @author 이수정
  * @since 1.0
  */
-@Slf4j
-@Controller
 @RequiredArgsConstructor
+@Controller
 @RequestMapping
 public class QueryProductWebController {
 
@@ -93,41 +91,6 @@ public class QueryProductWebController {
     }
 
     /**
-     * Paging Bar에 필요한 정보를 계산하고 Map으로 저장하여 반환합니다.
-     *
-     * @param size      페이지에 들어갈 오브젝트 개수
-     * @param blockSize 한 블럭에 들어갈 페이지 수
-     * @param products  페이징된 정보를 담고있는 PaginatedResponseDto
-     * @return Paging Bar에 필요한 정보를 담은 Map
-     * @author 이수정
-     * @since 1.0
-     */
-    private Map<String, Object> getPageInfo(
-            int size,
-            int blockSize,
-            PaginatedResponseDto<ProductsResponseDto> products
-    ) {
-        long currentPage = products.getCurrentPage();
-        long totalPage = products.getTotalPage();
-
-        int block = (int) (currentPage / blockSize);
-        long start = (long) block * blockSize + 1;
-        long last = Math.min((start + blockSize - 1), totalPage);
-        if (start > last) {
-            last = start;
-        }
-
-        return Map.of(
-                "size", size,
-                "totalPage", products.getTotalPage(),
-                "currentPage", products.getCurrentPage(),
-                "start", start,
-                "last", last,
-                "blockSize", blockSize
-        );
-    }
-
-    /**
      * [GET /manager/products] 관리자용 상품 전체 조회 View를 반환합니다.
      *
      * @param typeId 지정한 상품 유형 Id(없으면 전체 유형)
@@ -165,6 +128,41 @@ public class QueryProductWebController {
         ));
 
         return "/manager/product/products";
+    }
+
+    /**
+     * Paging Bar에 필요한 정보를 계산하고 Map으로 저장하여 반환합니다.
+     *
+     * @param size      페이지에 들어갈 오브젝트 개수
+     * @param blockSize 한 블럭에 들어갈 페이지 수
+     * @param products  페이징된 정보를 담고있는 PaginatedResponseDto
+     * @return Paging Bar에 필요한 정보를 담은 Map
+     * @author 이수정
+     * @since 1.0
+     */
+    private Map<String, Object> getPageInfo(
+            int size,
+            int blockSize,
+            PaginatedResponseDto<ProductsResponseDto> products
+    ) {
+        long currentPage = products.getCurrentPage();
+        long totalPage = products.getTotalPage();
+
+        int block = (int) (currentPage / blockSize);
+        long start = (long) block * blockSize + 1;
+        long last = Math.min((start + blockSize - 1), totalPage);
+        if (start > last) {
+            last = start;
+        }
+
+        return Map.of(
+                "size", size,
+                "totalPage", totalPage,
+                "currentPage", currentPage,
+                "start", start,
+                "last", last,
+                "blockSize", blockSize
+        );
     }
 
     /**
