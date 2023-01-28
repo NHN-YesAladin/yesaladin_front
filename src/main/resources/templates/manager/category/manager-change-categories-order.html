@@ -1,0 +1,364 @@
+<!doctype html>
+<!--
+* Tabler - Premium and Open Source dashboard template with responsive and high quality UI.
+* @version 1.0.0-beta5
+* @link https://tabler.io
+* Copyright 2018-2022 The Tabler Authors
+* Copyright 2018-2022 codecalm.net Paweł Kuna
+* Licensed under MIT (https://github.com/tabler/tabler/blob/master/LICENSE)
+-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <title>Yes Aladin! - 카테고리 관리자 화면-순서변경</title>
+    <!-- CSS files -->
+    <link th:href="@{/css/tabler.min.css}" rel="stylesheet"/>
+    <link th:href="@{/css/tabler-flags.min.css}" rel="stylesheet"/>
+    <link th:href="@{/css/tabler-payments.min.css}" rel="stylesheet"/>
+    <link th:href="@{/css/tabler-vendors.min.css}" rel="stylesheet"/>
+    <link th:href="@{/css/demo.min.css}" rel="stylesheet"/>
+</head>
+<body>
+<!-- Libs JS -->
+<script type="text/javascript" th:src="@{/libs/apexcharts/dist/apexcharts.min.js}"></script>
+<!-- Tabler Core -->
+<script type="text/javascript" th:src="@{/js/tabler.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/demo.min.js}"></script>
+<div class="wrapper">
+
+
+    <!-- TODO 2 : NAV-BAR -->
+    <div th:replace="~{manager/fragments/navbar-vertical :: fragment-nav-vertical}"></div>
+
+    <div class="page-wrapper">
+        <!-- TODO 1 : HEADER -->
+      <div th:replace="~{common/fragments/header :: fragment-header}"></div>
+        <div class="page-header d-print-none">
+          <div class="container-xl">
+            <div class="row g-2 align-items-center">
+              <div class="col">
+                <!-- Page pre-title -->
+                <div class="page-pretitle">
+                  카테고리
+                </div>
+                <h2 class="page-title">
+                  순서 변경
+                </h2>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TODO 3: BODY -->
+        <div class="page-body">
+<!--          -->
+          <form action="/manager/categories/order/modify" method="post" id="category-modify-form">
+            <div class="container-xl">
+              <div class="row row-deck row-cards">
+                <div class="col-12">
+                  <div class="card">
+                    <div class="card-header row">
+                      <h3 class="card-title col-md-2">카테고리 순서 변경</h3>
+                      <div class="mb-3 card" id="category-select-div"
+                           style="display: none;">
+                        <div class="row g-0">
+                          <div class="col-5" style="height: 20rem; overflow-y: scroll">
+                            <ul class="list-group" id="parent-category-group">
+                            </ul>
+                          </div>
+                          <div class="col-6" style="overflow-y: scroll; height: 20rem">
+                            <ul class="list-group" id="children-category-group">
+                            </ul>
+                          </div>
+                          <div class="col-1 d-flex flex-column justify-content-center align-self-center">
+                            <a href="#" class="m-auto btn w-50" id="order-up">
+                              <!-- Download SVG icon from http://tabler-icons.io/i/brand-google -->
+                              <svg xmlns="http://www.w3.org/2000/svg" class="m-auto icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><polyline points="7 11 12 6 17 11"></polyline><polyline points="7 17 12 12 17 17"></polyline>
+                              </svg>
+                            </a>
+                            <a href="#" class="m-auto btn w-50" id="order-down">
+                              <!-- Download SVG icon from http://tabler-icons.io/i/brand-google -->
+                              <svg xmlns="http://www.w3.org/2000/svg" class="m-auto icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><polyline points="7 7 12 12 17 7"></polyline><polyline points="7 13 12 18 17 13"></polyline></svg>
+                            </a>
+                            <p></p>
+                            <button type="submit" class="btn btn-primary m-auto">저장</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+
+        </div>
+
+        <!-- TODO 4 : footer -->
+        <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
+    </div>
+
+
+</div>
+<div class="d-none" id="shop-server-url" th:text="${@environment.getProperty('yesaladin.gateway.shop')}"></div>
+<div class="d-none" id="front-server-url" th:text="${@environment.getProperty('yesaladin.front.url')}"></div>
+<script>
+  let FRONT_SERVER;
+  let SHOP_SERVER;
+
+  const parentCategories = []
+  const tempParentCategories = {};
+  let childCategories = {};
+  const categories = {};
+  let activeCategoryId;
+  let activeCategoryOrder;
+
+
+
+  function changeOrderUp() {
+    const upButton = document.querySelector('#order-up');
+    upButton.addEventListener("click", () => {
+      let orderIdx = parseInt(activeCategoryOrder);
+      let present;
+      let prev;
+
+      const isParent = parseInt(activeCategoryId) % 10000 === 0;
+      if (isParent) {
+        present = tempParentCategories[orderIdx];
+        prev = tempParentCategories[orderIdx - 1];
+      } else {
+        present = childCategories[orderIdx];
+        prev = childCategories[orderIdx - 1];
+      }
+      if (present.order == 1) {
+        alert("가장 첫번째 요소입니다.");
+        return;
+      }
+
+      //UI 변경
+      const itemPrev = document.getElementById(`${prev.id}`);
+      const itemPresent = document.getElementById(`${present.id}`);
+      itemPrev.textContent = present.name;
+      itemPrev.id = present.id;
+      itemPrev.dataset['categoryOrder'] = present.order;
+
+      itemPresent.textContent = prev.name;
+      itemPresent.id = prev.id;
+      itemPresent.dataset['categoryOrder'] = prev.order;
+
+      //JS 동작을 위해 딕셔녀리 순서 변경 및 active 초기화
+      initActiveChildCategory();
+      if (isParent) {
+        initActiveParentCategory();
+        tempParentCategories[orderIdx] = prev;
+        tempParentCategories[orderIdx - 1] = present;
+      }else{
+        childCategories[orderIdx] = prev;
+        childCategories[orderIdx - 1] = present;
+      }
+      itemPrev.classList.add("active");
+
+      //순서 변경
+      [present.order, prev.order] = [prev.order, present.order];
+      activeCategoryOrder = present.order;
+
+
+    });
+  }
+
+  function changeOrderDown() {
+    const downButton = document.querySelector('#order-down');
+    downButton.addEventListener("click", () => {
+      let orderIdx = parseInt(activeCategoryOrder);
+      let present;
+      let next;
+
+      const isParent = parseInt(activeCategoryId) % 10000 === 0;
+      if (isParent) {
+        present = tempParentCategories[orderIdx];
+        next = tempParentCategories[orderIdx + 1];
+        if (present.order == Object.keys(tempParentCategories).length) {
+          alert("가장 마지막 요소입니다.");
+          return;
+        }
+      } else {
+        present = childCategories[orderIdx];
+        next = childCategories[orderIdx + 1];
+
+        if (present.order == Object.keys(childCategories).length) {
+          alert("가장 마지막 요소입니다.");
+          return;
+        }
+      }
+
+      //UI 변경
+      const itemNext = document.getElementById(`${next.id}`);
+      const itemPresent = document.getElementById(`${present.id}`);
+      itemNext.textContent = present.name;
+      itemNext.id = present.id;
+      itemNext.dataset['categoryOrder'] = present.order;
+
+      itemPresent.textContent = next.name;
+      itemPresent.id = next.id;
+      itemPresent.dataset['categoryOrder'] = next.order;
+
+      //JS 동작을 위해 딕셔녀리 순서 변경 및 active 초기화
+      if (isParent) {
+        initActiveParentCategory();
+        tempParentCategories[orderIdx] = next;
+        tempParentCategories[orderIdx + 1] = present;
+      }else{
+        initActiveChildCategory();
+        childCategories[orderIdx] = next;
+        childCategories[orderIdx + 1] = present;
+      }
+      itemNext.classList.add("active");
+
+      //순서 변경
+      [present.order, next.order] = [next.order, present.order];
+      activeCategoryOrder = present.order;
+
+    });
+  }
+
+  function handleSubmitEvent() {
+    const form = document.querySelector('#category-modify-form');
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      if (activeCategoryOrder == null) {
+        return;
+      }
+
+      let categoriesJson;
+      const isParent = parseInt(activeCategoryId) % 10000 === 0;
+      if (isParent) {
+        categoriesJson = JSON.stringify(Object.values(tempParentCategories));
+      }else{
+        categoriesJson = JSON.stringify(Object.values(childCategories));
+      }
+
+      const response = await fetch(`${SHOP_SERVER}/v1/categories/order`,
+          {method: "PUT", headers: { "Content-Type": "application/json" }, body: categoriesJson });
+      let result = await response.json();
+      console.log(result.result);
+    })
+  }
+
+  function initActiveParentCategory() {
+    const parentCategoryItems = document.querySelectorAll(
+        ".parent-category-item");
+    parentCategoryItems.forEach(c => c.classList.remove("active"));
+  }
+
+  function initActiveChildCategory() {
+    const childCategoryItems = document.querySelectorAll(".child-category-item");
+    childCategoryItems.forEach(c => c.classList.remove("active"));
+  }
+
+  function addEventListenerToChildCategoryItems() {
+    const childCategoryItems = document.querySelectorAll(".child-category-item");
+    childCategoryItems.forEach(c => c.addEventListener('click', async () => {
+      initActiveChildCategory();
+      activeCategoryId = c.id;
+      activeCategoryOrder = c.dataset['categoryOrder'];
+      c.classList.add("active");
+    }));
+  }
+
+  function addChildCategoryItemsToDiv(parentCategoryId) {
+    const childrenCategoryGroup = document.querySelector(
+        "#children-category-group");
+    childrenCategoryGroup.innerHTML = "";
+
+    childCategories = {};
+    categories[parentCategoryId].forEach(c => {
+      const item = document.createElement("li");
+      item.classList.add("list-group-item", "child-category-item");
+      item.textContent = c.name;
+      item.id = c.id;
+      item.dataset['categoryOrder'] = c.order;
+      childrenCategoryGroup.appendChild(item);
+
+      childCategories[c.order] = c;
+    })
+    addEventListenerToChildCategoryItems();
+  }
+
+  function addEventListenerToParentCategoryItems() {
+    const parentCategoryItems = document.querySelectorAll(
+        ".parent-category-item");
+    parentCategoryItems.forEach(c => c.addEventListener('click', async () => {
+      const parentCategoryId = c.id;
+      initActiveParentCategory();
+      initActiveChildCategory();
+      activeCategoryId = parentCategoryId;
+      activeCategoryOrder = c.dataset['categoryOrder'];
+      c.classList.add("active");
+      if (!categories[parentCategoryId]) {
+        const response = await fetch(
+            `${FRONT_SERVER}/api/categories/${parentCategoryId}?cate=children`);
+        categories[parentCategoryId] = await response.json();
+      }
+      addChildCategoryItemsToDiv(parentCategoryId);
+    }));
+  }
+
+  function addParentCategoryItemsToDiv() {
+    const parentCategoryGroup = document.querySelector(
+        "#parent-category-group");
+    parentCategoryGroup.innerHTML = "";
+
+    parentCategories.forEach(c => {
+      const item = document.createElement("li");
+      item.classList.add("list-group-item", "parent-category-item");
+      item.textContent = c.name;
+      item.id= c.id;
+      item.dataset['categoryOrder'] = c.order;
+      parentCategoryGroup.appendChild(item);
+    });
+    addEventListenerToParentCategoryItems();
+  }
+
+  async function initParentCategories() {
+    if (parentCategories.length > 0) {
+      addParentCategoryItemsToDiv()
+      return;
+    }
+    try {
+      const response = await fetch(
+          `${FRONT_SERVER}/api/categories?cate=parents`);
+      const parsedBody = await response.json();
+      parsedBody.forEach(c => {
+        parentCategories.push(c);
+        tempParentCategories[c.order] = c;
+      });
+      addParentCategoryItemsToDiv()
+    } catch (e) {
+      console.error(e);
+      alert("카테고리 목록을 불러올 수 없습니다.")
+    }
+  }
+
+  function initConnectionInfo() {
+    FRONT_SERVER = document.querySelector("#front-server-url").textContent;
+    SHOP_SERVER = document.querySelector("#shop-server-url").textContent;
+  }
+
+  (async function init() {
+    initConnectionInfo();
+    changeOrderUp();
+    changeOrderDown();
+    handleSubmitEvent();
+
+    activeCategoryId = null;
+    await initParentCategories();
+    const categorySelectDiv = document.querySelector("#category-select-div");
+    categorySelectDiv.style.display = '';
+  })();
+
+</script>
+</body>
+</html>

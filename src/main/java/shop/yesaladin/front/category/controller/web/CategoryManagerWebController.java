@@ -11,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import shop.yesaladin.front.category.dto.CategoryResponseDto;
@@ -95,6 +96,11 @@ public class CategoryManagerWebController {
         model.addAttribute("last", last);
         model.addAttribute("blockSize", blockSize);
         return "manager/category/manager-categories";
+    }
+
+    @GetMapping("/order")
+    public String changeOrders() {
+        return "manager/category/manager-change-categories-order";
     }
 
 
