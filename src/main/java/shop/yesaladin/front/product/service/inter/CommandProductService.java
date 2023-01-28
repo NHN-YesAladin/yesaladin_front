@@ -1,7 +1,8 @@
 package shop.yesaladin.front.product.service.inter;
 
-import java.io.IOException;
 import shop.yesaladin.front.product.dto.ProductResponseDto;
+
+import java.io.IOException;
 
 /**
  * 상품 등록/수정/삭제 요청을 위한 Service Interface 입니다.
@@ -31,4 +32,22 @@ public interface CommandProductService {
      * @since 1.0
      */
     void softDelete(long productId);
+
+    /**
+     * 상품 판매여부 변경을 요청합니다.
+     *
+     * @param productId 판매여부 변경할 상품의 Id
+     * @author 이수정
+     * @since 1.0
+     */
+    void changeIsSale(long productId);
+
+    /**
+     * 상품 강제품절여부 변경을 요청합니다.
+     *
+     * @param productId 강제품절여부 변경할 상품의 Id
+     * @author 이수정
+     * @since 1.0
+     */
+    void changeIsForcedOutOfStock(long productId);
 }

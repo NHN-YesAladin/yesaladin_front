@@ -1,5 +1,6 @@
 package shop.yesaladin.front.member.service.impl;
 
+import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
@@ -10,13 +11,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 import shop.yesaladin.front.config.GatewayConfig;
+import shop.yesaladin.front.member.dto.MemberWithdrawResponseDto;
 import shop.yesaladin.front.member.dto.SignUpRequest;
 import shop.yesaladin.front.member.dto.SignUpResponse;
 import shop.yesaladin.front.member.service.inter.CommandMemberService;
 
 /**
- * 회원 등록을 위한 service 구현체 입니다.
+ * 회원 등록, 수정, 삭제를 위한 service 구현체 입니다.
  *
  * @author : 송학현
  * @since : 1.0
@@ -53,4 +56,28 @@ public class CommandMemberServiceImpl implements CommandMemberService {
         return response.getBody();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void withdraw(String loginId) {
+        log.info("loginId={}", loginId);
+
+        URI uri = UriComponentsBuilder
+                .fromUriString(gatewayConfig.getUrl())
+                .path("/v1/members/withdraw/{loginId}")
+                .encode()
+                .build()
+                .expand(loginId)
+                .toUri();
+
+        ResponseEntity<MemberWithdrawResponseDto> response = restTemplate.exchange(
+                uri,
+                HttpMethod.DELETE,
+                HttpEntity.EMPTY,
+                MemberWithdrawResponseDto.class
+        );
+
+        log.info("response={}", response.getBody());
+    }
 }

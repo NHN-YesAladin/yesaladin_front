@@ -1,0 +1,161 @@
+<!doctype html>
+<!--
+* Tabler - Premium and Open Source dashboard template with responsive and high quality UI.
+* @version 1.0.0-beta5
+* @link https://tabler.io
+* Copyright 2018-2022 The Tabler Authors
+* Copyright 2018-2022 codecalm.net Paweł Kuna
+* Licensed under MIT (https://github.com/tabler/tabler/blob/master/LICENSE)
+-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <title>Yes Aladin!</title>
+    <!-- CSS files -->
+    <link th:href="@{/css/tabler.min.css}" rel="stylesheet"/>
+    <link th:href="@{/css/tabler-flags.min.css}" rel="stylesheet"/>
+    <link th:href="@{/css/tabler-payments.min.css}" rel="stylesheet"/>
+    <link th:href="@{/css/tabler-vendors.min.css}" rel="stylesheet"/>
+    <link th:href="@{/css/demo.min.css}" rel="stylesheet"/>
+</head>
+<body>
+<!-- Libs JS -->
+<script type="text/javascript" th:src="@{/libs/apexcharts/dist/apexcharts.min.js}"></script>
+<!-- Tabler Core -->
+<script type="text/javascript" th:src="@{/js/tabler.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/demo.min.js}"></script>
+
+<div class="wrapper">
+    <!-- TODO 1 : Head -->
+    <div th:replace="~{common/fragments/header :: fragment-header}"></div>
+    <!-- TODO 2 : NAV-BAR -->
+    <div th:replace="~{common/fragments/navbar :: fragment-nav-bar}"></div>
+
+    <div class="page-wrapper">
+        <div class="page-header d-print-none">
+            <div class="container-xl">
+                <div class="row g-2 align-items-center">
+                    <div class="col">
+                        <h2 class="page-title">
+                            마이 페이지
+                        </h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="page-body">
+            <div class="container-xl">
+                <div class="card">
+                    <div class="row g-0">
+                        <div class="col-xl-3 col-lg-3 bg-secondary-lt">
+                            <div class="card-body">
+                                <div th:replace="~{mypage/fragments/sidebar :: fragment-side-bar}"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-9 col-lg-9">
+                            <!--        TODO 3 :  Body          -->
+                            <div class="card-body">
+                                <h1 class="fw-bold mb-3">전체 주문 조회</h1>
+
+                                <div class="card p-3">
+                                    <!--   TODO 주문 조회 상단 기간 설정 헤더                          -->
+                                    <div class="card-header">
+                                        <form class="row row-cards g-3 w-full">
+                                            <div class="col-5">
+                                                <span class="form-label d-inline fs-3">기간별 조회</span>
+                                                <div class="btn-group w-auto d-inline" role="group">
+                                                    <input type="radio" class="btn-check" name="btn-radio-basic" id="btn-radio-basic-1" autocomplete="off" checked>
+                                                    <label for="btn-radio-basic-1" type="button" class="btn" style="height: 30px">1주일</label>
+                                                    <input type="radio" class="btn-check" name="btn-radio-basic" id="btn-radio-basic-2" autocomplete="off">
+                                                    <label for="btn-radio-basic-2" type="button" class="btn" style="height: 30px">15일</label>
+                                                    <input type="radio" class="btn-check" name="btn-radio-basic" id="btn-radio-basic-3" autocomplete="off">
+                                                    <label for="btn-radio-basic-3" type="button" class="btn" style="height: 30px">1달</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-7">
+                                                <label class="form-label d-inline fs-3 ms-1">지정 일자 조회</label>
+                                                <input class="form-control fs-6 w-auto d-inline" type="date" name="order-expected-date"
+                                                       th:max="${#calendars.format( #calendars.createNow(), 'yyyy-MM-dd')}"
+                                                       id="datepicker-pre">
+                                                ~ <input class="form-control fs-6 w-auto d-inline" type="date" name="order-expected-date"
+                                                       th:min="${#calendars.format( #calendars.createNow(), 'yyyy-MM-dd')}"
+                                                       id="datepicker-fut">
+                                                <a href="#" class="btn btn-primary w-auto d-inline" style="height: 30px">검색</a>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div class="card-body">
+                                        <table class="table text-center">
+                                            <thead>
+                                            <tr>
+                                                <th class="w-5" scope="col">주문번호</th>
+                                                <th class="w-auto" scope="col">주문일자</th>
+                                                <th class="w-25" scope="col">주문내역</th>
+                                                <th class="w-auto" scope="col">주문금액</th>
+                                                <th class="w-auto" scope="col">주문상태</th>
+                                                <th class="w-5" scope="col">주문자</th>
+                                                <th class="w-5" scope="col">조회</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody class="table-group-divider">
+                                            <!--        TODO : 테이블 내용 중앙 배치                            -->
+                                            <tr th:each="data: ${dataList}">
+                                                <td th:text="${data.getOrderNumber()}"></td>
+                                                <td th:text="${data.getOrderDate()}"></td>
+                                                <td class="text-start">
+                                                    <div class="row-cols-2">
+                                                        <p class="col-12 d-inline-block text-truncate"
+                                                           th:text="${data.getOrderName()}"
+                                                           style="max-width: 140px;">
+                                                        </p>
+                                                        <p class="col-12 d-inline-block text-truncate"
+                                                           style="max-width: 140px;">
+                                                            <span>등</span>&nbsp;
+                                                            <span th:text="${data.getCategoryCount()}">228</span>
+                                                            <span>종</span>&nbsp;
+                                                            <span th:text="${data.getProductCount()}">2445</span>
+                                                            <span>권</span>
+                                                        </p>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <span class="d-inline-block text-truncate"
+                                                          style="max-width: 100px;" th:text="${data.getAmount()}">
+                                                        222,500
+                                                    </span>
+                                                </td>
+                                                <td class="text-orange" th:text="${data.getDeliveryStatus()}"></td>
+                                                <td class="fw-bold" th:text="${data.getOrderMember()}"></td>
+                                                <td>
+                                                    <div>
+                                                        <a href="#" th:value="${data.getOrderId()}" class="btn btn-outline-dark w-full fs-5 fw-bolder m-1">
+                                                            주문상세조회
+                                                        </a>
+                                                        <a href="#" th:value="${data.getOrderId()}" class="btn btn-outline-dark w-full fs-5 fw-bolder m-1">
+                                                            배송조회
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div
+                                        th:replace="~{common/utils/paging :: paging('/mypage/orders', ${code == null ? '' : '&code=' + code})}">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- TODO 4 : footer -->
+    <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
+</div>
+</body>
+</html>
