@@ -1,23 +1,32 @@
 package shop.yesaladin.front.auth;
 
 import static java.util.stream.Collectors.toList;
+import static shop.yesaladin.front.member.jwt.AuthUtil.JWT_CODE;
+import static shop.yesaladin.front.member.jwt.AuthUtil.UUID_CODE;
 
 import java.util.List;
 import java.util.Objects;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import shop.yesaladin.front.common.exception.InvalidHttpHeaderException;
 import shop.yesaladin.front.member.adapter.MemberAdapter;
 import shop.yesaladin.front.member.dto.LoginRequest;
 import shop.yesaladin.front.member.dto.MemberResponse;
+import shop.yesaladin.front.member.jwt.AuthInfo;
 
 /**
  * AuthenticationManager를 custom한 Manager 입니다.
@@ -29,11 +38,14 @@ import shop.yesaladin.front.member.dto.MemberResponse;
 @RequiredArgsConstructor
 public class CustomAuthenticationManager implements AuthenticationManager {
 
+    private static final String UUID_HEADER = "UUID_HEADER";
+
     private final MemberAdapter memberAdapter;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     /**
-     * Auth 서버에서 발급받은 JWT 토큰을 기반으로 Shop 서버에 유저 정보를 요청 한 뒤, UsernamePasswordAuthenticationToken을 만들어
-     * 반환합니다.
+     * Auth 서버에서 발급받은 JWT 토큰을 기반으로 Shop 서버에 유저 정보를 요청 한 뒤,
+     * UsernamePasswordAuthenticationToken을 만들어 반환합니다.
      *
      * @param authentication 인증 객체입니다.
      * @return 인증 객체를 반환합니다.
@@ -51,10 +63,11 @@ public class CustomAuthenticationManager implements AuthenticationManager {
         );
         ResponseEntity<Void> exchange = memberAdapter.getAuthInfo(loginRequest);
 
-        String uuid = exchange.getHeaders().get("UUID_HEADER").get(0);
+        checkValidLoginRequest(exchange);
+
+        String uuid = Objects.requireNonNull(exchange.getHeaders().get(UUID_HEADER).get(0));
         log.info("uuid={}", uuid);
 
-        // TODO: login시 입력 값이 비었거나, 유저 정보가 없다면 redirect도 안되고 여기서 NullPointerException 발생함.
         String accessToken = extractAuthorizationHeader(exchange);
 
         if (accessToken.startsWith("Bearer ")) {
@@ -68,18 +81,40 @@ public class CustomAuthenticationManager implements AuthenticationManager {
 
         log.info("accessToken={}", accessToken);
 
-        // TODO: redis에 토큰 추가
-        // uuid를 기준으로 accessToken, user정보 넣기
-        // 이후 cookie에 uuid를 넣는다.
+        HttpServletResponse servletResponse = Objects.requireNonNull(((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())).getResponse();
+
+        Cookie cookie = new Cookie(UUID_CODE.getValue(), uuid);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+
+        servletResponse.addCookie(cookie);
 
         List<SimpleGrantedAuthority> authorities = getAuthorities(memberResponse);
         log.info("authorities={}", authorities);
+
+        AuthInfo authInfo = new AuthInfo(memberResponse.getBody(), accessToken, authorities);
+        log.info("authInfo={}", authInfo);
+        redisTemplate.opsForHash().put(uuid, JWT_CODE.getValue(), authInfo);
 
         return new UsernamePasswordAuthenticationToken(
                 authentication.getPrincipal().toString(),
                 null,
                 authorities
         );
+    }
+
+    /**
+     * login 요청 시 올바른 결과 인지 판별 하기 위해 Response Header를 검증 하는 기능 입니다.
+     * 예외 발생 시 CustomFailureHandler가 동작합니다.
+     *
+     * @param exchange Auth 서버에 login 요청 시 반환 되는 결과 입니다.
+     * @author : 송학현
+     * @since : 1.0
+     */
+    private void checkValidLoginRequest(ResponseEntity<Void> exchange) {
+        if (!exchange.getHeaders().containsKey(UUID_HEADER) || exchange.getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
+            throw new BadCredentialsException("자격 증명 실패");
+        }
     }
 
     /**
@@ -108,7 +143,7 @@ public class CustomAuthenticationManager implements AuthenticationManager {
      * @since : 1.0
      */
     private String extractAuthorizationHeader(ResponseEntity<Void> exchange) {
-        String accessToken = exchange.getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
+        String accessToken = Objects.requireNonNull(exchange.getHeaders().get(HttpHeaders.AUTHORIZATION).get(0));
         if (Objects.isNull(accessToken)) {
             throw new InvalidHttpHeaderException("Authorization Header is empty");
         }

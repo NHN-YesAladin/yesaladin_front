@@ -1,6 +1,5 @@
 package shop.yesaladin.front.tag.service.impl;
 
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -12,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import shop.yesaladin.front.tag.dto.TagResponseDto;
 import shop.yesaladin.front.tag.service.inter.QueryTagService;
+
+import java.util.List;
 
 /**
  * 태그 조회 요청을 위한 service 구현체 입니다.

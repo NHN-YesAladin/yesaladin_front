@@ -1,11 +1,12 @@
 package shop.yesaladin.front.product.dto;
 
 
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 /**
  * shop에서 상품 싱세 정보를 응답받기 위한 Dto 입니다.
@@ -43,25 +44,10 @@ public class ProductDetailResponseDto {
 
     private String description;
 
-    @Override
-    public String toString() {
-        return "ProductDetailResponseDto{" +
-                "id=" + id +
-                ", ebookFileUrl='" + ebookFileUrl + '\'' +
-                ", title='" + title + '\'' +
-                ", authors=" + authors +
-                ", publisher='" + publisher + '\'' +
-                ", thumbnailFileUrl='" + thumbnailFileUrl + '\'' +
-                ", actualPrice=" + actualPrice +
-                ", sellingPrice=" + sellingPrice +
-                ", pointPrice=" + pointPrice +
-                ", pointRate=" + pointRate +
-                ", publishedDate='" + publishedDate + '\'' +
-                ", isbn='" + isbn + '\'' +
-                ", isSubscriptionAvailable=" + isSubscriptionAvailable +
-                ", issn='" + issn + '\'' +
-                ", contents='" + contents + '\'' +
-                ", description='" + description + '\'' +
-                '}';
-    }
+    // 판매여부 관련
+    private long quantity;
+    private boolean isForcedOutOfStock;
+    private boolean isSale;
+    private boolean isDeleted;
+
 }

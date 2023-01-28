@@ -1,20 +1,17 @@
 package shop.yesaladin.front.product.controller;
 
-import java.io.IOException;
-import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import shop.yesaladin.front.product.dto.ProductResponseDto;
 import shop.yesaladin.front.product.service.inter.CommandProductService;
 import shop.yesaladin.front.product.service.inter.QueryProductService;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.Map;
 
 /**
  * 상품 등록/수정/삭제 관련 페이지를 위한 Controller 입니다.
@@ -118,5 +115,32 @@ public class CommandProductWebController {
         return "redirect:" + request.getHeader("Referer");
     }
 
+    /**
+     * [POST /products/{productId}/is-sale] 특정 상품의 판매여부를 변경합니다.
+     *
+     * @param productId 변경할 상품의 Id
+     * @author 이수정
+     * @since 1.0
+     */
+    @PostMapping("/products/{productId}/is-sale")
+    public String changeIsSale(@PathVariable long productId, HttpServletRequest request) {
+        commandProductService.changeIsSale(productId);
+
+        return "redirect:" + request.getHeader("Referer");
+    }
+
+    /**
+     * [POST /products/{productId}/is-forced-out-of-stock] 특정 상품의 강제품절여부를 변경합니다.
+     *
+     * @param productId 변경할 상품의 Id
+     * @author 이수정
+     * @since 1.0
+     */
+    @PostMapping("/products/{productId}/is-forced-out-of-stock")
+    public String changeIsForcedOutOfStock(@PathVariable long productId, HttpServletRequest request) {
+        commandProductService.changeIsForcedOutOfStock(productId);
+
+        return "redirect:" + request.getHeader("Referer");
+    }
 
 }

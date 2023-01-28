@@ -10,8 +10,9 @@ import lombok.ToString;
 
 /**
  * 카테고리 생성 및 수정을 위한 Dto
- *
+ * <p>
  * parentId가 null일 경우 상위 카테고리
+ *
  * @author 배수한
  * @since 1.0
  */

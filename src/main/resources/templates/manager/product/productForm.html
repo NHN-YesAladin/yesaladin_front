@@ -34,10 +34,10 @@
 
 <div class="wrapper">
   <!-- TODO 1 : HEADER -->
-  <div th:replace="~{fragments/header :: fragment-header}"></div>
+  <div th:replace="~{common/fragments/header :: fragment-header}"></div>
 
   <!-- TODO 2 : NAV-BAR -->
-  <div th:replace="~{fragments/navbar :: fragment-nav-bar}"></div>
+  <div th:replace="~{common/fragments/navbar :: fragment-nav-bar}"></div>
 
   <!-- TODO 3: BODY -->
   <div class="page-body">
@@ -261,14 +261,12 @@
 
   <!-- TODO 4 : footer -->
 </div>
-<div th:replace="~{fragments/footer :: fragment-footer}"></div>
-<!-- DOMContentLoaded관련 Script import -->
-<div th:replace="~{fragments/script :: fragment-script}"></div>
+<div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
 
 <script>
   function changeDisplay(target) {
     let element = document.getElementById(target);
-    if (element.style.display == 'none') {
+    if (element.style.display === 'none') {
       element.style.display = 'block';
     } else {
       element.style.display = 'none';
@@ -277,7 +275,7 @@
   }
   function changeValue(target) {
     let element = document.getElementById(target);
-    if (element.getAttribute('value') == 'false') {
+    if (element.getAttribute('value') === 'false') {
       element.setAttribute('value', 'true');
     } else {
       element.setAttribute('value', 'false')
@@ -322,7 +320,6 @@
 
     let emptyRegex = /\s/g;
     let isbnRegex = /^.*(?=.*\d)(?=^.{13}).*$/;
-    // let titleRegex = /^.*(?=.*[가-힣a-z])(?=^.{1,255}).*$/;
     let rateRegex = /^[1-9]{1}$|^[1-9]{1}[0-9]{1}$|^100$/;
     let issnRegex = /^.*(?=.*\d)(?=^.{8}).*$/;
     let quantityRegex = /^.*(?=.*\d)(?=^.{0,}).*$/;
@@ -342,13 +339,6 @@
           event.preventDefault();
           return false;
         }
-
-        // let titleVal = document.getElementById('title').value;
-        // if (!titleRegex.test(titleVal) || emptyRegex.test(titleVal)) {
-        //   alert('제목(특수문자 제외)을 올바르게 입력해주세요.');
-        //   event.preventDefault();
-        //   return false;
-        // }
 
         document.querySelector('#description').setAttribute('value', editor.getHTML());
         if (editor.getHTML() === '<p><br></p>') {

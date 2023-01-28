@@ -55,4 +55,9 @@ public class CouponManagerWebController {
     ) {
         return commandCouponService.createCouponTemplate(requestDto);
     }
+
+    @GetMapping
+    public String couponTemplateListView() {
+        return "coupon/manager-coupon-list-view";
+    }
 }

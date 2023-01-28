@@ -1,12 +1,13 @@
 package shop.yesaladin.front.product.dto;
 
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 import shop.yesaladin.front.file.dto.FileUploadResponseDto;
+
+import java.util.List;
 
 /**
  * 사용자가 요청한 상품 등록 정보를 받아오기 위한 Dto 입니다.
