@@ -156,7 +156,7 @@ public class QueryProductWebController {
         model.addAllAttributes(pageInfoMap);
 
         List<ProductsResponseDto> dataList = products.getDataList();
-        dataList.stream().forEach(data -> data.makeAuthorLine());
+        dataList.forEach(ProductsResponseDto::makeAuthorLine);
 
         model.addAllAttributes(Map.of(
                 "products", products.getDataList(),
@@ -180,6 +180,8 @@ public class QueryProductWebController {
         boolean isEbook = Objects.nonNull(response.getEbookFileUrl()) && !response.getEbookFileUrl()
                 .isBlank();
 
+        boolean onSale = response.getQuantity() > 0 && !response.isForcedOutOfStock() && response.isSale() && !response.isDeleted();
+
         return Map.ofEntries(
                 Map.entry("id", response.getId()),
                 Map.entry("isEbook", isEbook),
@@ -197,7 +199,8 @@ public class QueryProductWebController {
                 Map.entry("isSubscriptionAvailable", response.isSubscriptionAvailable()),
                 Map.entry("issn", response.getIssn()),
                 Map.entry("contents", response.getContents()),
-                Map.entry("description", response.getDescription())
+                Map.entry("description", response.getDescription()),
+                Map.entry("onSale", onSale)
         );
     }
 }

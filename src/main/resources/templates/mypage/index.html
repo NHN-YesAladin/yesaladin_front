@@ -9,16 +9,16 @@
 -->
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
-    <title>Yes Aladin!</title>
-    <!-- CSS files -->
-    <link th:href="@{/css/tabler.min.css}" rel="stylesheet"/>
-    <link th:href="@{/css/tabler-flags.min.css}" rel="stylesheet"/>
-    <link th:href="@{/css/tabler-payments.min.css}" rel="stylesheet"/>
-    <link th:href="@{/css/tabler-vendors.min.css}" rel="stylesheet"/>
-    <link th:href="@{/css/demo.min.css}" rel="stylesheet"/>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+  <title>Yes Aladin!</title>
+  <!-- CSS files -->
+  <link th:href="@{/css/tabler.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-flags.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-payments.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-vendors.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/demo.min.css}" rel="stylesheet"/>
 </head>
 <body>
 <!-- Libs JS -->
@@ -28,69 +28,175 @@
 <script type="text/javascript" th:src="@{/js/demo.min.js}"></script>
 
 <div class="wrapper">
-    <!-- TODO 1 : Head -->
-    <div th:replace="~{common/fragments/header :: fragment-header}"></div>
-    <!-- TODO 2 : NAV-BAR -->
-    <div th:replace="~{common/fragments/navbar :: fragment-nav-bar}"></div>
+  <!-- TODO 1 : Head -->
+  <div th:replace="~{common/fragments/header :: fragment-header}"></div>
+  <!-- TODO 2 : NAV-BAR -->
+  <div th:replace="~{common/fragments/navbar :: fragment-nav-bar}"></div>
 
-    <div class="page-wrapper">
-        <div class="main-container">
-            <div class="container-sm">
-                <div class="row justify-content-around mt-3 mt-lg-5">
-                    <div class="col-xl-3 col-lg-3 mb-4 bg-secondary-lt">
-                        <div th:replace="~{mypage/fragments/sidebar :: fragment-side-bar}"></div>
-                    </div>
-                    <div class="col-xl-9 col-lg-9">
-                        <!-- TODO 3: BODY -->
-                        <h1 class="text-end" th:text="'님 안녕하세요'"></h1>
-                        <div class="row row-cards">
-                            <div class="col-xl-4 col-md-4">
-                                <div class="card">
-                                    <div class="card-header d-block">
-                                        <h3 class="card-title d-inline">
-                                            회원 등급
-                                            <span class="card-subtitle ms-1 float-end text-muted" th:text="${'white'}"></span>
-                                        </h3>
-                                    </div>
-                                    <div class="card-body m-auto">
-                                        <a href="#" class="btn btn-outline-secondary btn-sm d-inline">회원 등급변경 내역</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-5 col-md-5">
-                                <div class="card">
-                                    <div class="card-header d-block">
-                                        <h3 class="card-title d-inline">
-                                            포인트
-                                            <span class="card-subtitle ms-1 float-end text-muted" th:text="${'원'}"></span>
-                                        </h3>
-                                    </div>
-                                    <div class="card-body m-auto">
-                                        <a href="/mypage/point-history/test" class="btn btn-outline-secondary btn-sm d-inline m-1">이용내역</a>
-                                        <a href="#" class="btn btn-primary btn-sm d-inline m-1">충전</a>
-                                        <a href="#" class="btn btn-info btn-sm d-inline m-1">선물</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-3 col-md-3">
-                                <div class="card">
-                                    <div class="card-header d-block">
-                                        <h3 class="card-title d-inline">쿠폰</h3>
-                                    </div>
-                                    <div class="card-body m-auto">
-                                        <a href="#" class="btn btn-outline-secondary btn-sm d-inline">쿠폰 목록</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  <div class="page-wrapper">
+    <div class="page-header d-print-none">
+      <div class="container-xl">
+        <div class="row g-2 align-items-center">
+          <div class="col">
+            <h2 class="page-title">
+              마이 페이지
+            </h2>
+          </div>
         </div>
-
+      </div>
     </div>
-    <!-- TODO 4 : footer -->
-    <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
+    <div class="page-body">
+      <div class="container-xl">
+        <div class="card">
+          <div class="row g-0">
+            <div class="col-xl-3 col-lg-3 bg-secondary-lt">
+              <div class="card-body">
+                <div th:replace="~{mypage/fragments/sidebar :: fragment-side-bar}"></div>
+              </div>
+            </div>
+            <div class="col-xl-9 col-lg-9">
+              <div class="card-body">
+                <!-- TODO 3: BODY -->
+                <h1 class="text-end" th:text="'님 안녕하세요'"></h1>
+                <div class="row row-cards mb-3">
+                  <div class="col-xl-5 col-md-5">
+                    <div class="card">
+                      <div class="card-header d-block">
+                        <h3 class="card-title d-inline">
+                          회원 등급
+                          <span class="card-subtitle ms-1 float-end text-muted"
+                                th:text="${'white'}"></span>
+                        </h3>
+                      </div>
+                      <div class="card-body m-auto">
+                        <a href="/mypage/grade-history/test"
+                           class="btn btn-outline-secondary btn-sm d-inline">회원 등급변경 내역</a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-xl-7 col-md-7">
+                    <div class="card">
+                      <div class="card-header d-block">
+                        <h3 class="card-title d-inline">
+                          포인트
+                          <span class="card-subtitle ms-1 float-end text-muted"
+                                th:text="${'원'}"></span>
+                        </h3>
+                      </div>
+                      <div class="card-body m-auto">
+                        <a href="/mypage/point-history/test"
+                           class="btn btn-outline-secondary btn-sm d-inline m-1">포인트 이용 내역</a>
+                        <a href="#" class="btn btn-primary btn-sm d-inline m-1">포인트 충전</a>
+                        <a href="#" class="btn btn-info btn-sm d-inline m-1">포인트 선물</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row row-cards mb-3">
+                  <div class="col-xl-5 col-md-5">
+                    <div class="card">
+                      <div class="card-header d-block">
+                        <h3 class="card-title d-inline">
+                          쿠폰
+                          <span class="card-subtitle ms-1 float-end text-muted"
+                                th:text="${'개'}"></span>
+                        </h3>
+                      </div>
+                      <div class="card-body m-auto">
+                        <a href="#" class="btn btn-outline-secondary btn-sm d-inline">쿠폰 목록</a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-xl-7 col-md-7">
+                    <div class="card">
+                      <div class="card-header d-block">
+                        <h3 class="card-title d-inline">재입고 알림 신청 상품</h3>
+                      </div>
+                      <div class="card-body m-auto">
+                        <div class="float-start w-auto d-inline"><span class="mb-3">알림 신청</span>
+                          <span
+                              th:text="${'___건'}"></span></div>
+                        /
+                        <div class="float-end w-auto d-inline"><span class="mb-3">알림 완료</span> <span
+                            th:text="${'___건'}"></span></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <hr>
+                <h3 class="sub-title">주문 상태</h3>
+                <div class="row row-cards mb-3">
+                  <div class="col-3">
+                    <div class="card card-stacked">
+                      <div class="card-body text-center">
+                        <h3 class="card-title">입금/결제 대기</h3>
+                        <a class="text-muted">___건</a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-3">
+                    <div class="card card-stacked">
+                      <div class="card-body text-center">
+                        <h3 class="card-title">배송 대기</h3>
+                        <a class="text-muted">___건</a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-3">
+                    <div class="card card-stacked">
+                      <div class="card-body text-center">
+                        <h3 class="card-title">배송중</h3>
+                        <a class="text-muted">___건</a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-3">
+                    <div class="card card-stacked">
+                      <div class="card-body text-center">
+                        <h3 class="card-title">배송 완료</h3>
+                        <a class="text-muted">___건</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <hr>
+                <div class="w-full">
+                  <h3 class="sub-title d-inline">위시 리스트</h3>
+                  <a href="#" class="btn btn-primary w-auto float-end btn-sm d-inline">더 보기</a>
+                </div>
+                <div class="border-1 border-muted w-auto">
+                  <div class="row row-cards w-full">
+                    <div class="col-3" th:each="a : ${#numbers.sequence(0,3)}">
+                      <div class="card">
+                        <div class="card-body"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <hr>
+                <div class="w-full">
+                  <h3 class="sub-title d-inline">최근 본 상품</h3>
+                  <a href="#" class="btn btn-primary w-auto float-end btn-sm d-inline">더 보기</a>
+                </div>
+                <div class="border-1 border-muted w-auto">
+                  <div class="row row-cards w-full">
+                    <div class="col-3" th:each="a : ${#numbers.sequence(0,3)}">
+                      <div class="card">
+                        <div class="card-body"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <!-- TODO 4 : footer -->
+  <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
 </div>
 </body>
 </html>
