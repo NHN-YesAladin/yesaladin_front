@@ -30,11 +30,11 @@
 
 
   <!-- TODO 2 : NAV-BAR -->
-  <div th:replace="~{fragments/navbar-vertical :: fragment-nav-vertical}"></div>
+  <div th:replace="~{manager/fragments/navbar-vertical :: fragment-nav-vertical}"></div>
 
   <div class="page-wrapper">
     <!-- TODO 1 : HEADER -->
-    <div th:replace="~{fragments/header :: fragment-header}"></div>
+    <div th:replace="~{common/fragments/navbar :: fragment-nav-bar}"></div>
     <div class="page-header d-print-none">
       <div class="container-xl">
         <div class="row g-2 align-items-center">
@@ -113,7 +113,7 @@
         </div>
       </div>
       <!-- TODO 4 : footer -->
-      <div th:replace="~{fragments/footer :: fragment-footer}"></div>
+      <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
     </div>
   </div>
 </div>
@@ -121,7 +121,6 @@
 <div class="d-none" id="shop-server-url" th:text="${shopServerUrl}"></div>
 <div class="d-none" id="front-server-url" th:text="${frontServerUrl}"></div>
 <!-- DOMContentLoaded관련 Script import -->
-<div th:replace="~{fragments/script :: fragment-script}"></div>
 <script th:src="@{/js/coupon/manager-coupon-create.js}"></script>
 </body>
 </html>

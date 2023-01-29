@@ -112,7 +112,8 @@ public class CustomAuthenticationManager implements AuthenticationManager {
      * @since : 1.0
      */
     private void checkValidLoginRequest(ResponseEntity<Void> exchange) {
-        if (!exchange.getHeaders().containsKey(UUID_HEADER) || exchange.getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
+        log.info("Auth server exchange check={}", exchange);
+        if (!exchange.getHeaders().containsKey(UUID_HEADER) || !exchange.getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
             throw new BadCredentialsException("자격 증명 실패");
         }
     }

@@ -30,18 +30,17 @@
   <h1>관리자 - 회원 관리</h1>
   <form method="get" id="search" action="manager-search-member-list.html">
     <select name="conditions" id="conditions">
-      <option value="loginId">아이디</option>
+      <option value="loginid">아이디</option>
       <option value="nickname">닉네임</option>
       <option value="name">이름</option>
       <option value="phone">전화번호</option>
-      <option value="signUpDate">가입일</option>
+      <option value="signupdate">가입일</option>
     </select>
     <input type="text" id="keyword" required/>
     <input type="submit"/>
   </form>
   <h1>리스트</h1><br/>
-    <div class="table-responsive">
-      <table class="table table-vcenter">
+      <table class="table">
         <thead>
         <tr>
           <th>id</th>
@@ -71,15 +70,14 @@
           <td th:text="${m.withdrawalDate}"></td>
           <td th:if="${m.isWithdrawal} == true" th:text="유"></td>
           <td th:if="${m.isWithdrawal} == false" th:text="무"></td>
-          <td th:text="${m.isBlocked} == true" th:text="유"></td>
-          <td th:text="${m.isBlocked} == false" th:text="무"></td>
+          <td th:if="${m.isBlocked} == true" th:text="유"></td>
+          <td th:if="${m.isBlocked} == false" th:text="무"></td>
           <td th:text="${m.point}"></td>
           <td th:text="${m.grade}"></td>
         </tr>
         </tbody>
       </table>
     </div>
-  </div>
 </div>
 <script>
   const t = document.getElementById('search');
@@ -88,7 +86,7 @@
     const type = select.options[select.selectedIndex].value;
     const keyword = document.getElementById('keyword').value;
     //alert(type + " " + keyword)
-    window.open('/v1/members/search/' + type + '/' + keyword)
+    window.open('/search/members/' + type + '/' + keyword)
   })
 </script>
 </body>

@@ -107,11 +107,10 @@ public class QueryProductServiceImpl implements QueryProductService {
                 .build()
                 .toUri();
 
-        HttpEntity httpEntity = getHttpEntity();
         ResponseEntity<PaginatedResponseDto<ProductsResponseDto>> products = restTemplate.exchange(
                 uri,
                 HttpMethod.GET,
-                httpEntity,
+                getHttpEntity(),
                 new ParameterizedTypeReference<PaginatedResponseDto<ProductsResponseDto>>() {
                 }
         );
@@ -137,11 +136,10 @@ public class QueryProductServiceImpl implements QueryProductService {
                 .build()
                 .toUri();
 
-        HttpEntity httpEntity = getHttpEntity();
         ResponseEntity<PaginatedResponseDto<ProductsResponseDto>> products = restTemplate.exchange(
                 uri,
                 HttpMethod.GET,
-                httpEntity,
+                getHttpEntity(),
                 new ParameterizedTypeReference<PaginatedResponseDto<ProductsResponseDto>>() {
                 }
         );
