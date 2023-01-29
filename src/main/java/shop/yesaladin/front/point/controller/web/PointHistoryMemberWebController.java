@@ -66,7 +66,7 @@ public class PointHistoryMemberWebController {
             @RequestParam(required = false) String code,
             @PageableDefault Pageable pageable
     ) {
-        int currentPage = pageable.getPageNumber() == 0 ? 0 : pageable.getPageNumber() - 1;
+        int currentPage = pageable.getPageNumber();
         int totalPage = 15;
         int totalDataCount = 149;
         List<PointHistoryResponseDto> dataList = new ArrayList<>();

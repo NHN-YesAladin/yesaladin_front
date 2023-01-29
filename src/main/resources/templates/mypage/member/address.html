@@ -1,0 +1,185 @@
+<!doctype html>
+<!--
+* Tabler - Premium and Open Source dashboard template with responsive and high quality UI.
+* @version 1.0.0-beta5
+* @link https://tabler.io
+* Copyright 2018-2022 The Tabler Authors
+* Copyright 2018-2022 codecalm.net Paweł Kuna
+* Licensed under MIT (https://github.com/tabler/tabler/blob/master/LICENSE)
+-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+  <title>Yes Aladin!</title>
+  <!-- CSS files -->
+  <link th:href="@{/css/tabler.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-flags.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-payments.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-vendors.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/demo.min.css}" rel="stylesheet"/>
+</head>
+<body>
+<!-- Tabler Core -->
+<script type="text/javascript" th:src="@{/js/tabler.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/demo.min.js}"></script>
+
+<div class="wrapper">
+  <!-- TODO 1 : Head -->
+  <div th:replace="~{common/fragments/header :: fragment-header}"></div>
+  <!-- TODO 2 : NAV-BAR -->
+  <div th:replace="~{common/fragments/navbar :: fragment-nav-bar}"></div>
+
+  <div class="page-wrapper">
+    <div class="page-header d-print-none">
+      <div class="container-xl">
+        <div class="row g-2 align-items-center">
+          <div class="col">
+            <h2 class="page-title">
+              마이 페이지
+            </h2>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-body">
+      <div class="container-xl">
+        <div class="card">
+          <div class="row g-0">
+            <div class="col-xl-3 col-lg-3 bg-secondary-lt">
+              <div class="card-body">
+                <div th:replace="~{mypage/fragments/sidebar :: fragment-side-bar}"></div>
+              </div>
+            </div>
+            <div class="col-xl-9 col-lg-9">
+              <div class="card-body">
+                <!-- TODO 3: BODY -->
+                <div class="row mb-3">
+                  <div class="col-9">
+                    <h1 class="fw-bold">회원 배송지 목록</h1>
+                  </div>
+                  <div class="col-3">
+                    <a href="#" class="btn btn-primary w-full" data-bs-toggle="modal"
+                       data-bs-target="#modal-team">배송지 추가</a>
+                  </div>
+                </div>
+                <div class="card">
+                  <div class="card-body">
+                    <form class="card mb-2" th:each="address:${data}" method="post"
+                          action="/mypage/address/default">
+                      <div class="row card-body">
+                        <div class="col-1 m-auto">
+                          <span th:text="${addressStat.index + 1}"></span>
+                        </div>
+                        <div class="col-10 m-auto">
+                          <input name="addressId" th:value="${address.id}" hidden>
+                          <span th:text="${address.address}"></span>
+                        </div>
+                        <div class="col-1">
+                          <div class="row">
+                            <div class="col-12">
+                              <button class="switch-icon switch-icon-scale"
+                                      th:classappend="${address.default ? 'active' : ''}"
+                                      data-bs-toggle="switch-icon" type="submit">
+                              <span class="switch-icon-a text-muted">
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                     class="icon icon-tabler icon-tabler-star" width="24"
+                                     height="24" viewBox="0 0 24 24" stroke-width="2"
+                                     stroke="currentColor" fill="none" stroke-linecap="round"
+                                     stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                    <path
+                                        d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"></path>
+                                </svg>
+                                </span>
+                                <span class="switch-icon-b text-yellow">
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                     class="icon icon-tabler icon-tabler-star-filled" width="24"
+                                     height="24" viewBox="0 0 24 24" stroke-width="2"
+                                     stroke="currentColor" fill="none" stroke-linecap="round"
+                                     stroke-linejoin="round">
+                                  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                  <path
+                                      d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"
+                                      fill="none"></path>
+                                </svg>
+                              </span>
+                              </button>
+                            </div>
+                            <div class="col-12">
+                              <a th:href="@{/mypage/address/delete(addressId=${address.id})}"
+                                 class="w-50">
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                     class="icon icon-tabler icon-tabler-trash" width="24"
+                                     height="24"
+                                     viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                     fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                  <path d="M4 7l16 0"></path>
+                                  <path d="M10 11l0 6"></path>
+                                  <path d="M14 11l0 6"></path>
+                                  <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"></path>
+                                  <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
+                                </svg>
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <!-- TODO 4 : footer -->
+  <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
+
+  <!-- Modal-->
+  <div class="modal modal-blur fade" id="modal-team" tabindex="-1" style="display: none;"
+       aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">배송지 등록</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"
+                  aria-label="Close"></button>
+        </div>
+        <form method="post" action="/mypage/address">
+          <div class="modal-body">
+            <div class="row mb-3 align-items-end">
+              <div class="col-12">
+                <label class="form-label">주소</label>
+                <label class="w-full">
+                  <input type="text" name="address" class="form-control">
+                </label>
+              </div>
+            </div>
+            <div class="row mb-3 align-items-end">
+              <span class="col">대표 배송지 설정</span>
+              <div class="col">
+                <label class="form-check form-check-single form-switch float-end ">
+                  <input class="form-check-input" name="isDefault" type="checkbox" checked>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">등록</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script th:src="@{/js/tabler.min.js(1674944800)}" defer=""></script>
+<script th:src="@{/js/demo.min.js(1674944800)}" defer=""></script>
+</body>
+</html>

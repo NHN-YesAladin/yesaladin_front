@@ -95,7 +95,7 @@ public class MemberMyPageWebController {
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
             Model model
     ) {
-        int currentPage = pageable.getPageNumber() == 0 ? 0 : pageable.getPageNumber() - 1;
+        int currentPage = pageable.getPageNumber();
         int totalPage = 15;
         int totalDataCount = 149;
         List<MemberGradeHistoryResponseDto> dataList = new ArrayList<>();

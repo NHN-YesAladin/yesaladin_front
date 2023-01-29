@@ -1,6 +1,5 @@
 package shop.yesaladin.front.member.dto;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -11,8 +10,8 @@ import lombok.Getter;
  * @since 1.0
  */
 @Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class MemberAddressQueryDto {
+@AllArgsConstructor
+public class MemberAddressResponseDto {
 
     private Long id;
     private String address;
