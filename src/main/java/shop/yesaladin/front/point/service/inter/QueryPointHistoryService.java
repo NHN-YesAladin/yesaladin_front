@@ -1,8 +1,10 @@
 package shop.yesaladin.front.point.service.inter;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.point.dto.PointHistoryResponseDto;
+import shop.yesaladin.front.point.dto.PointResponseDto;
 
 /**
  * 포인트 이용 내역을 조회하기 위한 service 입니다.
@@ -41,4 +43,13 @@ public interface QueryPointHistoryService {
             Pageable pageable,
             String loginId
     );
+
+    /**
+     * 회원의 포인트를 조회합니다.
+     *
+     * @return 회원의 포인트
+     * @author 최예린
+     * @since 1.0
+     */
+    ResponseEntity<PointResponseDto> getMemberPoint();
 }

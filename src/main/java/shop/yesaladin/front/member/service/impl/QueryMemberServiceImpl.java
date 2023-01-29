@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import shop.yesaladin.front.config.GatewayConfig;
+import shop.yesaladin.front.member.dto.MemberGradeQueryResponseDto;
 import shop.yesaladin.front.member.dto.MemberProfileExistResponseDto;
 import shop.yesaladin.front.member.dto.MemberQueryResponseDto;
 import shop.yesaladin.front.member.dto.MemberResponse;
@@ -113,11 +114,14 @@ public class QueryMemberServiceImpl implements QueryMemberService {
         );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public MemberQueryResponseDto getMemberInfo() {
         URI uri = UriComponentsBuilder
-                .fromUriString(gatewayConfig.getUrl())
-                .path("/v1/members/{loginId}}")
+                .fromUriString(gatewayConfig.getShopUrl())
+                .path("/v1/members/{loginId}")
                 .encode()
                 .build()
                 .expand("")
@@ -125,5 +129,24 @@ public class QueryMemberServiceImpl implements QueryMemberService {
         return restTemplate.getForObject(
                 uri, MemberQueryResponseDto.class
         );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getMemberGrade() {
+        URI uri = UriComponentsBuilder
+                .fromUriString(gatewayConfig.getShopUrl())
+                .path("/v1/members/{loginId}/grade")
+                .encode()
+                .build()
+                .expand("admin")
+                .toUri();
+        MemberGradeQueryResponseDto response = restTemplate.getForObject(
+                uri, MemberGradeQueryResponseDto.class
+        );
+        log.info("membergraderesponse : {}", response);
+        return response.getGradeEn();
     }
 }
