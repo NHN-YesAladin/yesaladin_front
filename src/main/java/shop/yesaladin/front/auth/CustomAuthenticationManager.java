@@ -15,6 +15,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -36,6 +37,8 @@ import shop.yesaladin.front.member.jwt.AuthInfo;
 @Slf4j
 @RequiredArgsConstructor
 public class CustomAuthenticationManager implements AuthenticationManager {
+
+    private static final String UUID_HEADER = "UUID_HEADER";
 
     private final MemberAdapter memberAdapter;
     private final RedisTemplate<String, Object> redisTemplate;
@@ -60,10 +63,11 @@ public class CustomAuthenticationManager implements AuthenticationManager {
         );
         ResponseEntity<Void> exchange = memberAdapter.getAuthInfo(loginRequest);
 
-        String uuid = exchange.getHeaders().get("UUID_HEADER").get(0);
+        checkValidLoginRequest(exchange);
+
+        String uuid = Objects.requireNonNull(exchange.getHeaders().get(UUID_HEADER).get(0));
         log.info("uuid={}", uuid);
 
-        // TODO: login시 입력 값이 비었거나, 유저 정보가 없다면 redirect도 안되고 여기서 NullPointerException 발생함.
         String accessToken = extractAuthorizationHeader(exchange);
 
         if (accessToken.startsWith("Bearer ")) {
@@ -100,6 +104,21 @@ public class CustomAuthenticationManager implements AuthenticationManager {
     }
 
     /**
+     * login 요청 시 올바른 결과 인지 판별 하기 위해 Response Header를 검증 하는 기능 입니다.
+     * 예외 발생 시 CustomFailureHandler가 동작합니다.
+     *
+     * @param exchange Auth 서버에 login 요청 시 반환 되는 결과 입니다.
+     * @author : 송학현
+     * @since : 1.0
+     */
+    private void checkValidLoginRequest(ResponseEntity<Void> exchange) {
+        log.info("Auth server exchange check={}", exchange);
+        if (!exchange.getHeaders().containsKey(UUID_HEADER) || !exchange.getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
+            throw new BadCredentialsException("자격 증명 실패");
+        }
+    }
+
+    /**
      * Shop 서버에서 제공 받은 회원 정보를 바탕으로 권한 정보를 추출하는 기능입니다.
      *
      * @param memberResponse Shop 서버에서 제공받은 회원 정보 결과 입니다.
@@ -125,7 +144,7 @@ public class CustomAuthenticationManager implements AuthenticationManager {
      * @since : 1.0
      */
     private String extractAuthorizationHeader(ResponseEntity<Void> exchange) {
-        String accessToken = exchange.getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
+        String accessToken = Objects.requireNonNull(exchange.getHeaders().get(HttpHeaders.AUTHORIZATION).get(0));
         if (Objects.isNull(accessToken)) {
             throw new InvalidHttpHeaderException("Authorization Header is empty");
         }

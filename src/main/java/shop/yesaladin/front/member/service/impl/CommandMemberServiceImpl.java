@@ -49,7 +49,7 @@ public class CommandMemberServiceImpl implements CommandMemberService {
         HttpEntity<SignUpRequest> entity = new HttpEntity<>(request, headers);
 
         ResponseEntity<SignUpResponse> response = restTemplate.exchange(
-                gatewayConfig.getUrl() + "/v1/members/",
+                gatewayConfig.getShopUrl() + "/v1/members/",
                 HttpMethod.POST,
                 entity,
                 SignUpResponse.class
@@ -67,7 +67,7 @@ public class CommandMemberServiceImpl implements CommandMemberService {
         log.info("loginId={}", loginId);
 
         URI uri = UriComponentsBuilder
-                .fromUriString(gatewayConfig.getUrl())
+                .fromUriString(gatewayConfig.getShopUrl())
                 .path("/v1/members/withdraw/{loginId}")
                 .encode()
                 .build()
