@@ -65,7 +65,7 @@ public class JwtInterceptor implements ClientHttpRequestInterceptor {
             log.info("authorities={}", auth.getAuthorities());
             log.info("nickname={}", auth.getNickname());
             request.getHeaders().setBearerAuth(auth.getAccessToken());
-
+            request.getHeaders().add(UUID_CODE.getValue(), uuid);
         }
         return execution.execute(request, body);
     }
