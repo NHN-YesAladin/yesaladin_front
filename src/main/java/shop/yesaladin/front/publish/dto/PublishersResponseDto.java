@@ -1,4 +1,4 @@
-package shop.yesaladin.front.writing.dto;
+package shop.yesaladin.front.publish.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * 저자 전체 조회를 하여 Dto로 반환합니다.
+ * 출판사 전체 조회를 하여 Dto로 반환합니다.
  *
  * @author 이수정
  * @since 1.0
@@ -15,9 +15,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuthorsResponseDto {
+public class PublishersResponseDto {
 
     private Long id;
     private String name;
-    private String loginId;
 }
