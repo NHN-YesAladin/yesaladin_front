@@ -92,7 +92,7 @@ public class CustomAuthenticationManager implements AuthenticationManager {
         List<SimpleGrantedAuthority> authorities = getAuthorities(memberResponse);
         log.info("authorities={}", authorities);
 
-        AuthInfo authInfo = new AuthInfo(memberResponse.getBody(), accessToken, authorities);
+        AuthInfo authInfo = new AuthInfo(memberResponse.getBody(), accessToken, memberResponse.getBody().getRoles());
         log.info("authInfo={}", authInfo);
         redisTemplate.opsForHash().put(uuid, JWT_CODE.getValue(), authInfo);
 
