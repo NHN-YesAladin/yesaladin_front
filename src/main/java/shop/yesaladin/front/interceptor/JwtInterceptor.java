@@ -80,7 +80,7 @@ public class JwtInterceptor implements ClientHttpRequestInterceptor {
      * @since : 1.0
      */
     public boolean isRequiredAuthorizationHeader(String uri) {
-        return !(uri.contains("login") || uri.contains("signup") || uri.contains("categories"));
+        return !(uri.contains("login") || uri.contains("signup") || uri.contains("categories") || uri.contains("check"));
     }
 
     /**
