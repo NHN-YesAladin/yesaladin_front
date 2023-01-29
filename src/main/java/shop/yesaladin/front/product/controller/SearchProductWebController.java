@@ -35,7 +35,7 @@ public class SearchProductWebController {
         model.addAttribute("selected", requestDto.getSelected());
         model.addAttribute("input", requestDto.getInput());
         model.addAttribute("blockSize", BLOCK_SIZE);
-        return "/main/product/searched-products";
+        return "main/product/searched-products";
     }
 
     private void getPageInfo(Model model, int offset, int size, Long count) {

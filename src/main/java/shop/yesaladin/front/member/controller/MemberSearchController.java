@@ -50,6 +50,7 @@ public class MemberSearchController {
      */
     @GetMapping("/loginid/{loginid}")
     public ModelAndView searchByLoginId(@PathVariable(name = "loginid") String loginId) {
+        log.info(loginId);
         ModelAndView modelAndView = new ModelAndView(VIEW_NAME);
         modelAndView.addObject(MEMBERS, searchMemberService.searchByLoginId(loginId));
         return modelAndView;
