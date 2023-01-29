@@ -66,7 +66,11 @@
             if (parentCategories.length === 0) {
                 // TODO 데이터 존재하므로 다시 fetch 할 필요 없음
                 let data = await getParentCategories();
-                data.forEach(c => parentCategories.push(c));
+                data.forEach(c => {
+                    if (c.isShown) {
+                        parentCategories.push(c);
+                    }
+                });
             }
 
             const headerList = document.getElementById("header-list");
@@ -102,7 +106,14 @@
                     if (!categories[id]) {
                         categories[id] = await getChildCategoriesByParentId(id);
                     }
-                    arrangeCategoryChildrenHeader(categories[id], menuColumns, menu);
+                    let shownCategories = [];
+                    categories[id].forEach(c => {
+                        if (c.isShown) {
+                            shownCategories.push(c);
+                        }
+                    });
+                    console.log(shownCategories);
+                    arrangeCategoryChildrenHeader(shownCategories, menuColumns, menu);
                 } catch (err){
                     console.error(err);
                     alert("2차 카테고리 목록을 불러올 수 없습니다.");

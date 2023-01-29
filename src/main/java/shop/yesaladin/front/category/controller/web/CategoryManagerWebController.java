@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Objects;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -29,6 +30,7 @@ import shop.yesaladin.front.common.exception.ValidationFailedException;
  * @since 1.0
  */
 
+@Slf4j
 @RequiredArgsConstructor
 @Controller
 @RequestMapping("/manager/categories")
@@ -146,7 +148,7 @@ public class CategoryManagerWebController {
         if (bindingResult.hasErrors()) {
             throw new ValidationFailedException(bindingResult);
         }
-
+        log.info("{}", modifyRequest);
         CategoryResponseDto responseDto = commandCategoryService.modify(categoryId, modifyRequest);
 
         if (Objects.isNull(responseDto.getParentId())) {
