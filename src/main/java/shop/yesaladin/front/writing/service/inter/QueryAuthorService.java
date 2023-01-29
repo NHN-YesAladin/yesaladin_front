@@ -1,6 +1,9 @@
 package shop.yesaladin.front.writing.service.inter;
 
+import shop.yesaladin.front.common.dto.PageRequestDto;
+import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.writing.dto.AuthorResponseDto;
+import shop.yesaladin.front.writing.dto.AuthorsResponseDto;
 
 import java.util.List;
 
@@ -20,4 +23,12 @@ public interface QueryAuthorService {
      * @since 1.0
      */
     List<AuthorResponseDto> findAll();
+
+    /**
+     * 관리자용 저자 전체 조회를 요청하여 응답받습니다.
+     *
+     * @param pageRequestDto Pagination을 위한 Dto
+     * @return 응답받은 저자 전체 조회 Dto
+     */
+    PaginatedResponseDto<AuthorsResponseDto> findAllForManager(PageRequestDto pageRequestDto);
 }
