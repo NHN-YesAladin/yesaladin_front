@@ -7,7 +7,7 @@ function nicknameCheck() {
     console.log(nicknameVal);
     const url = `/checkNickname/${nicknameVal}`;
     fetch(url, {
-      Accept: "application / json",
+      Accept: "application/json",
       method: "GET"
     }).then((resp) => {
       resp.json().then(resp => {
@@ -32,7 +32,7 @@ function loginIdCheck() {
     console.log(loginIdVal);
     const url = `/checkLoginId/${loginIdVal}`;
     fetch(url, {
-      Accept: "application / json",
+      Accept: "application/json",
       method: "GET"
     }).then((resp) => {
       resp.json().then(resp => {
@@ -57,7 +57,7 @@ function emailCheck() {
     console.log(emailVal);
     const url = `/checkEmail/${emailVal}`;
     fetch(url, {
-      Accept: "application / json",
+      Accept: "application/json",
       method: "GET"
     }).then((resp) => {
       resp.json().then(resp => {
@@ -82,7 +82,7 @@ function phoneCheck() {
     console.log(phoneVal);
     const url = `/checkPhone/${phoneVal}`;
     fetch(url, {
-      Accept: "application / json",
+      Accept: "application/json",
       method: "GET"
     }).then((resp) => {
       resp.json().then(resp => {
