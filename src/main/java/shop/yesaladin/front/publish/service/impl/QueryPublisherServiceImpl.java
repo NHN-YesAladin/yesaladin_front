@@ -12,7 +12,6 @@ import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.publish.dto.PublisherResponseDto;
 import shop.yesaladin.front.publish.dto.PublishersResponseDto;
 import shop.yesaladin.front.publish.service.inter.QueryPublisherService;
-import shop.yesaladin.front.writing.dto.AuthorsResponseDto;
 
 import java.net.URI;
 import java.util.List;
