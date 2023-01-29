@@ -13,7 +13,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum AuthUtil {
     JWT_CODE("JWT"),
-    UUID_CODE("UUID");
+    UUID_CODE("UUID"),
+    LOGON_CODE("LOGON");
 
     private final String value;
 }
