@@ -8,6 +8,8 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import shop.yesaladin.front.config.GatewayConfig;
 import shop.yesaladin.front.member.dto.MemberProfileExistResponseDto;
+import shop.yesaladin.front.member.dto.MemberQueryResponseDto;
+import shop.yesaladin.front.member.dto.MemberResponse;
 import shop.yesaladin.front.member.service.inter.QueryMemberService;
 
 /**
@@ -108,6 +110,20 @@ public class QueryMemberServiceImpl implements QueryMemberService {
         return restTemplate.getForObject(
                 uri,
                 MemberProfileExistResponseDto.class
+        );
+    }
+
+    @Override
+    public MemberQueryResponseDto getMemberInfo() {
+        URI uri = UriComponentsBuilder
+                .fromUriString(gatewayConfig.getUrl())
+                .path("/v1/members/{loginId}}")
+                .encode()
+                .build()
+                .expand("")
+                .toUri();
+        return restTemplate.getForObject(
+                uri, MemberQueryResponseDto.class
         );
     }
 }
