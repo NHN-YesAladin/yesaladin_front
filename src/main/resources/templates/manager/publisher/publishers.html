@@ -84,28 +84,8 @@
             </table>
           </div>
 
-<!--          <div-->
-<!--                  th:replace="~{common/utils/paging :: paging('/manager/publishers', '')}">-->
-<!--          </div>-->
-          <div class="card-footer d-flex align-items-center">
-            <ul class="pagination m-0 ms-auto">
-              <li class="page-item" th:if="${start > 1}">
-                <a class="page-link" th:href="@{/manager/publishers(size=${size}, page=(${start}-${blockSize}))}" tabindex="-1" aria-disabled="true">
-                  <!-- Download SVG icon from http://tabler-icons.io/i/chevron-left -->
-                  <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><polyline points="15 6 9 12 15 18" /></svg>
-                  이전
-                </a>
-              </li>
-              <li class="page-item" th:each="page : ${#numbers.sequence(start,last)}">
-                <a class="page-link" th:classappend="${currentPage==page}?'active'" th:href="@{/manager/publishers(size=${size}, page=${page}-1)}" th:text="${page}"></a>
-              </li>
-              <li class="page-item" th:if="${last < totalPage}">
-                <a class="page-link" th:href="@{/manager/publishers(size=${size}, page=(${start}+${blockSize}-1))}">
-                  다음 <!-- Download SVG icon from http://tabler-icons.io/i/chevron-right -->
-                  <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><polyline points="9 6 15 12 9 18" /></svg>
-                </a>
-              </li>
-            </ul>
+          <div
+                  th:replace="~{common/utils/paging-bar :: paging('/manager/publishers', '')}">
           </div>
         </div>
       </div>
@@ -114,7 +94,7 @@
       <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
     </div>
   </div>
-  <div class="modal modal-blur fade" id="modal-author-register" tabindex="-1" style="display: none;" aria-hidden="true">
+  <div class="modal modal-blur fade" id="modal-publisher-register" tabindex="-1" style="display: none;" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -135,7 +115,7 @@
       </div>
     </div>
   </div>
-  <div class="modal modal-blur fade" id="modal-author-modify" tabindex="-1" style="display: none;" aria-hidden="true">
+  <div class="modal modal-blur fade" id="modal-publisher-modify" tabindex="-1" style="display: none;" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -145,7 +125,7 @@
           <div class="row mb-3 align-items-end">
             <div class="col">
               <label class="form-label">출판사명</label>
-              <input type="text" class="form-control" id="author-modify-name">
+              <input type="text" class="form-control" id="publisher-modify-name">
             </div>
           </div>
         </div>
@@ -174,7 +154,7 @@
       })
       .then(res => {
         if (res.status !== 201) {
-          throw new Error(res.status + " 발생=> [출판사명: " + authorName + "]를 생성할 수 없습니다.");
+          throw new Error(res.status + " 발생=> [출판사명: " + publisherName + "]를 생성할 수 없습니다.");
         }
         return res.json();
       })
