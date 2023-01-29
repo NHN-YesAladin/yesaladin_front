@@ -3,15 +3,17 @@ package shop.yesaladin.front.writing.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
+import shop.yesaladin.front.common.dto.PageRequestDto;
+import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.writing.dto.AuthorResponseDto;
+import shop.yesaladin.front.writing.dto.AuthorsResponseDto;
 import shop.yesaladin.front.writing.service.inter.QueryAuthorService;
 
+import java.net.URI;
 import java.util.List;
 
 /**
@@ -30,11 +32,7 @@ public class QueryAuthorServiceImpl implements QueryAuthorService {
     private String url;
 
     /**
-     * 저자 전체 조회를 요청하여 응답을 받습니다.
-     *
-     * @return 응답받은 전체 조회된 Dto list
-     * @author 이수정
-     * @since 1.0
+     * {@inheritDoc}
      */
     @Override
     public List<AuthorResponseDto> findAll() {
@@ -45,6 +43,31 @@ public class QueryAuthorServiceImpl implements QueryAuthorService {
                 new ParameterizedTypeReference<List<AuthorResponseDto>>() {
                 }
         ).getBody();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public PaginatedResponseDto<AuthorsResponseDto> findAllForManager(PageRequestDto pageRequestDto) {
+        URI uri = UriComponentsBuilder
+                .fromUriString(url)
+                .path(PATH + "/manager")
+                .queryParam("page", pageRequestDto.getPage())
+                .queryParam("size", pageRequestDto.getSize())
+                .encode()
+                .build()
+                .toUri();
+
+        ResponseEntity<PaginatedResponseDto<AuthorsResponseDto>> authors = restTemplate.exchange(
+                uri,
+                HttpMethod.GET,
+                getHttpEntity(),
+                new ParameterizedTypeReference<PaginatedResponseDto<AuthorsResponseDto>>() {
+                }
+        );
+
+        return authors.getBody();
     }
 
     /**
