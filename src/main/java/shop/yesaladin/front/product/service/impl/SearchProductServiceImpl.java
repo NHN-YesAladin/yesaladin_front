@@ -1,6 +1,5 @@
 package shop.yesaladin.front.product.service.impl;
 
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,7 +25,7 @@ public class SearchProductServiceImpl implements SearchProductService {
 
     @Override
     public SearchedProductResponseDto searchProductsByProductField(SearchProductRequestDto requestDto) {
-        UriComponents url = UriComponentsBuilder.fromHttpUrl("http://localhost:8080")
+        UriComponents url = UriComponentsBuilder.fromHttpUrl(host)
                 .path(PATH)
                 .queryParam(requestDto.getSelected(), requestDto.getInput())
                 .queryParam(OFFSET, requestDto.getOffset()-1)
