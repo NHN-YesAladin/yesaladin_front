@@ -52,6 +52,7 @@ public class SecurityConfig {
                 UsernamePasswordAuthenticationFilter.class
         );
 
+        http.headers().frameOptions().sameOrigin();
         http.csrf().disable();
         http.cors().disable();
         return http.build();
