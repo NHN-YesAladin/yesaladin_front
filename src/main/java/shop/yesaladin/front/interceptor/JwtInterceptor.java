@@ -1,5 +1,6 @@
 package shop.yesaladin.front.interceptor;
 
+import static shop.yesaladin.front.member.jwt.AuthUtil.JWT_CODE;
 import static shop.yesaladin.front.member.jwt.AuthUtil.UUID_CODE;
 
 import java.io.IOException;
@@ -57,7 +58,7 @@ public class JwtInterceptor implements ClientHttpRequestInterceptor {
             String uuid = getUUID(servletRequest.getCookies());
             log.info("uuid={}", uuid);
 
-            AuthInfo auth = (AuthInfo) redisTemplate.opsForHash().get(uuid, "JWT");
+            AuthInfo auth = (AuthInfo) redisTemplate.opsForHash().get(uuid, JWT_CODE.getValue());
 
             log.info("accessToken={}", auth.getAccessToken());
             log.info("loginId={}", auth.getLoginId());
