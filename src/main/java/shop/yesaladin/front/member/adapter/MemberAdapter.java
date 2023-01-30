@@ -2,6 +2,7 @@ package shop.yesaladin.front.member.adapter;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -9,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.config.GatewayConfig;
 import shop.yesaladin.front.member.dto.LoginRequest;
 import shop.yesaladin.front.member.dto.MemberResponse;
@@ -58,18 +60,19 @@ public class MemberAdapter {
      * @author : 송학현
      * @since : 1.0
      */
-    public ResponseEntity<MemberResponse> getMemberInfo(
+    public ResponseEntity<ResponseDto<MemberResponse>> getMemberInfo(
             LoginRequest loginRequest,
             String accessToken
     ) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setBearerAuth(accessToken);
 
-        return restTemplate.getForEntity(
-                gatewayConfig.getShopUrl() + "/v1/members/login/{loginId}",
-                MemberResponse.class,
-                loginRequest.getLoginId(),
-                httpHeaders
+        return restTemplate.exchange(
+                gatewayConfig.getShopUrl() + "/v1/members/login/" + loginRequest.getLoginId(),
+                HttpMethod.GET,
+                new HttpEntity<>(httpHeaders),
+                new ParameterizedTypeReference<>() {
+                }
         );
     }
 }
