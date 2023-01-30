@@ -90,32 +90,45 @@
                 <td>2023-01-02</td>
                 <td><input class="form-check-input" type="checkbox"></td>
               </tr>
+              <tr th:each="data: ${dataList}">
+                <!--                <td th:text="${dataStat.index + currentPage * 10 + 1}"></td>-->
+                <!--                쿠폰 타입에 따라서 쿠폰 타입(세부항목) 표시-->
+                <td th:text="${data.name}"></td>
+                <td th:text="${data.triggerTypeCode}"></td>
+                <td th:text="${data.couponTypeCode}(${data.getDiscountAmount()})"></td>
+                <td th:text="${data.expirationDate}"></td>
+                <td th:text="${data.createdDateTime}"></td>
+                <td><input class="form-check-input" type="checkbox"></td>
+              </tr>
               </tbody>
             </table>
           </div>
           <nav>
-            <ul class="pagination justify-content-end">
-              <li class="page-item">
-                <a class="page-link" href="#">
-                  <span aria-hidden="true">&laquo;</span>
-                </a>
-              </li>
-              <li class="page-item"><a class="page-link" href="#">1</a></li>
-              <li class="page-item"><a class="page-link" href="#">2</a></li>
-              <li class="page-item"><a class="page-link" href="#">3</a></li>
-              <li class="page-item">
-                <a class="page-link" href="#">
-                  <span aria-hidden="true">&raquo;</span>
-                </a>
-              </li>
-            </ul>
-          </nav>
-        </div>
+            <div
+                th:replace="~{common/utils/paging :: paging('/manager/coupon')}">
+            </div>
+        <!--            <ul class="pagination justify-content-end">-->
+        <!--              <li class="page-item">-->
+        <!--                <a class="page-link" href="#">-->
+        <!--                  <span aria-hidden="true">&laquo;</span>-->
+        <!--                </a>-->
+        <!--              </li>-->
+        <!--              <li class="page-item"><a class="page-link" href="#">1</a></li>-->
+        <!--              <li class="page-item"><a class="page-link" href="#">2</a></li>-->
+        <!--              <li class="page-item"><a class="page-link" href="#">3</a></li>-->
+        <!--              <li class="page-item">-->
+        <!--                <a class="page-link" href="#">-->
+        <!--                  <span aria-hidden="true">&raquo;</span>-->
+        <!--                </a>-->
+        <!--              </li>-->
+        <!--            </ul>-->
+        </nav>
       </div>
-      <!-- TODO 4 : footer -->
-      <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
     </div>
+    <!-- TODO 4 : footer -->
+    <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
   </div>
+</div>
 </div>
 </div>
 <div class="d-none" id="shop-server-url" th:text="${shopServerUrl}"></div>
