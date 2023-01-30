@@ -84,6 +84,8 @@
                             </a>
                             <p></p>
                             <button type="submit" class="btn btn-primary m-auto">저장</button>
+                            <p></p>
+                            <button type="button" id="cancel-button" class="btn btn-secondary m-auto">취소</button>
                           </div>
                         </div>
                       </div>
@@ -243,9 +245,24 @@
       const response = await fetch(`${SHOP_SERVER}/v1/categories/order`,
           {method: "PUT", headers: { "Content-Type": "application/json" }, body: categoriesJson });
       let result = await response.json();
-      console.log(result.result);
+      if (result.success == true) {
+        alert("순서 변경 완료");
+      }else {
+        alert("순서 변경 실패");
+        window.location.reload();
+      }
+
     })
   }
+
+  const cancelButton = document.getElementById("cancel-button");
+  cancelButton.addEventListener("click", () => {
+    let cancelConfirm = confirm("저장하지 않고 취소하시겠습니까?");
+    if (cancelConfirm) {
+      window.location.reload();
+    }
+
+  });
 
   function initActiveParentCategory() {
     const parentCategoryItems = document.querySelectorAll(

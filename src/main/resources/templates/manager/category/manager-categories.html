@@ -192,7 +192,7 @@
                                           <span class="col">노출 여부</span>
                                           <span class="col-auto">
                                               <label class="form-check form-switch">
-                                                <input class="form-check-input active" id="category-isShown" name="isShown" type="checkbox">
+                                                <input class="form-check-input" id="category-isShown" name="isShown" type="checkbox">
 <!--                                                <input type="hidden" name="_isShown" value="on">-->
                                               </label>
                                             </span>
@@ -255,22 +255,20 @@
 <script>
   const t = document.getElementById('select-parent');
   t.addEventListener('change', function (event) {
-    // alert(event.target.value);
     const value = event.target.value;
     location.href = '/manager/categories?id=' + value;
   });
 
 
   const shown = document.getElementById("category-isShown");
-  shown.addEventListener("click", function (event) {
-    const tempShown = shown.dataset["isShownTemp"];
-    if (tempShown === "false") {
-      shown.value = true;
-      shown.removeAttribute("checked");
-    } else {
-      shown.setAttribute("checked","checked");
-      shown.value = false;
+  shown.addEventListener("change", function (event) {
+    const target = event.target;
+    if (target.checked) {
+      target.setAttribute("checked", "checked");
+    }else{
+      target.removeAttribute("checked");
     }
+    target.value = target.checked;
   });
 
   const modal = document.getElementById('modify-modal-report');
@@ -290,13 +288,13 @@
     nameTag.text = name;
 
     const shownTag = document.getElementById("category-isShown");
-    shownTag.dataset['isShownTemp'] = isShown;
-    console.log("show.bs.modal : " + isShown);
+    shownTag.dataset['isShown'] = isShown;
     if (isShown === "false") {
       shownTag.removeAttribute("checked");
     } else {
       shownTag.setAttribute("checked", "checked");
     }
+    shownTag.value = isShown;
 
     const opTag = document.getElementById(parentId);
     opTag.selected = true;
@@ -305,14 +303,13 @@
 
   modal.addEventListener("hide.bs.modal", function (event) {
     const shownTag = document.getElementById("category-isShown");
-    const tempShown = shownTag.dataset["isShownTemp"];
-    shownTag.value = tempShown;
+    const tempShown = shownTag.dataset["isShown"];
     if (tempShown === "false") {
       shownTag.removeAttribute("checked");
-
     } else {
       shownTag.setAttribute("checked", "checked");
     }
+    window.location.reload();
   });
 
   const modifyButton = document.getElementById("category-modify-button");
