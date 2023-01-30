@@ -50,7 +50,7 @@
             <a th:href="@{/products/form}" class="btn btn-primary d-none d-sm-inline-block">
               <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
               <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
-              상품 생성
+              상품 등록
             </a>
           </div>
         </div>
@@ -80,54 +80,54 @@
                 <th>출판사</th>
                 <th>출판일</th>
                 <th>판매가(할인율)</th>
-                <th>품절여부</th>
+                <th>수량</th>
+                <th>판매여부</th>
+                <th>강제품절여부</th>
                 <th>노출여부</th>
-                <th></th>
                 <th></th>
                 <th></th>
               </tr>
             </thead>
             <tbody>
               <tr th:each="product, i : ${products}">
-                <td><span class="text-muted" th:text="${i.count}"></span></td>
-                <td th:text="${product.title}" th:href="|/products/${product.id}|"></td>
+                <td class="text-center"><span class="text-muted" th:text="${i.count}"></span></td>
+                <td><a class="text-dark" th:text="${product.title}" th:href="|/products/${product.id}|"/></td>
                 <td th:text="${product.authorLine}"></td>
                 <td th:text="${product.publisher}"></td>
                 <td th:text="${product.publishedDate}"></td>
                 <td th:text="|${product.sellingPrice}원(${product.discountRate}% 할인)|"></td>
 
-                <td>
-                  <span class="badge bg-success me-1" th:if="${product.isOutOfStock}">Yes</span>
-                  <span class="badge bg-warning me-1" th:if="${!product.isOutOfStock}">No</span>
+                <td class="text-center"><p th:if="${!product.isDeleted}" th:text="${product.quantity}" style="margin: 0"></p></td>
+                <td class="text-center">
+                  <label class="form-check form-switch" style="margin: 0;padding-left: 45px;" th:if="${!product.isDeleted}">
+                    <input class="form-check-input" type="checkbox"
+                           th:checked="${product.isSale}" th:onclick="|changeIsSale(${product.id})|">
+                  </label>
                 </td>
-                <td>
+                <td class="text-center">
+                  <label class="form-check form-switch" style="margin: 0;padding-left: 50px;" th:if="${!product.isDeleted}">
+                    <input class="form-check-input" type="checkbox"
+                           th:checked="${product.isForcedOutOfStock}" th:onclick="|changeIsForcedOutOfStock(${product.id})|">
+                  </label>
+                </td>
+                <td class="text-center">
                   <span class="badge bg-success me-1" th:if="${product.isShown}">Yes</span>
                   <span class="badge bg-warning me-1" th:if="${!product.isShown}">No</span>
                 </td>
 
-                <td>
-                  <a th:href="|/products/${product.id}|" class="btn btn-dark btn-pill w-auto fs-5">
-                    조회
-                  </a>
-                </td>
                 <td>
                   <a th:href="|/manager/products/${product.id}|" class="btn btn-dark btn-pill w-auto fs-5">
                     수정
                   </a>
                 </td>
                 <td>
-                  <form method="post" th:action="|/products/${product.id}|">
-                    <span th:if="${product.isDeleted}">
-                      <button type="submit" class="btn btn-secondary btn-pill w-auto fs-5" disabled>
-                        삭제
-                      </button>
-                    </span>
-                      <span th:if="${!product.isDeleted}">
-                      <button type="submit" class="btn btn-secondary btn-pill w-auto fs-5">
-                        삭제
-                      </button>
-                    </span>
-                  </form>
+                  <button type="button" th:if="${product.isDeleted}" class="btn btn-secondary btn-pill w-auto fs-5" disabled>
+                    삭제
+                  </button>
+                  <a href="#" class="btn btn-secondary btn-pill w-auto fs-5 btn-modal" data-bs-toggle="modal" data-bs-target="#modal-delete-confirm"
+                     th:data-id="${product.id}" th:data-title="${product.title}" th:if="${!product.isDeleted}">
+                    삭제
+                  </a>
                 </td>
 
               </tr>
@@ -173,7 +173,51 @@
 
     </div>
   </div>
+  <div class="modal modal-blur fade" id="modal-delete-confirm" tabindex="-1" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-body">
+          <div class="modal-title">해당 상품을 삭제하시겠습니까?</div>
+          <div>삭제한 상품은 복구할 수 없습니다.<br/> 그래도 진행하시겠습니까?<br/><br/> 삭제할 상품: <p style="display: inline" id="modal-product-title-id"></p></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-link link-secondary me-auto" data-bs-dismiss="modal">취소</button>
+          <button type="submit" class="btn btn-danger" data-bs-dismiss="modal" id="modal-product-delete">네, 삭제합니다.</button>
+        </div>
+      </div>
+    </div>
+  </div>
   <script>
+    const modal = document.getElementById('modal-delete-confirm');
+    const titleId = document.getElementById('modal-product-title-id');
+    modal.addEventListener('show.bs.modal', function (event) {
+      titleId.value = event.relatedTarget.getAttribute('data-id').toString();
+      titleId.innerText = event.relatedTarget.getAttribute('data-title').toString();
+    });
+
+    const deleteButton = document.getElementById('modal-product-delete');
+    deleteButton.addEventListener('click', function (event) {
+      fetch(location.origin.toString() + "/products/" + titleId.value, {
+        method: "POST"
+      })
+      .then(res => window.location.reload())
+      .catch(err => {
+        window.alert(err);
+      });
+    });
+
+    function changeIsSale(id) {
+      fetch(location.origin.toString() + '/products/' + id + "/is-sale", {
+        method: "POST"
+      }).then(res => window.location.reload());
+    }
+
+    function changeIsForcedOutOfStock(id) {
+      fetch(location.origin.toString() + '/products/' + id + "/is-forced-out-of-stock", {
+        method: "POST"
+      }).then(res => window.location.reload());
+    }
+
     function selectType(typeId) {
       if (typeId === '') {
         window.location.href = '/manager/products';

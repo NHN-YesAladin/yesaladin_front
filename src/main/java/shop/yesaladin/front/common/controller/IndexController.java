@@ -1,13 +1,18 @@
 package shop.yesaladin.front.common.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import shop.yesaladin.front.member.service.inter.QueryMemberService;
 
+@RequiredArgsConstructor
 @Controller
 public class IndexController {
+
+    private final QueryMemberService queryMemberService;
 
     @GetMapping
     public String main(Model model) {
@@ -28,9 +33,6 @@ public class IndexController {
      */
     @GetMapping("/mypage")
     public String mypage() {
-        //회원 등급 조회
-        //회원 포인트 조회
-        //회원 쿠폰 개수 조회
         return "mypage/index";
     }
 

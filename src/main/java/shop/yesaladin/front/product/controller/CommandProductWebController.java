@@ -1,7 +1,6 @@
 package shop.yesaladin.front.product.controller;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -19,9 +18,8 @@ import java.util.Map;
  * @author 이수정
  * @since 1.0
  */
-@Slf4j
-@Controller
 @RequiredArgsConstructor
+@Controller
 @RequestMapping
 public class CommandProductWebController {
 
@@ -115,5 +113,32 @@ public class CommandProductWebController {
         return "redirect:" + request.getHeader("Referer");
     }
 
+    /**
+     * [POST /products/{productId}/is-sale] 특정 상품의 판매여부를 변경합니다.
+     *
+     * @param productId 변경할 상품의 Id
+     * @author 이수정
+     * @since 1.0
+     */
+    @PostMapping("/products/{productId}/is-sale")
+    public String changeIsSale(@PathVariable long productId, HttpServletRequest request) {
+        commandProductService.changeIsSale(productId);
+
+        return "redirect:" + request.getHeader("Referer");
+    }
+
+    /**
+     * [POST /products/{productId}/is-forced-out-of-stock] 특정 상품의 강제품절여부를 변경합니다.
+     *
+     * @param productId 변경할 상품의 Id
+     * @author 이수정
+     * @since 1.0
+     */
+    @PostMapping("/products/{productId}/is-forced-out-of-stock")
+    public String changeIsForcedOutOfStock(@PathVariable long productId, HttpServletRequest request) {
+        commandProductService.changeIsForcedOutOfStock(productId);
+
+        return "redirect:" + request.getHeader("Referer");
+    }
 
 }

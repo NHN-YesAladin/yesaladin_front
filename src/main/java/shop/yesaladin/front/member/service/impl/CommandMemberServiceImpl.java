@@ -14,7 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import shop.yesaladin.common.dto.ResponseDto;
+import shop.yesaladin.front.category.dto.CategorySaveRequestDto;
 import shop.yesaladin.front.config.GatewayConfig;
+import shop.yesaladin.front.member.dto.MemberUpdateRequestDto;
 import shop.yesaladin.front.member.dto.MemberWithdrawResponseDto;
 import shop.yesaladin.front.member.dto.SignUpRequest;
 import shop.yesaladin.front.member.dto.SignUpResponse;
@@ -24,6 +26,7 @@ import shop.yesaladin.front.member.service.inter.CommandMemberService;
  * 회원 등록, 수정, 삭제를 위한 service 구현체 입니다.
  *
  * @author : 송학현
+ * @author 최예린
  * @since : 1.0
  */
 @Slf4j
@@ -83,5 +86,30 @@ public class CommandMemberServiceImpl implements CommandMemberService {
         );
 
         log.info("response={}", response.getBody());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void edit(MemberUpdateRequestDto request) {
+        URI uri = UriComponentsBuilder
+                .fromUriString(gatewayConfig.getUrl())
+                .path("/v1/members/{loginId}")
+                .encode()
+                .build()
+                .expand("")
+                .toUri();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<MemberUpdateRequestDto> entity = new HttpEntity<>(request, headers);
+
+        ResponseEntity<MemberWithdrawResponseDto> response = restTemplate.exchange(
+                uri,
+                HttpMethod.PUT,
+                entity,
+                MemberWithdrawResponseDto.class
+        );
     }
 }

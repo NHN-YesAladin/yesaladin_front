@@ -15,6 +15,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.config.GatewayConfig;
 import shop.yesaladin.front.point.dto.PointHistoryResponseDto;
+import shop.yesaladin.front.point.dto.PointResponseDto;
 import shop.yesaladin.front.point.service.inter.QueryPointHistoryService;
 
 /**
@@ -71,10 +72,30 @@ public class QueryPointHistoryServiceImpl implements QueryPointHistoryService {
         ).getBody();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ResponseEntity<PointResponseDto> getMemberPoint() {
+        UriComponents components = UriComponentsBuilder.fromHttpUrl(gatewayConfig.getShopUrl())
+                .path("/v1/points/{loginId}")
+                .build()
+                .expand("");
+
+        ResponseEntity<PointResponseDto> response = restTemplate.exchange(
+                components.toUri(),
+                HttpMethod.GET,
+                getHttpEntity(),
+                PointResponseDto.class
+        );
+
+        return response;
+    }
+
     private HttpEntity<String> getHttpEntity() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> entity = new HttpEntity<>(headers);
-        return entity;
+
+        return new HttpEntity<>(headers);
     }
 }

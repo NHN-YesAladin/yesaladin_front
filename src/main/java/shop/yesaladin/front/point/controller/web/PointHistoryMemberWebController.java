@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Random;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -43,7 +42,8 @@ public class PointHistoryMemberWebController {
         String loginId = ((UserDetails) authentication.getPrincipal()).getUsername();
 
         PaginatedResponseDto<PointHistoryResponseDto> response =
-                (Objects.isNull(code) || Objects.equals(code, "")) ? queryPointHistoryService.getAllPointHistories(pageable, loginId)
+                (Objects.isNull(code) || Objects.equals(code, ""))
+                        ? queryPointHistoryService.getAllPointHistories(pageable, loginId)
                         : queryPointHistoryService.getPointHistories(pageable, loginId, code);
 
         model.addAttribute("currentPage", response.getCurrentPage());
@@ -61,8 +61,12 @@ public class PointHistoryMemberWebController {
      * @since 1.0
      */
     @GetMapping("/point-history/test")
-    public String test(Model model, @RequestParam(required = false) String code, @PageableDefault Pageable pageable) {
-        int currentPage = pageable.getPageNumber() == 0 ? 0 : pageable.getPageNumber() - 1;
+    public String test(
+            Model model,
+            @RequestParam(required = false) String code,
+            @PageableDefault Pageable pageable
+    ) {
+        int currentPage = pageable.getPageNumber();
         int totalPage = 15;
         int totalDataCount = 149;
         List<PointHistoryResponseDto> dataList = new ArrayList<>();

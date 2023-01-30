@@ -31,88 +31,92 @@
   <!-- TODO 1 : Head -->
   <div th:replace="~{common/fragments/header :: fragment-header}"></div>
   <!-- TODO 2 : NAV-BAR -->
-
   <div th:replace="~{common/fragments/navbar :: fragment-nav-bar}"></div>
 
   <div class="page-wrapper">
-    <div class="main-container">
-      <div class="container-sm">
-        <div class="row justify-content-around mt-3 mt-lg-5">
-          <div class="col-xl-3 col-lg-3 mb-4 bg-secondary-lt">
-            <div th:replace="~{mypage/fragments/sidebar :: fragment-side-bar}"></div>
+    <div class="page-header d-print-none">
+      <div class="container-xl">
+        <div class="row g-2 align-items-center">
+          <div class="col">
+            <h2 class="page-title">
+              마이 페이지
+            </h2>
           </div>
-          <div class="col-md-9 col-lg-8">
-            <!--        TODO 3 :  Body          -->
-            <div class="page-header d-print-none">
-              <div class="container-xl">
-                <div class="row g-2 align-items-center">
-                  <div class="col">
-                    <h2 class="page-title">
-                      회원 등급 변경 내역
-                    </h2>
-                  </div>
-                </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-body">
+      <div class="container-xl">
+        <div class="card">
+          <div class="row g-0">
+            <div class="col-xl-3 col-lg-3 bg-secondary-lt">
+              <div class="card-body">
+                <div th:replace="~{mypage/fragments/sidebar :: fragment-side-bar}"></div>
               </div>
             </div>
-            <div class="page-body">
-              <div class="container-xl">
-                <div class="row row-cards">
-                  <div class="col-12">
-                    <div class="card">
-                      <div class="card-body border-bottom py-3">
-                        <div class="d-flex">
-                          <form class="input-icon mb-2">
-                            <span class="form-label d-inline">조회 기간</span>
-                            <input class="form-control-sm border-1 d-inline form-select-sm"
-                                   type="date"
-                                   id="datepicker 1" name="startDate"
-                                   th:value="${startDate == null ? '2023-01-01' : startDate}"
-                                   th:max="${#calendars.format( #calendars.createNow(), 'yyyy-MM-dd')}">
-                            ~ <input class="form-control-sm border-1 d-inline form-select-sm"
-                                     type="date"
-                                     id="datepicker 2" name="endDate"
-                                     th:value="${endDate == null ? #calendars.format( #calendars.createNow(), 'yyyy-MM-dd') : endDate}"
-                                     th:max="${#calendars.format( #calendars.createNow(), 'yyyy-MM-dd')}">
-                            <button type="submit" class="btn btn-primary btn-sm">조회</button>
-                          </form>
-                        </div>
-                        <div class="table-responsive">
-                          <table class="table card-table table-vcenter text-nowrap datatable">
-                            <thead>
-                            <tr>
-                              <th class="w-1"></th>
-                              <th>변경 일자</th>
-                              <th>이전 달 결제 금액</th>
-                              <th>회원 등급</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr th:each="data: ${dataList}">
-                              <td th:text="${dataStat.index + currentPage * 10 + 1}"></td>
-                              <td th:text="${#temporals.format(data.updateDate, 'yyyy-MM-dd')}"></td>
-                              <td th:text="${data.previousPaidAmount}"></td>
-                              <td th:text="${data.memberGrade.name}"></td>
-                            </tr>
-                            </tbody>
-                          </table>
-                        </div>
-                        <div
-                            th:replace="~{common/utils/paging :: paging('/mypage/grade-history/test',
+            <div class="col-xl-9 col-lg-9">
+              <div class="card-body">
+                <!-- TODO 3: BODY -->
+                <!--                TODO 3-1 : HEADER-->
+                <h1 class="fw-bold mb-3">회원 등급 변경 내역</h1>
+
+                <div class="card">
+                  <div class="card-header">
+                    <div class="d-flex">
+                      <form class="input-icon mb-2">
+                        <span class="form-label d-inline">조회 기간</span>
+                        <input class="form-control-sm border-1 d-inline form-select-sm"
+                               type="date"
+                               id="datepicker 1" name="startDate"
+                               th:value="${startDate == null ? '2023-01-01' : startDate}"
+                               th:max="${#calendars.format( #calendars.createNow(), 'yyyy-MM-dd')}">
+                        ~ <input class="form-control-sm border-1 d-inline form-select-sm"
+                                 type="date"
+                                 id="datepicker 2" name="endDate"
+                                 th:value="${endDate == null ? #calendars.format( #calendars.createNow(), 'yyyy-MM-dd') : endDate}"
+                                 th:max="${#calendars.format( #calendars.createNow(), 'yyyy-MM-dd')}">
+                        <button type="submit" class="btn btn-primary btn-sm">조회</button>
+                      </form>
+                    </div>
+                  </div>
+                  <div class="card-body border-bottom py-3">
+                    <div class="table-responsive">
+                      <table class="table card-table table-vcenter text-nowrap datatable">
+                        <thead>
+                        <tr>
+                          <th class="w-1"></th>
+                          <th>변경 일자</th>
+                          <th>이전 달 결제 금액</th>
+                          <th>회원 등급</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="data: ${dataList}">
+                          <td th:text="${dataStat.index + currentPage * 10 + 1}"></td>
+                          <td th:text="${#temporals.format(data.updateDate, 'yyyy-MM-dd')}"></td>
+                          <td th:text="${data.previousPaidAmount}"></td>
+                          <td th:text="${data.memberGrade.name}"></td>
+                        </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div
+                        th:replace="~{common/utils/paging :: paging('/mypage/grade-history/test',
                             ${startDate == null ? '' : '&startDate=' + #temporals.format(startDate, 'yyyy-MM-dd')}
                             + ${endDate == null ? '' : '&endDate=' + #temporals.format(endDate, 'yyyy-MM-dd')})}"></div>
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>
+
             </div>
           </div>
         </div>
       </div>
-      <!-- TODO 4 : footer -->
-      <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
     </div>
+
   </div>
+  <!-- TODO 4 : footer -->
+  <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
 </div>
 </body>
 </html>

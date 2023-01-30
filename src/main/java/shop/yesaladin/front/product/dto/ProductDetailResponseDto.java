@@ -44,25 +44,10 @@ public class ProductDetailResponseDto {
 
     private String description;
 
-    @Override
-    public String toString() {
-        return "ProductDetailResponseDto{" +
-                "id=" + id +
-                ", ebookFileUrl='" + ebookFileUrl + '\'' +
-                ", title='" + title + '\'' +
-                ", authors=" + authors +
-                ", publisher='" + publisher + '\'' +
-                ", thumbnailFileUrl='" + thumbnailFileUrl + '\'' +
-                ", actualPrice=" + actualPrice +
-                ", sellingPrice=" + sellingPrice +
-                ", pointPrice=" + pointPrice +
-                ", pointRate=" + pointRate +
-                ", publishedDate='" + publishedDate + '\'' +
-                ", isbn='" + isbn + '\'' +
-                ", isSubscriptionAvailable=" + isSubscriptionAvailable +
-                ", issn='" + issn + '\'' +
-                ", contents='" + contents + '\'' +
-                ", description='" + description + '\'' +
-                '}';
-    }
+    // 판매여부 관련
+    private long quantity;
+    private boolean isForcedOutOfStock;
+    private boolean isSale;
+    private boolean isDeleted;
+
 }

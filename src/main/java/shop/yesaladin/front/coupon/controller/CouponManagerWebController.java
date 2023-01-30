@@ -45,7 +45,7 @@ public class CouponManagerWebController {
         model.addAttribute("createdCouponName", createdCouponName);
         model.addAttribute("frontServerUrl", frontServerMetaConfig.getFrontServerUrl());
         model.addAttribute("shopServerUrl", gatewayConfig.getShopUrl());
-        return "coupon/manager-coupon-create-view";
+        return "manager/coupon/manager-coupon-create-view";
     }
 
     @PostMapping("/create")
@@ -58,6 +58,6 @@ public class CouponManagerWebController {
 
     @GetMapping
     public String couponTemplateListView() {
-        return "coupon/manager-coupon-list-view";
+        return "manager/coupon/manager-coupon-list-view";
     }
 }
