@@ -59,6 +59,10 @@
             <groupId>org.springframework.boot</groupId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.thymeleaf.extras</groupId>
@@ -114,6 +118,11 @@
             <artifactId>micrometer-registry-prometheus</artifactId>
             <groupId>io.micrometer</groupId>
             <version>1.10.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.NHN-YesAladin</groupId>
+            <artifactId>yesaladin_common_utils</artifactId>
+            <version>1.1.1</version>
         </dependency>
         <dependency>
             <groupId>com.github.NHN-YesAladin</groupId>
