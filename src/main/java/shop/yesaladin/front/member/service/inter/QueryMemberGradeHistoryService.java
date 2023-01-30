@@ -17,7 +17,6 @@ public interface QueryMemberGradeHistoryService {
      * 회원 등급 변경 내역을 조회합니다.
      *
      * @param pageable  페이지와 사이즈
-     * @param loginId   회원 아이디
      * @param startDate 조회 시작일
      * @param endDate   조회 끝일
      * @return 기간별 페이징된 회원 등급 변경 내역 데이터
@@ -26,7 +25,6 @@ public interface QueryMemberGradeHistoryService {
      */
     PaginatedResponseDto<MemberGradeHistoryResponseDto> getMemberGradeHsitoryHistories(
             Pageable pageable,
-            String loginId,
             LocalDate startDate,
             LocalDate endDate
     );

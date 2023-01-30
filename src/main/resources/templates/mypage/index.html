@@ -54,7 +54,7 @@
                 <div th:replace="~{mypage/fragments/sidebar :: fragment-side-bar}"></div>
               </div>
             </div>
-            <div class="col-xl-9 col-lg-9">
+            <div class="col-xl-9 col-lg-9" id="mypage" th:data-url="${@environment.getProperty('yesaladin.front.url')}">
               <div class="card-body">
                 <!-- TODO 3: BODY -->
                 <h1 class="text-end" th:text="'님 안녕하세요'"></h1>
@@ -64,7 +64,7 @@
                       <div class="card-header d-block">
                         <h3 class="card-title d-inline">
                           회원 등급
-                          <span class="card-subtitle ms-1 float-end text-muted"
+                          <span id="member-grade" class="card-subtitle ms-1 float-end text-muted"
                                 th:text="${'white'}"></span>
                         </h3>
                       </div>
@@ -79,7 +79,7 @@
                       <div class="card-header d-block">
                         <h3 class="card-title d-inline">
                           포인트
-                          <span class="card-subtitle ms-1 float-end text-muted"
+                          <span id="member-point" class="card-subtitle ms-1 float-end text-muted"
                                 th:text="${'원'}"></span>
                         </h3>
                       </div>
@@ -198,5 +198,47 @@
   <!-- TODO 4 : footer -->
   <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
 </div>
+<script>
+  const mypage = document.getElementById("mypage");
+  const mainUrl = `${mypage.getAttribute("data-url")}`;
+  const innerMemberGradeUrl = `${mypage.getAttribute("data-url")}/grade`;
+  const innerMemberPointUrl = `${mypage.getAttribute("data-url")}/point`;
+
+  window.onload = function () {
+    setMyPageData();
+  }
+
+  async function setMyPageData() {
+    const grade = document.getElementById("member-grade");
+    const point = document.getElementById("member-point");
+
+    try {
+      grade.value = getMemberGrade();
+      point.value = getMemberPoint();
+    } catch (err) {
+      console.log(err)
+      if(!alert("회원 정보를 찾을 수 없습니다.")) document.location = mainUrl;
+    }
+  }
+  function getMemberGrade() {
+    const response = fetch(innerMemberGradeUrl, {
+      method : "GET",
+      headers: {
+        "Contest-Type" : "application/json"
+      }
+    });
+    return response;
+  }
+
+  function getMemberPoint() {
+    const response = fetch(innerMemberPointUrl, {
+      method : "GET",
+      headers: {
+        "Contest-Type" : "application/json"
+      }
+    });
+    return response;
+  }
+</script>
 </body>
 </html>
