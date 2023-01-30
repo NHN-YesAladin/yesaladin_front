@@ -3,6 +3,7 @@ package shop.yesaladin.front.member.service.impl;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -12,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.config.GatewayConfig;
 import shop.yesaladin.front.member.dto.MemberWithdrawResponseDto;
 import shop.yesaladin.front.member.dto.SignUpRequest;
@@ -45,15 +47,16 @@ public class CommandMemberServiceImpl implements CommandMemberService {
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<SignUpRequest> entity = new HttpEntity<>(request, headers);
 
-        ResponseEntity<SignUpResponse> response = restTemplate.exchange(
+        ResponseEntity<ResponseDto<SignUpResponse>> response = restTemplate.exchange(
                 gatewayConfig.getShopUrl() + "/v1/members/",
                 HttpMethod.POST,
                 entity,
-                SignUpResponse.class
+                new ParameterizedTypeReference<>() {
+                }
         );
 
-        log.info("response={}", response.getBody());
-        return response.getBody();
+        log.info("response={}", response.getBody().getData());
+        return response.getBody().getData();
     }
 
     /**
@@ -71,11 +74,12 @@ public class CommandMemberServiceImpl implements CommandMemberService {
                 .expand(loginId)
                 .toUri();
 
-        ResponseEntity<MemberWithdrawResponseDto> response = restTemplate.exchange(
+        ResponseEntity<ResponseDto<MemberWithdrawResponseDto>> response = restTemplate.exchange(
                 uri,
                 HttpMethod.DELETE,
                 HttpEntity.EMPTY,
-                MemberWithdrawResponseDto.class
+                new ParameterizedTypeReference<>() {
+                }
         );
 
         log.info("response={}", response.getBody());
