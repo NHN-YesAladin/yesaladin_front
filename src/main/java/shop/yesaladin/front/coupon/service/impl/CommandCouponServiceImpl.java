@@ -92,7 +92,8 @@ public class CommandCouponServiceImpl implements CommandCouponService {
                 createDto.getName(),
                 createDto.getIsUnlimited(),
                 createDto.getQuantity(),
-                createDto.getCouponImage().getResource(),
+                createDto.getCouponImage().isEmpty() ? null
+                        : createDto.getCouponImage().getResource(),
                 createDto.getDuration(),
                 createDto.getExpirationDate(),
                 createDto.getCouponTypeCode(),
@@ -106,7 +107,8 @@ public class CommandCouponServiceImpl implements CommandCouponService {
                 createDto.getName(),
                 createDto.getIsUnlimited(),
                 createDto.getQuantity(),
-                createDto.getCouponImage().getResource(),
+                createDto.getCouponImage().isEmpty() ? null
+                        : createDto.getCouponImage().getResource(),
                 createDto.getDuration(),
                 createDto.getExpirationDate(),
                 createDto.getCouponTypeCode(),
@@ -126,7 +128,8 @@ public class CommandCouponServiceImpl implements CommandCouponService {
                 createDto.getName(),
                 createDto.getIsUnlimited(),
                 createDto.getQuantity(),
-                createDto.getCouponImage().getResource(),
+                createDto.getCouponImage().isEmpty() ? null
+                        : createDto.getCouponImage().getResource(),
                 createDto.getDuration(),
                 createDto.getExpirationDate(),
                 createDto.getCouponTypeCode(),
