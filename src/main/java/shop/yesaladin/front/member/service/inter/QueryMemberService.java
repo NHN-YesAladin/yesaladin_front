@@ -1,6 +1,7 @@
 package shop.yesaladin.front.member.service.inter;
 
 import shop.yesaladin.front.member.dto.MemberProfileExistResponseDto;
+import shop.yesaladin.front.member.dto.MemberQueryResponseDto;
 
 /**
  * 회원 정보 조회용 Service Interface 입니다.
@@ -47,4 +48,22 @@ public interface QueryMemberService {
      * @since : 1.0
      */
     MemberProfileExistResponseDto phoneCheck(String phone);
+
+    /**
+     * 회원 정보를 조회합니다.
+     *
+     * @return 회원 정보
+     * @author 최예린
+     * @since 1.0
+     */
+    MemberQueryResponseDto getMemberInfo();
+
+    /**
+     * 회원의 등급을 조회합니다.
+     *
+     * @return 회원 등급
+     * @author 최예린
+     * @since 1.0
+     */
+    String getMemberGrade();
 }

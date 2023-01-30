@@ -1,31 +1,32 @@
 package shop.yesaladin.front.auth;
 
 import static java.util.stream.Collectors.toList;
+import static shop.yesaladin.front.member.jwt.AuthUtil.JWT_CODE;
+import static shop.yesaladin.front.member.jwt.AuthUtil.UUID_CODE;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationServiceException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import shop.yesaladin.front.common.exception.InvalidHttpHeaderException;
+import shop.yesaladin.front.member.adapter.MemberAdapter;
 import shop.yesaladin.front.member.dto.LoginRequest;
-import shop.yesaladin.front.member.jwt.JwtPayload;
+import shop.yesaladin.front.member.dto.MemberResponse;
+import shop.yesaladin.front.member.jwt.AuthInfo;
 
 /**
  * AuthenticationManager를 custom한 Manager 입니다.
@@ -37,19 +38,18 @@ import shop.yesaladin.front.member.jwt.JwtPayload;
 @RequiredArgsConstructor
 public class CustomAuthenticationManager implements AuthenticationManager {
 
-    private static final int BEARER_LENGTH = 7;
+    private static final String UUID_HEADER = "UUID_HEADER";
 
-    @Value("${yesaladin.gateway.base}")
-    private String gatewayUrl;
-
-    private final RestTemplate restTemplate;
+    private final MemberAdapter memberAdapter;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     /**
-     * Auth 서버에서 발급받은 JWT 토큰을 기반으로 UsernamePasswordAuthenticationToken을 만들어 반환합니다.
+     * Auth 서버에서 발급받은 JWT 토큰을 기반으로 Shop 서버에 유저 정보를 요청 한 뒤,
+     * UsernamePasswordAuthenticationToken을 만들어 반환합니다.
      *
      * @param authentication 인증 객체입니다.
      * @return 인증 객체를 반환합니다.
-     * @throws AuthenticationException
+     * @throws AuthenticationException 인증 실패 시 발생 하는 예외 입니다.
      * @author : 송학현
      * @since : 1.0
      */
@@ -57,37 +57,44 @@ public class CustomAuthenticationManager implements AuthenticationManager {
     @Override
     public Authentication authenticate(Authentication authentication)
             throws AuthenticationException {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
         LoginRequest loginRequest = new LoginRequest(
                 (String) authentication.getPrincipal(),
                 (String) authentication.getCredentials()
         );
-        HttpEntity<LoginRequest> entity = new HttpEntity<>(loginRequest, headers);
+        ResponseEntity<Void> exchange = memberAdapter.getAuthInfo(loginRequest);
 
-        // TODO: gatewayUrl이 현재 shop 기준으로 되어 있어 실제 gateway + auth url로 변경해야 함.
-        ResponseEntity<Void> exchange = restTemplate.exchange(
-                gatewayUrl + "/auth/login",
-                HttpMethod.POST,
-                entity,
-                Void.class
-        );
+        checkValidLoginRequest(exchange);
 
-        // TODO: login시 입력 값이 비었거나, 유저 정보가 없다면 redirect도 안되고 여기서 NullPointerException 발생함.
-        String accessToken = exchange.getHeaders().get("Authorization").get(0);
-        if (Objects.isNull(accessToken)) {
-            throw new AuthenticationServiceException("");
+        String uuid = Objects.requireNonNull(exchange.getHeaders().get(UUID_HEADER).get(0));
+        log.info("uuid={}", uuid);
+
+        String accessToken = extractAuthorizationHeader(exchange);
+
+        if (accessToken.startsWith("Bearer ")) {
+            accessToken = accessToken.substring(7);
         }
 
-        // TODO: redis에 토큰 추가
+        ResponseEntity<MemberResponse> memberResponse = memberAdapter.getMemberInfo(
+                loginRequest,
+                accessToken
+        );
 
         log.info("accessToken={}", accessToken);
 
-        List<SimpleGrantedAuthority> authorities = parseJwt(accessToken.substring(BEARER_LENGTH)).stream()
-                .map(SimpleGrantedAuthority::new)
-                .collect(toList());
+        HttpServletResponse servletResponse = Objects.requireNonNull(((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())).getResponse();
 
+        Cookie cookie = new Cookie(UUID_CODE.getValue(), uuid);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+
+        servletResponse.addCookie(cookie);
+
+        List<SimpleGrantedAuthority> authorities = getAuthorities(memberResponse);
         log.info("authorities={}", authorities);
+
+        AuthInfo authInfo = new AuthInfo(memberResponse.getBody(), accessToken, authorities);
+        log.info("authInfo={}", authInfo);
+        redisTemplate.opsForHash().put(uuid, JWT_CODE.getValue(), authInfo);
 
         return new UsernamePasswordAuthenticationToken(
                 authentication.getPrincipal().toString(),
@@ -97,20 +104,50 @@ public class CustomAuthenticationManager implements AuthenticationManager {
     }
 
     /**
-     * JWT를 parsing 하기 위한 기능입니다.
+     * login 요청 시 올바른 결과 인지 판별 하기 위해 Response Header를 검증 하는 기능 입니다.
+     * 예외 발생 시 CustomFailureHandler가 동작합니다.
      *
-     * @param jwt JWT로 발급된 accessToken 입니다.
-     * @return JWT payload에 저장된 권한 정보를 반환합니다.
-     * @throws JsonProcessingException
+     * @param exchange Auth 서버에 login 요청 시 반환 되는 결과 입니다.
+     * @author : 송학현
+     * @since : 1.0
      */
-    private List<String> parseJwt(String jwt) throws JsonProcessingException {
-        String[] jwtSection = jwt.split("\\.");
-        // JWT 는 header, payload, signature 가 "." 으로 연결됨 (header.payload.signature)
-        String jwtPayload = jwtSection[1];
+    private void checkValidLoginRequest(ResponseEntity<Void> exchange) {
+        log.info("Auth server exchange check={}", exchange);
+        if (!exchange.getHeaders().containsKey(UUID_HEADER) || !exchange.getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
+            throw new BadCredentialsException("자격 증명 실패");
+        }
+    }
 
-        byte[] decode = Base64.getDecoder().decode(jwtPayload);
-        JwtPayload payload = new ObjectMapper().readValue(new String(decode, StandardCharsets.UTF_8), JwtPayload.class);
+    /**
+     * Shop 서버에서 제공 받은 회원 정보를 바탕으로 권한 정보를 추출하는 기능입니다.
+     *
+     * @param memberResponse Shop 서버에서 제공받은 회원 정보 결과 입니다.
+     * @return token을 만들기 위해 권한 정보를 담은 List<SimpleGrantedAuthority>를 반환합니다.
+     * @author : 송학현
+     * @since : 1.0
+     */
+    private List<SimpleGrantedAuthority> getAuthorities(ResponseEntity<MemberResponse> memberResponse) {
+        MemberResponse member = Objects.requireNonNull(memberResponse).getBody();
+        log.info("member={}", member);
 
-        return payload.getRoles();
+        return member.getRoles().stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(toList());
+    }
+
+    /**
+     * 로그인 시 Auth 서버에서 제공 받은 응답 헤더를 추출하는 기능입니다.
+     *
+     * @param exchange Auth 서버에서 제공받은 응답 헤더입니다.
+     * @return Http Response Header의 Authorization에 들어있는 accessToken을 추출하여 반환합니다.
+     * @author : 송학현
+     * @since : 1.0
+     */
+    private String extractAuthorizationHeader(ResponseEntity<Void> exchange) {
+        String accessToken = Objects.requireNonNull(exchange.getHeaders().get(HttpHeaders.AUTHORIZATION).get(0));
+        if (Objects.isNull(accessToken)) {
+            throw new InvalidHttpHeaderException("Authorization Header is empty");
+        }
+        return accessToken;
     }
 }

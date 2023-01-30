@@ -22,4 +22,7 @@ public class GatewayConfig {
 
     @Value("${yesaladin.gateway.shop}")
     private String shopUrl;
+
+    @Value("${yesaladin.gateway.auth}")
+    private String authUrl;
 }

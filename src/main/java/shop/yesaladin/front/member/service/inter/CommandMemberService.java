@@ -1,5 +1,6 @@
 package shop.yesaladin.front.member.service.inter;
 
+import shop.yesaladin.front.member.dto.MemberUpdateRequestDto;
 import shop.yesaladin.front.member.dto.SignUpRequest;
 import shop.yesaladin.front.member.dto.SignUpResponse;
 
@@ -7,6 +8,7 @@ import shop.yesaladin.front.member.dto.SignUpResponse;
  * 회원 등록 수정 삭제 요청을 위한 service interface입니다.
  *
  * @author : 송학현
+ * @author 최예린
  * @since : 1.0
  */
 public interface CommandMemberService {
@@ -21,4 +23,21 @@ public interface CommandMemberService {
      */
     SignUpResponse signUp(SignUpRequest request);
 
+    /**
+     * 회원 탈퇴를 위한 기능입니다.
+     *
+     * @param loginId 탈퇴 대상 계정의 loginId 입니다.
+     * @author : 송학현
+     * @since : 1.0
+     */
+    void withdraw(String loginId);
+
+    /**
+     * 회원 정보를 수정합니다.
+     *
+     * @param request 회원 수정 정보
+     * @author 최예린
+     * @since 1.0
+     */
+    void edit(MemberUpdateRequestDto request);
 }

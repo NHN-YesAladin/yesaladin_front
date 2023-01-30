@@ -1,6 +1,5 @@
 package shop.yesaladin.front.category.service.impl;
 
-import java.awt.print.Pageable;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,25 +30,23 @@ import shop.yesaladin.front.config.GatewayConfig;
 @Service
 public class QueryCategoryServiceImpl implements QueryCategoryService {
 
+    private static final ParameterizedTypeReference<List<CategoryResponseDto>> CATEGORIES_LIST_TYPE
+            = new ParameterizedTypeReference<>() {
+    };
+    private static final ParameterizedTypeReference<PaginatedResponseDto<CategoryResponseDto>> PAGING_CATEGORIES_TYPE
+            = new ParameterizedTypeReference<>() {
+    };
     private final RestTemplate restTemplate;
     private final GatewayConfig gatewayConfig;
 
-    private static final ParameterizedTypeReference<List<CategoryResponseDto>> CATEGORIES_LIST_TYPE
-            = new ParameterizedTypeReference<>() {};
-
-    private static final ParameterizedTypeReference<PaginatedResponseDto<CategoryResponseDto>> PAGING_CATEGORIES_TYPE
-            = new ParameterizedTypeReference<>() {};
-
     /**
-     * 모든 1차 카테고리를 조회하는 기능
-     *
-     * @return 카테고리의 일부 정보를 담고있는 dto 리스트
+     * {@inheritDoc}
      */
     @Override
     public List<CategoryResponseDto> getParentCategories() {
         UriComponents uriComponents = UriComponentsBuilder.fromHttpUrl(
-                        gatewayConfig.getUrl() + "/v1/categories")
-                .path("/parents")
+                        gatewayConfig.getShopUrl() + "/v1/categories")
+                .queryParam("cate", "parents")
                 .build();
 
         ResponseEntity<List<CategoryResponseDto>> responseEntity = restTemplate.exchange(
@@ -65,11 +62,7 @@ public class QueryCategoryServiceImpl implements QueryCategoryService {
     }
 
     /**
-     * 1차 카테고리 id를 통해서 자식 카테고리(=2차 카테고리)를 페이징하여 조회하는 기능
-     *
-     * @param pageRequestDto page와 size를 담고있는 dto
-     * @param parentId 1차 카테고리 id
-     * @return 페이징 정보 및 데이터 리스트를 담고있는 dto
+     * {@inheritDoc}
      */
     @Override
     public PaginatedResponseDto<CategoryResponseDto> getChildCategoriesByParentId(
@@ -78,7 +71,7 @@ public class QueryCategoryServiceImpl implements QueryCategoryService {
     ) {
         log.info("{}", pageRequestDto);
         UriComponents uriComponents = UriComponentsBuilder.fromHttpUrl(
-                        gatewayConfig.getUrl() + "/v1/categories")
+                        gatewayConfig.getShopUrl() + "/v1/categories")
                 .queryParam("parentId", parentId)
                 .queryParam(
                         "page",

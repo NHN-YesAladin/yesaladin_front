@@ -7,7 +7,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import shop.yesaladin.front.config.GatewayConfig;
+import shop.yesaladin.front.member.dto.MemberGradeQueryResponseDto;
 import shop.yesaladin.front.member.dto.MemberProfileExistResponseDto;
+import shop.yesaladin.front.member.dto.MemberQueryResponseDto;
+import shop.yesaladin.front.member.dto.MemberResponse;
 import shop.yesaladin.front.member.service.inter.QueryMemberService;
 
 /**
@@ -32,7 +35,7 @@ public class QueryMemberServiceImpl implements QueryMemberService {
         log.info("nickname={}", nickname);
 
         URI uri = UriComponentsBuilder
-                .fromUriString(gatewayConfig.getUrl())
+                .fromUriString(gatewayConfig.getShopUrl())
                 .path("/v1/members/checkNick/{nickname}")
                 .encode()
                 .build()
@@ -54,7 +57,7 @@ public class QueryMemberServiceImpl implements QueryMemberService {
         log.info("nickname={}", loginId);
 
         URI uri = UriComponentsBuilder
-                .fromUriString(gatewayConfig.getUrl())
+                .fromUriString(gatewayConfig.getShopUrl())
                 .path("/v1/members/checkId/{loginId}")
                 .encode()
                 .build()
@@ -76,7 +79,7 @@ public class QueryMemberServiceImpl implements QueryMemberService {
         log.info("email={}", email);
 
         URI uri = UriComponentsBuilder
-                .fromUriString(gatewayConfig.getUrl())
+                .fromUriString(gatewayConfig.getShopUrl())
                 .path("/v1/members/checkEmail/{email}")
                 .encode()
                 .build()
@@ -98,7 +101,7 @@ public class QueryMemberServiceImpl implements QueryMemberService {
         log.info("phone={}", phone);
 
         URI uri = UriComponentsBuilder
-                .fromUriString(gatewayConfig.getUrl())
+                .fromUriString(gatewayConfig.getShopUrl())
                 .path("/v1/members/checkPhone/{phone}")
                 .encode()
                 .build()
@@ -109,5 +112,41 @@ public class QueryMemberServiceImpl implements QueryMemberService {
                 uri,
                 MemberProfileExistResponseDto.class
         );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public MemberQueryResponseDto getMemberInfo() {
+        URI uri = UriComponentsBuilder
+                .fromUriString(gatewayConfig.getShopUrl())
+                .path("/v1/members/{loginId}")
+                .encode()
+                .build()
+                .expand("")
+                .toUri();
+        return restTemplate.getForObject(
+                uri, MemberQueryResponseDto.class
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getMemberGrade() {
+        URI uri = UriComponentsBuilder
+                .fromUriString(gatewayConfig.getShopUrl())
+                .path("/v1/members/{loginId}/grade")
+                .encode()
+                .build()
+                .expand("admin")
+                .toUri();
+        MemberGradeQueryResponseDto response = restTemplate.getForObject(
+                uri, MemberGradeQueryResponseDto.class
+        );
+        log.info("membergraderesponse : {}", response);
+        return response.getGradeEn();
     }
 }

@@ -38,3 +38,6 @@ build/
 
 ### DEV ###
 application-dev.yml
+
+### node_modules ###
+node_modules

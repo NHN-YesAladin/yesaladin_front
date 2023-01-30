@@ -19,6 +19,10 @@ spring:
     database: 26
 
 yesaladin:
+  front:
+    url: https://yesaladin.shop
   gateway:
     base: https://api.yesaladin.shop
     coupon: https://api.yesaladin.shop/coupon
+    auth: https://api.yesaladin.shop/auth
+    shop: https://api.yesaladin.shop/shop

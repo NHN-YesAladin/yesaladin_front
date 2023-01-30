@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body th:fragment="util-search-bar">
+<h3 class="align-content-center text-center">통합검색</h3>
+<div class="container-xl">
+    <div class="my-2 my-md-0 flex-grow-1 flex-md-grow-0 order-first order-md-last">
+        <form action="/search/products" method="get">
+                <div class="d-flex justify-content-evenly mb-3">
+                    <select class="form-select w-auto" name="selected">
+                        <option value="title">제목</option>
+                        <option value="content">내용</option>
+                        <option value="isbn">ISBN</option>
+                        <option value="author">저자</option>
+                        <option value="publisher">출판사</option>
+                        <option value="tag">태그</option>
+                    </select>
+                    <select class="form-select w-auto" name="size">
+                        <option value="10">10개</option>
+                        <option value="20">20개</option>
+                    </select>
+                  <input th:if="${products != null}" name="input" type="text" class="form-control w-75" placeholder="Search…" aria-label="Search in website" th:value="${input}"/>
+                  <input th:if="${products == null}"name="input" type="text" class="form-control w-75" placeholder="Search…" aria-label="Search in website"/>
+                  <input name="offset" type="hidden" value="1"/>
+                  <button type="submit" class="btn btn-primary w-auto">Search</button>
+                </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

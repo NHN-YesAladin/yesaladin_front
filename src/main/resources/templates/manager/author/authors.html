@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<!--
+* Tabler - Premium and Open Source dashboard template with responsive and high quality UI.
+* @version 1.0.0-beta5
+* @link https://tabler.io
+* Copyright 2018-2022 The Tabler Authors
+* Copyright 2018-2022 codecalm.net Paweł Kuna
+* Licensed under MIT (https://github.com/tabler/tabler/blob/master/LICENSE)
+-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+  <title>Yes Aladin!</title>
+  <!-- CSS files -->
+  <link th:href="@{/css/tabler.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-flags.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-payments.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-vendors.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/demo.min.css}" rel="stylesheet"/>
+</head>
+<body>
+  <!-- Libs JS -->
+  <script type="text/javascript" th:src="@{/libs/apexcharts/dist/apexcharts.min.js}"></script>
+  <!-- Tabler Core -->
+  <script type="text/javascript" th:src="@{/js/tabler.min.js}"></script>
+  <script type="text/javascript" th:src="@{/js/demo.min.js}"></script>
+
+  <div class="wrapper">
+    <!-- TODO 1 : NAV-BAR -->
+    <div th:replace="~{manager/fragments/navbar-vertical :: fragment-nav-vertical}"></div>
+
+    <!-- TODO 2 : HEADER -->
+    <div class="page-wrapper">
+      <div th:replace="~{common/fragments/header :: fragment-header}"></div>
+      <div class="page-header d-print-none container-xl">
+        <div class="row g-2 align-items-center">
+          <div class="col">
+            <h2 class="page-title">
+              저자 관리
+            </h2>
+          </div>
+          <div class="col-auto ms-auto d-print-none">
+            <div class="btn-list">
+              <a href="#" class="btn btn-primary d-none d-sm-inline-block" data-bs-toggle="modal" data-bs-target="#modal-author-register">
+                <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+                저자 등록
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TODO 3: BODY -->
+      <div class="page-body container-xl">
+        <div class="card">
+          <div class="card-header row">
+            <h3 class="card-title col-md-2">저자 관리</h3>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table card-table table-vcenter text-nowrap datatable">
+              <thead>
+              <tr>
+                <th class="w-1">No.</th>
+                <th>저자 이름</th>
+                <th>저자 ID</th>
+                <th></th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr th:each="author, i : ${authors}">
+                <td class="text-center"><span class="text-muted" th:text="${author.id}"></span></td>
+                <td th:text="${author.name}"></td>
+                <td th:text="${author.loginId}"></td>
+                <td>
+                  <a href="#" class="btn btn-dark btn-pill w-auto fs-5" data-bs-toggle="modal" data-bs-target="#modal-author-modify"
+                     th:data-id="${author.id}" th:data-name="${author.name}" th:data-login-id="${author.loginId}">
+                    수정
+                  </a>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div
+                  th:replace="~{common/utils/paging-bar :: paging('/manager/authors', '')}">
+          </div>
+        </div>
+      </div>
+
+      <!-- TODO 4 : footer -->
+      <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
+    </div>
+  </div>
+  <div class="modal modal-blur fade" id="modal-author-register" tabindex="-1" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">저자 등록</h5>
+        </div>
+        <div class="modal-body">
+          <div class="row mb-3 align-items-end">
+            <div class="col">
+              <label class="form-label">저자명</label>
+              <input type="text" class="form-control" id="author-name">
+            </div>
+            <div class="col">
+              <label class="form-label">저자 로그인 ID
+                <p class="page-pretitle" style="display: inline; margin: 3px;">없는 경우 입력하지 않아도 됩니다.</p>
+              </label>
+              <input type="text" class="form-control" id="author-login-id">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn me-auto" data-bs-dismiss="modal">취소</button>
+          <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" id="modal-author-register-button" th:data-shop-url="${@environment.getProperty('yesaladin.gateway.shop')}">저자 등록</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal modal-blur fade" id="modal-author-modify" tabindex="-1" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">저자 수정</h5>
+        </div>
+        <div class="modal-body">
+          <div class="row mb-3 align-items-end">
+            <div class="col">
+              <label class="form-label">저자명</label>
+              <input type="text" class="form-control" id="author-modify-name">
+            </div>
+            <div class="col">
+              <label class="form-label">
+                저자 ID
+                <p class="page-pretitle" style="display: inline; margin: 3px;">없는 경우 입력하지 않아도 됩니다.</p>
+              </label>
+              <input type="text" class="form-control" id="author-modify-login-id">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn me-auto" data-bs-dismiss="modal">취소</button>
+          <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" id="modal-author-modify-button"
+                  th:data-shop-url="${@environment.getProperty('yesaladin.gateway.shop')}">저자 수정</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    const registerButton = document.getElementById('modal-author-register-button');
+    registerButton.addEventListener('click', function (event) {
+      const authorName = document.getElementById('author-name').value;
+      const authorLoginId = document.getElementById('author-login-id').value;
+
+      fetch(registerButton.getAttribute('data-shop-url') + "/v1/authors", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Origin": window.origin
+        },
+        body: JSON.stringify({
+          name: authorName,
+          loginId: authorLoginId
+        })
+      })
+      .then(res => {
+        if (res.status !== 201) {
+          throw new Error(res.status + " 발생=> [저자명: " + authorName + ", 로그인 ID: " + authorLoginId + "]를 생성할 수 없습니다.");
+        }
+        return res.json();
+      })
+      .then(data => window.alert("저자('" + data.name + "')를 생성하였습니다."))
+      .catch(err => {
+        window.alert(err);
+      })
+      .finally(() => window.location.reload());
+    });
+  </script>
+  <script>
+    const modal = document.getElementById('modal-author-modify');
+    let name = document.getElementById('author-modify-name');
+    let loginId = document.getElementById('author-modify-login-id');
+    let id;
+    modal.addEventListener('show.bs.modal', function (event) {
+      id = event.relatedTarget.getAttribute('data-id');
+      name.value = event.relatedTarget.getAttribute('data-name');
+      loginId.value = event.relatedTarget.getAttribute('data-login-id');
+    });
+
+    const modifyButton = document.getElementById('modal-author-modify-button');
+    modifyButton.addEventListener('click', function (event) {
+      name = document.getElementById('author-modify-name');
+      loginId = document.getElementById('author-modify-login-id');
+
+      fetch(modifyButton.getAttribute('data-shop-url') + '/v1/authors/' + id, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "Origin": window.origin
+        },
+        body: JSON.stringify({
+          name: name.value,
+          loginId: loginId.value
+        })
+      }).then(res => {
+        if (!res.ok) {
+          throw new Error(res.status + " 발생=> [ID: " + id + " 저자명: " + name.value + ", 로그인 ID: " + loginId.value + "]로 수정할 수 없습니다.");
+        }
+        return res.json();
+      }).then(data => {
+        window.alert("저자('" + data.name + "')를 수정하였습니다.")
+      }).catch(err => {
+        window.alert(err);
+      }).finally(() => window.location.reload());
+    });
+  </script>
+</body>
+</html>
