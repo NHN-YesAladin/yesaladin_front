@@ -14,6 +14,6 @@ import lombok.Getter;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class MemberGradeQueryResponseDto {
 
-    String gradeEn;
-    String gradeKo;
+    private String gradeEn;
+    private String gradeKo;
 }
