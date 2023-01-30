@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import shop.yesaladin.front.member.dto.MemberGradeQueryResponseDto;
 import shop.yesaladin.front.member.dto.MemberProfileExistResponseDto;
 import shop.yesaladin.front.member.service.inter.QueryMemberService;
 
@@ -79,5 +80,10 @@ public class MemberRestController {
     public MemberProfileExistResponseDto phoneDuplicateCheck(@PathVariable String phone) {
         log.info("phone={}", phone);
         return queryMemberService.phoneCheck(phone);
+    }
+
+    @GetMapping("/grade")
+    public String getMemberGrade() {
+        return queryMemberService.getMemberGrade();
     }
 }

@@ -1,9 +1,10 @@
 package shop.yesaladin.front.product.dto;
 
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Getter
 @AllArgsConstructor
@@ -21,9 +22,10 @@ public class SearchedProductDto {
     private List<SearchedProductCategory> categories;
     private List<String> authors;
     private List<String> tags;
+
     public String getAuthorLine() {
         StringBuilder sb = new StringBuilder();
-        for(String author: authors)
+        for (String author : authors)
             sb.append(author).append(" ");
         return sb.toString();
     }
