@@ -48,6 +48,7 @@ public class JwtInterceptor implements ClientHttpRequestInterceptor {
     public ClientHttpResponse intercept(
             HttpRequest request, byte[] body, ClientHttpRequestExecution execution
     ) throws IOException {
+        log.info("path={}", request.getURI().getPath());
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (this.isRequiredAuthorizationHeader(request.getURI().getPath())
                 && !Objects.isNull(authentication)) {
@@ -59,13 +60,14 @@ public class JwtInterceptor implements ClientHttpRequestInterceptor {
             log.info("uuid={}", uuid);
 
             AuthInfo auth = (AuthInfo) redisTemplate.opsForHash().get(uuid, JWT_CODE.getValue());
-
-            log.info("accessToken={}", auth.getAccessToken());
-            log.info("loginId={}", auth.getLoginId());
-            log.info("authorities={}", auth.getAuthorities());
-            log.info("nickname={}", auth.getNickname());
-            request.getHeaders().setBearerAuth(auth.getAccessToken());
-            request.getHeaders().add(UUID_CODE.getValue(), uuid);
+            if (Objects.nonNull(auth)) {
+                log.info("accessToken={}", auth.getAccessToken());
+                log.info("loginId={}", auth.getLoginId());
+                log.info("authorities={}", auth.getAuthorities());
+                log.info("nickname={}", auth.getNickname());
+                request.getHeaders().setBearerAuth(auth.getAccessToken());
+                request.getHeaders().add(UUID_CODE.getValue(), uuid);
+            }
         }
         return execution.execute(request, body);
     }
@@ -80,7 +82,8 @@ public class JwtInterceptor implements ClientHttpRequestInterceptor {
      * @since : 1.0
      */
     public boolean isRequiredAuthorizationHeader(String uri) {
-        return !(uri.contains("login") || uri.contains("signup") || uri.contains("categories") || uri.contains("check"));
+        // TODO: shop api 기준으로 경로들 리스트화 해서 수정할 것
+        return !(uri.contains("login") || uri.contains("members") || uri.contains("categories") || uri.contains("check"));
     }
 
     /**
