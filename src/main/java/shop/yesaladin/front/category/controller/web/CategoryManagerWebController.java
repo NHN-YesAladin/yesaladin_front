@@ -5,12 +5,14 @@ import java.util.List;
 import java.util.Objects;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import shop.yesaladin.front.category.dto.CategoryResponseDto;
@@ -28,6 +30,7 @@ import shop.yesaladin.front.common.exception.ValidationFailedException;
  * @since 1.0
  */
 
+@Slf4j
 @RequiredArgsConstructor
 @Controller
 @RequestMapping("/manager/categories")
@@ -97,6 +100,11 @@ public class CategoryManagerWebController {
         return "manager/category/manager-categories";
     }
 
+    @GetMapping("/order")
+    public String changeOrders() {
+        return "manager/category/manager-change-categories-order";
+    }
+
 
     /**
      * 카테고리 생성 처리
@@ -140,7 +148,7 @@ public class CategoryManagerWebController {
         if (bindingResult.hasErrors()) {
             throw new ValidationFailedException(bindingResult);
         }
-
+        log.info("{}", modifyRequest);
         CategoryResponseDto responseDto = commandCategoryService.modify(categoryId, modifyRequest);
 
         if (Objects.isNull(responseDto.getParentId())) {
