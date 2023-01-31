@@ -56,9 +56,6 @@
 
     const navBar = document.getElementById("navbar-menu");
     const innerCategoryUrl = `${navBar.getAttribute("data-url")}/api/categories`;
-    // window.onload = function () {
-    //     setCategoryHeaderList();
-    // };
     window.addEventListener('DOMContentLoaded', (event) => {
         setCategoryHeaderList();
     });
@@ -105,10 +102,8 @@
                 const menuColumns = document.createElement("div");
 
                 menuColumns.classList.add("dropdown-menu-columns");
-                // menuColumns.id = `menu-col-${id}`;
                 menuColumns.setAttribute("id",`menu-col-${id}`)
                 menu.classList.add("dropdown-menu");
-                // menuColumns.id = `menu-${id}`;
                 menu.setAttribute("id",`menu-${id}`)
                 menu.appendChild(menuColumns);
 
