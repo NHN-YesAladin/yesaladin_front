@@ -1,6 +1,6 @@
 package shop.yesaladin.front.product.service.inter;
 
-import shop.yesaladin.front.product.dto.ProductResponseDto;
+import shop.yesaladin.front.product.dto.ProductCreateRequestDto;
 
 import java.io.IOException;
 
@@ -20,7 +20,7 @@ public interface CommandProductService {
      * @author 이수정
      * @since 1.0
      */
-    long register(ProductResponseDto productResponseDto) throws IOException;
+    long register(ProductCreateRequestDto productResponseDto) throws IOException;
 
 //    void modify(ProductResponseDto productResponseDto, long productId);
 

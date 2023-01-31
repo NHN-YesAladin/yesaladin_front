@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <body th:fragment="paging(url, queryParam)" >
-<div class="card-footer d-flex align-items-center">
+<div class="card-footer d-flex align-items-center" th:if="${totalPage != 0}">
   <ul class="pagination m-0 ms-auto"
       th:with="start=${(currentPage / 5) * 5 + 1},
                     last=(${start + 4 < totalPage ? start + 4 : totalPage})">
