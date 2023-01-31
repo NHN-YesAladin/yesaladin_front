@@ -46,7 +46,7 @@ public class QueryProductWebController {
 
         model.addAllAttributes(makeAttributeMap(response));
 
-        return "/main/product/product";
+        return "main/product/product";
     }
 
 
@@ -127,7 +127,7 @@ public class QueryProductWebController {
                 "types", queryProductTypeService.findAll()
         ));
 
-        return "/manager/product/products";
+        return "manager/product/products";
     }
 
     /**
