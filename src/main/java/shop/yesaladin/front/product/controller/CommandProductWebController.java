@@ -40,7 +40,7 @@ public class CommandProductWebController {
 
         model.addAllAttributes(productRelatedDtoMap);
 
-        return "/manager/product/productForm";
+        return "manager/product/productForm";
     }
 
     /**
