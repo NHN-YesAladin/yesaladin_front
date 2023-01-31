@@ -52,7 +52,7 @@
     })
     const parentCategories = [];
     const categories = {};
-    const ids = [];
+
 
     const navBar = document.getElementById("navbar-menu");
     const innerCategoryUrl = `${navBar.getAttribute("data-url")}/api/categories`;
@@ -61,12 +61,11 @@
     // };
     window.addEventListener('DOMContentLoaded', (event) => {
         setCategoryHeaderList();
-        displayChildCategories();
     });
 
     //TODO async - await 공부 후 설명 필요
     async function setCategoryHeaderList() {
-
+        const ids = [];
         try {
             if (parentCategories.length === 0) {
                 // TODO 데이터 존재하므로 다시 fetch 할 필요 없음
@@ -106,9 +105,12 @@
                 const menuColumns = document.createElement("div");
 
                 menuColumns.classList.add("dropdown-menu-columns");
-                menuColumns.id = `menu-col-${id}`;
+                // menuColumns.id = `menu-col-${id}`;
+                menuColumns.setAttribute("id",`menu-col-${id}`)
                 menu.classList.add("dropdown-menu");
-                menuColumns.id = `menu-${id}`;
+                // menuColumns.id = `menu-${id}`;
+                menu.setAttribute("id",`menu-${id}`)
+                menu.appendChild(menuColumns);
 
                 list.classList.add("nav-item");
                 list.classList.add("dropdown");
@@ -120,6 +122,7 @@
                 list.addEventListener('mouseover', hoverCategory());
                 list.addEventListener('mouseout',mouseOutCategory())
             }
+            await displayChildCategories(ids);
         } catch (err) {
             console.error(err);
             alert("카테고리 목록을 불러올 수 없습니다.");
@@ -127,11 +130,10 @@
 
     }
 
-    async function displayChildCategories() {
+    async function displayChildCategories(ids) {
         for (const id of ids) {
             const menu = document.getElementById(`menu-${id}`);
             const menuColumns = document.getElementById(`menu-col-${id}`);
-
             try {
                 if (!categories[id]) {
                     categories[id] = await getChildCategoriesByParentId(id);
@@ -142,7 +144,6 @@
                         shownCategories.push(c);
                     }
                 });
-                console.log(shownCategories);
                 arrangeCategoryChildrenHeader(shownCategories, menuColumns, menu);
             } catch (err){
                 console.error(err);
