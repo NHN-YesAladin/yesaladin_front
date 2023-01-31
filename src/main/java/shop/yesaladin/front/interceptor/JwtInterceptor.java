@@ -83,7 +83,8 @@ public class JwtInterceptor implements ClientHttpRequestInterceptor {
      */
     public boolean isRequiredAuthorizationHeader(String uri) {
         // TODO: shop api 기준으로 경로들 리스트화 해서 수정할 것
-        return !(uri.contains("login") || uri.contains("members") || uri.contains("categories") || uri.contains("check"));
+//        return !(uri.contains("login") || uri.contains("members") || uri.contains("categories") || uri.contains("check"));
+        return !(uri.contains("/"));
     }
 
     /**
