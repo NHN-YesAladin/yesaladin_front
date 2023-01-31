@@ -203,14 +203,14 @@
                         <h2 class="float-start m-1">연관상품</h2>
                         <ul class="pagination float-end m-1">
                             <li class="page-item">
-                                <a class="page-link" tabindex="-1" aria-disabled="true" onclick="preRelation()">
+                                <a class="page-link" tabindex="-1" aria-disabled="true" onclick="preRelation()" id="pre">
                                     <!-- Download SVG icon from http://tabler-icons.io/i/chevron-left -->
                                     <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M15 6l-6 6l6 6"></path></svg>
                                 </a>
                             </li>
                             <li class="page-item"><a class="page-link" id="relation-page" th:data-shop-url="${@environment.getProperty('yesaladin.gateway.shop')}">1</a></li>
                             <li class="page-item">
-                                <a class="page-link" tabindex="-1" aria-disabled="true" onclick="postRelation()">
+                                <a class="page-link" tabindex="-1" aria-disabled="true" onclick="postRelation()" id="post">
                                     <!-- Download SVG icon from http://tabler-icons.io/i/chevron-right -->
                                     <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M9 6l6 6l-6 6"></path></svg>
                                 </a>
@@ -309,7 +309,7 @@
     function preRelation() {
         let page = parseInt(relationPage.innerText) - 1;
 
-        makeRelations(page - 1);
+        makeRelations(page);
 
         relationPage.innerText = page.toString();
     }
@@ -317,32 +317,45 @@
     function postRelation() {
         let page = parseInt(relationPage.innerText) + 1;
 
-        makeRelations(page - 1);
+        makeRelations(page);
 
         relationPage.innerText = page.toString();
     }
 
     window.addEventListener('DOMContentLoaded', function() {
-        let page = parseInt(relationPage.innerText) == null ? 0 : parseInt(relationPage.innerText);
+        let page = parseInt(relationPage.innerText);
 
         makeRelations(page);
 
-        relationPage.innerText = (page + 1).toString();
+        relationPage.innerText = page.toString();
     });
 
     function makeRelations(page) {
+        const pre = document.getElementById("pre");
+        const post = document.getElementById("post");
+
+        if ((page - 1) <= 0) {
+            console.log("pre");
+            pre.classList.add('disabled');
+        }
+
         const productId = document.getElementById('product-id').value;
         const relationTable = document.getElementById('relation-table');
-        fetch(relationPage.getAttribute('data-shop-url') + "/v1/products/" + productId + "/relations?size=4&page=" + (page - 1), {
+        fetch(relationPage.getAttribute('data-shop-url') + "/v1/products/" + productId + "/relations?size=1&page=" + (page - 1), {
             method: "GET"
         })
             .then(res => res.json())
             .then(data => {
-                console.log(data);
                 console.log(relationPage.children.length);
                 // 원래있던 데이터를 다 지우고
                 // 새로 업데이트 합니다.
                 // tr -> td
+
+
+                if ((page + 1) >= data.totalPage){
+                    console.log("post");
+                    post.classList.add('disabled');
+                }
             })
             .catch(err => alert(err));
     }
