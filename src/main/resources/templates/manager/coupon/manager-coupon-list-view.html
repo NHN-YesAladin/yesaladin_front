@@ -93,14 +93,16 @@
               <tr th:each="data: ${dataList}">
                 <td th:text="${data.name}"></td>
                 <td th:text="${data.triggerTypeCode}"></td>
-                <!--                정액할인 쿠폰-->
-                <td th:if="${data.couponTypeCode.toString().equals('FIXED_AMOUNT')}" th:text="정액할인(${data.discountAmount})"></td>
-                <!--                정율할인 쿠폰-->
-                <td th:if="${data.couponTypeCode.toString().equals('FIXED_RATE')}" th:text="정율할인(${data.discountRate})"></td>
-                <!--                포인트 충전 쿠폰-->
-                <td th:if="${data.couponTypeCode.toString().equals('POINT')}" th:text="포인트(${data.chargePointAmount})"></td>
+                <th:block th:switch="${data.couponTypeCode.toString()}">
+                  <!--                정액할인 쿠폰-->
+                  <td th:case="FIXED_PRICE" th:text="'정액할인(' + ${data.discountAmount} + ')'"></td>
+                  <!--                정율할인 쿠폰-->
+                  <td th:case="FIXED_RATE" th:text="'정율할인(' + ${data.discountRate} + ')'"></td>
+                  <!--                포인트 충전 쿠폰-->
+                  <td th:case="POINT" th:text="'포인트(' + ${data.chargePointAmount} + ')'"></td>
+                </th:block>
                 <!--                유효기간-->
-                <td th:text="${data.duration == null ? '~ ' + #temporals.format(data.updateDate, 'yyyy-MM-dd') : '발행일로부터 ' + #data.duration}"></td>
+                <td th:text="${data.duration == 0 ? '~ ' + #temporals.format(data.expirationDate, 'yyyy-MM-dd') : '발행일로부터 ' + data.duration}"></td>
                 <td th:text="${#temporals.format(data.createdDateTime, 'yyyy-MM-dd')}"></td>
                 <td><input class="form-check-input" type="checkbox"></td>
               </tr>
@@ -108,24 +110,9 @@
             </table>
           </div>
           <nav>
-<!--            <div-->
-<!--                th:replace="~{common/utils/paging :: paging('/manager/coupon')}">-->
-<!--            </div>-->
-                    <ul class="pagination justify-content-end">
-                      <li class="page-item">
-                        <a class="page-link" href="#">
-                          <span aria-hidden="true">&laquo;</span>
-                        </a>
-                      </li>
-                      <li class="page-item"><a class="page-link" href="#">1</a></li>
-                      <li class="page-item"><a class="page-link" href="#">2</a></li>
-                      <li class="page-item"><a class="page-link" href="#">3</a></li>
-                      <li class="page-item">
-                        <a class="page-link" href="#">
-                          <span aria-hidden="true">&raquo;</span>
-                        </a>
-                      </li>
-                    </ul>
+            <div
+                th:replace="~{common/utils/paging :: paging('/manager/coupon', '')}">
+            </div>
         </nav>
       </div>
     </div>
