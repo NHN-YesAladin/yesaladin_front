@@ -75,8 +75,12 @@
                          th:style="|background-image: url(${product.thumbnailFileUrl})|" width="300" height="400"></div>
                   </div>
                   <div class="col-8">
-                    <p th:text="|${product.authorLine} 저|"></p>
-                    <p th:text="|${product.publisher}|"></p>
+                    <div th:each="author, j : ${product.authors}" style="display: inline">
+                      <p th:text="${author}" style="display: inline"></p>
+                      <p th:if="${!j.last}" style="display: inline">, </p>
+                      <p th:if="${j.last}" style="display: inline">저 |</p>
+                    </div>
+                    <p th:text="|${product.publisher}|" style="display: inline"></p>
                     <p th:text="|출판일 : ${product.publishedDate}|"></p>
                     <h3 th:text="|${product.sellingPrice}원 |" style="display: inline"></h3>
                     <p class="page-pretitle" th:text="|(${product.discountRate}% 할인)|" style="display: inline"></p><br/>
@@ -87,37 +91,7 @@
             </div>
           </div>
         </div>
-
-        <div class="card-footer d-flex align-items-center">
-          <ul class="pagination m-0 ms-auto">
-            <li class="page-item" th:if="${start > 1}">
-              <a class="page-link" th:if="${typeId} != ''" th:href="@{/products(typeId=${typeId}, size=${size}, page=(${start}-${blockSize}))}" tabindex="-1" aria-disabled="true">
-                <!-- Download SVG icon from http://tabler-icons.io/i/chevron-left -->
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><polyline points="15 6 9 12 15 18" /></svg>
-                이전
-              </a>
-              <a class="page-link" th:if="${typeId} == ''" th:href="@{/products(size=${size}, page=(${start}-${blockSize}))}" tabindex="-1" aria-disabled="true">
-                <!-- Download SVG icon from http://tabler-icons.io/i/chevron-left -->
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><polyline points="15 6 9 12 15 18" /></svg>
-                이전
-              </a>
-            </li>
-            <li class="page-item" th:each="page : ${#numbers.sequence(start,last)}">
-              <a class="page-link" th:if="${typeId} != ''" th:classappend="${currentPage==page}?'active'" th:href="@{/products(typeId=${typeId}, size=${size}, page=${page}-1)}" th:text="${page}"></a>
-              <a class="page-link" th:if="${typeId} == ''" th:classappend="${currentPage==page}?'active'" th:href="@{/products(size=${size}, page=${page}-1)}" th:text="${page}"></a>
-            </li>
-            <li class="page-item" th:if="${last < totalPage}">
-              <a class="page-link" th:if="${typeId} != ''" th:href="@{/products(typeId=${typeId}, size=${size}, page=(${start}+${blockSize}-1))}">
-                다음 <!-- Download SVG icon from http://tabler-icons.io/i/chevron-right -->
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><polyline points="9 6 15 12 9 18" /></svg>
-              </a>
-              <a class="page-link" th:if="${typeId} == ''" th:href="@{/products(size=${size}, page=(${start}+${blockSize}-1))}">
-                다음 <!-- Download SVG icon from http://tabler-icons.io/i/chevron-right -->
-                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><polyline points="9 6 15 12 9 18" /></svg>
-              </a>
-            </li>
-          </ul>
-        </div>
+        <div th:replace="~{common/utils/paging-bar :: paging('/manager/products', ${typeId == null ? '' : '&typeId=' + typeId})}"></div>
       </div>
     </div>
 

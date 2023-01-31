@@ -1,7 +1,9 @@
 package shop.yesaladin.front.member.adapter;
 
+import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -9,6 +11,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
+import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.config.GatewayConfig;
 import shop.yesaladin.front.member.dto.LoginRequest;
 import shop.yesaladin.front.member.dto.MemberResponse;
@@ -58,18 +62,27 @@ public class MemberAdapter {
      * @author : 송학현
      * @since : 1.0
      */
-    public ResponseEntity<MemberResponse> getMemberInfo(
+    public ResponseEntity<ResponseDto<MemberResponse>> getMemberInfo(
             LoginRequest loginRequest,
             String accessToken
     ) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setBearerAuth(accessToken);
 
-        return restTemplate.getForEntity(
-                gatewayConfig.getShopUrl() + "/v1/members/login/{loginId}",
-                MemberResponse.class,
-                loginRequest.getLoginId(),
-                httpHeaders
+        URI uri = UriComponentsBuilder
+                .fromUriString(gatewayConfig.getShopUrl())
+                .path("/v1/members/login/{loginId}")
+                .encode()
+                .build()
+                .expand(loginRequest.getLoginId())
+                .toUri();
+
+        return restTemplate.exchange(
+                uri,
+                HttpMethod.GET,
+                new HttpEntity<>(httpHeaders),
+                new ParameterizedTypeReference<>() {
+                }
         );
     }
 }
