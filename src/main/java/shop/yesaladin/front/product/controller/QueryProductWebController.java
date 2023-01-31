@@ -122,7 +122,7 @@ public class QueryProductWebController {
     /**
      * Paging Bar에 필요한 정보를 계산하고 Map으로 저장하여 반환합니다.
      *
-     * @param products  페이징된 정보를 담고있는 PaginatedResponseDto
+     * @param products 페이징된 정보를 담고있는 PaginatedResponseDto
      * @return Paging Bar에 필요한 정보를 담은 Map
      * @author 이수정
      * @since 1.0
