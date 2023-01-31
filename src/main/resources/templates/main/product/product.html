@@ -146,7 +146,7 @@
                                 </div>
                                 <!-- 정기구독 불가능 -->
                                 <div class="row px-2 py-1" th:if="${!isSubscriptionAvailable}">
-                                    <a href="#" class="btn btn-facebook w-100">
+                                    <a href="/order/test" class="btn btn-facebook w-100">
                                         <svg xmlns="http://www.w3.org/2000/svg"
                                              class="icon icon-tabler icon-tabler-brand-cashapp" width="24" height="24"
                                              viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
@@ -160,7 +160,7 @@
                                 <!-- 정기구독 가능 -->
                                 <div class="row p-1" th:if="${isSubscriptionAvailable}">
                                     <div class="col-6 px-1">
-                                        <a href="#" class="btn btn-facebook w-100">
+                                        <a href="/order/test" class="btn btn-facebook w-100">
                                             <svg xmlns="http://www.w3.org/2000/svg"
                                                  class="icon icon-tabler icon-tabler-brand-cashapp" width="24" height="24"
                                                  viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
@@ -203,10 +203,10 @@
                         <h2 class="float-start m-1">연관상품</h2>
                         <ul class="pagination float-end m-1">
                             <li class="page-item">
-                                <a class="page-link" tabindex="-1" aria-disabled="true" onclick="preRelation()" id="pre">
-                                    <!-- Download SVG icon from http://tabler-icons.io/i/chevron-left -->
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M15 6l-6 6l6 6"></path></svg>
-                                </a>
+                                    <a class="page-link" tabindex="-1" aria-disabled="true" onclick="preRelation()" id="pre">
+                                        <!-- Download SVG icon from http://tabler-icons.io/i/chevron-left -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M15 6l-6 6l6 6"></path></svg>
+                                    </a>
                             </li>
                             <li class="page-item"><a class="page-link" id="relation-page" th:data-shop-url="${@environment.getProperty('yesaladin.gateway.shop')}">1</a></li>
                             <li class="page-item">
@@ -220,31 +220,8 @@
                         <div class="card">
                             <div class="card-body">
                                 <table class="col-12">
-                                    <tbody id="relation-table">
-                                        <tr class="col-3">
-                                            <td>1</td>
-                                            <td>2</td>
-                                            <td>3</td>
-                                            <td>4</td>
-                                        </tr>
-                                        <tr class="col-3">
-                                            <td>1</td>
-                                            <td>2</td>
-                                            <td>3</td>
-                                            <td>4</td>
-                                        </tr>
-                                        <tr class="col-3">
-                                            <td>1</td>
-                                            <td>2</td>
-                                            <td>3</td>
-                                            <td>4</td>
-                                        </tr>
-                                        <tr class="col-3">
-                                            <td>1</td>
-                                            <td>2</td>
-                                            <td>3</td>
-                                            <td>4</td>
-                                        </tr>
+                                    <tbody class="divide-x" id="relation-table">
+
                                     </tbody>
                                 </table>
                             </div>
@@ -334,27 +311,66 @@
         const pre = document.getElementById("pre");
         const post = document.getElementById("post");
 
-        if ((page - 1) <= 0) {
-            console.log("pre");
-            pre.classList.add('disabled');
-        }
-
         const productId = document.getElementById('product-id').value;
         const relationTable = document.getElementById('relation-table');
-        fetch(relationPage.getAttribute('data-shop-url') + "/v1/products/" + productId + "/relations?size=1&page=" + (page - 1), {
+        fetch(relationPage.getAttribute('data-shop-url') + "/v1/products/" + productId + "/relations?size=4&page=" + (page - 1), {
             method: "GET"
         })
             .then(res => res.json())
-            .then(data => {
-                console.log(relationPage.children.length);
-                // 원래있던 데이터를 다 지우고
-                // 새로 업데이트 합니다.
-                // tr -> td
+            .then(response => {
+                while (relationTable.firstChild) {
+                    relationTable.removeChild(relationTable.firstChild);
+                }
 
+                console.log(response.dataList);
+                for (let i = 0; i < response.dataList.length; i++) {
+                    const tr = document.createElement('tr');
+                    tr.classList.add('col-3', 'p-0');
 
-                if ((page + 1) >= data.totalPage){
-                    console.log("post");
-                    post.classList.add('disabled');
+                    const tdThumbnail = document.createElement('td');
+                    const aThumbnail = document.createElement('a');
+                    aThumbnail.href = "/products/" + response.dataList[i].id;
+                    const imgThumbnail = document.createElement('img');
+                    imgThumbnail.src = response.dataList[i].thumbnailFileUrl;
+                    imgThumbnail.style = 'width: 150px';
+                    imgThumbnail.classList.add('border', 'rounded-2');
+                    aThumbnail.append(imgThumbnail);
+                    tdThumbnail.append(aThumbnail);
+
+                    const tdTitle = document.createElement('td');
+                    const h3Title = document.createElement('h3');
+                    h3Title.classList.add('p-0', 'm-0');
+                    const aTitle = document.createElement('a');
+                    aTitle.href = "/products/" + response.dataList[i].id;
+                    aTitle.innerText = response.dataList[i].title;
+                    aTitle.classList.add('text-dark');
+                    h3Title.append(aTitle);
+                    tdTitle.append(h3Title);
+
+                    const tdMakers = document.createElement('td');
+                    tdMakers.innerText = response.dataList[i].authors + " 저 | " + response.dataList[i].publisher;
+
+                    const tdPrice = document.createElement('td');
+                    tdPrice.innerText = response.dataList[i].sellingPrice + "원(" + response.dataList[i].rate + "%)";
+                    tdPrice.classList.add('strong');
+
+                    tr.append(tdThumbnail, tdTitle, tdMakers, tdPrice);
+
+                    relationTable.append(tr);
+                }
+
+                if ((page - 1) <= 0) {
+                    console.log("pre: " + page);
+                    pre.classList.add('visually-hidden');
+                } else {
+                    pre.classList.remove('visually-hidden');
+                }
+
+                if (page >= response.totalPage){
+                    console.log("post : " + page + ", total : " + response.totalPage);
+                    post.classList.add('visually-hidden');
+                } else {
+                    post.classList.remove('visually-hidden');
                 }
             })
             .catch(err => alert(err));
