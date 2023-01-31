@@ -68,10 +68,7 @@ public class FileWebController {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/file-download")
     @ResponseBody
-    public ResponseEntity<byte[]> fileDownload(@RequestParam String url) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Disposition", "attachment");
-
-        return new ResponseEntity<>(fileStorageService.fileDownload(url), headers, HttpStatus.OK);
+    public byte[] fileDownload(@RequestParam String url) {
+        return fileStorageService.fileDownload(url);
     }
 }
