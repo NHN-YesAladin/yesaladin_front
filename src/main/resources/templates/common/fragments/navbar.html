@@ -52,12 +52,17 @@
     })
     const parentCategories = [];
     const categories = {};
+    const ids = [];
 
     const navBar = document.getElementById("navbar-menu");
     const innerCategoryUrl = `${navBar.getAttribute("data-url")}/api/categories`;
-    window.onload = function () {
+    // window.onload = function () {
+    //     setCategoryHeaderList();
+    // };
+    window.addEventListener('DOMContentLoaded', (event) => {
         setCategoryHeaderList();
-    };
+        displayChildCategories();
+    });
 
     //TODO async - await 공부 후 설명 필요
     async function setCategoryHeaderList() {
@@ -76,6 +81,7 @@
             const headerList = document.getElementById("header-list");
             for (let i = 0; i < parentCategories.length; i++) {
                 const id = parentCategories[i].id;
+                ids.push(id);
                 const name = parentCategories[i].name;
 
                 const list = document.createElement("li");
@@ -100,24 +106,9 @@
                 const menuColumns = document.createElement("div");
 
                 menuColumns.classList.add("dropdown-menu-columns");
+                menuColumns.id = `menu-col-${id}`;
                 menu.classList.add("dropdown-menu");
-
-                try {
-                    if (!categories[id]) {
-                        categories[id] = await getChildCategoriesByParentId(id);
-                    }
-                    let shownCategories = [];
-                    categories[id].forEach(c => {
-                        if (c.isShown) {
-                            shownCategories.push(c);
-                        }
-                    });
-                    console.log(shownCategories);
-                    arrangeCategoryChildrenHeader(shownCategories, menuColumns, menu);
-                } catch (err){
-                    console.error(err);
-                    alert("2차 카테고리 목록을 불러올 수 없습니다.");
-                }
+                menuColumns.id = `menu-${id}`;
 
                 list.classList.add("nav-item");
                 list.classList.add("dropdown");
@@ -133,6 +124,32 @@
             console.error(err);
             alert("카테고리 목록을 불러올 수 없습니다.");
         }
+
+    }
+
+    async function displayChildCategories() {
+        for (const id of ids) {
+            const menu = document.getElementById(`menu-${id}`);
+            const menuColumns = document.getElementById(`menu-col-${id}`);
+
+            try {
+                if (!categories[id]) {
+                    categories[id] = await getChildCategoriesByParentId(id);
+                }
+                let shownCategories = [];
+                categories[id].forEach(c => {
+                    if (c.isShown) {
+                        shownCategories.push(c);
+                    }
+                });
+                console.log(shownCategories);
+                arrangeCategoryChildrenHeader(shownCategories, menuColumns, menu);
+            } catch (err){
+                console.error(err);
+                alert("2차 카테고리 목록을 불러올 수 없습니다.");
+            }
+        }
+
     }
 
     function getParentCategories() {
