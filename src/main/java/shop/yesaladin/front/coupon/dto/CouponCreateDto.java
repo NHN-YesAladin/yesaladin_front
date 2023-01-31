@@ -37,6 +37,7 @@ public abstract class CouponCreateDto {
         map.add("imageFile", imageFile);
         map.add("duration", duration);
         map.add("expirationDate", Objects.nonNull(expirationDate) ? expirationDate.toString() : null);
+        map.add("expirationDate", expirationDate == null ? null : expirationDate.toString());
         map.add("couponTypeCode", couponTypeCode);
         return map;
     }
