@@ -92,7 +92,7 @@
               </tr>
               <tr th:each="data: ${dataList}">
                 <td th:text="${data.name}"></td>
-                <td th:text="${data.triggerTypeCode}"></td>
+                <td th:text="${data.triggerTypeCode.getDisplayName()}"></td>
                 <th:block th:switch="${data.couponTypeCode.toString()}">
                   <td th:case="FIXED_PRICE" th:text="'정액할인(' + ${data.discountAmount} + ')'"></td>
                   <td th:case="FIXED_RATE" th:text="'정율할인(' + ${data.discountRate} + '%)'"></td>
