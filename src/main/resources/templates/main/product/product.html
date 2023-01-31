@@ -22,6 +22,16 @@
     <link th:href="@{/css/demo.min.css}" rel="stylesheet"/>
 
     <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css"/>
+
+    <style>
+        tr {
+            display: block;
+            float: left;
+        }
+        th, td {
+            display: block;
+        }
+    </style>
 </head>
 <body>
 <!-- Libs JS -->
@@ -49,10 +59,12 @@
                             <h2 class="badge bg-azure-lt">E-Book</h2>
                         </div>
                         <h1 th:text="${title}"></h1>
+                        <input hidden="hidden" id="product-id" th:value="${id}">
                         <h3>저자 :
-                            <div th:each="author: ${authors}" style="display: inline"><p th:text="|${author}|"
-                                                                                         style="display: inline"></p>
-                                <p th:if="${authorStat.last} != true" style="display: inline">, </p></div>
+                            <div th:each="author, j : ${authors}" style="display: inline">
+                                <p th:text="${author}" style="display: inline"></p>
+                                <p th:if="${!j.last}" style="display: inline">,</p>
+                            </div>
                             | 출판사 : <p th:text="${publisher}" style="display: inline"></p></h3>
                     </div>
                 </div>
@@ -70,7 +82,7 @@
                                 <p th:text="|포인트 적립금(포인트 적립율) : ${pointPrice}원(${pointRate}%)|"></p>
                             </div>
                             <div class="col-12 p-2">
-                                <p> 배송비 </p>
+                                <p> 배송비 : 3000원 </p>
                             </div>
                             <div class="col-12 p-2" th:if="${onSale}">
                                 <div class="row p-1 text-lg-end">
@@ -134,7 +146,7 @@
                                 </div>
                                 <!-- 정기구독 불가능 -->
                                 <div class="row px-2 py-1" th:if="${!isSubscriptionAvailable}">
-                                    <a href="#" class="btn btn-facebook w-100">
+                                    <a href="/order/test" class="btn btn-facebook w-100">
                                         <svg xmlns="http://www.w3.org/2000/svg"
                                              class="icon icon-tabler icon-tabler-brand-cashapp" width="24" height="24"
                                              viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
@@ -148,7 +160,7 @@
                                 <!-- 정기구독 가능 -->
                                 <div class="row p-1" th:if="${isSubscriptionAvailable}">
                                     <div class="col-6 px-1">
-                                        <a href="#" class="btn btn-facebook w-100">
+                                        <a href="/order/test" class="btn btn-facebook w-100">
                                             <svg xmlns="http://www.w3.org/2000/svg"
                                                  class="icon icon-tabler icon-tabler-brand-cashapp" width="24" height="24"
                                                  viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
@@ -187,7 +199,33 @@
                         </div>
                     </div>
                     <div class="row g-2 p-3">
-                        <h2>연관상품</h2>
+                        <div>
+                        <h2 class="float-start m-1">연관상품</h2>
+                        <ul class="pagination float-end m-1">
+                            <li class="page-item">
+                                    <a class="page-link" tabindex="-1" aria-disabled="true" onclick="preRelation()" id="pre">
+                                        <!-- Download SVG icon from http://tabler-icons.io/i/chevron-left -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M15 6l-6 6l6 6"></path></svg>
+                                    </a>
+                            </li>
+                            <li class="page-item"><a class="page-link" id="relation-page" th:data-shop-url="${@environment.getProperty('yesaladin.gateway.shop')}">1</a></li>
+                            <li class="page-item">
+                                <a class="page-link" tabindex="-1" aria-disabled="true" onclick="postRelation()" id="post">
+                                    <!-- Download SVG icon from http://tabler-icons.io/i/chevron-right -->
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M9 6l6 6l-6 6"></path></svg>
+                                </a>
+                            </li>
+                        </ul>
+                        </div>
+                        <div class="card">
+                            <div class="card-body">
+                                <table class="col-12">
+                                    <tbody class="divide-x" id="relation-table">
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                     <div class="row g-2 divide-y p-3">
                         <div class="col-12">
@@ -241,6 +279,101 @@
     function upQuantity() {
         const quantity = document.getElementById("quantityBox");
         ++quantity.value;
+    }
+</script>
+<script>
+    const relationPage = document.getElementById('relation-page');
+    function preRelation() {
+        let page = parseInt(relationPage.innerText) - 1;
+
+        makeRelations(page);
+
+        relationPage.innerText = page.toString();
+    }
+
+    function postRelation() {
+        let page = parseInt(relationPage.innerText) + 1;
+
+        makeRelations(page);
+
+        relationPage.innerText = page.toString();
+    }
+
+    window.addEventListener('DOMContentLoaded', function() {
+        let page = parseInt(relationPage.innerText);
+
+        makeRelations(page);
+
+        relationPage.innerText = page.toString();
+    });
+
+    function makeRelations(page) {
+        const pre = document.getElementById("pre");
+        const post = document.getElementById("post");
+
+        const productId = document.getElementById('product-id').value;
+        const relationTable = document.getElementById('relation-table');
+        fetch(relationPage.getAttribute('data-shop-url') + "/v1/products/" + productId + "/relations?size=4&page=" + (page - 1), {
+            method: "GET"
+        })
+            .then(res => res.json())
+            .then(response => {
+                while (relationTable.firstChild) {
+                    relationTable.removeChild(relationTable.firstChild);
+                }
+
+                console.log(response.dataList);
+                for (let i = 0; i < response.dataList.length; i++) {
+                    const tr = document.createElement('tr');
+                    tr.classList.add('col-3', 'p-0');
+
+                    const tdThumbnail = document.createElement('td');
+                    const aThumbnail = document.createElement('a');
+                    aThumbnail.href = "/products/" + response.dataList[i].id;
+                    const imgThumbnail = document.createElement('img');
+                    imgThumbnail.src = response.dataList[i].thumbnailFileUrl;
+                    imgThumbnail.style = 'width: 150px';
+                    imgThumbnail.classList.add('border', 'rounded-2');
+                    aThumbnail.append(imgThumbnail);
+                    tdThumbnail.append(aThumbnail);
+
+                    const tdTitle = document.createElement('td');
+                    const h3Title = document.createElement('h3');
+                    h3Title.classList.add('p-0', 'm-0');
+                    const aTitle = document.createElement('a');
+                    aTitle.href = "/products/" + response.dataList[i].id;
+                    aTitle.innerText = response.dataList[i].title;
+                    aTitle.classList.add('text-dark');
+                    h3Title.append(aTitle);
+                    tdTitle.append(h3Title);
+
+                    const tdMakers = document.createElement('td');
+                    tdMakers.innerText = response.dataList[i].authors + " 저 | " + response.dataList[i].publisher;
+
+                    const tdPrice = document.createElement('td');
+                    tdPrice.innerText = response.dataList[i].sellingPrice + "원(" + response.dataList[i].rate + "%)";
+                    tdPrice.classList.add('strong');
+
+                    tr.append(tdThumbnail, tdTitle, tdMakers, tdPrice);
+
+                    relationTable.append(tr);
+                }
+
+                if ((page - 1) <= 0) {
+                    console.log("pre: " + page);
+                    pre.classList.add('visually-hidden');
+                } else {
+                    pre.classList.remove('visually-hidden');
+                }
+
+                if (page >= response.totalPage){
+                    console.log("post : " + page + ", total : " + response.totalPage);
+                    post.classList.add('visually-hidden');
+                } else {
+                    post.classList.remove('visually-hidden');
+                }
+            })
+            .catch(err => alert(err));
     }
 </script>
 </body>

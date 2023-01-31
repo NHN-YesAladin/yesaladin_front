@@ -35,12 +35,11 @@ public class JwtInterceptor implements ClientHttpRequestInterceptor {
     /**
      * RestTemplate의 실행 전, Request Header에 JWT 토큰을 담기 위한 기능 입니다.
      *
-     * @param request HttpRequest 객체 입니다.
-     * @param body 요청 body에 해당 합니다.
+     * @param request   HttpRequest 객체 입니다.
+     * @param body      요청 body에 해당 합니다.
      * @param execution 실제 실행을 수행 하고 요청을 후속 프로세스 체인으로 전달하기 위한 객체 입니다.
      * @return Client 측의 HTTP 응답을 나타 냅니다. RestTemplate 요청 직전에
      * @throws IOException interceptor 작동 시 발생할 수 있는 예외 입니다.
-     *
      * @author : 송학현
      * @since : 1.0
      */
@@ -50,9 +49,7 @@ public class JwtInterceptor implements ClientHttpRequestInterceptor {
     ) throws IOException {
         log.info("path={}", request.getURI().getPath());
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (this.isRequiredAuthorizationHeader(request.getURI().getPath())
-                && !Objects.isNull(authentication)) {
-
+        if (Objects.nonNull(authentication)) {
             HttpServletRequest servletRequest = Objects.requireNonNull(((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()))
                     .getRequest();
 
@@ -70,20 +67,6 @@ public class JwtInterceptor implements ClientHttpRequestInterceptor {
             }
         }
         return execution.execute(request, body);
-    }
-
-    /**
-     * RestTemplate 으로 API 요청 시 Authorization Header 값이 필요한 경로 인지 판별 하기 위한 기능 입니다.
-     * categories의 경우, 추 후 GET 요청의 경우만 Gateway filter에서 제외 하도록 하겠습니다.
-     *
-     * @param uri API 요청 대상 경로 입니다.
-     * @return JWT AccessToken이 필요한 경로 인지 판별한 결과 입니다.
-     * @author : 송학현
-     * @since : 1.0
-     */
-    public boolean isRequiredAuthorizationHeader(String uri) {
-        // TODO: shop api 기준으로 경로들 리스트화 해서 수정할 것
-        return !(uri.contains("login") || uri.contains("members") || uri.contains("categories") || uri.contains("check") || uri.contains("coupons"));
     }
 
     /**
