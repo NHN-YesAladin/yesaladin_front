@@ -14,6 +14,7 @@ import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -49,7 +50,7 @@ public class JwtInterceptor implements ClientHttpRequestInterceptor {
     ) throws IOException {
         log.info("path={}", request.getURI().getPath());
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (Objects.nonNull(authentication)) {
+        if (!(authentication instanceof AnonymousAuthenticationToken)) {
             HttpServletRequest servletRequest = Objects.requireNonNull(((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()))
                     .getRequest();
 
