@@ -313,7 +313,7 @@
 
         const productId = document.getElementById('product-id').value;
         const relationTable = document.getElementById('relation-table');
-        fetch(relationPage.getAttribute('data-shop-url') + "/v1/products/" + productId + "/relations?&size=4&page=" + (page - 1), {
+        fetch(relationPage.getAttribute('data-shop-url') + "/v1/products/" + productId + "/relations?size=4&page=" + (page - 1), {
             method: "GET"
         })
             .then(res => res.json())
