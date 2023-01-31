@@ -1,7 +1,6 @@
 package shop.yesaladin.front.product.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -16,8 +15,6 @@ import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.config.GatewayConfig;
 import shop.yesaladin.front.product.dto.RelationsResponseDto;
 import shop.yesaladin.front.product.service.inter.QueryRelationService;
-
-import java.util.List;
 
 
 /**
@@ -40,7 +37,7 @@ public class QueryRelationServiceImpl implements QueryRelationService {
     public PaginatedResponseDto<RelationsResponseDto> getRelations(long productId, PageRequestDto pageRequestDto) {
         UriComponents uriComponents = UriComponentsBuilder
                 .fromHttpUrl(gatewayConfig.getShopUrl())
-                .path("/v1/products/" + productId + "/relations")
+                .path("/v1/products/" + productId + "/relations/manager")
                 .queryParam("page", pageRequestDto.getPage())
                 .queryParam("size", pageRequestDto.getSize())
                 .build();
@@ -49,7 +46,8 @@ public class QueryRelationServiceImpl implements QueryRelationService {
                 uriComponents.toUri(),
                 HttpMethod.GET,
                 getHttpEntity(),
-                new ParameterizedTypeReference<PaginatedResponseDto<RelationsResponseDto>>() {}
+                new ParameterizedTypeReference<PaginatedResponseDto<RelationsResponseDto>>() {
+                }
         ).getBody();
     }
 
