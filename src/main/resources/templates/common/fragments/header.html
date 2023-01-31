@@ -60,16 +60,13 @@
           </div>
         </a>
         <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-          <div>
-            <a href="/mypage" class="dropdown-item">마이 페이지</a>
-            <a href="/manager" class="dropdown-item">관리자 페이지</a>
-          </div>
-          <div class="dropdown-divider"></div>
           <div sec:authorize="!isAuthenticated()">
             <a href="/members/signup" class="dropdown-item">SignUp</a>
             <a href="/members/login" class="dropdown-item">Login</a>
           </div>
           <div sec:authorize="isAuthenticated()">
+            <a href="/mypage" class="dropdown-item">마이 페이지</a>
+            <a href="/manager" class="dropdown-item">관리자 페이지</a>
             <a href="/logout" class="dropdown-item">Logout</a>
           </div>
         </div>
