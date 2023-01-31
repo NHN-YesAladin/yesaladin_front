@@ -9,9 +9,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/order")
 public class OrderMainWebController {
 
-    @GetMapping
+    @GetMapping("/test")
     public String getOrderSheet(Model model) {
         model.addAttribute("userPoint", 5000);
+
+        return "/main/order/order-page";
+    }
+
+    @GetMapping("/member")
+    public String getMemberOrderSheet(Model model) {
         return "/main/order/order-page";
     }
 

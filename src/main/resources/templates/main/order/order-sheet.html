@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <body th:fragment="order-sheet">
-<form th:method="post">
+<form method="post" th:action="@{'/order' + ${member == null ? '/non-member': '/member'}}">
   <div class="container-narrow py-4">
     <div class="text-center mb-4">
       <h1 class="h-auto">주문서</h1>
@@ -14,14 +14,13 @@
           <div class="card-body">
             <!--        TODO 회원인지에 따라 배송지 선택 disabled 만들기-->
             <label class="form-label required">주문인</label>
-            <input type="text" class="form-control" name="orderer"
-                   placeholder="홍길동">
+            <input type="text" class="form-control" name="orderer" placeholder="홍길동"
+                   th:value="${member == null ? '' : member.name}">
             <label class="form-label required">전화번호</label>
             <input type="text" class="form-control" name="orderer-phone-number" id="phone-number"
-                   maxlength="11"
-                   data-mask="000 0000 0000" placeholder="띄어쓰기 없이 붙여주세요.(ex: 01012341234)"
-                   data-mask-visible="true"
-                   autocomplete="off">
+                   maxlength="11" data-mask="000 0000 0000" placeholder="띄어쓰기 없이 붙여주세요.(ex: 01012341234)"
+                   data-mask-visible="true" autocomplete="off"
+                   th:value="${member == null ? '' : member.phoneNumber}">
           </div>
         </div>
         <br>
@@ -31,14 +30,14 @@
             <div>
               <label class="form-label required d-lg-inline float-start">주소</label>
               <!--              TODO 배송지 선택 버튼-->
-              </button>
               <a href="#" class="btn btn-outline-secondary btn-sm float-end btn-modal"
                  data-bs-toggle="modal" data-bs-target="#modal-report">
                 배송지 선택
               </a>
             </div>
-            <input type="text" class="form-control" name="orderer-address"
-                   placeholder="주소">
+            <input type="text" name="orderer-address-id" hidden="hidden">
+            <input type="text" class="form-control" name="orderer-address" placeholder="주소"
+                   th:value="${member == null ? '' : member.address}">
             <label class="form-label required d-lg-inline float-start">희망배송날짜</label>
             <input class="form-control mb-2" type="date" name="order-expected-date"
                    th:min="${#calendars.format( #calendars.createNow(), 'yyyy-MM-dd')}"
@@ -69,7 +68,9 @@
                 <td th:value="${product.title}"></td>
                 <td th:value="${product.price}"></td>
                 <td th:value="${product.point}"></td>
-                <td th:value="${product.quantity}"></td>
+                <td th:value="${product.quantity}">
+                  <span name="order-product-quantity" th:value="${product.quantity}"
+                </td>
                 <td>
                   <!--                  TODO 개별 쿠폰 적용하기-->
                   <button type="button" class="btn btn-outline-secondary btn-sm float-end">쿠폰 적용
