@@ -17,39 +17,38 @@
         <img th:src="@{~/img/logo/logo.png}" height="32" class="navbar-brand-image d-inline w-auto">
         <span class="text-primary d-inline">Yes! Aladin</span>
       </a>
+    <!-- dark/light 모드 전환 -->
+    <a href="?theme=dark" class="nav-link px-0 hide-theme-dark ms-2" title="Enable dark mode"
+       data-bs-toggle="tooltip" data-bs-placement="bottom">
+      <!-- Download SVG icon from http://tabler-icons.io/i/moon -->
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
+           viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+           stroke-linecap="round" stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+        <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z"/>
+      </svg>
+    </a>
+    <a href="?theme=light" class="nav-link px-0 hide-theme-light" title="Enable light mode"
+       data-bs-toggle="tooltip" data-bs-placement="bottom">
+      <!-- Download SVG icon from http://tabler-icons.io/i/sun -->
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
+           viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+           stroke-linecap="round" stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+        <circle cx="12" cy="12" r="4"/>
+        <path
+            d="M3 12h1m8 -9v1m8 8h1m-9 8v1m-6.4 -15.4l.7 .7m12.1 -.7l-.7 .7m0 11.4l.7 .7m-12.1 -.7l-.7 .7"/>
+      </svg>
+    </a>
     </h1>
     <div class="navbar-nav flex-row order-md-last">
-      <!-- dark/light 모드 전환 -->
-      <a href="?theme=dark" class="nav-link px-0 hide-theme-dark" title="Enable dark mode"
-         data-bs-toggle="tooltip" data-bs-placement="bottom">
-        <!-- Download SVG icon from http://tabler-icons.io/i/moon -->
-        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
-             viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-             stroke-linecap="round" stroke-linejoin="round">
-          <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-          <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z"/>
-        </svg>
-      </a>
-      <a href="?theme=light" class="nav-link px-0 hide-theme-light" title="Enable light mode"
-         data-bs-toggle="tooltip" data-bs-placement="bottom">
-        <!-- Download SVG icon from http://tabler-icons.io/i/sun -->
-        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
-             viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-             stroke-linecap="round" stroke-linejoin="round">
-          <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-          <circle cx="12" cy="12" r="4"/>
-          <path
-              d="M3 12h1m8 -9v1m8 8h1m-9 8v1m-6.4 -15.4l.7 .7m12.1 -.7l-.7 .7m0 11.4l.7 .7m-12.1 -.7l-.7 .7"/>
-        </svg>
-      </a>
+
       <!-- TODO 2 사용자 아이콘
             * 로그인/로그아웃
             * 로그인한 사용자의 이름 또는 아이디 -->
       <div class="nav-item dropdown">
         <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown"
            aria-label="Open user menu">
-          <span class="avatar avatar-sm"
-                style="background-image: url(./static/img/logo/logo.png)"></span>
           <div class="d-none d-xl-block ps-2">
             <div sec:authorize="!isAuthenticated()">
               <span>😁</span>
@@ -64,7 +63,11 @@
             <a href="/members/signup" class="dropdown-item">SignUp</a>
             <a href="/members/login" class="dropdown-item">Login</a>
           </div>
-          <div sec:authorize="isAuthenticated()">
+          <div sec:authorize="hasRole('ROLE_USER')">
+            <a href="/mypage" class="dropdown-item">마이 페이지</a>
+            <a href="/logout" class="dropdown-item">Logout</a>
+          </div>
+          <div sec:authorize="hasRole('ROLE_ADMIN')">
             <a href="/mypage" class="dropdown-item">마이 페이지</a>
             <a href="/manager" class="dropdown-item">관리자 페이지</a>
             <a href="/logout" class="dropdown-item">Logout</a>
