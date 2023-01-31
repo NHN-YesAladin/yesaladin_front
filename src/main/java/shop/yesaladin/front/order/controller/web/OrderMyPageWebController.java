@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.order.dto.TotalOrderResponseDto;
 
@@ -23,12 +24,13 @@ public class OrderMyPageWebController {
 
     @GetMapping
     public String getOrderList(
+            @RequestParam(name = "days", required = false) Integer days,
             @PageableDefault Pageable pageable,
             Model model
     ) {
+        System.out.println("days = " + days);
         //TODO 사용자 인증
 
-        //TODO orderService 구현 및 선언 -> 페이지네이션된 주문 리스트 조회
         List<TotalOrderResponseDto> dataList = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             dataList.add(TotalOrderResponseDto.builder()
