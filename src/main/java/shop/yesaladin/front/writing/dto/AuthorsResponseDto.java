@@ -20,13 +20,4 @@ public class AuthorsResponseDto {
     private Long id;
     private String name;
     private String loginId;
-
-    @Override
-    public String toString() {
-        return "AuthorsResponseDto{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", loginId='" + loginId + '\'' +
-                '}';
-    }
 }

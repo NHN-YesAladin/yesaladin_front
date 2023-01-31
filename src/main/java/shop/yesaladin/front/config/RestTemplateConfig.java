@@ -1,10 +1,14 @@
 package shop.yesaladin.front.config;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
+import shop.yesaladin.front.interceptor.JwtInterceptor;
 
 /**
  * RestTemplate 설정 클래스
@@ -13,19 +17,26 @@ import org.springframework.web.client.RestTemplate;
  * @since : 1.0
  */
 @Configuration
+@RequiredArgsConstructor
 public class RestTemplateConfig {
+
+    private final RedisTemplate<String, Object> redisTemplate;
+
 
     /**
      * client와 server간 요청, 응답을 위한 RestTemplate Bean 설정.
      *
-     * @param clientHttpRequestFactory client, server 커넥션 설정 factory class.
+     * @param builder RestTemplate의 client, server 커넥션 설정을 위한 사용자 정의 Builder.
      * @return RestTemplate 반환.
      * @author : 송학현
      * @since : 1.0
      */
     @Bean
-    public RestTemplate restTemplate(ClientHttpRequestFactory clientHttpRequestFactory) {
-        return new RestTemplate(clientHttpRequestFactory);
+    public RestTemplate restTemplate(RestTemplateBuilder builder) {
+        return builder
+                .interceptors(new JwtInterceptor(redisTemplate))
+                .customizers(restTemplate -> restTemplate.setRequestFactory(clientHttpRequestFactory()))
+                .build();
     }
 
     /**

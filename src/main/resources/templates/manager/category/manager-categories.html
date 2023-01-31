@@ -51,7 +51,7 @@
               <div class="col-auto ms-auto d-print-none">
                 <div class="btn-list">
                 <span class="d-none d-sm-inline">
-                  <a href="#" class="btn">
+                  <a href="/manager/categories/order" class="btn">
                     카테고리 순서 관리
                   </a>
                 </span>
@@ -191,9 +191,9 @@
                                         <label class="row mb-3">
                                           <span class="col">노출 여부</span>
                                           <span class="col-auto">
-                                              <label class="form-check form-check-single form-switch">
-                                                <input class="form-check-input" id="category-isShown" name="isShown" type="checkbox"  >
-                                                <input type="hidden" name="_isShown" value="on">
+                                              <label class="form-check form-switch">
+                                                <input class="form-check-input" id="category-isShown" name="isShown" type="checkbox">
+<!--                                                <input type="hidden" name="_isShown" value="on">-->
                                               </label>
                                             </span>
                                         </label>
@@ -211,7 +211,7 @@
                                         </div>
                                       </div>
                                       <div class="modal-footer">
-                                        <a href="#" class="btn btn-link link-secondary" data-bs-dismiss="modal">
+                                        <a href="#" class="btn btn-link link-secondary" id="modify-cancel" data-bs-dismiss="modal">
                                           Cancel
                                         </a>
                                         <button type="submit" class="btn btn-primary" id="category-modify-button">등록</button>
@@ -255,14 +255,25 @@
 <script>
   const t = document.getElementById('select-parent');
   t.addEventListener('change', function (event) {
-    // alert(event.target.value);
     const value = event.target.value;
     location.href = '/manager/categories?id=' + value;
   });
 
+
+  const shown = document.getElementById("category-isShown");
+  shown.addEventListener("change", function (event) {
+    const target = event.target;
+    if (target.checked) {
+      target.setAttribute("checked", "checked");
+    }else{
+      target.removeAttribute("checked");
+    }
+    target.value = target.checked;
+  });
+
   const modal = document.getElementById('modify-modal-report');
   modal.addEventListener('show.bs.modal',function (event){
-    const button = event.relatedTarget
+    const button = event.relatedTarget;
     const categoryId = button.getAttribute('data-cat-id');
     const parentId = button.getAttribute('data-cat-parent-id');
     const name = button.getAttribute('data-cat-name');
@@ -277,12 +288,29 @@
     nameTag.text = name;
 
     const shownTag = document.getElementById("category-isShown");
-    shownTag.checked = isShown;
+    shownTag.dataset['isShown'] = isShown;
+    if (isShown === "false") {
+      shownTag.removeAttribute("checked");
+    } else {
+      shownTag.setAttribute("checked", "checked");
+    }
+    shownTag.value = isShown;
 
     const opTag = document.getElementById(parentId);
     opTag.selected = true;
 
   })
+
+  modal.addEventListener("hide.bs.modal", function (event) {
+    const shownTag = document.getElementById("category-isShown");
+    const tempShown = shownTag.dataset["isShown"];
+    if (tempShown === "false") {
+      shownTag.removeAttribute("checked");
+    } else {
+      shownTag.setAttribute("checked", "checked");
+    }
+    window.location.reload();
+  });
 
   const modifyButton = document.getElementById("category-modify-button");
   modifyButton.addEventListener('click',function (event){
@@ -323,16 +351,18 @@
   const deleteButtons = document.getElementsByClassName("category-delete-button");
   for (const deleteButton of deleteButtons) {
     deleteButton.addEventListener('click', function (event) {
-      const id = event.target.value;
-      const url = `/manager/categories?id=${id}`;
-      fetch(url, {
-        method: "POST"
-      }).then((resp) => {
-        console.log(resp);
-        const parentId = `${id.substring(0,2)}000`
-        location.href = `/manager/categories?id=${parentId}`;
-      });
-
+      let delConfirm = confirm("해당 카테고리가 삭제 됩니다.")
+      if (delConfirm) {
+        const id = event.target.value;
+        const url = `/manager/categories?id=${id}`;
+        fetch(url, {
+          method: "POST"
+        }).then((resp) => {
+          console.log(resp);
+          const parentId = `${id.substring(0,2)}000`
+          location.href = `/manager/categories?id=${parentId}`;
+        });
+      }
     });
 
   }
