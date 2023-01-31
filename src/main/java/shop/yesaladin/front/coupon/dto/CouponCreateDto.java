@@ -1,6 +1,7 @@
 package shop.yesaladin.front.coupon.dto;
 
 import java.time.LocalDate;
+import java.util.Objects;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.core.io.Resource;
@@ -35,6 +36,7 @@ public abstract class CouponCreateDto {
         map.add("quantity", quantity);
         map.add("imageFile", imageFile);
         map.add("duration", duration);
+        map.add("expirationDate", Objects.nonNull(expirationDate) ? expirationDate.toString() : null);
         map.add("expirationDate", expirationDate == null ? null : expirationDate.toString());
         map.add("couponTypeCode", couponTypeCode);
         return map;
