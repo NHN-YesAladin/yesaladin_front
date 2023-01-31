@@ -2,11 +2,11 @@ package shop.yesaladin.front.file.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import shop.yesaladin.front.file.dto.FileUploadResponseDto;
@@ -56,4 +56,22 @@ public class FileWebController {
         return ResponseEntity.ok().body(Map.of("url", responseDto.getUrl()));
     }
 
+
+    /**
+     * 사용자가 요청한 파일의 url을 바탕으로 파일을 다운로드합니다.
+     *
+     * @param url 사용자가 요청한 파일의 url
+     * @throws IOException
+     * @author 김홍대
+     * @since 1.0
+     */
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/file-download")
+    @ResponseBody
+    public ResponseEntity<byte[]> fileDownload(@RequestParam String url) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "attachment");
+
+        return new ResponseEntity<>(fileStorageService.fileDownload(url), headers, HttpStatus.OK);
+    }
 }
