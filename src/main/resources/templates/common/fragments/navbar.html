@@ -53,15 +53,16 @@
     const parentCategories = [];
     const categories = {};
 
+
     const navBar = document.getElementById("navbar-menu");
     const innerCategoryUrl = `${navBar.getAttribute("data-url")}/api/categories`;
-    window.onload = function () {
+    window.addEventListener('DOMContentLoaded', (event) => {
         setCategoryHeaderList();
-    };
+    });
 
     //TODO async - await 공부 후 설명 필요
     async function setCategoryHeaderList() {
-
+        const ids = [];
         try {
             if (parentCategories.length === 0) {
                 // TODO 데이터 존재하므로 다시 fetch 할 필요 없음
@@ -76,6 +77,7 @@
             const headerList = document.getElementById("header-list");
             for (let i = 0; i < parentCategories.length; i++) {
                 const id = parentCategories[i].id;
+                ids.push(id);
                 const name = parentCategories[i].name;
 
                 const list = document.createElement("li");
@@ -100,24 +102,10 @@
                 const menuColumns = document.createElement("div");
 
                 menuColumns.classList.add("dropdown-menu-columns");
+                menuColumns.setAttribute("id",`menu-col-${id}`)
                 menu.classList.add("dropdown-menu");
-
-                try {
-                    if (!categories[id]) {
-                        categories[id] = await getChildCategoriesByParentId(id);
-                    }
-                    let shownCategories = [];
-                    categories[id].forEach(c => {
-                        if (c.isShown) {
-                            shownCategories.push(c);
-                        }
-                    });
-                    console.log(shownCategories);
-                    arrangeCategoryChildrenHeader(shownCategories, menuColumns, menu);
-                } catch (err){
-                    console.error(err);
-                    alert("2차 카테고리 목록을 불러올 수 없습니다.");
-                }
+                menu.setAttribute("id",`menu-${id}`)
+                menu.appendChild(menuColumns);
 
                 list.classList.add("nav-item");
                 list.classList.add("dropdown");
@@ -129,10 +117,35 @@
                 list.addEventListener('mouseover', hoverCategory());
                 list.addEventListener('mouseout',mouseOutCategory())
             }
+            await displayChildCategories(ids);
         } catch (err) {
             console.error(err);
             alert("카테고리 목록을 불러올 수 없습니다.");
         }
+
+    }
+
+    async function displayChildCategories(ids) {
+        for (const id of ids) {
+            const menu = document.getElementById(`menu-${id}`);
+            const menuColumns = document.getElementById(`menu-col-${id}`);
+            try {
+                if (!categories[id]) {
+                    categories[id] = await getChildCategoriesByParentId(id);
+                }
+                let shownCategories = [];
+                categories[id].forEach(c => {
+                    if (c.isShown) {
+                        shownCategories.push(c);
+                    }
+                });
+                arrangeCategoryChildrenHeader(shownCategories, menuColumns, menu);
+            } catch (err){
+                console.error(err);
+                alert("2차 카테고리 목록을 불러올 수 없습니다.");
+            }
+        }
+
     }
 
     function getParentCategories() {
