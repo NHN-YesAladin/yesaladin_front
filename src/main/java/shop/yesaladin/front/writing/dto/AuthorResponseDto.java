@@ -19,4 +19,5 @@ public class AuthorResponseDto {
 
     private Long id;
     private String name;
+    private String loginId;
 }
