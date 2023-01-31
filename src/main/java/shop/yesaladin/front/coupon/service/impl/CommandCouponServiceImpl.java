@@ -3,14 +3,17 @@ package shop.yesaladin.front.coupon.service.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.coupon.trigger.CouponTypeCode;
 import shop.yesaladin.front.config.GatewayConfig;
 import shop.yesaladin.front.coupon.dto.AmountCouponCreateDto;
@@ -41,12 +44,15 @@ public class CommandCouponServiceImpl implements CommandCouponService {
                 httpHeaders
         );
         try {
-            ResponseEntity<CouponCreateResponseDto> mapResponseEntity = restTemplate.postForEntity(
+            ResponseEntity<ResponseDto<CouponCreateResponseDto>> mapResponseEntity = restTemplate.exchange(
                     gatewayConfig.getCouponUrl() + "/v1/coupons?" + queryParamName,
+                    HttpMethod.POST,
                     httpEntity,
-                    CouponCreateResponseDto.class
+                    new ParameterizedTypeReference<>() {
+                    }
             );
-            return mapResponseEntity.getBody();
+
+            return mapResponseEntity.getBody().getData();
         } catch (HttpClientErrorException e) {
             return getResponseDtoWithErrorMessageList(e);
         }
