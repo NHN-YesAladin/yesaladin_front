@@ -63,11 +63,16 @@
             <a href="/members/signup" class="dropdown-item">SignUp</a>
             <a href="/members/login" class="dropdown-item">Login</a>
           </div>
-          <div sec:authorize="hasRole('ROLE_USER')">
-            <a href="/mypage" class="dropdown-item">마이 페이지</a>
-            <a href="/logout" class="dropdown-item">Logout</a>
-          </div>
-          <div sec:authorize="hasRole('ROLE_ADMIN')">
+<!--          <div sec:authorize="hasRole('ROLE_USER')">-->
+<!--            <a href="/mypage" class="dropdown-item">마이 페이지</a>-->
+<!--            <a href="/logout" class="dropdown-item">Logout</a>-->
+<!--          </div>-->
+<!--          <div sec:authorize="hasRole('ROLE_ADMIN')">-->
+<!--            <a href="/mypage" class="dropdown-item">마이 페이지</a>-->
+<!--            <a href="/manager" class="dropdown-item">관리자 페이지</a>-->
+<!--            <a href="/logout" class="dropdown-item">Logout</a>-->
+<!--          </div>-->
+          <div>
             <a href="/mypage" class="dropdown-item">마이 페이지</a>
             <a href="/manager" class="dropdown-item">관리자 페이지</a>
             <a href="/logout" class="dropdown-item">Logout</a>
