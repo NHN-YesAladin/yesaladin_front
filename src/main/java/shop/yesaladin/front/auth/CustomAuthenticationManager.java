@@ -2,6 +2,7 @@ package shop.yesaladin.front.auth;
 
 import static java.util.stream.Collectors.toList;
 import static shop.yesaladin.front.member.jwt.AuthUtil.JWT_CODE;
+import static shop.yesaladin.front.member.jwt.AuthUtil.LOG_ON_CODE;
 import static shop.yesaladin.front.member.jwt.AuthUtil.UUID_CODE;
 
 import java.util.List;
@@ -22,6 +23,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.common.exception.InvalidHttpHeaderException;
 import shop.yesaladin.front.member.adapter.MemberAdapter;
 import shop.yesaladin.front.member.dto.LoginRequest;
@@ -74,10 +76,12 @@ public class CustomAuthenticationManager implements AuthenticationManager {
             accessToken = accessToken.substring(7);
         }
 
-        ResponseEntity<MemberResponse> memberResponse = memberAdapter.getMemberInfo(
+        ResponseEntity<ResponseDto<MemberResponse>> response = memberAdapter.getMemberInfo(
                 loginRequest,
                 accessToken
         );
+
+        MemberResponse memberResponse = response.getBody().getData();
 
         log.info("accessToken={}", accessToken);
 
@@ -92,9 +96,10 @@ public class CustomAuthenticationManager implements AuthenticationManager {
         List<SimpleGrantedAuthority> authorities = getAuthorities(memberResponse);
         log.info("authorities={}", authorities);
 
-        AuthInfo authInfo = new AuthInfo(memberResponse.getBody(), accessToken, authorities);
+        AuthInfo authInfo = new AuthInfo(memberResponse, accessToken, memberResponse.getRoles());
         log.info("authInfo={}", authInfo);
         redisTemplate.opsForHash().put(uuid, JWT_CODE.getValue(), authInfo);
+        redisTemplate.opsForHash().put(uuid, LOG_ON_CODE.getValue(), uuid);
 
         return new UsernamePasswordAuthenticationToken(
                 authentication.getPrincipal().toString(),
@@ -126,8 +131,8 @@ public class CustomAuthenticationManager implements AuthenticationManager {
      * @author : 송학현
      * @since : 1.0
      */
-    private List<SimpleGrantedAuthority> getAuthorities(ResponseEntity<MemberResponse> memberResponse) {
-        MemberResponse member = Objects.requireNonNull(memberResponse).getBody();
+    private List<SimpleGrantedAuthority> getAuthorities(MemberResponse memberResponse) {
+        MemberResponse member = Objects.requireNonNull(memberResponse);
         log.info("member={}", member);
 
         return member.getRoles().stream()

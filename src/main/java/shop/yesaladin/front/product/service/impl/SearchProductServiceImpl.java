@@ -28,7 +28,7 @@ public class SearchProductServiceImpl implements SearchProductService {
         UriComponents url = UriComponentsBuilder.fromHttpUrl(host)
                 .path(PATH)
                 .queryParam(requestDto.getSelected(), requestDto.getInput())
-                .queryParam(OFFSET, requestDto.getOffset()-1)
+                .queryParam(OFFSET, requestDto.getOffset() - 1)
                 .queryParam(SIZE, requestDto.getSize())
                 .build();
         return restTemplate.getForObject(

@@ -35,7 +35,7 @@ public abstract class CouponCreateDto {
         map.add("quantity", quantity);
         map.add("imageFile", imageFile);
         map.add("duration", duration);
-        map.add("expirationDate", expirationDate);
+        map.add("expirationDate", expirationDate.toString());
         map.add("couponTypeCode", couponTypeCode);
         return map;
     }

@@ -1,6 +1,9 @@
 package shop.yesaladin.front.tag.service.inter;
 
+import shop.yesaladin.front.common.dto.PageRequestDto;
+import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.tag.dto.TagResponseDto;
+import shop.yesaladin.front.tag.dto.TagsResponseDto;
 
 import java.util.List;
 
@@ -20,4 +23,12 @@ public interface QueryTagService {
      * @since 1.0
      */
     List<TagResponseDto> findAll();
+
+    /**
+     * 관리자용 태그 전체 조회를 요청하여 응답받습니다.
+     *
+     * @param pageRequestDto Pagination을 위한 Dto
+     * @return 응답받은 태그 전체 조회 Dto
+     */
+    PaginatedResponseDto<TagsResponseDto> findAllForManager(PageRequestDto pageRequestDto);
 }
