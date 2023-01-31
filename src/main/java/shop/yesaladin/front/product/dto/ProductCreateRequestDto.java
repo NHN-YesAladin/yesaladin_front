@@ -19,7 +19,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductResponseDto {
+public class ProductCreateRequestDto {
 
     // 상품 ISBN
     private String isbn;

@@ -25,4 +25,14 @@ public interface FileStorageService {
      */
     FileUploadResponseDto fileUpload(String domainName, String typeName, MultipartFile file)
             throws IOException;
+
+    /**
+     * 파일을 다운로드 하기위해 StorageAuthService에서 토큰을 발급받고,
+     * api를 호출하여 데이터를 바이트 배열로 받아 InputStream으로 반환합니다.
+     *
+     * @param url 파일을 다운받기 위한 파일의 url
+     * @author 김홍대
+     * @since 1.0
+     */
+    byte[] fileDownload(String url);
 }

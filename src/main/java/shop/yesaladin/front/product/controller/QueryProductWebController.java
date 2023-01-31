@@ -14,7 +14,6 @@ import shop.yesaladin.front.product.dto.ProductsResponseDto;
 import shop.yesaladin.front.product.service.inter.QueryProductService;
 import shop.yesaladin.front.product.service.inter.QueryProductTypeService;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -46,7 +45,7 @@ public class QueryProductWebController {
 
         model.addAllAttributes(makeAttributeMap(response));
 
-        return "/main/product/product";
+        return "main/product/product";
     }
 
 
@@ -68,18 +67,13 @@ public class QueryProductWebController {
             @RequestParam(required = false, defaultValue = "30") Integer size,
             Model model
     ) {
-        int blockSize = 10;
-
         PaginatedResponseDto<ProductsResponseDto> products = queryProductService.findAll(
                 new PageRequestDto(page, size),
                 typeId
         );
 
-        Map<String, Object> pageInfoMap = getPageInfo(size, blockSize, products);
+        Map<String, Object> pageInfoMap = getPageInfo(products);
         model.addAllAttributes(pageInfoMap);
-
-        List<ProductsResponseDto> dataList = products.getDataList();
-        dataList.forEach(ProductsResponseDto::makeAuthorLine);
 
         model.addAllAttributes(Map.of(
                 "products", products.getDataList(),
@@ -108,18 +102,13 @@ public class QueryProductWebController {
             @RequestParam(required = false, defaultValue = "30") Integer size,
             Model model
     ) {
-        int blockSize = 10;
-
         PaginatedResponseDto<ProductsResponseDto> products = queryProductService.findAllForManager(
                 new PageRequestDto(page, size),
                 typeId
         );
 
-        Map<String, Object> pageInfoMap = getPageInfo(size, blockSize, products);
+        Map<String, Object> pageInfoMap = getPageInfo(products);
         model.addAllAttributes(pageInfoMap);
-
-        List<ProductsResponseDto> dataList = products.getDataList();
-        dataList.forEach(ProductsResponseDto::makeAuthorLine);
 
         model.addAllAttributes(Map.of(
                 "products", products.getDataList(),
@@ -127,41 +116,25 @@ public class QueryProductWebController {
                 "types", queryProductTypeService.findAll()
         ));
 
-        return "/manager/product/products";
+        return "manager/product/products";
     }
 
     /**
      * Paging Bar에 필요한 정보를 계산하고 Map으로 저장하여 반환합니다.
      *
-     * @param size      페이지에 들어갈 오브젝트 개수
-     * @param blockSize 한 블럭에 들어갈 페이지 수
-     * @param products  페이징된 정보를 담고있는 PaginatedResponseDto
+     * @param products 페이징된 정보를 담고있는 PaginatedResponseDto
      * @return Paging Bar에 필요한 정보를 담은 Map
      * @author 이수정
      * @since 1.0
      */
     private Map<String, Object> getPageInfo(
-            int size,
-            int blockSize,
             PaginatedResponseDto<ProductsResponseDto> products
     ) {
-        long currentPage = products.getCurrentPage();
-        long totalPage = products.getTotalPage();
-
-        int block = (int) (currentPage / blockSize);
-        long start = (long) block * blockSize + 1;
-        long last = Math.min((start + blockSize - 1), totalPage);
-        if (start > last) {
-            last = start;
-        }
-
         return Map.of(
-                "size", size,
-                "totalPage", totalPage,
-                "currentPage", currentPage,
-                "start", start,
-                "last", last,
-                "blockSize", blockSize
+                "totalPage", products.getTotalPage(),
+                "currentPage", products.getCurrentPage(),
+                "totalDataCount", products.getTotalDataCount(),
+                "tags", products.getDataList()
         );
     }
 
