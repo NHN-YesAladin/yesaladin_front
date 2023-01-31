@@ -94,15 +94,11 @@
                 <td th:text="${data.name}"></td>
                 <td th:text="${data.triggerTypeCode}"></td>
                 <th:block th:switch="${data.couponTypeCode.toString()}">
-                  <!--                정액할인 쿠폰-->
                   <td th:case="FIXED_PRICE" th:text="'정액할인(' + ${data.discountAmount} + ')'"></td>
-                  <!--                정율할인 쿠폰-->
-                  <td th:case="FIXED_RATE" th:text="'정율할인(' + ${data.discountRate} + ')'"></td>
-                  <!--                포인트 충전 쿠폰-->
+                  <td th:case="FIXED_RATE" th:text="'정율할인(' + ${data.discountRate} + '%)'"></td>
                   <td th:case="POINT" th:text="'포인트(' + ${data.chargePointAmount} + ')'"></td>
                 </th:block>
-                <!--                유효기간-->
-                <td th:text="${data.duration == 0 ? '~ ' + #temporals.format(data.expirationDate, 'yyyy-MM-dd') : '발행일로부터 ' + data.duration}"></td>
+                <td th:text="${data.duration == null ? '~ ' + #temporals.format(data.expirationDate, 'yyyy-MM-dd') : '발행일로부터 ' + data.duration + '일'}"></td>
                 <td th:text="${#temporals.format(data.createdDateTime, 'yyyy-MM-dd')}"></td>
                 <td><input class="form-check-input" type="checkbox"></td>
               </tr>
@@ -113,13 +109,13 @@
             <div
                 th:replace="~{common/utils/paging :: paging('/manager/coupon', '')}">
             </div>
-        </nav>
+          </nav>
+        </div>
       </div>
+      <!-- TODO 4 : footer -->
+      <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
     </div>
-    <!-- TODO 4 : footer -->
-    <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
   </div>
-</div>
 </div>
 </div>
 <div class="d-none" id="shop-server-url" th:text="${shopServerUrl}"></div>
