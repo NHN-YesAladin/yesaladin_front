@@ -9,41 +9,47 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import shop.yesaladin.front.product.dto.ProductTypeResponseDto;
-import shop.yesaladin.front.product.service.inter.QueryProductTypeService;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
+import shop.yesaladin.front.common.dto.PageRequestDto;
+import shop.yesaladin.front.common.dto.PaginatedResponseDto;
+import shop.yesaladin.front.config.GatewayConfig;
+import shop.yesaladin.front.product.dto.RelationsResponseDto;
+import shop.yesaladin.front.product.service.inter.QueryRelationService;
 
 import java.util.List;
 
+
 /**
- * 상품 유형 조회 요청을 위한 Service 구현체 입니다.
+ * 상품 연관관계 조회 요청을 위한 Service 구현체 입니다.
  *
  * @author 이수정
  * @since 1.0
  */
 @RequiredArgsConstructor
 @Service
-public class QueryProductTypeServiceImpl implements QueryProductTypeService {
+public class QueryRelationServiceImpl implements QueryRelationService {
 
     private final RestTemplate restTemplate;
-    private final String PATH = "/v1/product-types";
-    @Value("${yesaladin.gateway.shop}")
-    private String url;
+    private final GatewayConfig gatewayConfig;
 
     /**
-     * 상품 유형 전체 조회를 요청하여 응답을 받습니다.
-     *
-     * @return 응답받은 전체 조회된 Dto list
-     * @author 이수정
-     * @since 1.0
+     * {@inheritDoc}
      */
     @Override
-    public List<ProductTypeResponseDto> findAll() {
+    public PaginatedResponseDto<RelationsResponseDto> getRelations(long productId, PageRequestDto pageRequestDto) {
+        UriComponents uriComponents = UriComponentsBuilder
+                .fromHttpUrl(gatewayConfig.getShopUrl())
+                .path("/v1/products/" + productId + "/relations")
+                .queryParam("page", pageRequestDto.getPage())
+                .queryParam("size", pageRequestDto.getSize())
+                .build();
+
         return restTemplate.exchange(
-                url + PATH,
+                uriComponents.toUri(),
                 HttpMethod.GET,
                 getHttpEntity(),
-                new ParameterizedTypeReference<List<ProductTypeResponseDto>>() {
-                }
+                new ParameterizedTypeReference<PaginatedResponseDto<RelationsResponseDto>>() {}
         ).getBody();
     }
 
