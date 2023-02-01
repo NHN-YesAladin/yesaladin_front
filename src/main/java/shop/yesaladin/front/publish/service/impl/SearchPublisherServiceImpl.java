@@ -25,13 +25,13 @@ import shop.yesaladin.front.writing.dto.SearchedAuthorResponseDto;
 @Service
 public class SearchPublisherServiceImpl implements SearchPublisherService {
     private final RestTemplate restTemplate;
-    @Value("${yesaladin.gateway.shop}")
-    private final String url;
+    private final GatewayConfig gatewayConfig;
+    private static final String PATH = "/shop/v1/search/publishers";
 
     @Override
     public SearchPublisherResponseDto searchPublisherByName(String name, int offset, int size) {
-        UriComponents uriComponents = UriComponentsBuilder.fromOriginHeader(url)
-                .path("/v1/search/publishers")
+        UriComponents uriComponents = UriComponentsBuilder.fromOriginHeader(gatewayConfig.getShopUrl())
+                .path(PATH)
                 .queryParam("name", name)
                 .queryParam("offset", offset)
                 .queryParam("size", size)

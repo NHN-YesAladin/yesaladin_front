@@ -27,22 +27,24 @@ import shop.yesaladin.front.config.GatewayConfig;
 public class SearchCategoryServiceImpl implements SearchCategoryService {
 
     private final RestTemplate restTemplate;
-    @Value("${yesaladin.gateway.shop}")
-    private final String url;
+    private final GatewayConfig gatewayConfig;
+    private static final String PATH = "/shop/v1/search/categories";
     /**
      * {@inheritDoc}
      */
     @Override
     public SearchedCategoryResponseDto searchCategoryByName(String name, int offset, int size) {
-        UriComponents uriComponents = UriComponentsBuilder.fromHttpUrl(url)
-                .path("/v1/search/categories")
+        UriComponents uriComponents = UriComponentsBuilder.fromOriginHeader(gatewayConfig.getShopUrl())
+                .path(PATH)
                 .queryParam("name", name)
                 .queryParam("offset", offset)
                 .queryParam("size", size)
                 .build();
         ResponseEntity<ResponseDto<SearchedCategoryResponseDto>> result =
                 restTemplate.exchange(uriComponents.toUriString(),
-                        HttpMethod.GET, null, new ParameterizedTypeReference<ResponseDto<SearchedCategoryResponseDto>>() {
+                        HttpMethod.GET,
+                        null,
+                        new ParameterizedTypeReference<ResponseDto<SearchedCategoryResponseDto>>() {
                         });
         return result.getBody().getData();
     }

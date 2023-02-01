@@ -1,6 +1,7 @@
 package shop.yesaladin.front.writing.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -21,13 +22,16 @@ import shop.yesaladin.front.writing.service.inter.SearchAuthorService;
  * @author : 김선홍
  * @since : 1.0
  */
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class SearchAuthorServiceImpl implements SearchAuthorService {
 
     private final RestTemplate restTemplate;
     @Value("${yesaladin.gateway.shop}")
-    private final String url;
+    private String url;
+    private static final String PATH = "/shop/v1/search/authors";
+
 
     /**
      *{@inheritDoc}
@@ -35,11 +39,12 @@ public class SearchAuthorServiceImpl implements SearchAuthorService {
     @Override
     public SearchedAuthorResponseDto searchAuthorByName(String name, int offset, int size) {
         UriComponents uriComponents = UriComponentsBuilder.fromOriginHeader(url)
-                .path("/v1/search/authors")
+                .path(PATH)
                 .queryParam("name", name)
                 .queryParam("offset", offset)
                 .queryParam("size", size)
                 .build();
+        log.info(uriComponents.toUriString());
         ResponseEntity<ResponseDto<SearchedAuthorResponseDto>> result = restTemplate.exchange(
                 uriComponents.toUriString(),
                 HttpMethod.GET,
