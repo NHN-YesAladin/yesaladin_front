@@ -3,6 +3,7 @@ package shop.yesaladin.front.order.controller.web;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
@@ -28,8 +29,17 @@ public class OrderMyPageWebController {
             @PageableDefault Pageable pageable,
             Model model
     ) {
-        System.out.println("days = " + days);
+        LocalDate endDate = LocalDate.now();
+        LocalDate startDate;
+
         //TODO 사용자 인증
+        if (Objects.isNull(days)) {
+            //TODO 6개월 조회?
+        }
+        startDate = endDate.minusDays(days);
+
+
+
 
         List<TotalOrderResponseDto> dataList = new ArrayList<>();
         for (int i = 0; i < 10; i++) {

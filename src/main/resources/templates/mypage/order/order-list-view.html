@@ -66,9 +66,9 @@
                                             <div class="col-5">
                                                 <span class="form-label d-inline fs-3">기간별 조회</span>
                                                 <div class="btn-group w-auto d-inline" role="group">
-                                                    <a href="#" class="btn btn-outline-info w-auto d-inline" th:classappend="${false} ? 'btn-info':''" id="b-1" style="height: 30px">1주일</a>
-                                                    <a href="#" class="btn btn-outline-info w-auto d-inline" id="b-2" style="height: 30px">15일</a>
-                                                    <a href="#" class="btn btn-outline-info w-auto d-inline" id="b-3" style="height: 30px">1달</a>
+                                                    <a href="/mypage/orders?days=7&page=0" class="btn btn-outline-info w-auto d-inline" th:classappend="${false} ? 'btn-info':''" id="b-1" style="height: 30px">1주일</a>
+                                                    <a href="/mypage/orders?days=15&page=0" class="btn btn-outline-info w-auto d-inline" id="b-2" style="height: 30px">15일</a>
+                                                    <a href="/mypage/orders?days=30&page=0" class="btn btn-outline-info w-auto d-inline" id="b-3" style="height: 30px">1달</a>
                                                 </div>
                                             </div>
                                             <div class="col-7">
@@ -187,22 +187,22 @@
         target.classList.remove("btn-outline-info");
         target.classList.add("btn-info");
 
-        let actionPath;
-        if (target.id === "b-1") {
-            actionPath = `?days=7&page=0`;
-        } else if (target.id === "b-2") {
-            actionPath = `?days=15&page=0`;
-        } else {
-            actionPath = `?days=30&page=0`;
-        }
-
-        console.log(actionPath);
-        const newForm = document.createElement('form');
-        newForm.name = 'newForm';
-        newForm.method = 'get';
-        newForm.action = `/mypage/orders${actionPath}`;
-        document.body.appendChild(newForm);
-        // newForm.submit();
+        // let actionPath;
+        // if (target.id === "b-1") {
+        //     actionPath = `?days=7&page=0`;
+        // } else if (target.id === "b-2") {
+        //     actionPath = `?days=15&page=0`;
+        // } else {
+        //     actionPath = `?days=30&page=0`;
+        // }
+        //
+        // console.log(actionPath);
+        // const newForm = document.createElement('form');
+        // newForm.name = 'newForm';
+        // newForm.method = 'get';
+        // newForm.action = `/mypage/orders${actionPath}`;
+        // document.body.appendChild(newForm);
+        // // newForm.submit();
     }
 </script>
 </html>
