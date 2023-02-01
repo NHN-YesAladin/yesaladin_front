@@ -57,7 +57,7 @@ public class QueryRelationWebController {
         Map<String, Object> pageInfoMap = getPageInfo(relations);
         model.addAllAttributes(pageInfoMap);
 
-        return "/manager/product/productRelations";
+        return "manager/product/productRelations";
     }
 
     /**
