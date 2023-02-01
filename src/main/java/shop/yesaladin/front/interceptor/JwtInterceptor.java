@@ -57,6 +57,10 @@ public class JwtInterceptor implements ClientHttpRequestInterceptor {
             String uuid = getUuidFromCookie(servletRequest.getCookies());
             log.info("uuid={}", uuid);
 
+            if (Objects.isNull(uuid)) {
+                return execution.execute(request, body);
+            }
+
             AuthInfo auth = (AuthInfo) redisTemplate.opsForHash().get(uuid, JWT_CODE.getValue());
             if (Objects.nonNull(auth)) {
                 log.info("accessToken={}", auth.getAccessToken());
