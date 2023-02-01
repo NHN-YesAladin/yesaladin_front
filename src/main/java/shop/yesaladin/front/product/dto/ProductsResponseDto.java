@@ -34,24 +34,7 @@ public class ProductsResponseDto {
     private Boolean isShown;
     private Boolean isDeleted;
 
-    private String authorLine;
     private String thumbnailFileUrl;
     private List<String> tags;
-
-    /**
-     * 뷰에 나타낼 저자 리스트를 문자열로 만들어 반환합니다.
-     *
-     * @author 이수정
-     * @since 1.0
-     */
-    public void makeAuthorLine() {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < this.authors.size(); i++) {
-            stringBuilder.append(this.authors.get(i));
-            if (i != this.authors.size() - 1) {
-                stringBuilder.append(" | ");
-            }
-        }
-        this.authorLine = stringBuilder.toString();
-    }
+    private String ebookFileUrl;
 }

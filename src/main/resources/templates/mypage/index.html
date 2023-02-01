@@ -57,7 +57,7 @@
             <div class="col-xl-9 col-lg-9" id="mypage" th:data-url="${@environment.getProperty('yesaladin.front.url')}">
               <div class="card-body">
                 <!-- TODO 3: BODY -->
-                <h1 class="text-end" th:text="'님 안녕하세요'"></h1>
+                <h1 class="text-end" th:text="${#authentication.name +' 님 안녕하세요'}"></h1>
                 <div class="row row-cards mb-3">
                   <div class="col-xl-5 col-md-5">
                     <div class="card">

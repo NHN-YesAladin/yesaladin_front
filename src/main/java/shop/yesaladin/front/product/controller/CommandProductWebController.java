@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import shop.yesaladin.front.product.dto.ProductResponseDto;
+import shop.yesaladin.front.product.dto.ProductCreateRequestDto;
 import shop.yesaladin.front.product.service.inter.CommandProductService;
 import shop.yesaladin.front.product.service.inter.QueryProductService;
 
@@ -40,7 +40,7 @@ public class CommandProductWebController {
 
         model.addAllAttributes(productRelatedDtoMap);
 
-        return "/manager/product/productForm";
+        return "manager/product/productForm";
     }
 
     /**
@@ -52,7 +52,7 @@ public class CommandProductWebController {
      * @since 1.0
      */
     @PostMapping("/products")
-    public String register(@ModelAttribute ProductResponseDto productResponseDto)
+    public String register(@ModelAttribute ProductCreateRequestDto productResponseDto)
             throws IOException {
         long id = commandProductService.register(productResponseDto);
 
