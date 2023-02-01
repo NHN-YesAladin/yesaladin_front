@@ -1,6 +1,7 @@
 package shop.yesaladin.front.publish.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -24,11 +25,12 @@ import shop.yesaladin.front.writing.dto.SearchedAuthorResponseDto;
 @Service
 public class SearchPublisherServiceImpl implements SearchPublisherService {
     private final RestTemplate restTemplate;
-    private final GatewayConfig gatewayConfig;
+    @Value("${yesaladin.gateway.shop}")
+    private final String url;
 
     @Override
     public SearchPublisherResponseDto searchPublisherByName(String name, int offset, int size) {
-        UriComponents uriComponents = UriComponentsBuilder.fromOriginHeader(gatewayConfig.getShopUrl())
+        UriComponents uriComponents = UriComponentsBuilder.fromOriginHeader(url)
                 .path("/v1/search/publishers")
                 .queryParam("name", name)
                 .queryParam("offset", offset)

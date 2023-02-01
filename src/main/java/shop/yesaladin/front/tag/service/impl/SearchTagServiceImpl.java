@@ -1,6 +1,7 @@
 package shop.yesaladin.front.tag.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -24,14 +25,15 @@ import shop.yesaladin.front.tag.service.inter.SearchTagService;
 public class SearchTagServiceImpl implements SearchTagService {
 
     private final RestTemplate restTemplate;
-    private final GatewayConfig gatewayConfig;
+    @Value("${yesaladin.gateway.shop}")
+    private final String url;
 
     /**
      * {@inheritDoc}
      */
     @Override
     public SearchedTagsResponseDto searchTagByName(String name, int offset, int size) {
-        UriComponents uriComponents = UriComponentsBuilder.fromOriginHeader(gatewayConfig.getShopUrl())
+        UriComponents uriComponents = UriComponentsBuilder.fromOriginHeader(url)
                 .path("/v1/search/tags")
                 .queryParam("name", name)
                 .queryParam("offset", offset)

@@ -2,6 +2,7 @@ package shop.yesaladin.front.category.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -26,13 +27,14 @@ import shop.yesaladin.front.config.GatewayConfig;
 public class SearchCategoryServiceImpl implements SearchCategoryService {
 
     private final RestTemplate restTemplate;
-    private final GatewayConfig gatewayConfig;
+    @Value("${yesaladin.gateway.shop}")
+    private final String url;
     /**
      * {@inheritDoc}
      */
     @Override
     public SearchedCategoryResponseDto searchCategoryByName(String name, int offset, int size) {
-        UriComponents uriComponents = UriComponentsBuilder.fromHttpUrl(gatewayConfig.getShopUrl())
+        UriComponents uriComponents = UriComponentsBuilder.fromHttpUrl(url)
                 .path("/v1/search/categories")
                 .queryParam("name", name)
                 .queryParam("offset", offset)
