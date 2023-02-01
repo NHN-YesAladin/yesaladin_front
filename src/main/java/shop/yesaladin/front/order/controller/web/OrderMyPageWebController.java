@@ -1,45 +1,64 @@
 package shop.yesaladin.front.order.controller.web;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import shop.yesaladin.front.common.dto.PaginatedResponseDto;
+import shop.yesaladin.front.order.dto.OrderSummaryResponseDto;
 import shop.yesaladin.front.order.dto.TotalOrderResponseDto;
+import shop.yesaladin.front.order.service.inter.QueryOrderService;
 
 /**
  * @author 배수한
  * @since 1.0
  */
 
+@Slf4j
+@RequiredArgsConstructor
 @Controller
 @RequestMapping("/mypage/orders")
 public class OrderMyPageWebController {
 
+    private final QueryOrderService queryOrderService;
+
+
     @GetMapping
     public String getOrderList(
-            @RequestParam(name = "days", required = false) Integer days,
-            @PageableDefault Pageable pageable,
+            @RequestParam(name = "code", required = false) Integer code,
+            Pageable pageable,
             Model model
     ) {
-        LocalDate endDate = LocalDate.now();
-        LocalDate startDate;
 
         //TODO 사용자 인증
-        if (Objects.isNull(days)) {
-            //TODO 6개월 조회?
+        LocalDate startDate = LocalDate.now();
+        LocalDate endDate = LocalDate.now();
+        if (Objects.isNull(code)) {
+            startDate = startDate.minusMonths(3);
+        }else{
+            startDate = endDate.minusDays(code);
         }
-        startDate = endDate.minusDays(days);
 
 
+        log.info("pageable : {} | code : {} ", pageable, code);
+        log.info("startDate : {} | endDate : {} ", startDate, endDate);
 
+        PaginatedResponseDto<OrderSummaryResponseDto> response1 = queryOrderService.getOrderListInPeriodByMemberId(
+                pageable,
+                startDate.toString(),
+                endDate.toString()
+        );
+
+        log.info("{}",response1.getDataList());
 
         List<TotalOrderResponseDto> dataList = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
@@ -62,6 +81,7 @@ public class OrderMyPageWebController {
                 .dataList(dataList)
                 .build();
 
+        model.addAttribute("code", code);
         model.addAttribute("currentPage", response.getCurrentPage());
         model.addAttribute("totalPage", response.getTotalPage());
         model.addAttribute("totalDataCount", response.getTotalDataCount());
