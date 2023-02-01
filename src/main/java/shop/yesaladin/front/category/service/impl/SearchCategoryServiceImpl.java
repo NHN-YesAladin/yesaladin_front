@@ -32,7 +32,7 @@ public class SearchCategoryServiceImpl implements SearchCategoryService {
      */
     @Override
     public SearchedCategoryResponseDto searchCategoryByName(String name, int offset, int size) {
-        UriComponents uriComponents = UriComponentsBuilder.fromHttpUrl("http://localhost:8080")
+        UriComponents uriComponents = UriComponentsBuilder.fromHttpUrl(gatewayConfig.getShopUrl())
                 .path("/v1/search/categories")
                 .queryParam("name", name)
                 .queryParam("offset", offset)

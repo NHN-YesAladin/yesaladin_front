@@ -31,7 +31,7 @@ public class SearchTagServiceImpl implements SearchTagService {
      */
     @Override
     public SearchedTagsResponseDto searchTagByName(String name, int offset, int size) {
-        UriComponents uriComponents = UriComponentsBuilder.fromOriginHeader("http://localhost:8080")
+        UriComponents uriComponents = UriComponentsBuilder.fromOriginHeader(gatewayConfig.getShopUrl())
                 .path("/v1/search/tags")
                 .queryParam("name", name)
                 .queryParam("offset", offset)

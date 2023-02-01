@@ -9,6 +9,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 import shop.yesaladin.common.dto.ResponseDto;
+import shop.yesaladin.front.config.GatewayConfig;
 import shop.yesaladin.front.writing.dto.SearchedAuthorResponseDto;
 import shop.yesaladin.front.writing.service.inter.SearchAuthorService;
 
@@ -24,13 +25,14 @@ import shop.yesaladin.front.writing.service.inter.SearchAuthorService;
 public class SearchAuthorServiceImpl implements SearchAuthorService {
 
     private final RestTemplate restTemplate;
+    private final GatewayConfig gatewayConfig;
 
     /**
      *{@inheritDoc}
      */
     @Override
     public SearchedAuthorResponseDto searchAuthorByName(String name, int offset, int size) {
-        UriComponents uriComponents = UriComponentsBuilder.fromOriginHeader("http://localhost:8080")
+        UriComponents uriComponents = UriComponentsBuilder.fromOriginHeader(gatewayConfig.getShopUrl())
                 .path("/v1/search/authors")
                 .queryParam("name", name)
                 .queryParam("offset", offset)
