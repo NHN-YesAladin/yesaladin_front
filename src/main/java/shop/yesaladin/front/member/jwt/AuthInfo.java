@@ -20,11 +20,11 @@ import shop.yesaladin.front.member.dto.MemberResponse;
 @AllArgsConstructor
 public class AuthInfo implements Serializable {
 
+    private Long id;
     private String name;
     private String nickname;
     private String loginId;
     private String email;
-    private String password;
     private String accessToken;
     private List<String> authorities;
 
@@ -33,11 +33,11 @@ public class AuthInfo implements Serializable {
             String accessToken,
             List<String> authorities
     ) {
+        this.id = memberResponse.getId();
         this.name = memberResponse.getName();
         this.nickname = memberResponse.getNickname();
         this.loginId = memberResponse.getLoginId();
         this.email = memberResponse.getEmail();
-        this.password = memberResponse.getPassword();
         this.accessToken = accessToken;
         this.authorities = authorities;
     }

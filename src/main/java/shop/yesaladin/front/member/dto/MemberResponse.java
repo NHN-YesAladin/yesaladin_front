@@ -25,6 +25,5 @@ public class MemberResponse {
     private String nickname;
     private String loginId;
     private String email;
-    private String password;
     private List<String> roles;
 }
