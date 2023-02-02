@@ -42,7 +42,7 @@
   <!-- TODO 3: BODY -->
   <div class="page-body">
     <div class="container">
-      <form class="card product-form" action="/products" method="post"
+      <form class="card product-form" th:action="/products" method="post"
             enctype="multipart/form-data">
 
         <div class="card-header">
@@ -99,6 +99,7 @@
               </div>
               <div class="col-auto">
                 <a href="#" class="btn btn-icon" aria-label="Button" id="categorySearch">
+                  <!-- Download SVG icon from http://tabler-icons.io/i/search -->
                   <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
                 </a>
               </div>
@@ -108,8 +109,8 @@
             <table id="searched-category-table" class="table" style="table-layout: fixed"></table>
           </div>
           <div class="mb-1">
-              <label class="form-label text-success">선택한 카테고리</label>
-              <table id="selected-category-view-table" class="table" style="table-layout: fixed"></table>
+            <label class="form-label text-success">선택한 카테고리</label>
+            <table id="selected-category-view-table" class="table" style="table-layout: fixed"></table>
           </div>
           <div id="selected-category-checkbox-list" style="display: none"></div>
           <div class="mb-3">
@@ -126,10 +127,10 @@
               </div>
             </div>
           </div>
-            <table class="table" id="searched-author-table" style="table-layout: fixed"></table>
+          <table class="table" id="searched-author-table" style="table-layout: fixed"></table>
           <div class="mt-1 mb-1">
             <label class="form-label text-success">선택한 저자</label>
-                <table id="selected-author-table" class="table" style="table-layout: fixed"></table>
+            <table id="selected-author-table" class="table" style="table-layout: fixed"></table>
           </div>
           <div id="selected-authors-checkbox" style="display:none;"></div>
           <div class="mb-3">
@@ -151,7 +152,7 @@
           </div>
           <div class="mb-3">
             <label class="form-label text-success">선택한 출판사</label>
-              <table id="selected-publisher-table" class="table" style="table-layout: fixed"></table>
+            <table id="selected-publisher-table" class="table" style="table-layout: fixed"></table>
           </div>
           <div id="selected-publisher-checkbox" style="display: none"></div>
 
@@ -164,13 +165,13 @@
                        stroke-linecap="round" stroke-linejoin="round"><path stroke="none"
                                                                             d="M0 0h24v24H0z"
                                                                             fill="none"></path><rect
-                      x="4" y="5" width="16" height="16" rx="2"></rect><line x1="16" y1="3" x2="16"
-                                                                             y2="7"></line><line
-                      x1="8" y1="3" x2="8" y2="7"></line><line x1="4" y1="11" x2="20"
-                                                               y2="11"></line><line x1="11" y1="15"
-                                                                                    x2="12"
-                                                                                    y2="15"></line><line
-                      x1="12" y1="15" x2="12" y2="18"></line></svg>
+                          x="4" y="5" width="16" height="16" rx="2"></rect><line x1="16" y1="3" x2="16"
+                                                                                 y2="7"></line><line
+                          x1="8" y1="3" x2="8" y2="7"></line><line x1="4" y1="11" x2="20"
+                                                                   y2="11"></line><line x1="11" y1="15"
+                                                                                        x2="12"
+                                                                                        y2="15"></line><line
+                          x1="12" y1="15" x2="12" y2="18"></line></svg>
                 </span>
               <input type="date" class="form-control" name="publishedDate"
                      id="datepicker-icon-prepend" value="" required>
@@ -194,6 +195,7 @@
               </div>
               <div class="col-auto">
                 <a href="#" class="btn btn-icon" aria-label="Button" id="tag-search">
+                  <!-- Download SVG icon from http://tabler-icons.io/i/search -->
                   <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
                 </a>
               </div>
@@ -309,7 +311,8 @@
   <!-- TODO 4 : footer -->
 </div>
 <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
-<div class="d-none" id="front-server-url" th:text="${@environment.getProperty('yesaladin.front.url')}"></div>
+<div class="d-none" id="front-server-url"
+     th:text="${@environment.getProperty('yesaladin.front.url')}"></div>
 <script>
   function changeDisplay(target) {
     let element = document.getElementById(target);
@@ -331,6 +334,7 @@
     console.log('res: ' + element.getAttribute('value'));
   }
 </script>
+
 <script>
   const Editor = toastui.Editor;
 
@@ -350,27 +354,26 @@
 
     console.log(location.origin.toString());
     fetch(location.origin.toString() + "/files/file-upload/product/description",
-        {
-          method: 'POST',
-          body: formData
-        })
-    .then(res => res.json())
-    .then(data => callback(data.url,
-        document.getElementById('toastuiAltTextInput').getAttribute('value')))
-    .catch(err => {
-      window.alert(err);
-    });
+            {
+              method: 'POST',
+              body: formData
+            })
+            .then(res => res.json())
+            .then(data => callback(data.url,
+                    document.getElementById('toastuiAltTextInput').getAttribute('value')))
+            .catch(err => {
+              window.alert(err);
+            });
   });
 
   window.addEventListener('load', () => {
-
     const productForm = document.getElementsByClassName('product-form');
 
     let emptyRegex = /\s/g;
     let isbnRegex = /^.*(?=.*\d)(?=^.{13}).*$/;
     let rateRegex = /^[0-9]{1}$|^[1-9]{1}[0-9]{1}$|^100$/;
     let issnRegex = /^.*(?=.*\d)(?=^.{8}).*$/;
-    let quantityRegex = /^[+]?\d*(\.?\d*)?$/;
+    let quantityRegex = /^.*(?=.*\d)(?=^.{0,}).*$/;
     let preferentialShowRankingRegex = /^(0|[-]?[1-9]\d*)$/;
 
     Array.prototype.filter.call(productForm, (productForm) => {
@@ -421,7 +424,7 @@
         }
 
         let quantityVal = document.getElementById('quantity').value;
-        if (!quantityRegex.test(quantityVal) || emptyRegex.test(quantityVal) || quantity == 0) {
+        if (!quantityRegex.test(quantityVal) || emptyRegex.test(quantityVal) || quantityVal == 0) {
           alert('올바른 수량을 입력해주세요.(1 이상의 숫자)');
           event.preventDefault();
           return false;
@@ -429,18 +432,17 @@
 
         let preferentialShowRankingVal = document.getElementById('preferentialShowRanking').value;
         if (!preferentialShowRankingRegex.test(preferentialShowRankingVal) || emptyRegex.test(
-            preferentialShowRankingVal)) {
+                preferentialShowRankingVal)) {
           alert('노출 우선순위를 입력해주세요. (음수 가능, 낮을수록 조회 상단에 위치하게 됩니다.)');
           event.preventDefault();
           return false;
         }
+
       }, false);
 
     });
   }, false);
 
-</script>
-<script>
   const selectedCategoryList = document.getElementsByName('categories')
   const selectedViewCategoryTable = document.getElementById('selected-category-view-table')
   const categoryTable = document.getElementById('searched-category-table');
@@ -464,11 +466,11 @@
           const id = json.searchedCategoryDtoList[i].id;
           const parentName = row.insertCell();
           parentName.innerText = json.searchedCategoryDtoList[i].parentName + " >> "
-              + json.searchedCategoryDtoList[i].name;
+                  + json.searchedCategoryDtoList[i].name;
 
           const select = row.insertCell();
           select.innerHTML = '<button class="btn btn-primary btn-xs my-xs-btn" type="button">'
-              + '<span class="glyphicon glyphicon-pencil"></span>추가</button>';
+                  + '<span class="glyphicon glyphicon-pencil"></span>추가</button>';
           select.addEventListener("click", (s) => {
             s.preventDefault()
             if (selectedCategoryList.length > 2) {
@@ -478,11 +480,11 @@
               const selectedCategoryViewRow = selectedViewCategoryTable.insertRow();
               const selectedCategoryViewCeil = selectedCategoryViewRow.insertCell();
               selectedCategoryViewCeil.innerText  = json.searchedCategoryDtoList[i].parentName
-                  + " >> " + json.searchedCategoryDtoList[i].name;
+                      + " >> " + json.searchedCategoryDtoList[i].name;
 
               const deleteButton = selectedCategoryViewRow.insertCell();
               deleteButton.innerHTML = '<button class="btn btn-primary btn-xs my-xs-btn" type="button">'
-                  + '<span class="glyphicon glyphicon-pencil"></span>삭제</button>';
+                      + '<span class="glyphicon glyphicon-pencil"></span>삭제</button>';
               deleteButton.id = id;
               const createSelectedCategory = document.createElement('input');
               createSelectedCategory.name = "categories"
@@ -491,7 +493,7 @@
               createSelectedCategory.checked = true;
               createSelectedCategory.readOnly = true;
               document.getElementById('selected-category-checkbox-list').appendChild(
-                  createSelectedCategory)
+                      createSelectedCategory)
               deleteButton.addEventListener('click', (e) => {
                 selectedCategoryViewRow.remove()
                 createSelectedCategory.remove()
@@ -529,7 +531,7 @@
 
           const selectedButton = row.insertCell();
           selectedButton.innerHTML = '<button class="btn btn-primary btn-xs my-xs-btn" type="button">'
-              + '<span class="glyphicon glyphicon-pencil"></span>추가</button>';
+                  + '<span class="glyphicon glyphicon-pencil"></span>추가</button>';
           selectedButton.addEventListener('click', (e) => {
             if (!checkValue(tags, json.searchedTagDtoList[i].id)) {
               const row = selectedTagTable.insertRow();
@@ -539,7 +541,7 @@
 
               const deleteButton = row.insertCell();
               deleteButton.innerHTML = '<button class="btn btn-primary btn-xs my-xs-btn" type="button">'
-                  + '<span class="glyphicon glyphicon-pencil"></span>삭제</button>';
+                      + '<span class="glyphicon glyphicon-pencil"></span>삭제</button>';
 
               const tagCheckBox = document.createElement('input');
               tagCheckBox.setAttribute('type', 'checkbox');
@@ -590,35 +592,35 @@
           }
           const selectButton = row.insertCell();
           selectButton.innerHTML = '<button class="btn btn-primary btn-xs my-xs-btn" type="button">'
-              + '<span class="glyphicon glyphicon-pencil"></span>추가</button>';
+                  + '<span class="glyphicon glyphicon-pencil"></span>추가</button>';
           selectButton.addEventListener('click',(e) => {
             if(!checkValue(authors, json.searchedAuthorDtoList[i].id)) {
-            const row = selectedAuthorTable.insertRow();
+              const row = selectedAuthorTable.insertRow();
 
-            const name = row.insertCell()
-            name.innerText = "name: " + json.searchedAuthorDtoList[i].name;
+              const name = row.insertCell()
+              name.innerText = "name: " + json.searchedAuthorDtoList[i].name;
 
               const cellLoginId = row.insertCell();
-            if(json.searchedAuthorDtoList[i].loginId !== null) {
-              cellLoginId.innerText = "loginId: " + json.searchedAuthorDtoList[i].loginId;
-            }
+              if(json.searchedAuthorDtoList[i].loginId !== null) {
+                cellLoginId.innerText = "loginId: " + json.searchedAuthorDtoList[i].loginId;
+              }
 
-            const authorCheckBox = document.createElement('input');
-            authorCheckBox.setAttribute('type', 'number');
-            authorCheckBox.name = "authors";
-            authorCheckBox.value = json.searchedAuthorDtoList[i].id;
-            authorCheckBox.readOnly = true;
-            authorCheckBox.hidden = true;
-            selectedAuthorsCheckBox.appendChild(authorCheckBox)
+              const authorCheckBox = document.createElement('input');
+              authorCheckBox.setAttribute('type', 'number');
+              authorCheckBox.name = "authors";
+              authorCheckBox.value = json.searchedAuthorDtoList[i].id;
+              authorCheckBox.readOnly = true;
+              authorCheckBox.hidden = true;
+              selectedAuthorsCheckBox.appendChild(authorCheckBox)
 
-            const deleteButton = row.insertCell()
-            deleteButton.innerHTML = '<button class="btn btn-primary btn-xs my-xs-btn" type="button">'
-                + '<span class="glyphicon glyphicon-pencil"></span>삭제</button>';
-            deleteButton.addEventListener('click', (e) => {
-              row.remove();
-              authorCheckBox.remove();
-            })
-          }})
+              const deleteButton = row.insertCell()
+              deleteButton.innerHTML = '<button class="btn btn-primary btn-xs my-xs-btn" type="button">'
+                      + '<span class="glyphicon glyphicon-pencil"></span>삭제</button>';
+              deleteButton.addEventListener('click', (e) => {
+                row.remove();
+                authorCheckBox.remove();
+              })
+            }})
         }
       })
     })
@@ -650,7 +652,7 @@
 
           const selectButton = row.insertCell();
           selectButton.innerHTML = '<button class="btn btn-primary btn-xs my-xs-btn" type="button">'
-              + '<span class="glyphicon glyphicon-pencil"></span>추가</button>';
+                  + '<span class="glyphicon glyphicon-pencil"></span>추가</button>';
           selectButton.addEventListener('click',(e) => {
             if(publisher.length == 0) {
               const row = selectedPublisherTable.insertRow();
@@ -668,7 +670,7 @@
 
               const deleteButton = row.insertCell()
               deleteButton.innerHTML = '<button class="btn btn-primary btn-xs my-xs-btn" type="button">'
-                  + '<span class="glyphicon glyphicon-pencil"></span>삭제</button>';
+                      + '<span class="glyphicon glyphicon-pencil"></span>삭제</button>';
               deleteButton.addEventListener('click', (e) => {
                 row.remove()
                 publisherCheckBox.remove()

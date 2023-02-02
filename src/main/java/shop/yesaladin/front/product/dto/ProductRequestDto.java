@@ -89,10 +89,7 @@ public class ProductRequestDto {
     private List<Long> tags;
 
     // 카테고리
-//    private List<String> categories;
-
-    // 강제 품절 (수정용)
-//    private Boolean isForcedOutOfStock;
+    private List<Long> categories;
 
 
     @Override

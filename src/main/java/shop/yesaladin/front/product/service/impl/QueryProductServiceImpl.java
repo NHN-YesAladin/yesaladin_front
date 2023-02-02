@@ -8,9 +8,11 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+import shop.yesaladin.front.category.dto.CategoryResponseDto;
 import shop.yesaladin.front.common.dto.PageRequestDto;
 import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.product.dto.ProductDetailResponseDto;
+import shop.yesaladin.front.product.dto.ProductModifyDto;
 import shop.yesaladin.front.product.dto.ProductTypeResponseDto;
 import shop.yesaladin.front.product.dto.ProductsResponseDto;
 import shop.yesaladin.front.product.service.inter.QueryProductService;
@@ -75,24 +77,6 @@ public class QueryProductServiceImpl implements QueryProductService {
      * {@inheritDoc}
      */
     @Override
-    public Map<String, Object> getProductRelatedDtoMap() {
-        List<AuthorResponseDto> authors = queryAuthorService.findAll();
-        List<PublisherResponseDto> publishers = queryPulisherService.findAll();
-        List<ProductTypeResponseDto> types = queryProductTypeService.findAll();
-        List<TagResponseDto> tags = queryTagService.findAll();
-
-        return Map.of(
-                "authors", authors,
-                "publishers", publishers,
-                "types", types,
-                "tags", tags
-        );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public PaginatedResponseDto<ProductsResponseDto> findAllForManager(
             PageRequestDto pageRequestDto,
             Integer typeId
@@ -145,6 +129,28 @@ public class QueryProductServiceImpl implements QueryProductService {
         );
 
         return products.getBody();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ProductModifyDto getProductForForm(String productId) {
+        URI uri = UriComponentsBuilder
+                .fromUriString(url)
+                .path(PATH + "/" + productId + "/manager")
+                .encode()
+                .build()
+                .toUri();
+
+        HttpEntity httpEntity = getHttpEntity();
+        ResponseEntity<ProductModifyDto> responseEntity = restTemplate.exchange(
+                uri,
+                HttpMethod.GET,
+                httpEntity,
+                ProductModifyDto.class
+        );
+        return responseEntity.getBody();
     }
 
     /**

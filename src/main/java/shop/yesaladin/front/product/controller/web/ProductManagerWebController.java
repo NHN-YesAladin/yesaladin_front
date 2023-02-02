@@ -1,12 +1,14 @@
 package shop.yesaladin.front.product.controller.web;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import shop.yesaladin.front.common.dto.PageRequestDto;
 import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.product.dto.ProductCreateRequestDto;
+import shop.yesaladin.front.product.dto.ProductModifyDto;
 import shop.yesaladin.front.product.dto.ProductsResponseDto;
 import shop.yesaladin.front.product.service.inter.CommandProductService;
 import shop.yesaladin.front.product.service.inter.QueryProductService;
@@ -23,6 +25,7 @@ import java.util.Objects;
  * @author 이수정
  * @since 1.0
  */
+@Slf4j
 @RequiredArgsConstructor
 @Controller
 @RequestMapping
@@ -36,17 +39,12 @@ public class ProductManagerWebController {
     /**
      * [GET /products/form] 상품 등록 form view를 반환합니다.
      *
-     * @param model 뷰로 데이터 전달
      * @return 상품 등록 form
      * @author 이수정
      * @since 1.0
      */
     @GetMapping("/products/form")
-    public String productForm(Model model) {
-        Map<String, Object> productRelatedDtoMap = queryProductService.getProductRelatedDtoMap();
-
-        model.addAllAttributes(productRelatedDtoMap);
-
+    public String productForm() {
         return "manager/product/productForm";
     }
 
@@ -66,25 +64,24 @@ public class ProductManagerWebController {
         return "redirect:/products/" + id;
     }
 
-    // 상품 수정 미완
-//    /**
-//     * [GET /products/{productId}/form] 상품 수정 form view를 반환합니다.
-//     *
-//     * @param productId 수정할 상품의
-//     * @param model 뷰로 데이터 전달
-//     * @return 상품 수정 form
-//     * @author 이수정
-//     * @since 1.0
-//     */
-//    @GetMapping("/manager/products/{productId}")
-//    public String productModifyForm(@PathVariable String productId, Model model) {
-//        // Map<String, Object> 원래 있던 정보를 받아음.
-//
-//        // model.addAllAttributes(productRelatedDtoMap);
-//
-//        return "/manager/product/productModifyForm";
-//    }
-//
+    /**
+     * [GET /manager/products/{productId}] 상품 수정 form view를 반환합니다.
+     *
+     * @param productId 수정할 상품의
+     * @param model 뷰로 데이터 전달
+     * @return 상품 수정 form
+     * @author 이수정
+     * @since 1.0
+     */
+    @GetMapping("/manager/products/{productId}")
+    public String productModifyForm(@PathVariable String productId, Model model) {
+        ProductModifyDto modifyDto = queryProductService.getProductForForm(productId);
+
+        model.addAttribute(modifyDto);
+
+        return "/manager/product/productModifyForm";
+    }
+
 //    /**
 //     * [PUT /products/{productId}] 특정 상품을 수정합니다.
 //     *

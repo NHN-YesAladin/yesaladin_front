@@ -4,13 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.web.multipart.MultipartFile;
-import shop.yesaladin.front.file.dto.FileUploadResponseDto;
+import shop.yesaladin.front.category.dto.CategoryResponseDto;
+import shop.yesaladin.front.publish.dto.PublishersResponseDto;
+import shop.yesaladin.front.tag.dto.TagsResponseDto;
+import shop.yesaladin.front.writing.dto.AuthorsResponseDto;
 
 import java.util.List;
 
 /**
- * 사용자가 요청한 상품 등록 정보를 받아오기 위한 Dto 입니다.
+ * 상품 수정 View에 들어갈 정보를 받아오기 위한 Dto 입니다.
  *
  * @author 이수정
  * @since 1.0
@@ -19,13 +21,13 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductCreateRequestDto {
+public class ProductModifyDto {
 
     // 상품 ISBN
     private String isbn;
 
     // 상품 썸네일 파일
-    private MultipartFile thumbnailFile;
+    private String thumbnailFile;
 
     // 상품 기본 설명 부분
     private String title;
@@ -33,35 +35,35 @@ public class ProductCreateRequestDto {
     private String description;
 
     // e-book 파일
-    private MultipartFile ebookFile;
+    private String ebookFile;
 
     // 저자
-    private List<Long> authors;
+    private List<AuthorsResponseDto> authors;
 
     // 출판사
-    private long publisher;
+    private PublishersResponseDto publisher;
     private String publishedDate;
 
     // 상품 유형
     private String productTypeCode;
 
     // 상품 태그
-    private List<Long> tags;
+    private List<TagsResponseDto> tags;
 
     // 정가
     private long actualPrice;
 
     // 개별 할인
-    private String isSeparatelyDiscount;
+    private Boolean isSeparatelyDiscount;
     private int discountRate;
 
     // 포인트 적립
-    private String isGivenPoint;
+    private Boolean isGivenPoint;
     private int givenPointRate;
     private String productSavingMethodCode;
 
     // 구독
-    private String isSubscriptionAvailable;
+    private Boolean isSubscriptionAvailable;
     private String issn;
 
     // 수량
@@ -70,15 +72,12 @@ public class ProductCreateRequestDto {
     // 노출 우선 순위
     private int preferentialShowRanking;
 
-    // 판매 여부
-    private String isSale;
-
     // 카테고리
-    private List<Long> categories;
+    private List<CategoryResponseDto> categories;
 
     @Override
     public String toString() {
-        return "ProductCreateRequestDto{" +
+        return "ProductModifyDto{" +
                 "isbn='" + isbn + '\'' +
                 ", thumbnailFile=" + thumbnailFile +
                 ", title='" + title + '\'' +
@@ -100,45 +99,7 @@ public class ProductCreateRequestDto {
                 ", issn='" + issn + '\'' +
                 ", quantity=" + quantity +
                 ", preferentialShowRanking=" + preferentialShowRanking +
-                ", isSale='" + isSale + '\'' +
                 ", categories=" + categories +
                 '}';
-    }
-
-    public ProductRequestDto getProductCreateRequestDto(
-            FileUploadResponseDto thumbnailFileResponse,
-            FileUploadResponseDto ebookFileResponse
-    ) {
-        return new ProductRequestDto(
-                isbn,
-                title,
-                contents,
-                description,
-                authors,
-                publisher,
-                actualPrice,
-                discountRate,
-                changeStringToBoolean(isSeparatelyDiscount),
-                givenPointRate,
-                changeStringToBoolean(isGivenPoint),
-                issn,
-                changeStringToBoolean(isSubscriptionAvailable),
-                changeStringToBoolean(isSale),
-                quantity,
-                publishedDate,
-                preferentialShowRanking,
-                thumbnailFileResponse.getUrl(),
-                thumbnailFileResponse.getFileUploadDateTime(),
-                ebookFileResponse.getUrl(),
-                ebookFileResponse.getFileUploadDateTime(),
-                productTypeCode,
-                productSavingMethodCode,
-                tags,
-                categories
-        );
-    }
-
-    private boolean changeStringToBoolean(String target) {
-        return target != null;
     }
 }
