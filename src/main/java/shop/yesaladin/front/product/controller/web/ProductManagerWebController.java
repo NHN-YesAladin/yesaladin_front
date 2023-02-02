@@ -1,19 +1,24 @@
-package shop.yesaladin.front.product.controller;
+package shop.yesaladin.front.product.controller.web;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import shop.yesaladin.front.common.dto.PageRequestDto;
+import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.product.dto.ProductCreateRequestDto;
+import shop.yesaladin.front.product.dto.ProductsResponseDto;
 import shop.yesaladin.front.product.service.inter.CommandProductService;
 import shop.yesaladin.front.product.service.inter.QueryProductService;
+import shop.yesaladin.front.product.service.inter.QueryProductTypeService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Map;
+import java.util.Objects;
 
 /**
- * 상품 등록/수정/삭제 관련 페이지를 위한 Controller 입니다.
+ * 상품 등록/조회/수정/삭제 관련 관리자용 페이지를 위한 Controller 입니다.
  *
  * @author 이수정
  * @since 1.0
@@ -21,10 +26,12 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Controller
 @RequestMapping
-public class CommandProductWebController {
+public class ProductManagerWebController {
 
     private final CommandProductService commandProductService;
     private final QueryProductService queryProductService;
+
+    private final QueryProductTypeService queryProductTypeService;
 
     /**
      * [GET /products/form] 상품 등록 form view를 반환합니다.
@@ -44,7 +51,7 @@ public class CommandProductWebController {
     }
 
     /**
-     * [POST /products] 상품 등록을 등록합니다.
+     * [POST /products] 상품을 등록합니다.
      *
      * @param productResponseDto 상품의 수정할 정보를 담고 있는 Dto
      * @return 등록된 상품의 상세 페이지
@@ -139,6 +146,60 @@ public class CommandProductWebController {
         commandProductService.changeIsForcedOutOfStock(productId);
 
         return "redirect:" + request.getHeader("Referer");
+    }
+
+    /**
+     * [GET /manager/products] 관리자용 상품 전체 조회 View를 반환합니다.
+     *
+     * @param typeId 지정한 상품 유형 Id(없으면 전체 유형)
+     * @param page   현재 페이지 - 1
+     * @param size   페이지 크기
+     * @param model  뷰로 데이터 전달
+     * @return 관리자용 상품 전체 조회 View
+     * @author 이수정
+     * @since 1.0
+     */
+    @GetMapping("/manager/products")
+    public String managerProducts(
+            @RequestParam(required = false) Integer typeId,
+            @RequestParam(required = false, defaultValue = "0") Integer page,
+            @RequestParam(required = false, defaultValue = "30") Integer size,
+            Model model
+    ) {
+        PaginatedResponseDto<ProductsResponseDto> products = queryProductService.findAllForManager(
+                new PageRequestDto(page, size),
+                typeId
+        );
+
+        Map<String, Object> pageInfoMap = getPageInfo(products);
+        model.addAllAttributes(pageInfoMap);
+
+        model.addAllAttributes(Map.of(
+                "products", products.getDataList(),
+                "typeId", Objects.isNull(typeId) ? "" : typeId,
+                "types", queryProductTypeService.findAll()
+        ));
+
+        return "manager/product/products";
+    }
+
+    /**
+     * Paging Bar에 필요한 정보를 계산하고 Map으로 저장하여 반환합니다.
+     *
+     * @param products 페이징된 정보를 담고있는 PaginatedResponseDto
+     * @return Paging Bar에 필요한 정보를 담은 Map
+     * @author 이수정
+     * @since 1.0
+     */
+    private Map<String, Object> getPageInfo(
+            PaginatedResponseDto<ProductsResponseDto> products
+    ) {
+        return Map.of(
+                "totalPage", products.getTotalPage(),
+                "currentPage", products.getCurrentPage(),
+                "totalDataCount", products.getTotalDataCount(),
+                "tags", products.getDataList()
+        );
     }
 
 }

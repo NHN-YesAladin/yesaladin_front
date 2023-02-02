@@ -1,4 +1,4 @@
-package shop.yesaladin.front.product.controller;
+package shop.yesaladin.front.product.controller.web;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * 상품 조회 페이지를 위한 Controller 입니다.
+ * 상품 모든 사용자용 조회 페이지를 위한 Controller 입니다.
  *
  * @author 이수정
  * @since 1.0
@@ -26,7 +26,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @Controller
 @RequestMapping
-public class QueryProductWebController {
+public class ProductMainWebController {
 
     private final QueryProductService queryProductService;
     private final QueryProductTypeService queryProductTypeService;
@@ -85,41 +85,6 @@ public class QueryProductWebController {
     }
 
     /**
-     * [GET /manager/products] 관리자용 상품 전체 조회 View를 반환합니다.
-     *
-     * @param typeId 지정한 상품 유형 Id(없으면 전체 유형)
-     * @param page   현재 페이지 - 1
-     * @param size   페이지 크기
-     * @param model  뷰로 데이터 전달
-     * @return 관리자용 상품 전체 조회 View
-     * @author 이수정
-     * @since 1.0
-     */
-    @GetMapping("/manager/products")
-    public String managerProducts(
-            @RequestParam(required = false) Integer typeId,
-            @RequestParam(required = false, defaultValue = "0") Integer page,
-            @RequestParam(required = false, defaultValue = "30") Integer size,
-            Model model
-    ) {
-        PaginatedResponseDto<ProductsResponseDto> products = queryProductService.findAllForManager(
-                new PageRequestDto(page, size),
-                typeId
-        );
-
-        Map<String, Object> pageInfoMap = getPageInfo(products);
-        model.addAllAttributes(pageInfoMap);
-
-        model.addAllAttributes(Map.of(
-                "products", products.getDataList(),
-                "typeId", Objects.isNull(typeId) ? "" : typeId,
-                "types", queryProductTypeService.findAll()
-        ));
-
-        return "manager/product/products";
-    }
-
-    /**
      * Paging Bar에 필요한 정보를 계산하고 Map으로 저장하여 반환합니다.
      *
      * @param products 페이징된 정보를 담고있는 PaginatedResponseDto
@@ -148,8 +113,7 @@ public class QueryProductWebController {
      */
     private Map<String, Object> makeAttributeMap(ProductDetailResponseDto response) {
 
-        boolean isEbook = Objects.nonNull(response.getEbookFileUrl()) && !response.getEbookFileUrl()
-                .isBlank();
+        boolean isEbook = Objects.nonNull(response.getEbookFileUrl()) && !response.getEbookFileUrl().isBlank();
 
         boolean onSale = response.getQuantity() > 0 && !response.isForcedOutOfStock() && response.isSale() && !response.isDeleted();
 
