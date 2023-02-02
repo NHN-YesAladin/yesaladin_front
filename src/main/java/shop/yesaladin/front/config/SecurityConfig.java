@@ -124,6 +124,6 @@ public class SecurityConfig {
      */
     @Bean
     public CustomLogoutHandler customLogoutHandler() {
-        return new CustomLogoutHandler(redisTemplate);
+        return new CustomLogoutHandler(redisTemplate, memberAdapter);
     }
 }

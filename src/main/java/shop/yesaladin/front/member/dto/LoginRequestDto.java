@@ -20,7 +20,7 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginRequest {
+public class LoginRequestDto {
 
     @NotBlank
     @Size(min = 8, max = 15)
