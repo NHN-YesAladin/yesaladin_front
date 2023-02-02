@@ -16,7 +16,6 @@ import java.util.List;
  * @since 1.0
  */
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductCreateRequestDto {
@@ -73,7 +72,7 @@ public class ProductCreateRequestDto {
     // 판매 여부
     private String isSale;
 
-//    private List<String> categories;
+    private List<Long> categories;
 
 
     @Override

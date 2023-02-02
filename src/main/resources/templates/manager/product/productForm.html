@@ -90,7 +90,7 @@
             <input type="file" name="ebookFile" class="form-control"
                    accept="application/epub+zip, application/pdf, application/vnd.comicbook+zip">
           </div>
-          <!-- TODO: 카테고리 -->
+
           <div class="mb-3">
             <label class="form-label">카테고리 검색</label>
             <div class="row g-2">
@@ -99,7 +99,6 @@
               </div>
               <div class="col-auto">
                 <a href="#" class="btn btn-icon" aria-label="Button" id="categorySearch">
-                  <!-- Download SVG icon from http://tabler-icons.io/i/search -->
                   <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
                 </a>
               </div>
@@ -113,7 +112,6 @@
               <table id="selected-category-view-table" class="table" style="table-layout: fixed"></table>
           </div>
           <div id="selected-category-checkbox-list" style="display: none"></div>
-          <!--             TODO: 저자, 출판사 선홍님 검색으로 교체 예정 -->
           <div class="mb-3">
             <label class="form-label">저자 검색</label>
             <div class="row g-2">
@@ -134,7 +132,6 @@
                 <table id="selected-author-table" class="table" style="table-layout: fixed"></table>
           </div>
           <div id="selected-authors-checkbox" style="display:none;"></div>
-          <!-- TODO: 출판사 -->
           <div class="mb-3">
             <label class="form-label">출판사 검색</label>
             <div class="row g-2">
@@ -157,27 +154,6 @@
               <table id="selected-publisher-table" class="table" style="table-layout: fixed"></table>
           </div>
           <div id="selected-publisher-checkbox" style="display: none"></div>
-
-<!--          테스트용 저자, 출판사-->
-<!--          <div class="mb-3">-->
-<!--            <label class="form-label">저자</label>&lt;!&ndash; 다중 선택 가능하도록! &ndash;&gt;-->
-<!--            <select type="text" class="form-select tomselected ts-hidden-accessible"-->
-<!--                    multiple="multiple" name="authors" id="select-authors" value="" tabindex="-1"-->
-<!--                    required>-->
-<!--              <option value="" disabled>&#45;&#45; Select Authors &#45;&#45;</option>-->
-<!--              <option th:each="author : ${authors}" th:value="${author.getId()}"-->
-<!--                      th:utext="${author.getName()}"/>-->
-<!--            </select>-->
-<!--          </div>-->
-<!--          <div class="mb-3">-->
-<!--            <label class="form-label">출판사</label>-->
-<!--            <select type="text" class="form-select tomselected ts-hidden-accessible"-->
-<!--                    name="publisher" id="select-publishers" value="" tabindex="-1" required>-->
-<!--              <option value="" disabled>&#45;&#45; Select Publisher &#45;&#45;</option>-->
-<!--              <option th:each="publisher : ${publishers}" th:value="${publisher.getId()}"-->
-<!--                      th:utext="${publisher.getName()}"/>-->
-<!--            </select>-->
-<!--          </div>-->
 
           <div class="mb-3">
             <label class="form-label">출판일</label>
@@ -206,8 +182,7 @@
             <select type="text" class="form-select tomselected ts-hidden-accessible"
                     name="productTypeCode" id="select-type" tabindex="-1" required>
               <option value="">-- Select Product Type --</option>
-              <option th:each="type : ${types}" th:value="${type.getType()}"
-                      th:utext="${type.getType()}"/>
+              <option th:each="type : ${types}" th:value="${type.getType()}" th:utext="${type.getKoName()}"></option>
             </select>
           </div>
 
@@ -219,7 +194,6 @@
               </div>
               <div class="col-auto">
                 <a href="#" class="btn btn-icon" aria-label="Button" id="tag-search">
-                  <!-- Download SVG icon from http://tabler-icons.io/i/search -->
                   <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
                 </a>
               </div>
@@ -229,7 +203,6 @@
             <table id="selected-tag-table" class="table" style="table-layout: fixed"></table>
             <div id="selected-tags-checkbox" style="display: none"></div>
           </div>
-          Textarea and se
 
           <div class="mb-3">
             <label class="form-label">정가</label>
@@ -336,8 +309,7 @@
   <!-- TODO 4 : footer -->
 </div>
 <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
-<div class="d-none" id="front-server-url"
-     th:text="${@environment.getProperty('yesaladin.front.url')}"></div>
+<div class="d-none" id="front-server-url" th:text="${@environment.getProperty('yesaladin.front.url')}"></div>
 <script>
   function changeDisplay(target) {
     let element = document.getElementById(target);
@@ -359,7 +331,6 @@
     console.log('res: ' + element.getAttribute('value'));
   }
 </script>
-
 <script>
   const Editor = toastui.Editor;
 
@@ -398,7 +369,7 @@
     let isbnRegex = /^.*(?=.*\d)(?=^.{13}).*$/;
     let rateRegex = /^[0-9]{1}$|^[1-9]{1}[0-9]{1}$|^100$/;
     let issnRegex = /^.*(?=.*\d)(?=^.{8}).*$/;
-    let quantityRegex = /^.*(?=.*\d)(?=^.{0,}).*$/;
+    let quantityRegex = /^[+]?\d*(\.?\d*)?$/;
     let preferentialShowRankingRegex = /^(0|[-]?[1-9]\d*)$/;
 
     Array.prototype.filter.call(productForm, (productForm) => {
@@ -449,8 +420,8 @@
         }
 
         let quantityVal = document.getElementById('quantity').value;
-        if (!quantityRegex.test(quantityVal) || emptyRegex.test(quantityVal)) {
-          alert('수량을 입력해주세요.');
+        if (!quantityRegex.test(quantityVal) || emptyRegex.test(quantityVal) || quantity == 0) {
+          alert('올바른 수량을 입력해주세요.(1 이상의 숫자)');
           event.preventDefault();
           return false;
         }
@@ -462,12 +433,13 @@
           event.preventDefault();
           return false;
         }
-
       }, false);
 
     });
   }, false);
 
+</script>
+<script>
   const selectedCategoryList = document.getElementsByName('categories')
   const selectedViewCategoryTable = document.getElementById('selected-category-view-table')
   const categoryTable = document.getElementById('searched-category-table');

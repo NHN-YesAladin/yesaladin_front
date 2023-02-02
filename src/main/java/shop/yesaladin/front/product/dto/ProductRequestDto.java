@@ -19,7 +19,6 @@ import java.util.List;
  * @since 1.0
  */
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductRequestDto {

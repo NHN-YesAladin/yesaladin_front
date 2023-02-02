@@ -12,11 +12,11 @@ import lombok.Setter;
  * @since 1.0
  */
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductTypeResponseDto {
 
     private int id;
     private String type;
+    private String koName;
 }

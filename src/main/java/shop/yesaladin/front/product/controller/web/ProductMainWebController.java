@@ -115,7 +115,7 @@ public class ProductMainWebController {
 
         boolean isEbook = Objects.nonNull(response.getEbookFileUrl()) && !response.getEbookFileUrl().isBlank();
 
-        boolean onSale = response.getQuantity() > 0 && !response.isForcedOutOfStock() && response.isSale() && !response.isDeleted();
+        boolean onSale = response.getQuantity() > 0 && !response.getIsForcedOutOfStock() && response.getIsSale() && !response.getIsDeleted();
 
         return Map.ofEntries(
                 Map.entry("id", response.getId()),
@@ -131,7 +131,7 @@ public class ProductMainWebController {
                 Map.entry("pointRate", response.getPointRate()),
                 Map.entry("publishedDate", response.getPublishedDate()),
                 Map.entry("isbn", response.getIsbn()),
-                Map.entry("isSubscriptionAvailable", response.isSubscriptionAvailable()),
+                Map.entry("isSubscriptionAvailable", response.getIsSubscriptionAvailable()),
                 Map.entry("issn", response.getIssn()),
                 Map.entry("contents", response.getContents()),
                 Map.entry("description", response.getDescription()),

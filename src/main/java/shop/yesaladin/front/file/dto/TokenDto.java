@@ -12,7 +12,6 @@ import lombok.Setter;
  * @author 이수정
  * @since 1.0
  */
-@Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor

@@ -13,7 +13,6 @@ import lombok.Setter;
  * @since 1.0
  */
 @Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)

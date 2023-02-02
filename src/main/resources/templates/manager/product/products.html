@@ -62,7 +62,7 @@
           <div class="col-md-4">
             <select id="select-type" th:name="productType" class="form-select" onchange="selectType(this.value)">
               <option value="">전체</option>
-              <option th:each="type : ${types}" th:value="${type.id}" th:text="${type.type}" th:selected="${type.id == typeId}"></option>
+              <option th:each="type : ${types}" th:value="${type.id}" th:text="${type.getKoName()}" th:selected="${type.id == typeId}"></option>
             </select>
           </div>
         </div>

@@ -269,7 +269,14 @@
 
     const addCart = document.getElementById('add-cart');
     addCart.addEventListener('click', () => {
+        let quantityRegex = /^[+]?\d*(\.?\d*)?$/;
+
         const quantity = document.getElementById('quantity').value;
+        console.log(quantity);
+        if (!quantityRegex.test(quantity) || quantity == 0) {
+            alert('올바른 수량을 입력해주세요.(1 이상의 숫자)');
+            return;
+        }
 
         fetch(FRONT_SERVER + '/carts', {
             "Content-Type": "application/json",

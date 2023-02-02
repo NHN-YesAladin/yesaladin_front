@@ -12,7 +12,6 @@ import lombok.Setter;
  * @since 1.0
  */
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class AuthorsResponseDto {
