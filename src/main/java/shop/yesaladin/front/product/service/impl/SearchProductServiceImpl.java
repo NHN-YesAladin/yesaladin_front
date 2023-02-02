@@ -23,7 +23,7 @@ public class SearchProductServiceImpl implements SearchProductService {
     private final RestTemplate restTemplate;
     @Value("${yesaladin.gateway.shop}")
     private String host;
-    private static final String PATH = "v1/search/products";
+    private static final String PATH = "/v1/search/products";
     private static final String OFFSET = "offset";
     private static final String SIZE = "size";
 

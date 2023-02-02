@@ -1,7 +1,6 @@
 package shop.yesaladin.front.tag.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +25,7 @@ public class SearchTagServiceImpl implements SearchTagService {
 
     private final RestTemplate restTemplate;
     private final GatewayConfig gatewayConfig;
-    private static final String PATH = "shop/v1/search/tags";
+    private static final String PATH = "/v1/search/tags";
 
     /**
      * {@inheritDoc}

@@ -1,7 +1,6 @@
 package shop.yesaladin.front.publish.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +12,6 @@ import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.config.GatewayConfig;
 import shop.yesaladin.front.publish.dto.SearchPublisherResponseDto;
 import shop.yesaladin.front.publish.service.inter.SearchPublisherService;
-import shop.yesaladin.front.writing.dto.SearchedAuthorResponseDto;
 
 /**
  * 엘라스틱서치 출판사 검색 서비스 구현체
@@ -26,7 +24,7 @@ import shop.yesaladin.front.writing.dto.SearchedAuthorResponseDto;
 public class SearchPublisherServiceImpl implements SearchPublisherService {
     private final RestTemplate restTemplate;
     private final GatewayConfig gatewayConfig;
-    private static final String PATH = "shop/v1/search/publishers";
+    private static final String PATH = "/v1/search/publishers";
 
     @Override
     public SearchPublisherResponseDto searchPublisherByName(String name, int offset, int size) {
