@@ -1,5 +1,7 @@
 package shop.yesaladin.front.member.adapter;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -7,7 +9,6 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -15,6 +16,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.config.GatewayConfig;
 import shop.yesaladin.front.member.dto.LoginRequest;
+import shop.yesaladin.front.member.dto.LogoutRequestDto;
 import shop.yesaladin.front.member.dto.MemberResponse;
 
 /**
@@ -42,7 +44,7 @@ public class MemberAdapter {
      */
     public ResponseEntity<Void> getAuthInfo(LoginRequest loginRequest) {
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setContentType(APPLICATION_JSON);
         HttpEntity<LoginRequest> entity = new HttpEntity<>(loginRequest, headers);
 
         return restTemplate.exchange(
@@ -81,6 +83,38 @@ public class MemberAdapter {
                 uri,
                 HttpMethod.GET,
                 new HttpEntity<>(httpHeaders),
+                new ParameterizedTypeReference<>() {
+                }
+        );
+    }
+
+    /**
+     * Auth 서버에 logout 요청을 하기 위한 기능 입니다.
+     * Auth 서버는 식별 키를 받아 Redis에 저장된 로그인 된 회원의 정보를 제거 합니다.
+     *
+     * @param uuid 로그인 한 사용자가 가진 유일한 식별 값
+     * @author 송학현
+     * @since 1.0
+     */
+    public void logout(String uuid) {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(APPLICATION_JSON);
+        LogoutRequestDto logoutRequest = new LogoutRequestDto(uuid);
+
+        log.info("request={}", logoutRequest);
+        HttpEntity<LogoutRequestDto> entity = new HttpEntity<>(logoutRequest, httpHeaders);
+
+        URI uri = UriComponentsBuilder
+                .fromUriString(gatewayConfig.getAuthUrl())
+                .path("/logout")
+                .encode()
+                .build()
+                .toUri();
+
+        restTemplate.exchange(
+                uri,
+                HttpMethod.POST,
+                entity,
                 new ParameterizedTypeReference<>() {
                 }
         );
