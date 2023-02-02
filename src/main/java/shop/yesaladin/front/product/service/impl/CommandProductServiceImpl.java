@@ -41,6 +41,8 @@ public class CommandProductServiceImpl implements CommandProductService {
     @Override
     public long register(ProductCreateRequestDto productResponseDto) throws IOException {
 
+        log.info("productResponseDto = {}", productResponseDto.toString());
+
         MultipartFile thumbnailFile = productResponseDto.getThumbnailFile();
         FileUploadResponseDto thumbnailFileResponse = fileStorageService.fileUpload(
                 "product",
