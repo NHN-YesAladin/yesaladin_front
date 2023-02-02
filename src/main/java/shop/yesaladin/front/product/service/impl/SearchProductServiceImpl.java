@@ -41,8 +41,6 @@ public class SearchProductServiceImpl implements SearchProductService {
                 null,
                 new ParameterizedTypeReference<ResponseDto<SearchedProductResponseDto>>() {}
         );
-        System.out.println(result.getBody().getData().getCount());
-        System.out.println(result.getBody().getData().getProducts().get(0));
         return result.getBody().getData();
     }
 }
