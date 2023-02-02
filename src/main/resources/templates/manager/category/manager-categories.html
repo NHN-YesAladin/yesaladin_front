@@ -127,11 +127,17 @@
                             <div class="card-header row">
                                 <h3 class="card-title col-md-2">카테고리 관리</h3>
                                 <div class="col-md-4">
-                                <select id="select-parent" th:name="parentCategory" class="form-select">
-                                  <option value="none">선택</option>
-                                  <option th:each="parentCategory : ${parentCategories}"
-                                          th:value="${parentCategory.id}" th:text="${parentCategory.name}" th:selected="${parentCategory.id == id}"></option>
-                                </select>
+                                  <select id="select-parent" th:name="parentCategory" class="form-select">
+                                    <option value="none">선택</option>
+                                    <option th:each="parentCategory : ${parentCategories}"
+                                            th:value="${parentCategory.id}" th:text="${parentCategory.name}" th:selected="${parentCategory.id == id}"></option>
+                                  </select>
+                              </div>
+                              <div th:if="${parent != null}" class="col-md-4">
+                                <a href="#" id="parent-modify-button" class="btn btn-secondary btn-pill w-auto fs-5 btn-modal" data-bs-toggle="modal" data-bs-target="#modify-modal-report"
+                                   th:data-cat-parent-id="${parent.parentId}" th:data-cat-id="${parent.id}" th:data-cat-name="${parent.name}" th:data-cat-shown="${parent.isShown}">
+                                  수정
+                                </a>
                               </div>
                             </div>
                             <!--          //TODO 관리자 페이지 리스트 예시 -->
@@ -256,6 +262,10 @@
   const t = document.getElementById('select-parent');
   t.addEventListener('change', function (event) {
     const value = event.target.value;
+    if (value === "none") {
+      location.href = '/manager/categories';
+      return;
+    }
     location.href = '/manager/categories?id=' + value;
   });
 
@@ -296,8 +306,15 @@
     }
     shownTag.value = isShown;
 
-    const opTag = document.getElementById(parentId);
-    opTag.selected = true;
+    const selectTag = document.getElementById("modify-select-parent");
+    if (parentId === null) {
+      selectTag.classList.add("d-none");
+    } else {
+      selectTag.classList.remove("d-none");
+      const opTag = document.getElementById(parentId);
+      opTag.selected = true;
+    }
+
 
   })
 

@@ -53,9 +53,9 @@ public class CategoryRestController {
     /**
      * 카테고리 이름으로 검색하는 메서드
      *
-     * @param name 검색할 이름
+     * @param name   검색할 이름
      * @param offset 검색할 페이지 위치
-     * @param size 총 데이터 갯수
+     * @param size   총 데이터 갯수
      * @return 검색된 카테고리 리스트와 총 갯수
      */
     @GetMapping(value = "/search", params = {"name", "offset", "size"})
