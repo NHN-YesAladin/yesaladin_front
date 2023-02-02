@@ -26,7 +26,7 @@ public class ProductRequestDto {
 
     @NotBlank
     @Length(max = 13)
-    private String ISBN;
+    private String isbn;
 
     // 상품 설명
     @NotBlank
@@ -56,7 +56,7 @@ public class ProductRequestDto {
 
     // 구독 상품 관련
     @Length(max = 9)
-    private String ISSN;
+    private String issn;
     private Boolean isSubscriptionAvailable;
 
     // 판매 여부
@@ -99,7 +99,7 @@ public class ProductRequestDto {
     @Override
     public String toString() {
         return "ProductRequestDto{" +
-                "ISBN='" + ISBN + '\'' +
+                "isbn='" + isbn + '\'' +
                 ", title='" + title + '\'' +
                 ", contents='" + contents + '\'' +
                 ", description='" + description + '\'' +
@@ -110,7 +110,7 @@ public class ProductRequestDto {
                 ", isSeparatelyDiscount=" + isSeparatelyDiscount +
                 ", givenPointRate=" + givenPointRate +
                 ", isGivenPoint=" + isGivenPoint +
-                ", ISSN='" + ISSN + '\'' +
+                ", issn='" + issn + '\'' +
                 ", isSubscriptionAvailable=" + isSubscriptionAvailable +
                 ", isSale=" + isSale +
                 ", quantity=" + quantity +
