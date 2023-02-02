@@ -26,7 +26,7 @@ import shop.yesaladin.front.writing.dto.SearchedAuthorResponseDto;
 public class SearchPublisherServiceImpl implements SearchPublisherService {
     private final RestTemplate restTemplate;
     private final GatewayConfig gatewayConfig;
-    private static final String PATH = "/shop/v1/search/publishers";
+    private static final String PATH = "shop/v1/search/publishers";
 
     @Override
     public SearchPublisherResponseDto searchPublisherByName(String name, int offset, int size) {

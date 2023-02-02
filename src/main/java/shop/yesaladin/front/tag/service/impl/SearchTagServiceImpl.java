@@ -26,7 +26,7 @@ public class SearchTagServiceImpl implements SearchTagService {
 
     private final RestTemplate restTemplate;
     private final GatewayConfig gatewayConfig;
-    private static final String PATH = "/shop/v1/search/tags";
+    private static final String PATH = "shop/v1/search/tags";
 
     /**
      * {@inheritDoc}

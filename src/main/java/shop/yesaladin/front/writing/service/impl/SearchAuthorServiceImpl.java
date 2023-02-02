@@ -30,7 +30,7 @@ public class SearchAuthorServiceImpl implements SearchAuthorService {
     private final RestTemplate restTemplate;
     @Value("${yesaladin.gateway.shop}")
     private String url;
-    private static final String PATH = "/shop/v1/search/authors";
+    private static final String PATH = "shop/v1/search/authors";
 
 
     /**
