@@ -3,6 +3,8 @@ package shop.yesaladin.front.category.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * 카테고리 정보 Dto
@@ -11,6 +13,8 @@ import lombok.Getter;
  * @author : 김선홍
  */
 @Getter
+@Setter
+@NoArgsConstructor
 @AllArgsConstructor
 public class SearchedCategoryDto {
     private Long id;
