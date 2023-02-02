@@ -31,9 +31,11 @@ public class ReissueTokenInterceptor implements HandlerInterceptor {
     private final RedisTemplate<String, Object> redisTemplate;
 
     /**
-     * @param request HttpServletRequest
+     * JWT Token 재발급을 위한 기능입니다.
+     *
+     * @param request  HttpServletRequest
      * @param response HttpServletResponse
-     * @param handler interceptor가 진입하려는 Controller가 담겨있는 handler
+     * @param handler  interceptor가 진입하려는 Controller가 담겨있는 handler
      * @return Controller 진입 여부
      * @throws Exception interceptor 작동 시 발생할 수 있는 예외 입니다.
      * @author 송학현
@@ -54,7 +56,8 @@ public class ReissueTokenInterceptor implements HandlerInterceptor {
                 return true;
             }
 
-            AuthInfo authInfo = (AuthInfo) redisTemplate.opsForHash().get(uuid, JWT_CODE.getValue());
+            AuthInfo authInfo = (AuthInfo) redisTemplate.opsForHash()
+                    .get(uuid, JWT_CODE.getValue());
             log.info("redis에 기존에 있던 accessToken={}", authInfo.getAccessToken());
             if (Objects.nonNull(authInfo)) {
                 String accessToken = memberAdapter.tokenReissue(uuid);
