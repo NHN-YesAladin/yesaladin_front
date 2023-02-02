@@ -91,36 +91,74 @@
                    accept="application/epub+zip, application/pdf, application/vnd.comicbook+zip">
           </div>
           <!-- TODO: 카테고리 -->
-
-          <label class="form-label">카테고리 검색</label>
-          <label for="categoryName"></label><input type="text" id="categoryName"/>
-          <button id="categorySearch" type="button">Search</button>
-          <table id="searched-category-table" class="table"></table>
-          <h2>선택한 카테고리</h2>
-          <table id="selected-category-view-table" class="table"></table>
+          <div class="mb-3">
+            <label class="form-label">카테고리 검색</label>
+            <div class="row g-2">
+              <div class="col">
+                <input type="text" class="form-control" placeholder="Search for…" id="categoryName">
+              </div>
+              <div class="col-auto">
+                <a href="#" class="btn btn-icon" aria-label="Button" id="categorySearch">
+                  <!-- Download SVG icon from http://tabler-icons.io/i/search -->
+                  <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="mb-3">
+            <table id="searched-category-table" class="table" style="table-layout: fixed"></table>
+          </div>
+          <div class="mb-1">
+              <label class="form-label text-success">선택한 카테고리</label>
+              <table id="selected-category-view-table " class="table" style="table-layout: fixed"></table>
+          </div>
           <div id="selected-category-checkbox-list" style="display: none"></div>
-
           <!--             TODO: 저자, 출판사 선홍님 검색으로 교체 예정 -->
           <div class="mb-3">
             <label class="form-label">저자 검색</label>
-            <label for="input-author-name"></label><input type="text" id="input-author-name"/>
-            <button id="author-search" type="button">Search</button>
-            <table id="searched-author-table" class="table"></table>
-            <h2>선택한 저자</h2>
-            <table id="selected-author-table" class="table"></table>
-            <div id="selected-authors-checkbox"></div>
+            <div class="row g-2">
+              <div class="col">
+                <input type="text" class="form-control" placeholder="Search for…" id="input-author-name">
+              </div>
+              <div class="col-auto">
+                <a href="#" class="btn btn-icon" aria-label="Button" id="author-search">
+                  <!-- Download SVG icon from http://tabler-icons.io/i/search -->
+                  <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
+                </a>
+              </div>
+            </div>
           </div>
+            <table class="table" id="searched-author-table" style="table-layout: fixed"></table>
+          <div class="mt-1 mb-1">
+            <label class="form-label text-success">선택한 저자</label>
+                <table id="selected-author-table" class="table" style="table-layout: fixed"></table>
+          </div>
+          <div id="selected-authors-checkbox" style="display:none;"></div>
+          <!-- TODO: 출판사 -->
           <div class="mb-3">
             <label class="form-label">출판사 검색</label>
-            <label for="input-publisher-name"></label><input type="text" id="input-publisher-name"/>
-            <button id="publisher-search" type="button">Search</button>
-            <table id="searched-publisher-table" class="table"></table>
-            <h2>선택한 출판사</h2>
-            <table id="selected-publisher-table" class="table"></table>
-            <div id="selected-publisher-checkbox" style="display: none"></div>
+            <div class="row g-2">
+              <div class="col">
+                <input type="text" class="form-control" placeholder="Search for…" id="input-publisher-name">
+              </div>
+              <div class="col-auto">
+                <a href="#" class="btn btn-icon" aria-label="Button" id="publisher-search">
+                  <!-- Download SVG icon from http://tabler-icons.io/i/search -->
+                  <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
+                </a>
+              </div>
+            </div>
           </div>
+          <div class="mb-3">
+            <table class="table" id="searched-publisher-table" style="table-layout: fixed"></table>
+          </div>
+          <div class="mb-3">
+            <label class="form-label text-success">선택한 출판사</label>
+              <table id="selected-publisher-table" class="table" style="table-layout: fixed"></table>
+          </div>
+          <div id="selected-publisher-checkbox" style="display: none"></div>
 
-          테스트용 저자, 출판사
+<!--          테스트용 저자, 출판사-->
 <!--          <div class="mb-3">-->
 <!--            <label class="form-label">저자</label>&lt;!&ndash; 다중 선택 가능하도록! &ndash;&gt;-->
 <!--            <select type="text" class="form-select tomselected ts-hidden-accessible"-->
@@ -175,13 +213,23 @@
 
           <div class="mb-3">
             <label class="form-label">상품 태그</label>
-            <label for="tag-name"></label><input type="text" id="tag-name"/>
-            <button id="tag-search" type="button">Search</button>
-            <table id="searched-tag-table" class="table"></table>
-            <h2>선택한 태그</h2>
-            <table id="selected-tag-table" class="table"></table>
+            <div class="row g-2">
+              <div class="col">
+                <input type="text" class="form-control" placeholder="Search for…" id="tag-name">
+              </div>
+              <div class="col-auto">
+                <a href="#" class="btn btn-icon" aria-label="Button" id="tag-search">
+                  <!-- Download SVG icon from http://tabler-icons.io/i/search -->
+                  <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
+                </a>
+              </div>
+            </div>
+            <table id="searched-tag-table" class="table" style="table-layout: fixed"></table>
+            <label class="form-label text-success">선택한 태그</label>
+            <table id="selected-tag-table" class="table" style="table-layout: fixed"></table>
             <div id="selected-tags-checkbox" style="display: none"></div>
           </div>
+          Textarea and se
 
           <div class="mb-3">
             <label class="form-label">정가</label>
@@ -431,9 +479,14 @@
     }).then(function (res) {
       res.json().then(function (json) {
         initSearchTable(categoryTable)
+        const head = categoryTable.createTHead()
+        const low = head.insertRow()
+        const cell = low.insertCell();
+        cell.innerHTML = '<b class="font-weight-bold">검색된 카테고리</b>'
+        const body = categoryTable.createTBody()
         for (let i = 0; i < json.searchedCategoryDtoList.length; i++) {
 
-          const row = categoryTable.insertRow();
+          const row = body.insertRow();
 
           const id = json.searchedCategoryDtoList[i].id;
           const parentName = row.insertCell();
@@ -490,8 +543,13 @@
     }).then(function (res) {
       res.json().then(function (json) {
         initSearchTable(searchedTagTable)
+        const head = searchedTagTable.createTHead()
+        const low = head.insertRow()
+        const cell = low.insertCell();
+        cell.innerHTML = '<b class="font-weight-bold">검색된 태그</b>'
+        const body = searchedTagTable.createTBody()
         for (let i = 0; i < json.searchedTagDtoList.length; i++) {
-          const row = searchedTagTable.insertRow();
+          const row = body.insertRow();
 
           const cell = row.insertCell();
           cell.innerText = json.searchedTagDtoList[i].name;
@@ -543,14 +601,19 @@
     }).then(function (res) {
       res.json().then(function (json) {
         initSearchTable(searchedAuthorTable);
+        const head = searchedAuthorTable.createTHead()
+        const low = head.insertRow()
+        const cell = low.insertCell();
+        cell.innerHTML = '<b class="font-weight-bold">검색된 저자</b>'
+        const body = searchedAuthorTable.createTBody()
         for(let i = 0; i < json.searchedAuthorDtoList.length; i++) {
-          const row = searchedAuthorTable.insertRow();
+          const row = body.insertRow();
 
           const cellName = row.insertCell();
-          cellName.innerText = "이름: " + json.searchedAuthorDtoList[i].name;
+          cellName.innerText = "name: " + json.searchedAuthorDtoList[i].name;
           const cellLoginId = row.insertCell()
           if(json.searchedAuthorDtoList[i].loginId !== null) {
-            cellLoginId.innerText = "로그인아이디: " + json.searchedAuthorDtoList[i].loginId
+            cellLoginId.innerText = "loginId: " + json.searchedAuthorDtoList[i].loginId
           }
           const selectButton = row.insertCell();
           selectButton.innerHTML = '<button class="btn btn-primary btn-xs my-xs-btn" type="button">'
@@ -560,18 +623,17 @@
             const row = selectedAuthorTable.insertRow();
 
             const name = row.insertCell()
-            name.innerText = json.searchedAuthorDtoList[i].name;
+            name.innerText = "name: " + json.searchedAuthorDtoList[i].name;
 
               const cellLoginId = row.insertCell();
             if(json.searchedAuthorDtoList[i].loginId !== null) {
-              cellLoginId.innerText = json.searchedAuthorDtoList[i].loginId;
+              cellLoginId.innerText = "loginId: " + json.searchedAuthorDtoList[i].loginId;
             }
 
             const authorCheckBox = document.createElement('input');
             authorCheckBox.setAttribute('type', 'number');
             authorCheckBox.name = "authors";
             authorCheckBox.value = json.searchedAuthorDtoList[i].id;
-            console.log("authors value isNAN: " + isNaN(authorCheckBox.value) )
             authorCheckBox.readOnly = true;
             authorCheckBox.hidden = true;
             selectedAuthorsCheckBox.appendChild(authorCheckBox)
@@ -602,8 +664,13 @@
     }).then(function (res) {
       res.json().then(function (json) {
         initSearchTable(searchedPublisherTable);
+        const head = searchedPublisherTable.createTHead()
+        const low = head.insertRow()
+        const cell = low.insertCell();
+        cell.innerHTML = '<b class="font-weight-bold">검색된 출판사</b>'
+        const body = searchedPublisherTable.createTBody()
         for(let i = 0; i < json.searchedPublisherDtoList.length; i++) {
-          const row = searchedPublisherTable.insertRow();
+          const row = body.insertRow();
 
           const cell = row.insertCell();
           cell.innerText = json.searchedPublisherDtoList[i].name;
@@ -612,7 +679,7 @@
           selectButton.innerHTML = '<button class="btn btn-primary btn-xs my-xs-btn" type="button">'
               + '<span class="glyphicon glyphicon-pencil"></span>추가</button>';
           selectButton.addEventListener('click',(e) => {
-            if(publisher.length < 1) {
+            if(publisher.length == 0) {
               const row = selectedPublisherTable.insertRow();
 
               const cell = row.insertCell();

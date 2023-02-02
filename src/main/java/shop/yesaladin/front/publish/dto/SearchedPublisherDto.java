@@ -12,6 +12,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class SearchedPublisherDto {
-    Long id;
-    String name;
+    private Long id;
+    private String name;
 }

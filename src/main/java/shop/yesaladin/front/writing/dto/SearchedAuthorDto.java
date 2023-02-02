@@ -12,7 +12,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class SearchedAuthorDto {
-    Long id;
-    String name;
-    String loginId;
+    private Long id;
+    private String name;
+    private String loginId;
 }

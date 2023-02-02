@@ -13,6 +13,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class SearchPublisherResponseDto {
-    Long count;
-    List<SearchedPublisherDto> searchedPublisherDtoList;
+    private Long count;
+    private List<SearchedPublisherDto> searchedPublisherDtoList;
 }

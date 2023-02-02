@@ -14,6 +14,6 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 public class SearchedTagsResponseDto {
-    Long count;
-    List<SearchedTagDto> searchedTagDtoList;
+    private Long count;
+    private List<SearchedTagDto> searchedTagDtoList;
 }
