@@ -1,6 +1,7 @@
 package shop.yesaladin.front.auth;
 
 import static shop.yesaladin.front.member.jwt.AuthUtil.JWT_CODE;
+import static shop.yesaladin.front.member.jwt.AuthUtil.LOG_ON_CODE;
 import static shop.yesaladin.front.member.jwt.AuthUtil.UUID_CODE;
 
 import java.util.Objects;
@@ -52,9 +53,10 @@ public class CustomLogoutHandler implements LogoutHandler {
 
         session.invalidate();
 
-        String uuid = getUUID(request.getCookies());
+        String uuid = getUuidFromCookie(request.getCookies());
         log.info("uuid={}", uuid);
         redisTemplate.opsForHash().delete(uuid, JWT_CODE.getValue());
+        redisTemplate.opsForHash().delete(uuid, LOG_ON_CODE.getValue());
 
         SecurityContext context = SecurityContextHolder.getContext();
         SecurityContextHolder.clearContext();
@@ -69,7 +71,7 @@ public class CustomLogoutHandler implements LogoutHandler {
      * @author : 송학현
      * @since : 1.0
      */
-    private String getUUID(Cookie[] cookies) {
+    private String getUuidFromCookie(Cookie[] cookies) {
         if (Objects.isNull(cookies)) {
             return null;
         }

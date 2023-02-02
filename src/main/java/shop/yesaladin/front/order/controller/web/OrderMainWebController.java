@@ -12,7 +12,7 @@ public class OrderMainWebController {
     @GetMapping
     public String getOrderSheet(Model model) {
         model.addAttribute("userPoint", 5000);
-        return "/main/order/order-page";
+        return "main/order/order-page";
     }
 
 }

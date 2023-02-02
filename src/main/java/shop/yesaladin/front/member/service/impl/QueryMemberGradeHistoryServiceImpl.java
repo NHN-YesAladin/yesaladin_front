@@ -39,7 +39,6 @@ public class QueryMemberGradeHistoryServiceImpl implements QueryMemberGradeHisto
     @Override
     public PaginatedResponseDto<MemberGradeHistoryResponseDto> getMemberGradeHsitoryHistories(
             Pageable pageable,
-            String loginId,
             LocalDate startDate,
             LocalDate endDate
     ) {
@@ -54,7 +53,7 @@ public class QueryMemberGradeHistoryServiceImpl implements QueryMemberGradeHisto
                 .queryParam("page", pageable.getPageNumber())
                 .queryParam("size", pageable.getPageSize())
                 .encode().build()
-                .expand(loginId).toUri();
+                .expand("").toUri();
 
         return restTemplate.exchange(uri, HttpMethod.GET, entity, GRADE_HISTORY_TYPE).getBody();
     }

@@ -36,11 +36,11 @@
 
 
   <!-- TODO 2 : NAV-BAR -->
-  <div th:replace="~{fragments/navbar-vertical :: fragment-nav-vertical}"></div>
+  <div th:replace="~{manager/fragments/navbar-vertical :: fragment-nav-vertical}"></div>
 
   <div class="page-wrapper">
     <!-- TODO 1 : HEADER -->
-    <div th:replace="~{fragments/header :: fragment-header}"></div>
+    <div th:replace="~{common/fragments/header :: fragment-header}"></div>
     <div class="page-header d-print-none">
       <div class="container-xl">
         <div class="row g-2 align-items-center">
@@ -92,8 +92,7 @@
                          min="1" name="quantity" th:field="*{quantity}">
                   <input type="checkbox" id="coupon-unlimited-quantity-check"
                          class="form-check-input ms-3" name="isUnlimited" th:field="*{isUnlimited}">
-                  <label for="coupon-unlimited-quantity-check" class="col form-check-label">개수 제한
-                    없음</label>
+                  <label for="coupon-unlimited-quantity-check" class="col form-check-label">무제한</label>
                 </div>
                 <div class="mb-3 row">
                   <label for="coupon-trigger-select" class="col-sm-2 col-form-label">발행트리거</label>
@@ -116,13 +115,10 @@
                 <div class="mb-3 row">
                   <label class="col-sm-2 col-form-label fs-5"
                          for="coupon-name-input">할인금액/할인율</label>
-                  <select id="coupon-discount-type-select" class="form-select col-sm-2 w-25">
-                    <option selected>정액/정률 할인</option>
-                  </select>
                   <input type="number" required id="coupon-discount-value-input"
                          name="discountAmount"
                          th:field="*{discountAmount}"
-                         class="form-control col-sm-2 w-25 ms-3" placeholder="할인율 또는 금액" min="1">
+                         class="form-control w-50" min="1" placeholder="할인율 또는 금액">
                 </div>
                 <div class="mb-3 row" id="coupon-max-discount-price-div" style="display: none">
                   <label for="coupon-max-discount-price-input"
@@ -208,7 +204,7 @@
           </div>
         </form>
         <!-- TODO 4 : footer -->
-        <div th:replace="~{fragments/footer :: fragment-footer}"></div>
+        <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
       </div>
     </div>
   </div>
@@ -216,7 +212,6 @@
 <div class="d-none" id="shop-server-url" th:text="${shopServerUrl}"></div>
 <div class="d-none" id="front-server-url" th:text="${frontServerUrl}"></div>
 <!-- DOMContentLoaded관련 Script import -->
-<div th:replace="~{fragments/script :: fragment-script}"></div>
 <script th:src="@{/js/coupon/manager-coupon-create.js}"></script>
 </body>
 </html>

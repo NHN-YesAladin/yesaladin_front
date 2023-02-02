@@ -9,9 +9,9 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import shop.yesaladin.front.file.dto.FileUploadResponseDto;
 import shop.yesaladin.front.file.service.inter.FileStorageService;
+import shop.yesaladin.front.product.dto.ProductCreateRequestDto;
 import shop.yesaladin.front.product.dto.ProductOnlyIdDto;
 import shop.yesaladin.front.product.dto.ProductRequestDto;
-import shop.yesaladin.front.product.dto.ProductResponseDto;
 import shop.yesaladin.front.product.service.inter.CommandProductService;
 
 import java.io.IOException;
@@ -39,7 +39,7 @@ public class CommandProductServiceImpl implements CommandProductService {
      * {@inheritDoc}
      */
     @Override
-    public long register(ProductResponseDto productResponseDto) throws IOException {
+    public long register(ProductCreateRequestDto productResponseDto) throws IOException {
 
         MultipartFile thumbnailFile = productResponseDto.getThumbnailFile();
         FileUploadResponseDto thumbnailFileResponse = fileStorageService.fileUpload(

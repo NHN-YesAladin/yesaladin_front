@@ -40,7 +40,10 @@ public class SecurityConfig {
      */
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeRequests().anyRequest().permitAll();
+        http.authorizeRequests()
+//                .antMatchers("/mypage/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+//                .antMatchers("/manager/**").hasAnyAuthority("ROLE_ADMIN")
+                .anyRequest().permitAll();
         http.formLogin().disable();
         http.logout()
                 .logoutUrl("/logout")
@@ -52,6 +55,7 @@ public class SecurityConfig {
                 UsernamePasswordAuthenticationFilter.class
         );
 
+        http.headers().defaultsDisabled().frameOptions().sameOrigin();
         http.csrf().disable();
         http.cors().disable();
         return http.build();

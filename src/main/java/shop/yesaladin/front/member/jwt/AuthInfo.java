@@ -2,9 +2,10 @@ package shop.yesaladin.front.member.jwt;
 
 import java.io.Serializable;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import shop.yesaladin.front.member.dto.MemberResponse;
 
 /**
@@ -15,20 +16,22 @@ import shop.yesaladin.front.member.dto.MemberResponse;
  */
 @Getter
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class AuthInfo implements Serializable {
 
-    private final String name;
-    private final String nickname;
-    private final String loginId;
-    private final String email;
-    private final String password;
-    private final String accessToken;
-    private final List<SimpleGrantedAuthority> authorities;
+    private String name;
+    private String nickname;
+    private String loginId;
+    private String email;
+    private String password;
+    private String accessToken;
+    private List<String> authorities;
 
     public AuthInfo(
             MemberResponse memberResponse,
             String accessToken,
-            List<SimpleGrantedAuthority> authorities
+            List<String> authorities
     ) {
         this.name = memberResponse.getName();
         this.nickname = memberResponse.getNickname();

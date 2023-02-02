@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<!--
+* Tabler - Premium and Open Source dashboard template with responsive and high quality UI.
+* @version 1.0.0-beta5
+* @link https://tabler.io
+* Copyright 2018-2022 The Tabler Authors
+* Copyright 2018-2022 codecalm.net Paweł Kuna
+* Licensed under MIT (https://github.com/tabler/tabler/blob/master/LICENSE)
+-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <title>Yes Aladin!</title>
+    <!-- CSS files -->
+    <link th:href="@{/css/tabler.min.css}" rel="stylesheet"/>
+    <link th:href="@{/css/tabler-flags.min.css}" rel="stylesheet"/>
+    <link th:href="@{/css/tabler-payments.min.css}" rel="stylesheet"/>
+    <link th:href="@{/css/tabler-vendors.min.css}" rel="stylesheet"/>
+    <link th:href="@{/css/demo.min.css}" rel="stylesheet"/>
+</head>
+<body>
+<!-- Libs JS -->
+<script type="text/javascript" th:src="@{/libs/apexcharts/dist/apexcharts.min.js}"></script>
+<!-- Tabler Core -->
+<script type="text/javascript" th:src="@{/js/tabler.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/demo.min.js}"></script>
+
+<div class="wrapper">
+
+    <!-- TODO 1 : NAV-BAR -->
+    <div th:replace="~{manager/fragments/navbar-vertical :: fragment-nav-vertical}"></div>
+
+    <!-- TODO 2 : HEADER -->
+    <div class="page-wrapper">
+        <div th:replace="~{common/fragments/header :: fragment-header}"></div>
+        <div class="page-header d-print-none container-xl">
+            <div class="row g-2 align-items-center">
+                <div class="col">
+                        <h2 class="page-title d-inline">
+                            상품 연관관계 관리
+                        </h2>
+                </div>
+                <div class="col-auto ms-auto d-print-none">
+                    <div class="btn-list">
+                        <a href="/manager/products" class="btn btn-secondary btn-icon" style="width: 30px;">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-left m-0" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                <path d="M5 12l14 0"></path>
+                                <path d="M5 12l6 6"></path>
+                                <path d="M5 12l6 -6"></path>
+                            </svg>
+                        </a>
+                        <a href="#" class="btn btn-primary d-none d-sm-inline-block" data-bs-toggle="modal" data-bs-target="#modal-relation-register"
+                           th:data-base-id="${product.getId()}" th:data-base-title="${product.getTitle()}">
+                            <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+                            상품 연관관계 등록
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TODO 3: BODY -->
+        <div class="page-body container-xl">
+            <div class="card">
+                <div class="card-header">
+                <div class="card p-0">
+                    <div class="row row-0">
+                        <div class="col-2">
+                            <img th:src="${product.getThumbnailFileUrl()}" class="w-100 h-100 object-cover card-img-start">
+                        </div>
+                        <div class="col">
+                            <div class="card-body">
+                                <h3 th:text="|제목 : ${product.getTitle()}|"></h3>
+                                저자 : <div th:each="author, i : ${product.authors}" style="display: inline">
+                                    <p th:text="${author}" style="display: inline"></p>
+                                    <p th:if="${!i.last}" style="display: inline">|</p>
+                                </div><br>
+                                <p th:text="|출판사 : ${product.getPublisher()}|" style="display:inline;"></p>
+                                <p th:text="|출판일 : ${product.getPublishedDate()}|"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table card-table table-vcenter text-nowrap datatable">
+                            <thead>
+                                <tr>
+                                    <th class="w-1">No.</th>
+                                    <th>제목</th>
+                                    <th>저자</th>
+                                    <th>출판사</th>
+                                    <th>출판일</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="relation, i : ${relations}">
+                                    <td class="text-center"><span class="text-muted" th:text="${i.count}"></span></td>
+                                    <td th:text="${relation.title}"></td>
+                                    <td>
+                                        <div th:each="author, j : ${relation.authors}" style="display: inline">
+                                            <p th:text="${author}" style="display: inline"></p>
+                                            <p th:if="${!j.last}" style="display: inline">|</p>
+                                        </div>
+                                    </td>
+                                    <td th:text="${relation.publisher}"></td>
+                                    <td th:text="${relation.publishedDate}"></td>
+                                    <td>
+                                        <a href="#" class="btn btn-secondary btn-pill w-auto fs-5 btn-modal" data-bs-toggle="modal" data-bs-target="#modal-relation-delete"
+                                           th:data-base-id="${product.getId()}" th:data-base-title="${product.getTitle()}"
+                                           th:data-target-id="${relation.id}" th:data-target-title="${relation.title}">
+                                            삭제
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div th:replace="~{common/utils/paging-bar :: paging('/manager/products/' + ${productId} + '/relations', '')}"></div>
+            </div>
+        </div>
+
+        <!-- TODO 4 : footer -->
+        <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
+
+    </div>
+</div>
+<div class="modal modal-blur fade" id="modal-relation-delete" tabindex="-1" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-status bg-danger"></div>
+            <div class="modal-body text-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-danger icon-lg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 9v2m0 4v.01"></path><path d="M5 19h14a2 2 0 0 0 1.84 -2.75l-7.1 -12.25a2 2 0 0 0 -3.5 0l-7.1 12.25a2 2 0 0 0 1.75 2.75"></path></svg>
+                <h3>해당 상품을 연관상품에서 삭제하시겠습니까?</h3>
+                <div class="text-muted">연관관계를 삭제한 상품은 복구할 수 없습니다.<br/> 그래도 진행하시겠습니까?<br/><br/>[<p style="display: inline;" id="modal-delete-product-base"></p>]와 [<p style="display: inline;" id="modal-delete-product-target"></p>]의 연관관계를 끊습니다.</div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-link link-secondary me-auto" data-bs-dismiss="modal">취소</button>
+                <button type="submit" class="btn btn-danger" data-bs-dismiss="modal" id="modal-relation-delete-button" th:data-shop-url="${@environment.getProperty('yesaladin.gateway.shop')}">네, 삭제합니다.</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal modal-blur fade" id="modal-relation-register" tabindex="-1" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">연관상품 등록</h5>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-3 align-items-end">
+                    <div class="col">
+                        <label class="form-label">[<d id="modal-register-product-base" class="d-inline"></d>]와 연관관계를 맺을 상품</label>
+                        <input type="text" class="form-control" id="relation-target-id">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn me-auto" data-bs-dismiss="modal">취소</button>
+                <button type="submit" class="btn btn-primary" data-bs-dismiss="modal" id="modal-relation-register-button" th:data-shop-url="${@environment.getProperty('yesaladin.gateway.shop')}">연관상품 등록</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    const modalDelete = document.getElementById('modal-relation-delete');
+    const base = document.getElementById('modal-delete-product-base');
+    const target = document.getElementById('modal-delete-product-target');
+    modalDelete.addEventListener('show.bs.modal', function (event) {
+        base.value = event.relatedTarget.getAttribute('data-base-id').toString();
+        base.innerText = event.relatedTarget.getAttribute('data-base-title').toString();
+
+        target.value = event.relatedTarget.getAttribute('data-target-id').toString();
+        target.innerText = event.relatedTarget.getAttribute('data-target-title').toString();
+    });
+
+    const deleteButton = document.getElementById('modal-relation-delete-button');
+    deleteButton.addEventListener('click', function (event) {
+        const shopUrl = deleteButton.getAttribute('data-shop-url').toString();
+        console.log("삭제 버튼 누름 : " + shopUrl + "/v1/products/" + base.value + "/relations/" + target.value);
+        fetch(shopUrl + "/v1/products/" + base.value + "/relations/" + target.value, {
+            method: "DELETE"
+        })
+            .then(res => window.location.reload())
+            .catch(err => {
+                window.alert(err);
+            });
+    });
+</script>
+<script>
+    const modalRegister = document.getElementById('modal-relation-register');
+    const registerBase = document.getElementById('modal-register-product-base');
+    modalRegister.addEventListener('show.bs.modal', function (event) {
+        registerBase.value = event.relatedTarget.getAttribute('data-base-id').toString();
+        registerBase.innerText = event.relatedTarget.getAttribute('data-base-title').toString();
+    });
+
+    const registerButton = document.getElementById('modal-relation-register-button');
+    const targetId = document.getElementById('relation-target-id');
+    registerButton.addEventListener('click', function (event) {
+        const shopUrl = registerButton.getAttribute('data-shop-url').toString();
+        fetch(shopUrl + "/v1/products/" + registerBase.value + "/relations", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                productSubId: targetId.value
+            })
+        })
+            .then(res => {
+                if (res.status !== 201) {
+                    throw new Error(res.status + " 발생=> 연관관계[MainID: " + registerBase.value + ", SubID: " + targetId.value + "]로 등록할 수 없습니다.");
+                }
+                return res.json();
+            })
+            .then(data => {
+                window.alert("연관관계[MainID: " + registerBase.value + ", SubID: " + targetId.value + "]를 등록하였습니다.");
+            })
+            .catch(err => {
+                window.alert(err);
+            })
+            .finally(() => {
+                location.reload();
+            });
+    })
+
+
+</script>
+</body>
+</html>
