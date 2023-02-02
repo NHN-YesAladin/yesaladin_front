@@ -1,10 +1,7 @@
 package shop.yesaladin.front.common.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import shop.yesaladin.front.member.service.inter.QueryMemberService;
 
@@ -15,12 +12,7 @@ public class IndexController {
     private final QueryMemberService queryMemberService;
 
     @GetMapping
-    public String main(Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        String userId = (String) authentication.getPrincipal();
-
-        model.addAttribute("userId", userId);
+    public String main() {
         return "main/index";
     }
 
