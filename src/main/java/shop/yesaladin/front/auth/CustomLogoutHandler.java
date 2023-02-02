@@ -57,6 +57,10 @@ public class CustomLogoutHandler implements LogoutHandler {
 
         String uuid = getUuidFromCookie(request.getCookies());
         log.info("uuid={}", uuid);
+        if (Objects.isNull(uuid)) {
+            throw new InvalidLogoutRequestException();
+        }
+
         redisTemplate.opsForHash().delete(uuid, JWT_CODE.getValue());
         redisTemplate.opsForHash().delete(uuid, LOG_ON_CODE.getValue());
 
