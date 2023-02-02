@@ -1,7 +1,6 @@
-package shop.yesaladin.front.product.controller;
+package shop.yesaladin.front.product.controller.web;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,11 +22,10 @@ import java.util.Map;
  * @author 이수정
  * @since 1.0
  */
-@Slf4j
 @RequiredArgsConstructor
 @Controller
 @RequestMapping
-public class QueryRelationWebController {
+public class RelationManagerWebController {
 
     private final QueryRelationService queryRelationService;
     private final QueryProductService queryProductService;
