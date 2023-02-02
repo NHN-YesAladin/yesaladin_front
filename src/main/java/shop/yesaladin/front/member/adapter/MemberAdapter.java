@@ -119,4 +119,36 @@ public class MemberAdapter {
                 }
         );
     }
+
+    /**
+     * Auth 서버에 토큰 재발급 요청을 하기 위한 기능입니다.
+     *
+     * @param uuid 회원의 고유 식별자에 해당합니다.
+     * @return 재발급된 JWT AccessToken을 반환합니다.
+     * @author 송학현
+     * @since 1.0
+     */
+    public String tokenReissue(String uuid) {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(APPLICATION_JSON);
+        httpHeaders.add("UUID", uuid);
+
+        URI uri = UriComponentsBuilder
+                .fromUriString(gatewayConfig.getAuthUrl())
+                .path("/reissue")
+                .encode()
+                .build()
+                .toUri();
+
+        HttpEntity entity = new HttpEntity<>(httpHeaders);
+        ResponseEntity<Void> response = restTemplate.exchange(
+                uri,
+                HttpMethod.POST,
+                entity,
+                new ParameterizedTypeReference<>() {
+                }
+        );
+
+        return response.getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
+    }
 }
