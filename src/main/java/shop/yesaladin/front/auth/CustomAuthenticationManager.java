@@ -2,7 +2,6 @@ package shop.yesaladin.front.auth;
 
 import static java.util.stream.Collectors.toList;
 import static shop.yesaladin.front.member.jwt.AuthUtil.JWT_CODE;
-import static shop.yesaladin.front.member.jwt.AuthUtil.LOG_ON_CODE;
 import static shop.yesaladin.front.member.jwt.AuthUtil.UUID_CODE;
 
 import java.util.List;
@@ -99,7 +98,6 @@ public class CustomAuthenticationManager implements AuthenticationManager {
         AuthInfo authInfo = new AuthInfo(memberResponseDto, accessToken, memberResponseDto.getRoles());
         log.info("authInfo={}", authInfo);
         redisTemplate.opsForHash().put(uuid, JWT_CODE.getValue(), authInfo);
-        redisTemplate.opsForHash().put(uuid, LOG_ON_CODE.getValue(), uuid);
 
         return new UsernamePasswordAuthenticationToken(
                 authentication.getPrincipal().toString(),
