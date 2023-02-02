@@ -73,13 +73,17 @@
                                             </div>
                                             <div class="col-7">
                                                 <label class="form-label d-inline fs-3 ms-1">지정 일자 조회</label>
-                                                <input class="form-control fs-6 w-auto d-inline" type="date" name="order-expected-date"
+                                                <input class="form-control fs-6 w-auto d-inline"
+                                                       type="date" name="order-expected-date"
+                                                       th:min="${#temporals.format( #temporals.createNow().minus(1,T(java.time.temporal.ChronoUnit).YEARS), 'yyyy-MM-dd')}"
                                                        th:max="${#calendars.format( #calendars.createNow(), 'yyyy-MM-dd')}"
                                                        id="datepicker-pre">
-                                                ~ <input class="form-control fs-6 w-auto d-inline" type="date" name="order-expected-date"
-                                                       th:max="${#calendars.format( #calendars.createNow(), 'yyyy-MM-dd')}"
-                                                       id="datepicker-fut">
-                                                <a href="#" class="btn btn-primary w-auto d-inline" style="height: 30px">검색</a>
+                                                ~ <input class="form-control fs-6 w-auto d-inline"
+                                                         type="date" name="order-expected-date"
+                                                         th:min="${#temporals.format( #temporals.createNow().minus(1,T(java.time.temporal.ChronoUnit).YEARS), 'yyyy-MM-dd')}"
+                                                         th:max="${#calendars.format( #calendars.createNow(), 'yyyy-MM-dd')}"
+                                                         id="datepicker-fut">
+                                                <a href="#" id="duration-search" class="btn btn-primary w-auto d-inline" style="height: 30px">검색</a>
                                             </div>
                                         </form>
                                     </div>
@@ -93,45 +97,49 @@
                                                 <th class="w-auto" scope="col">주문금액</th>
                                                 <th class="w-auto" scope="col">주문상태</th>
                                                 <th class="w-5" scope="col">주문자</th>
+                                                <th class="w-10" scope="col">비고</th>
                                                 <th class="w-5" scope="col">조회</th>
                                             </tr>
                                             </thead>
                                             <tbody class="table-group-divider">
-                                            <!--        TODO : 테이블 내용 중앙 배치                            -->
                                             <tr th:each="data: ${dataList}">
-                                                <td th:text="${data.getOrderNumber()}"></td>
-                                                <td th:text="${data.getOrderDate()}"></td>
+                                                <td th:text="${data.orderName}"></td>
+                                                <td th:text="${#temporals.format(data.orderDateTime, 'yyyy-MM-dd')}"></td>
                                                 <td class="text-start">
                                                     <div class="row-cols-2">
                                                         <p class="col-12 d-inline-block text-truncate"
-                                                           th:text="${data.getOrderName()}"
+                                                           th:text="${data.orderName}"
                                                            style="max-width: 140px;">
                                                         </p>
                                                         <p class="col-12 d-inline-block text-truncate"
                                                            style="max-width: 140px;">
                                                             <span>등</span>&nbsp;
-                                                            <span th:text="${data.getCategoryCount()}">228</span>
+                                                            <span th:text="${data.orderProductCount == null } ? 0 : ${data.orderProductCount}">228</span>
                                                             <span>종</span>&nbsp;
-                                                            <span th:text="${data.getProductCount()}">2445</span>
+                                                            <span th:text="${data.productTotalCount== null } ? 0 : ${data.productTotalCount}">2445</span>
                                                             <span>권</span>
                                                         </p>
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <span class="d-inline-block text-truncate"
-                                                          style="max-width: 100px;" th:text="${data.getAmount()}">
+                                                          style="max-width: 100px;" th:text="${data.orderAmount}">
                                                         222,500
                                                     </span>
                                                 </td>
-                                                <td class="text-orange" th:text="${data.getDeliveryStatus()}"></td>
-                                                <td class="fw-bold" th:text="${data.getOrderMember()}"></td>
+                                                <td class="text-orange" th:text="${data.orderStatusCode}"></td>
+                                                <td class="fw-bolder" th:text="${data.memberName}"></td>
+                                                <td class="" th:text="${data.orderCode == 'MEMBER_SUBSCRIBE'} ? '구독 주문':''"></td>
                                                 <td>
                                                     <div>
-                                                        <a href="#" th:value="${data.getOrderId()}" class="btn btn-outline-dark w-full fs-5 fw-bolder m-1">
+                                                        <a href="#" th:value="${data.orderId}" class="btn btn-outline-dark w-full fs-5 fw-bolder m-1">
                                                             주문상세조회
                                                         </a>
-                                                        <a href="#" th:value="${data.getOrderId()}" class="btn btn-outline-dark w-full fs-5 fw-bolder m-1">
+                                                        <a href="#" th:value="${data.orderId}" class="btn btn-outline-dark w-full fs-5 fw-bolder m-1">
                                                             배송조회
+                                                        </a>
+                                                        <a href="#" th:value="${data.orderId}" class="btn btn-outline-secondary w-full fs-5 m-1">
+                                                            숨김처리
                                                         </a>
                                                     </div>
                                                 </td>
@@ -186,7 +194,15 @@
         let target = event.target;
         target.classList.remove("btn-outline-info");
         target.classList.add("btn-info");
-
     }
+
+    const durationButton = document.getElementById("duration-search");
+    durationButton.addEventListener("click", (event) => {
+        let startDate = document.getElementById("datepicker-pre").value;
+        let endDate = document.getElementById("datepicker-fut").value;
+        let days = Math.abs(new Date(endDate) - new Date(startDate))/86400000;
+        console.log(days);
+        window.location.href = `/mypage/orders?code=${days}&page=0&?endDate=${endDate}`
+    });
 </script>
 </html>

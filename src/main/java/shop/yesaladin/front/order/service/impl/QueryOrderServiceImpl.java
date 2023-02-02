@@ -1,6 +1,7 @@
 package shop.yesaladin.front.order.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
@@ -26,6 +27,7 @@ import shop.yesaladin.front.order.service.inter.QueryOrderService;
  * @since 1.0
  */
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class QueryOrderServiceImpl implements QueryOrderService {
@@ -40,16 +42,18 @@ public class QueryOrderServiceImpl implements QueryOrderService {
     @Override
     public PaginatedResponseDto<OrderSummaryResponseDto> getOrderListInPeriodByMemberId(
             Pageable pageable,
-            String startDate,
-            String endDate
+            PeriodQueryRequestDto requestDto
     ) {
         UriComponents uriComponents = UriComponentsBuilder.fromHttpUrl(
                         gatewayConfig.getShopUrl() + "/v1/member-orders")
                 .queryParam("page", pageable.getPageNumber())
-                .queryParam("size", pageable.getPageSize() == 0 ? 10 : pageable.getPageSize())
-                .queryParam("startDate", startDate)
-                .queryParam("endDate", endDate)
+                .queryParam("size", pageable.getPageSize() == 20 ? 10 : pageable.getPageSize())
+                .queryParam("startDate", requestDto.getStartDate())
+                .queryParam("endDate", requestDto.getEndDate())
                 .build();
+
+        log.info("pageable : {}", pageable);
+        log.info("startDate : {} | endDate : {} ", requestDto.getStartDate(), requestDto.getEndDate());
 
         ResponseEntity<PaginatedResponseDto<OrderSummaryResponseDto>> responseEntity = restTemplate.exchange(
                 uriComponents.toUri(),

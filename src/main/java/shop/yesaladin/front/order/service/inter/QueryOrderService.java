@@ -16,8 +16,7 @@ public interface QueryOrderService {
 
     PaginatedResponseDto<OrderSummaryResponseDto> getOrderListInPeriodByMemberId(
             Pageable pageable,
-            String startDate,
-            String endDate
+            PeriodQueryRequestDto requestDto
     );
 
 }

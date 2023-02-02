@@ -29,5 +29,7 @@ public class OrderSummaryResponseDto {
     private Long memberId;
     private String memberName;
     private Long orderProductCount;
+    private Integer productTotalCount;
+    private String orderCode;
 
 }

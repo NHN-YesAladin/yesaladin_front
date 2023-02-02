@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import shop.yesaladin.front.common.dto.PaginatedResponseDto;
+import shop.yesaladin.front.common.dto.PeriodQueryRequestDto;
 import shop.yesaladin.front.order.dto.OrderSummaryResponseDto;
 import shop.yesaladin.front.order.dto.TotalOrderResponseDto;
 import shop.yesaladin.front.order.service.inter.QueryOrderService;
@@ -35,10 +36,11 @@ public class OrderMyPageWebController {
     @GetMapping
     public String getOrderList(
             @RequestParam(name = "code", required = false) Integer code,
+            @RequestParam(name = "endDate", required = false) String shouldEndDate,
             Pageable pageable,
             Model model
     ) {
-
+        System.out.println("shouldEndDate = " + shouldEndDate);
         //TODO 사용자 인증
         LocalDate startDate = LocalDate.now();
         LocalDate endDate = LocalDate.now();
@@ -48,38 +50,12 @@ public class OrderMyPageWebController {
             startDate = endDate.minusDays(code);
         }
 
-
-        log.info("pageable : {} | code : {} ", pageable, code);
-        log.info("startDate : {} | endDate : {} ", startDate, endDate);
-
-        PaginatedResponseDto<OrderSummaryResponseDto> response1 = queryOrderService.getOrderListInPeriodByMemberId(
+        PaginatedResponseDto<OrderSummaryResponseDto> response = queryOrderService.getOrderListInPeriodByMemberId(
                 pageable,
-                startDate.toString(),
-                endDate.toString()
+                new PeriodQueryRequestDto(startDate, endDate)
         );
 
-        log.info("{}",response1.getDataList());
-
-        List<TotalOrderResponseDto> dataList = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            dataList.add(TotalOrderResponseDto.builder()
-                    .orderId((long) i)
-                    .orderNumber("00000000000" + i)
-                    .orderMember("김씨00")
-                    .orderName("자바 외 2")
-                    .orderDate(LocalDate.now())
-                    .categoryCount(i)
-                    .productCount(i)
-                    .amount(10000L * i)
-                    .deliveryStatus("배송완료")
-                    .build());
-        }
-        PaginatedResponseDto<TotalOrderResponseDto> response = PaginatedResponseDto.<TotalOrderResponseDto>builder()
-                .totalPage(10L)
-                .currentPage(0L)
-                .totalDataCount(100L)
-                .dataList(dataList)
-                .build();
+        log.info("{}",response.getDataList());
 
         model.addAttribute("code", code);
         model.addAttribute("currentPage", response.getCurrentPage());
