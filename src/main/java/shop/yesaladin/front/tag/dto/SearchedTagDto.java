@@ -12,7 +12,6 @@ import lombok.Setter;
  * @author : 김선홍
  */
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class SearchedTagDto {
