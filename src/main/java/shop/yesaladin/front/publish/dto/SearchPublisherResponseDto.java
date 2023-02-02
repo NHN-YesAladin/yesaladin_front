@@ -4,7 +4,6 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 /**
  * 출판사 정보 dto 리스트와 총 갯수
