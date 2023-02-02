@@ -71,7 +71,8 @@ public class QueryCategoryServiceImpl implements QueryCategoryService {
                         gatewayConfig.getShopUrl() + "/v1/categories")
                 .queryParam("parentId", parentId)
                 .queryParam("page", pageRequestDto.getPage() == null ? 0 : pageRequestDto.getPage())
-                .queryParam("size",
+                .queryParam(
+                        "size",
                         pageRequestDto.getSize() == null ? 10 : pageRequestDto.getSize()
                 )
                 .build();

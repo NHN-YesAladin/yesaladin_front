@@ -13,7 +13,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import shop.yesaladin.front.category.dto.CategoryResponseDto;
@@ -74,7 +73,6 @@ public class CategoryManagerWebController {
                 .filter(parent -> parent.getId().equals(parentId))
                 .findAny();
         parentOptional.ifPresent(responseDto -> model.addAttribute("parent", responseDto));
-
 
         if (Objects.nonNull(parentId)) {
             // 페이징 전용 dto를 리턴 받는다.

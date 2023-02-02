@@ -9,6 +9,7 @@ import shop.yesaladin.front.category.dto.SearchedCategoryResponseDto;
  * @since : 1.0
  */
 public interface SearchCategoryService {
+
     /**
      * 카테고리 이름으로 검색하는 메서드
      *
