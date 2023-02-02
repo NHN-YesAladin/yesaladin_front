@@ -502,9 +502,7 @@
               console.log(selectedCategoryList.length)
               alert("카테고리는 3개까지만 허용합니다.")
             } else if (!checkValue(selectedCategoryList, id)) {
-              console.log("여기2222222222222222222")
               const selectedCategoryViewRow = selectedViewCategoryTable.insertRow();
-              console.log("여기333333333333333333")
               const selectedCategoryViewCeil = selectedCategoryViewRow.insertCell();
               selectedCategoryViewCeil.innerText  = json.searchedCategoryDtoList[i].parentName
                   + " >> " + json.searchedCategoryDtoList[i].name;
@@ -717,8 +715,6 @@
   }
 
   function checkValue(checkBox, id) {
-    console.log(id)
-    console.log(checkBox)
     for (let i = 0; i < checkBox.length; i++) {
       if (checkBox[i].value == id) {
         return true;

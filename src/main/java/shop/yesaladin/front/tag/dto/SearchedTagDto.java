@@ -3,7 +3,6 @@ package shop.yesaladin.front.tag.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 /**
  * 태그 정보 dto
