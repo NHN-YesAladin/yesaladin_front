@@ -38,8 +38,8 @@ public class JwtInterceptor implements ClientHttpRequestInterceptor {
      *
      * @param request   HttpRequest 객체 입니다.
      * @param body      요청 body에 해당 합니다.
-     * @param execution 실제 실행을 수행 하고 요청을 후속 프로세스 체인으로 전달하기 위한 객체 입니다.
-     * @return Client 측의 HTTP 응답을 나타 냅니다. RestTemplate 요청 직전에
+     * @param execution RestTemplate 요청 직전에 실제 실행을 수행 하고 요청을 후속 프로세스 체인으로 전달하기 위한 객체 입니다.
+     * @return Client 측의 HTTP 응답을 나타 냅니다.
      * @throws IOException interceptor 작동 시 발생할 수 있는 예외 입니다.
      * @author : 송학현
      * @since : 1.0
