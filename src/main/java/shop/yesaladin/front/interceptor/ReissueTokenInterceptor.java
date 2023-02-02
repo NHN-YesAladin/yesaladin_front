@@ -49,19 +49,16 @@ public class ReissueTokenInterceptor implements HandlerInterceptor {
         String uuid = getUuidFromCookie(request.getCookies());
         log.info("uuid={}", uuid);
         if (!(authentication instanceof AnonymousAuthenticationToken) && Objects.nonNull(uuid)) {
-            log.info("로그인 o");
-
             if (Objects.isNull(uuid)) {
-                log.info("uuid 없음");
+                log.info("UUID not exist");
                 return true;
             }
 
             AuthInfo authInfo = (AuthInfo) redisTemplate.opsForHash()
                     .get(uuid, JWT_CODE.getValue());
-            log.info("redis에 기존에 있던 accessToken={}", authInfo.getAccessToken());
             if (Objects.nonNull(authInfo)) {
                 String accessToken = memberAdapter.tokenReissue(uuid);
-                log.info("new token={}", accessToken);
+                log.info("Reissued AccessToken={}", accessToken);
 
                 redisTemplate.opsForHash().delete(uuid, JWT_CODE.getValue());
                 authInfo.setAccessToken(accessToken);
@@ -69,8 +66,6 @@ public class ReissueTokenInterceptor implements HandlerInterceptor {
             }
             return true;
         }
-
-        log.info("로그인 x");
         return true;
     }
 

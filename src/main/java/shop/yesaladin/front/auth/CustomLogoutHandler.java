@@ -1,7 +1,6 @@
 package shop.yesaladin.front.auth;
 
 import static shop.yesaladin.front.member.jwt.AuthUtil.JWT_CODE;
-import static shop.yesaladin.front.member.jwt.AuthUtil.LOG_ON_CODE;
 import static shop.yesaladin.front.member.jwt.AuthUtil.UUID_CODE;
 
 import java.util.Objects;
@@ -18,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import shop.yesaladin.front.member.adapter.MemberAdapter;
 import shop.yesaladin.front.member.exception.InvalidLogoutRequestException;
+import shop.yesaladin.front.member.jwt.AuthInfo;
 
 /**
  * 기본적으로 동작하는 LogoutHandler를 custom한 클래스 입니다.
@@ -61,10 +61,10 @@ public class CustomLogoutHandler implements LogoutHandler {
             throw new InvalidLogoutRequestException();
         }
 
+        AuthInfo auth = (AuthInfo) redisTemplate.opsForHash().get(uuid, JWT_CODE.getValue());
         redisTemplate.opsForHash().delete(uuid, JWT_CODE.getValue());
-        redisTemplate.opsForHash().delete(uuid, LOG_ON_CODE.getValue());
 
-        memberAdapter.logout(uuid);
+        memberAdapter.logout(uuid, auth.getAccessToken());
 
         SecurityContext context = SecurityContextHolder.getContext();
         SecurityContextHolder.clearContext();

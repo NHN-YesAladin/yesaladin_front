@@ -96,9 +96,10 @@ public class MemberAdapter {
      * @author 송학현
      * @since 1.0
      */
-    public void logout(String uuid) {
+    public void logout(String uuid, String accessToken) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(APPLICATION_JSON);
+        httpHeaders.setBearerAuth(accessToken);
         LogoutRequestDto logoutRequest = new LogoutRequestDto(uuid);
 
         log.info("request={}", logoutRequest);
@@ -115,8 +116,7 @@ public class MemberAdapter {
                 uri,
                 HttpMethod.POST,
                 entity,
-                new ParameterizedTypeReference<>() {
-                }
+                Void.class
         );
     }
 
@@ -145,8 +145,7 @@ public class MemberAdapter {
                 uri,
                 HttpMethod.POST,
                 entity,
-                new ParameterizedTypeReference<>() {
-                }
+                Void.class
         );
 
         return response.getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
