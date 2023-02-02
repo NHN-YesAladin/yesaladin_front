@@ -26,8 +26,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.common.exception.InvalidHttpHeaderException;
 import shop.yesaladin.front.member.adapter.MemberAdapter;
-import shop.yesaladin.front.member.dto.LoginRequest;
-import shop.yesaladin.front.member.dto.MemberResponse;
+import shop.yesaladin.front.member.dto.LoginRequestDto;
+import shop.yesaladin.front.member.dto.MemberResponseDto;
 import shop.yesaladin.front.member.jwt.AuthInfo;
 
 /**
@@ -59,11 +59,11 @@ public class CustomAuthenticationManager implements AuthenticationManager {
     @Override
     public Authentication authenticate(Authentication authentication)
             throws AuthenticationException {
-        LoginRequest loginRequest = new LoginRequest(
+        LoginRequestDto loginRequestDto = new LoginRequestDto(
                 (String) authentication.getPrincipal(),
                 (String) authentication.getCredentials()
         );
-        ResponseEntity<Void> exchange = memberAdapter.getAuthInfo(loginRequest);
+        ResponseEntity<Void> exchange = memberAdapter.getAuthInfo(loginRequestDto);
 
         checkValidLoginRequest(exchange);
 
@@ -76,12 +76,12 @@ public class CustomAuthenticationManager implements AuthenticationManager {
             accessToken = accessToken.substring(7);
         }
 
-        ResponseEntity<ResponseDto<MemberResponse>> response = memberAdapter.getMemberInfo(
-                loginRequest,
+        ResponseEntity<ResponseDto<MemberResponseDto>> response = memberAdapter.getMemberInfo(
+                loginRequestDto,
                 accessToken
         );
 
-        MemberResponse memberResponse = response.getBody().getData();
+        MemberResponseDto memberResponseDto = response.getBody().getData();
 
         log.info("accessToken={}", accessToken);
 
@@ -93,10 +93,10 @@ public class CustomAuthenticationManager implements AuthenticationManager {
 
         servletResponse.addCookie(cookie);
 
-        List<SimpleGrantedAuthority> authorities = getAuthorities(memberResponse);
+        List<SimpleGrantedAuthority> authorities = getAuthorities(memberResponseDto);
         log.info("authorities={}", authorities);
 
-        AuthInfo authInfo = new AuthInfo(memberResponse, accessToken, memberResponse.getRoles());
+        AuthInfo authInfo = new AuthInfo(memberResponseDto, accessToken, memberResponseDto.getRoles());
         log.info("authInfo={}", authInfo);
         redisTemplate.opsForHash().put(uuid, JWT_CODE.getValue(), authInfo);
         redisTemplate.opsForHash().put(uuid, LOG_ON_CODE.getValue(), uuid);
@@ -126,13 +126,13 @@ public class CustomAuthenticationManager implements AuthenticationManager {
     /**
      * Shop 서버에서 제공 받은 회원 정보를 바탕으로 권한 정보를 추출하는 기능입니다.
      *
-     * @param memberResponse Shop 서버에서 제공받은 회원 정보 결과 입니다.
+     * @param memberResponseDto Shop 서버에서 제공받은 회원 정보 결과 입니다.
      * @return token을 만들기 위해 권한 정보를 담은 List<SimpleGrantedAuthority>를 반환합니다.
      * @author : 송학현
      * @since : 1.0
      */
-    private List<SimpleGrantedAuthority> getAuthorities(MemberResponse memberResponse) {
-        MemberResponse member = Objects.requireNonNull(memberResponse);
+    private List<SimpleGrantedAuthority> getAuthorities(MemberResponseDto memberResponseDto) {
+        MemberResponseDto member = Objects.requireNonNull(memberResponseDto);
         log.info("member={}", member);
 
         return member.getRoles().stream()

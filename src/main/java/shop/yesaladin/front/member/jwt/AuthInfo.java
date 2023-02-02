@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import shop.yesaladin.front.member.dto.MemberResponse;
+import shop.yesaladin.front.member.dto.MemberResponseDto;
 
 /**
  * user 정보와 accessToken을 Redis에 저장하여 관리하기 위한 클래스입니다.
@@ -29,15 +29,15 @@ public class AuthInfo implements Serializable {
     private List<String> authorities;
 
     public AuthInfo(
-            MemberResponse memberResponse,
+            MemberResponseDto memberResponseDto,
             String accessToken,
             List<String> authorities
     ) {
-        this.id = memberResponse.getId();
-        this.name = memberResponse.getName();
-        this.nickname = memberResponse.getNickname();
-        this.loginId = memberResponse.getLoginId();
-        this.email = memberResponse.getEmail();
+        this.id = memberResponseDto.getId();
+        this.name = memberResponseDto.getName();
+        this.nickname = memberResponseDto.getNickname();
+        this.loginId = memberResponseDto.getLoginId();
+        this.email = memberResponseDto.getEmail();
         this.accessToken = accessToken;
         this.authorities = authorities;
     }

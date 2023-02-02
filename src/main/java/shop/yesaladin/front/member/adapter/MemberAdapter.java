@@ -15,9 +15,9 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.config.GatewayConfig;
-import shop.yesaladin.front.member.dto.LoginRequest;
+import shop.yesaladin.front.member.dto.LoginRequestDto;
 import shop.yesaladin.front.member.dto.LogoutRequestDto;
-import shop.yesaladin.front.member.dto.MemberResponse;
+import shop.yesaladin.front.member.dto.MemberResponseDto;
 
 /**
  * 회원 관련 로직을 처리하기 위해 Shop, Auth 서버에 RestTemplate으로 요청하기 위한 어댑터 입니다.
@@ -37,15 +37,15 @@ public class MemberAdapter {
      * 로그인 과정에서 Auth 서버에서 인증된 JWT 형식의 accessToken과 uuid를 받아오는 기능입니다.
      * 해당 정보들은 HTTP Response Header에 담겨 반환 됩니다.
      *
-     * @param loginRequest 회원이 로그인 시 입력한 정보를 담은 DTO 입니다.
+     * @param loginRequestDto 회원이 로그인 시 입력한 정보를 담은 DTO 입니다.
      * @return Auth 서버에서 발급받은 JWT 형식의 accessToken 입니다.
      * @author : 송학현
      * @since : 1.0
      */
-    public ResponseEntity<Void> getAuthInfo(LoginRequest loginRequest) {
+    public ResponseEntity<Void> getAuthInfo(LoginRequestDto loginRequestDto) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(APPLICATION_JSON);
-        HttpEntity<LoginRequest> entity = new HttpEntity<>(loginRequest, headers);
+        HttpEntity<LoginRequestDto> entity = new HttpEntity<>(loginRequestDto, headers);
 
         return restTemplate.exchange(
                 gatewayConfig.getAuthUrl() + "/auth/login",
@@ -58,14 +58,14 @@ public class MemberAdapter {
     /**
      * 로그인 과정에서 accessToken을 발급 받아 HTTP Header에 추가한 뒤, Shop 서버에 회원의 정보를 요청하는 기능입니다.
      *
-     * @param loginRequest 회원이 로그인 시 입력한 정보를 담은 DTO 입니다.
+     * @param loginRequestDto 회원이 로그인 시 입력한 정보를 담은 DTO 입니다.
      * @param accessToken  로그인 과정에서 Auth 서버에서 발급받은 JWT 형식의 accessToken 입니다.
      * @return Shop 서버에 요청한 회원의 정보 DTO를 담은 결과 입니다.
      * @author : 송학현
      * @since : 1.0
      */
-    public ResponseEntity<ResponseDto<MemberResponse>> getMemberInfo(
-            LoginRequest loginRequest,
+    public ResponseEntity<ResponseDto<MemberResponseDto>> getMemberInfo(
+            LoginRequestDto loginRequestDto,
             String accessToken
     ) {
         HttpHeaders httpHeaders = new HttpHeaders();
@@ -76,7 +76,7 @@ public class MemberAdapter {
                 .path("/v1/members/login/{loginId}")
                 .encode()
                 .build()
-                .expand(loginRequest.getLoginId())
+                .expand(loginRequestDto.getLoginId())
                 .toUri();
 
         return restTemplate.exchange(
