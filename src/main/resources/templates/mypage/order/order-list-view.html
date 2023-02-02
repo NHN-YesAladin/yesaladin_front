@@ -138,6 +138,7 @@
                                                         <a href="#" th:value="${data.orderId}" class="btn btn-outline-dark w-full fs-5 fw-bolder m-1">
                                                             배송조회
                                                         </a>
+<!--                                               // TODO 숨김처리 링크 처리         -->
                                                         <a href="#" th:value="${data.orderId}" class="btn btn-outline-secondary w-full fs-5 m-1">
                                                             숨김처리
                                                         </a>
@@ -198,11 +199,18 @@
 
     const durationButton = document.getElementById("duration-search");
     durationButton.addEventListener("click", (event) => {
-        let startDate = document.getElementById("datepicker-pre").value;
-        let endDate = document.getElementById("datepicker-fut").value;
-        let days = Math.abs(new Date(endDate) - new Date(startDate))/86400000;
-        console.log(days);
-        window.location.href = `/mypage/orders?code=${days}&page=0&?endDate=${endDate}`
+        let start = document.getElementById("datepicker-pre").value;
+        let end = document.getElementById("datepicker-fut").value;
+
+        let endDate = new Date(end);
+        let startDate = new Date(start);
+        if (start === "" || end === "" || (endDate - startDate) < 0) {
+            alert("날짜를 정확히 지정해주십시오");
+            return;
+        }
+
+        let days = Math.abs(endDate - startDate)/86400000;
+        window.location.href = `/mypage/orders?code=${days}&page=0&endDate=${end}`
     });
 </script>
 </html>

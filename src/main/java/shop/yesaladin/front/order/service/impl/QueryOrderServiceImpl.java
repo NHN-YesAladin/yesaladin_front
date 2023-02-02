@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
-import shop.yesaladin.front.category.dto.CategoryResponseDto;
 import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.common.dto.PeriodQueryRequestDto;
 import shop.yesaladin.front.config.GatewayConfig;
@@ -39,6 +38,10 @@ public class QueryOrderServiceImpl implements QueryOrderService {
             = new ParameterizedTypeReference<>() {
     };
 
+    /**
+     * {@inheritDoc}
+     *
+     */
     @Override
     public PaginatedResponseDto<OrderSummaryResponseDto> getOrderListInPeriodByMemberId(
             Pageable pageable,
