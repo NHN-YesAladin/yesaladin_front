@@ -3,7 +3,6 @@ package shop.yesaladin.front.writing.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 /**
  * 저자 정보 dto
@@ -12,7 +11,6 @@ import lombok.Setter;
  * @author : 김선홍
  */
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class SearchedAuthorDto {

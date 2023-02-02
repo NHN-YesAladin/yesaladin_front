@@ -110,7 +110,7 @@
           </div>
           <div class="mb-1">
               <label class="form-label text-success">선택한 카테고리</label>
-              <table id="selected-category-view-table " class="table" style="table-layout: fixed"></table>
+              <table id="selected-category-view-table" class="table" style="table-layout: fixed"></table>
           </div>
           <div id="selected-category-checkbox-list" style="display: none"></div>
           <!--             TODO: 저자, 출판사 선홍님 검색으로 교체 예정 -->
@@ -499,12 +499,12 @@
           select.addEventListener("click", (s) => {
             s.preventDefault()
             if (selectedCategoryList.length > 2) {
+              console.log(selectedCategoryList.length)
               alert("카테고리는 3개까지만 허용합니다.")
             } else if (!checkValue(selectedCategoryList, id)) {
               const selectedCategoryViewRow = selectedViewCategoryTable.insertRow();
-
               const selectedCategoryViewCeil = selectedCategoryViewRow.insertCell();
-              selectedCategoryViewCeil.innerText = innerText = json.searchedCategoryDtoList[i].parentName
+              selectedCategoryViewCeil.innerText  = json.searchedCategoryDtoList[i].parentName
                   + " >> " + json.searchedCategoryDtoList[i].name;
 
               const deleteButton = selectedCategoryViewRow.insertCell();
@@ -715,8 +715,6 @@
   }
 
   function checkValue(checkBox, id) {
-    console.log(id)
-    console.log(checkBox)
     for (let i = 0; i < checkBox.length; i++) {
       if (checkBox[i].value == id) {
         return true;

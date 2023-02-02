@@ -1,10 +1,9 @@
 package shop.yesaladin.front.product.dto;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Getter
 @AllArgsConstructor
@@ -15,7 +14,7 @@ public class SearchedProductDto {
     private Long quantity;
     private int discountRate;
     private long sellingPrice;
-    private Boolean isForcedOutOfStack;
+    private Boolean isForcedOutOfStock;
     private String thumbnailFileUrl;
     private String publisher;
     private String publishedDate;
