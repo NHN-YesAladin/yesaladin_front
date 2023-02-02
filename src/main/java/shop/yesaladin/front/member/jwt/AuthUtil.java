@@ -13,8 +13,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum AuthUtil {
     JWT_CODE("JWT"),
-    UUID_CODE("UUID"),
-    LOG_ON_CODE("LOGON");
+    UUID_CODE("UUID"); //TODO: 장바구니 쪽과 구분하기 위해 이름 바꿀 것
 
     private final String value;
 }

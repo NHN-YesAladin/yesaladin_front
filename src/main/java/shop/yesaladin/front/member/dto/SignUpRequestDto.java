@@ -21,7 +21,7 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class SignUpRequest {
+public class SignUpRequestDto {
 
     @NotBlank
     @Size(min = 2, max = 50)
