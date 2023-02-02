@@ -28,7 +28,7 @@ public class SearchCategoryServiceImpl implements SearchCategoryService {
 
     private final RestTemplate restTemplate;
     private final GatewayConfig gatewayConfig;
-    private static final String PATH = "/shop/v1/search/categories";
+    private static final String PATH = "/v1/search/categories";
 
     /**
      * {@inheritDoc}
