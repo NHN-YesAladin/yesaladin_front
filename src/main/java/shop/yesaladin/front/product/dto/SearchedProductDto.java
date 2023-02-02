@@ -15,7 +15,7 @@ public class SearchedProductDto {
     private Long quantity;
     private int discountRate;
     private long sellingPrice;
-    private boolean isForcedOutOfStack;
+    private Boolean isForcedOutOfStack;
     private String thumbnailFileUrl;
     private String publisher;
     private String publishedDate;
