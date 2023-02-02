@@ -5,6 +5,7 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import shop.yesaladin.front.member.dto.MemberResponseDto;
 
@@ -15,6 +16,7 @@ import shop.yesaladin.front.member.dto.MemberResponseDto;
  * @since : 1.0
  */
 @Getter
+@Setter
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
