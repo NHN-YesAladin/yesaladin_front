@@ -3,6 +3,7 @@ package shop.yesaladin.front.publish.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * 출판사 정보 dto
