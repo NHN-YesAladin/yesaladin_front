@@ -43,7 +43,7 @@
           <div class="col-md-4">
             <select id="select-type" th:name="productType" class="form-select" onchange="selectType(this.value)">
               <option value="">전체</option>
-              <option th:each="type : ${types}" th:value="${type.id}" th:text="${type.type}" th:selected="${type.id == typeId}"></option>
+              <option th:each="type : ${types}" th:value="${type.getId()}" th:text="${type.getKoName()}" th:selected="${type.id == typeId}"></option>
             </select>
           </div>
         </div>
@@ -82,7 +82,7 @@
                     </div>
                     <p th:text="|${product.publisher}|" style="display: inline"></p>
                     <p th:text="|출판일 : ${product.publishedDate}|"></p>
-                    <h3 th:text="|${product.sellingPrice}원 |" style="display: inline"></h3>
+                    <h3 th:text="|${#numbers.formatInteger(product.sellingPrice, 1, 'COMMA')}원 |" style="display: inline"></h3>
                     <p class="page-pretitle" th:text="|(${product.discountRate}% 할인)|" style="display: inline"></p><br/>
                     <span class="badge bg-azure-lt" th:each="tag : ${product.tags}" th:text="|#${tag}|" style="margin: 2px"></span>
                   </div>

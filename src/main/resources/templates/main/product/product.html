@@ -59,7 +59,6 @@
                             <h2 class="badge bg-azure-lt">E-Book</h2>
                         </div>
                         <h1 th:text="${title}"></h1>
-                        <input hidden="hidden" id="product-id" th:value="${id}">
                         <h3>저자 :
                             <div th:each="author, j : ${authors}" style="display: inline">
                                 <p th:text="${author}" style="display: inline"></p>
@@ -77,12 +76,12 @@
                         </div>
                         <div class="col-8 divide-y">
                             <div class="col-12 p-2">
-                                <p th:text="|정가 : ${actualPrice}원|"></p>
-                                <p th:text="|판매가(할인율) : ${sellingPrice}원(${discountRate}%)|"></p>
-                                <p th:text="|포인트 적립금(포인트 적립율) : ${pointPrice}원(${pointRate}%)|"></p>
+                                <p th:text="|정가 : ${#numbers.formatInteger(actualPrice, 1, 'COMMA')}원|"></p>
+                                <p th:text="|판매가(할인율) : ${#numbers.formatInteger(sellingPrice, 1, 'COMMA')}원(${discountRate}%)|"></p>
+                                <p th:text="|포인트 적립금(포인트 적립율) : ${#numbers.formatInteger(pointPrice, 1, 'COMMA')}원(${pointRate}%)|"></p>
                             </div>
                             <div class="col-12 p-2">
-                                <p> 배송비 : 3000원 </p>
+                                 배송비 : <p class="d-inline" th:text="${sellingPrice} >= 30000 ? '0' : '3,000'"></p>원
                             </div>
                             <div class="col-12 p-2" th:if="${onSale}">
                                 <div class="row p-1 text-lg-end">
@@ -98,8 +97,8 @@
                                                 <path d="M5 12l14 0"></path>
                                             </svg>
                                         </button>
-                                        <input type="text" class="form-control d-inline text-center" value="1" id="quantityBox"
-                                               name="quantity" maxlength="4" style="width:60px">
+                                        <input type="text" class="form-control d-inline text-center" value="1" min="1"
+                                               id="quantity" name="quantity"  maxlength="4" style="width:60px">
                                         <button type="button" class="btn btn-secondary btn-icon"
                                                 onclick="upQuantity()" style="width: 35px">
                                             <svg xmlns="http://www.w3.org/2000/svg"
@@ -116,7 +115,7 @@
 
                                 <div class="row p-1">
                                     <div class="col-6 px-1">
-                                        <button type="button" class="btn btn-twitter w-100">
+                                        <button type="button" class="btn btn-twitter w-100" id="add-cart">
                                             <svg xmlns="http://www.w3.org/2000/svg"
                                                  class="icon icon-tabler icon-tabler-shopping-cart-plus" width="24"
                                                  height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
@@ -198,7 +197,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row g-2 p-3">
+                    <div class="row g-2 p-3" id="relation-div">
                         <div>
                         <h2 class="float-start m-1">연관상품</h2>
                         <ul class="pagination float-end m-1">
@@ -208,7 +207,7 @@
                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M15 6l-6 6l6 6"></path></svg>
                                     </a>
                             </li>
-                            <li class="page-item"><a class="page-link" id="relation-page" th:data-shop-url="${@environment.getProperty('yesaladin.gateway.shop')}">1</a></li>
+                            <li class="page-item"><a class="page-link" id="relation-page">1</a></li>
                             <li class="page-item">
                                 <a class="page-link" tabindex="-1" aria-disabled="true" onclick="postRelation()" id="post">
                                     <!-- Download SVG icon from http://tabler-icons.io/i/chevron-right -->
@@ -231,16 +230,16 @@
                         <div class="col-12">
                             <h2>품목정보</h2>
                             <p th:text="|출판일 : ${publishedDate}|"></p>
-                            <p th:text="|ISBN13 : ${isbn}|"></p>
+                            <p th:text="|ISBN13 : ${isbn}|" name="isbn"></p>
                             <div th:if="${isSubscriptionAvailable} == true">
-                                <p th:text="|ISSN11 : ${issn}|"></p>
+                                <p th:text="|ISSN11 : ${issn}|" name="issn"></p>
                             </div>
                         </div>
-                        <div class="col-12">
+                        <div class="col-12" th:if="${categories.size() != 0}">
                             <h2>카테고리 분류</h2>
-                            <p>카테고리 1</p>
-                            <p>카테고리 2</p>
-                            <p>카테고리 3</p>
+                            <div th:each="category : ${categories}">
+                                <p th:text="${category.parentName} + ' >> ' + ${category.name}"></p>
+                            </div>
                         </div>
                         <div class="col-12">
                             <h2>목차</h2>
@@ -260,9 +259,36 @@
     <!-- TODO 4 : footer -->
     <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
 </div>
+<input type="hidden" class="d-none" id="product-id" th:value="${id}">
+<div class="d-none" id="shop-server-url" th:text="${@environment.getProperty('yesaladin.gateway.shop')}"></div>
+<div class="d-none" id="front-server-url" th:text="${@environment.getProperty('yesaladin.front.url')}"></div>
 <script>
-    console.log(document.querySelector('#description').value);
+    let FRONT_SERVER = document.getElementById('front-server-url').textContent;
+    let SHOP_SERVER = document.getElementById('shop-server-url').textContent;
+    let PRODUCT_ID = document.getElementById('product-id').value;
 
+    const addCart = document.getElementById('add-cart');
+    addCart.addEventListener('click', () => {
+        let quantityRegex = /^[+]?\d*(\.?\d*)?$/;
+
+        const quantity = document.getElementById('quantity').value;
+        console.log(quantity);
+        if (!quantityRegex.test(quantity) || quantity == 0) {
+            alert('올바른 수량을 입력해주세요.(1 이상의 숫자)');
+            return;
+        }
+
+        fetch(FRONT_SERVER + '/carts', {
+            "Content-Type": "application/json",
+            method: "POST",
+            body: {
+                id : PRODUCT_ID,
+                quantity : quantity
+            }
+        }).then(res => console.log(res));
+    });
+</script>
+<script>
     const viewer = toastui.Editor.factory({
         el: document.querySelector('#viewer'),
         viewer: true,
@@ -272,33 +298,19 @@
 </script>
 <script>
     function downQuantity() {
-        const quantity = document.getElementById("quantityBox");
-        --quantity.value;
+        const quantity = document.getElementById("quantity");
+        if (quantity.value > 1) {
+            --quantity.value;
+        }
     }
 
     function upQuantity() {
-        const quantity = document.getElementById("quantityBox");
+        const quantity = document.getElementById("quantity");
         ++quantity.value;
     }
 </script>
 <script>
     const relationPage = document.getElementById('relation-page');
-    function preRelation() {
-        let page = parseInt(relationPage.innerText) - 1;
-
-        makeRelations(page);
-
-        relationPage.innerText = page.toString();
-    }
-
-    function postRelation() {
-        let page = parseInt(relationPage.innerText) + 1;
-
-        makeRelations(page);
-
-        relationPage.innerText = page.toString();
-    }
-
     window.addEventListener('DOMContentLoaded', function() {
         let page = parseInt(relationPage.innerText);
 
@@ -307,22 +319,40 @@
         relationPage.innerText = page.toString();
     });
 
+    function preRelation() {
+        let page = parseInt(relationPage.innerText) - 1;
+
+        makeRelations(page);
+
+        relationPage.innerText = page.toString();
+    }
+    function postRelation() {
+        let page = parseInt(relationPage.innerText) + 1;
+
+        makeRelations(page);
+
+        relationPage.innerText = page.toString();
+
+    }
+
     function makeRelations(page) {
         const pre = document.getElementById("pre");
         const post = document.getElementById("post");
 
-        const productId = document.getElementById('product-id').value;
         const relationTable = document.getElementById('relation-table');
-        fetch(relationPage.getAttribute('data-shop-url') + "/v1/products/" + productId + "/relations?size=1&page=" + (page - 1), {
+        fetch(SHOP_SERVER + "/v1/products/" + PRODUCT_ID + "/relations?size=4&page=" + (page - 1), {
             method: "GET"
         })
             .then(res => res.json())
             .then(response => {
+                if (page === 1 && response.dataList.length === 0) {
+                    document.getElementById('relation-div').classList.add('d-none');
+                }
+
                 while (relationTable.firstChild) {
                     relationTable.removeChild(relationTable.firstChild);
                 }
 
-                console.log(response.dataList);
                 for (let i = 0; i < response.dataList.length; i++) {
                     const tr = document.createElement('tr');
                     tr.classList.add('col-3', 'p-0');
@@ -351,7 +381,7 @@
                     tdMakers.innerText = response.dataList[i].authors + " 저 | " + response.dataList[i].publisher;
 
                     const tdPrice = document.createElement('td');
-                    tdPrice.innerText = response.dataList[i].sellingPrice + "원(" + response.dataList[i].rate + "%)";
+                    tdPrice.innerText = response.dataList[i].sellingPrice.toLocaleString() + "원(" + response.dataList[i].rate + "%)";
                     tdPrice.classList.add('strong');
 
                     tr.append(tdThumbnail, tdTitle, tdMakers, tdPrice);
@@ -360,20 +390,18 @@
                 }
 
                 if ((page - 1) <= 0) {
-                    console.log("pre: " + page);
                     pre.classList.add('visually-hidden');
                 } else {
                     pre.classList.remove('visually-hidden');
                 }
 
                 if (page >= response.totalPage){
-                    console.log("post : " + page + ", total : " + response.totalPage);
                     post.classList.add('visually-hidden');
                 } else {
                     post.classList.remove('visually-hidden');
                 }
             })
-            .catch(err => alert(err));
+            .catch(err => console.log(err));
     }
 </script>
 </body>
