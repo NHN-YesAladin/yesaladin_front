@@ -63,8 +63,6 @@ public class MemberAuthWebController {
         log.info("response={}", response);
         model.addAttribute("response", response);
 
-        // TODO: redirect 관련 코드리뷰 반영해야함.
-
         return "auth/signup-success";
     }
 
