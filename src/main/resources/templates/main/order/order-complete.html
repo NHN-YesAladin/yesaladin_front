@@ -29,20 +29,112 @@
 
 <div class="wrapper">
     <!-- TODO 1 : HEADER -->
-    <div th:replace="~{fragments/header :: fragment-header}"></div>
+    <div th:replace="~{common/fragments/header :: fragment-header}"></div>
 
     <!-- TODO 2 : NAV-BAR -->
-    <div th:replace="~{fragments/navbar :: fragment-nav-bar}"></div>
+    <div th:replace="~{common/fragments/navbar :: fragment-nav-bar}"></div>
 
     <!-- TODO 3: BODY -->
     <div class="page-wrapper">
-        <h1>ORDER COMPLETE</h1>
+        <div class="container-narrow py-4">
+            <div class="card card-md">
+                <div class="ribbon bg-red">NEW</div>
+                <div class="card-body">
+                    <div class="card card-md">
+                        <div class="m-auto">
+                            <span class="fs-1 fw-bolder">주문 성공!</span>
+                        </div>
+                    </div>
+                    <div class="card card-md">
+                        <div class="card-body">
+                            <h3 class="card-title fs-2">주문 정보</h3>
+                            <div class="m-auto">
+                                <div>
+                                    <span class="fs-3 fw-normal">주문자 : </span>
+                                    <span class="fs-3 fw-bolder">구현필요</span>
+                                </div>
+                                <div>
+                                    <span class="fs-3 fw-normal">주문번호 : </span>
+                                    <span class="fs-3 fw-bolder" th:text="${response.orderNumber}"></span>
+                                </div>
+                                <div>
+                                    <span class="fs-3 fw-normal">주문명 : </span>
+                                    <span class="fs-3 fw-bolder" th:text="${response.orderName}">주문 성공!</span>
+                                </div>
+                                <div>
+                                    <span class="fs-3 fw-normal">배송지 : </span>
+                                    <span class="fs-3 fw-bolder">구현필요</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card card-md">
+                        <div class="card-body">
+                            <h3 class="card-title fs-2">주문 상태</h3>
+                            <div class="m-auto">
+                                <div class="card card-md">
+                                    <div class="card-body">
+                                        <ul class="steps steps-blue steps-counter">
+                                            <li class="step-item">주문완료</li>
+                                            <li class="step-item active">결제대기</li>
+                                            <li class="step-item">배송 준비중</li>
+                                            <li class="step-item ">배송중</li>
+                                            <li class="step-item">배송 완료</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card card-md">
+                        <div class="card-body">
+                            <h3 class="card-title fs-2">결제 정보</h3>
+                            <div class="m-auto">
+                                <div>
+                                    <span class="fs-3 fw-normal">결제 수단 : </span>
+                                    <span class="fs-3 fw-bolder" th:text="${response.method}">간편결제</span>
+                                    <span class="fs-3" > / </span>
+                                    <span class="fs-3 fw-bolder" th:text="${response.cardOwnerCode}">개인</span>
+                                </div>
+                                <div>
+                                    <span class="fs-3 fw-normal">결제 정보 : </span>
+                                    <span class="fs-3 fw-bolder" th:text="${response.cardAcquirerCode}">비씨카드</span>
+                                    <span class="fs-3" > / </span>
+                                    <span class="fs-3 fw-bolder" th:text="${response.cardNumber}">비씨카드</span>
+                                </div>
+                                <div>
+                                    <span class="fs-3 fw-normal">결제 승인 번호 : </span>
+                                    <span class="fs-3 fw-bolder" th:text="${response.cardApproveNumber}">1231</span>
+                                </div>
+                                <div>
+                                    <span class="fs-3 fw-normal">결제 금액 : </span>
+                                    <span class="fs-3 fw-bolder"  th:text="${#numbers.formatInteger(response.totalAmount,3,'COMMA') + '원'}">1231</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="mt-2 m-auto">
+                        <a href="#" class="btn btn-outline-primary w-100" onclick="processPayment(this)">
+                            주문 상세 보기
+                        </a>
+                    </div>
+                    <div class="mt-2 m-auto">
+                        <a href="#" class="btn btn-outline-primary w-100" onclick="processPayment(this)">
+                            홈으로 가기
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
     </div>
 
     <!-- TODO 4 : footer -->
-    <div th:replace="~{fragments/footer :: fragment-footer}"></div>
+    <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
 </div>
-<!-- DOMContentLoaded관련 Script import -->
-<div th:replace="~{fragments/script :: fragment-script}"></div>
 </body>
 </html>

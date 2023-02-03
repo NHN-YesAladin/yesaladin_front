@@ -39,9 +39,9 @@ public class PaymentController {
     public String success(
             @RequestParam("paymentKey") String paymentKey,
             @RequestParam("orderId") String orderId,
-            @RequestParam("amount") Long amount
+            @RequestParam("amount") Long amount,
+            Model model
     ) {
-
         PaymentRequestDto requestDto = new PaymentRequestDto(
                 paymentKey,
                 orderId,
@@ -49,8 +49,10 @@ public class PaymentController {
         );
         //TODO 주문이 이미 생성이 되어 있어야 shop서버와 통신하여 결제 완료처리 가능
         PaymentCompleteSimpleResponseDto responseDto = paymentService.confirm(requestDto);
+        System.out.println("responseDto = " + responseDto);
+        model.addAttribute("response", responseDto);
 
-        return "/order/order-complete";
+        return "main/order/order-complete";
     }
 
     /**
@@ -72,7 +74,7 @@ public class PaymentController {
         model.addAttribute("code", code);
 
         log.error("{} / {}", code, message);
-        return "/order/fail";
+        return "main/order/fail";
     }
 
 }
