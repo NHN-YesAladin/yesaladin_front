@@ -1,0 +1,139 @@
+<!doctype html>
+<!--
+* Tabler - Premium and Open Source dashboard template with responsive and high quality UI.
+* @version 1.0.0-beta5
+* @link https://tabler.io
+* Copyright 2018-2022 The Tabler Authors
+* Copyright 2018-2022 codecalm.net Paweł Kuna
+* Licensed under MIT (https://github.com/tabler/tabler/blob/master/LICENSE)
+-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+  <title>Yes Aladin!</title>
+  <!-- CSS files -->
+  <link th:href="@{/css/tabler.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-flags.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-payments.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-vendors.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/demo.min.css}" rel="stylesheet"/>
+</head>
+<body>
+<!-- Libs JS -->
+<script type="text/javascript" th:src="@{/libs/apexcharts/dist/apexcharts.min.js}"></script>
+<!-- Tabler Core -->
+<script type="text/javascript" th:src="@{/js/tabler.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/demo.min.js}"></script>
+
+<div class="wrapper">
+  <!-- TODO 1 : HEADER -->
+  <div th:replace="~{common/fragments/header :: fragment-header}"></div>
+
+  <!-- TODO 2 : NAV-BAR -->
+  <div th:replace="~{common/fragments/navbar :: fragment-nav-bar}"></div>
+
+  <!-- TODO 3: BODY -->
+  <div class="page-wrapper">
+    <div class="container-narrow py-4">
+      <div class="card card-md">
+        <div class="ribbon ribbon-top bg-red">
+          <!-- Download SVG icon from http://tabler-icons.io/i/star -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-alert-circle"
+               width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+               fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+            <path d="M12 12m-9 0a9 9 0 1 0 18 0 9 9 0 1 0-18 0"></path>
+            <path d="M12 8l0 4"></path>
+            <path d="M12 16l.01 0"></path>
+          </svg>
+        </div>
+        <div class="card-body">
+          <div class="card card-md">
+            <div class="m-auto">
+              <span class="fs-1 fw-bolder">주문 실패</span>
+            </div>
+          </div>
+          <div class="card card-md">
+            <div class="card-body">
+              <h3 class="card-title fs-2">주문 정보</h3>
+              <div class="m-auto">
+                <div>
+                  <span class="fs-3 fw-normal">주문자 : </span>
+                  <span class="fs-3 fw-bolder">구현필요</span>
+                </div>
+                <div>
+                  <span class="fs-3 fw-normal">주문번호 : </span>
+                  <!--                                    <span class="fs-3 fw-bolder" th:text="${response.orderNumber}"></span>-->
+                </div>
+                <div>
+                  <span class="fs-3 fw-normal">주문명 : </span>
+                  <!--                                    <span class="fs-3 fw-bolder" th:text="${response.orderName}">주문 성공!</span>-->
+                </div>
+                <div>
+                  <span class="fs-3 fw-normal">배송지 : </span>
+                  <span class="fs-3 fw-bolder">구현필요</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card card-md">
+            <div class="card-body">
+              <h3 class="card-title fs-2">주문 상태</h3>
+              <div class="m-auto">
+                <div class="card card-md">
+                  <div class="card-body">
+                    <ul class="steps steps-red steps-counter">
+                      <li class="step-item">주문완료</li>
+                      <li class="step-item active">결제대기</li>
+                      <li class="step-item">결제완료</li>
+                      <li class="step-item">배송 준비중</li>
+                      <li class="step-item ">배송중</li>
+                      <li class="step-item">배송 완료</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card card-md">
+            <div class="card-body">
+              <h3 class="card-title fs-2">결제 정보</h3>
+              <div class="mt-2 m-auto">
+                <div>
+                  <span class="fs-3 fw-normal">결제 필요 금액 : </span>
+                  <span class="fs-3 fw-bolder">구현필요</span>
+                </div>
+                <a href="#" class="btn btn-outline-danger w-100 fs-4"
+                   onclick="processPayment(this)">
+                  다시 결제 하기
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="mt-2 m-auto">
+            <a href="#" class="btn btn-outline-primary w-100" onclick="processPayment(this)">
+              주문 상세 보기
+            </a>
+          </div>
+          <div class="mt-2 m-auto">
+            <a href="#" class="btn btn-outline-primary w-100" onclick="processPayment(this)">
+              홈으로 가기
+            </a>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+
+  </div>
+
+  <!-- TODO 4 : footer -->
+  <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
+</div>
+</body>
+</html>

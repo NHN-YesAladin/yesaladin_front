@@ -65,16 +65,16 @@ public class PaymentController {
      */
     @RequestMapping("/fail")
     public String failPayment(
-            @RequestParam String message,
-            @RequestParam String code,
+            @RequestParam(required = false) String message,
+            @RequestParam(required = false) String code,
             Model model
     ) {
         //TODO 결제 실패시 정책 수립 후 화면 꾸미기
         model.addAttribute("message", message);
         model.addAttribute("code", code);
 
-        log.error("{} / {}", code, message);
-        return "main/order/fail";
+        log.info("{} / {}", code, message);
+        return "main/order/order-fail";
     }
 
 }
