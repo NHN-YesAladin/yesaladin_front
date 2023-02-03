@@ -11,7 +11,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 import shop.yesaladin.common.dto.ResponseDto;
-import shop.yesaladin.front.config.GatewayConfig;
 import shop.yesaladin.front.writing.dto.SearchedAuthorResponseDto;
 import shop.yesaladin.front.writing.service.inter.SearchAuthorService;
 
@@ -30,7 +29,7 @@ public class SearchAuthorServiceImpl implements SearchAuthorService {
     private final RestTemplate restTemplate;
     @Value("${yesaladin.gateway.shop}")
     private String url;
-    private static final String PATH = "/shop/v1/search/authors";
+    private static final String PATH = "/v1/search/authors";
 
 
     /**

@@ -2,7 +2,6 @@ package shop.yesaladin.front.category.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -26,9 +25,9 @@ import shop.yesaladin.front.config.GatewayConfig;
 @Service
 public class SearchCategoryServiceImpl implements SearchCategoryService {
 
+    private static final String PATH = "/v1/search/categories";
     private final RestTemplate restTemplate;
     private final GatewayConfig gatewayConfig;
-    private static final String PATH = "/shop/v1/search/categories";
 
     /**
      * {@inheritDoc}
@@ -42,11 +41,13 @@ public class SearchCategoryServiceImpl implements SearchCategoryService {
                 .queryParam("size", size)
                 .build();
         ResponseEntity<ResponseDto<SearchedCategoryResponseDto>> result =
-                restTemplate.exchange(uriComponents.toUriString(),
+                restTemplate.exchange(
+                        uriComponents.toUriString(),
                         HttpMethod.GET,
                         null,
                         new ParameterizedTypeReference<ResponseDto<SearchedCategoryResponseDto>>() {
-                        });
+                        }
+                );
         return result.getBody().getData();
     }
 }

@@ -122,6 +122,10 @@
   function changeOrderUp() {
     const upButton = document.querySelector('#order-up');
     upButton.addEventListener("click", () => {
+      if ( activeCategoryOrder == 1) {
+        alert("가장 첫번째 요소입니다.");
+        return;
+      }
       let orderIdx = parseInt(activeCategoryOrder);
       let present;
       let prev;
@@ -134,21 +138,16 @@
         present = childCategories[orderIdx];
         prev = childCategories[orderIdx - 1];
       }
-      if (present.order == 1) {
-        alert("가장 첫번째 요소입니다.");
-        return;
-      }
+
 
       //UI 변경
       const itemPrev = document.getElementById(`${prev.id}`);
       const itemPresent = document.getElementById(`${present.id}`);
       itemPrev.textContent = present.name;
       itemPrev.id = present.id;
-      itemPrev.dataset['categoryOrder'] = present.order;
 
       itemPresent.textContent = prev.name;
       itemPresent.id = prev.id;
-      itemPresent.dataset['categoryOrder'] = prev.order;
 
       //JS 동작을 위해 딕셔녀리 순서 변경 및 active 초기화
       initActiveChildCategory();
@@ -165,8 +164,6 @@
       //순서 변경
       [present.order, prev.order] = [prev.order, present.order];
       activeCategoryOrder = present.order;
-
-
     });
   }
 
@@ -181,7 +178,7 @@
       if (isParent) {
         present = tempParentCategories[orderIdx];
         next = tempParentCategories[orderIdx + 1];
-        if (present.order == Object.keys(tempParentCategories).length) {
+        if ( activeCategoryOrder == Object.keys(tempParentCategories).length) {
           alert("가장 마지막 요소입니다.");
           return;
         }
@@ -189,7 +186,7 @@
         present = childCategories[orderIdx];
         next = childCategories[orderIdx + 1];
 
-        if (present.order == Object.keys(childCategories).length) {
+        if ( activeCategoryOrder == Object.keys(childCategories).length) {
           alert("가장 마지막 요소입니다.");
           return;
         }
@@ -200,11 +197,9 @@
       const itemPresent = document.getElementById(`${present.id}`);
       itemNext.textContent = present.name;
       itemNext.id = present.id;
-      itemNext.dataset['categoryOrder'] = present.order;
 
       itemPresent.textContent = next.name;
       itemPresent.id = next.id;
-      itemPresent.dataset['categoryOrder'] = next.order;
 
       //JS 동작을 위해 딕셔녀리 순서 변경 및 active 초기화
       if (isParent) {
@@ -221,7 +216,6 @@
       //순서 변경
       [present.order, next.order] = [next.order, present.order];
       activeCategoryOrder = present.order;
-
     });
   }
 
@@ -298,7 +292,6 @@
       item.id = c.id;
       item.dataset['categoryOrder'] = c.order;
       childrenCategoryGroup.appendChild(item);
-
       childCategories[c.order] = c;
     })
     addEventListenerToChildCategoryItems();

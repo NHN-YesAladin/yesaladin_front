@@ -10,7 +10,6 @@ import shop.yesaladin.front.config.GatewayConfig;
 import shop.yesaladin.front.member.dto.MemberGradeQueryResponseDto;
 import shop.yesaladin.front.member.dto.MemberProfileExistResponseDto;
 import shop.yesaladin.front.member.dto.MemberQueryResponseDto;
-import shop.yesaladin.front.member.dto.MemberResponse;
 import shop.yesaladin.front.member.service.inter.QueryMemberService;
 
 /**

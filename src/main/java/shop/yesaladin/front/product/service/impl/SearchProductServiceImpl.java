@@ -3,10 +3,14 @@ package shop.yesaladin.front.product.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
+import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.product.dto.SearchProductRequestDto;
 import shop.yesaladin.front.product.dto.SearchedProductResponseDto;
 import shop.yesaladin.front.product.service.inter.SearchProductService;
@@ -31,9 +35,12 @@ public class SearchProductServiceImpl implements SearchProductService {
                 .queryParam(OFFSET, requestDto.getOffset() - 1)
                 .queryParam(SIZE, requestDto.getSize())
                 .build();
-        return restTemplate.getForObject(
+        ResponseEntity<ResponseDto<SearchedProductResponseDto>> result = restTemplate.exchange(
                 url.toUriString(),
-                SearchedProductResponseDto.class
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<ResponseDto<SearchedProductResponseDto>>() {}
         );
+        return result.getBody().getData();
     }
 }
