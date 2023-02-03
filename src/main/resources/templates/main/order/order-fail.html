@@ -65,11 +65,11 @@
                 </div>
                 <div>
                   <span class="fs-3 fw-normal">주문번호 : </span>
-                  <!--                                    <span class="fs-3 fw-bolder" th:text="${response.orderNumber}"></span>-->
+                  <span class="fs-3 fw-bolder" th:text="${orderNumber}"></span>
                 </div>
                 <div>
                   <span class="fs-3 fw-normal">주문명 : </span>
-                  <!--                                    <span class="fs-3 fw-bolder" th:text="${response.orderName}">주문 성공!</span>-->
+                  <span class="fs-3 fw-bolder" th:text="${orderName}">주문 성공!</span>
                 </div>
                 <div>
                   <span class="fs-3 fw-normal">배송지 : </span>
@@ -103,7 +103,7 @@
               <div class="mt-2 m-auto">
                 <div>
                   <span class="fs-3 fw-normal">결제 필요 금액 : </span>
-                  <span class="fs-3 fw-bolder">구현필요</span>
+                  <span class="fs-3 fw-bolder" th:text="${amount}">1</span>
                 </div>
                 <a href="#" class="btn btn-outline-danger w-100 fs-4"
                    onclick="processPayment(this)">
