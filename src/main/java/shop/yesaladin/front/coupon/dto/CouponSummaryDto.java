@@ -6,8 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import shop.yesaladin.coupon.trigger.CouponTypeCode;
-import shop.yesaladin.coupon.trigger.TriggerTypeCode;
+import shop.yesaladin.coupon.code.CouponTypeCode;
+import shop.yesaladin.coupon.code.TriggerTypeCode;
 
 /**
  * 쿠폰에 대한 요약 정보를 담기 위해 사용하는 dto 클래스 입니다.
