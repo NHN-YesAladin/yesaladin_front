@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDate;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
@@ -12,6 +13,7 @@ import lombok.NoArgsConstructor;
  * @author 최예린
  * @since 1.0
  */
+@Getter
 @AllArgsConstructor
 public class PeriodQueryRequestDto {
 

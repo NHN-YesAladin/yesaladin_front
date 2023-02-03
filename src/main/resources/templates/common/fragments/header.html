@@ -46,37 +46,32 @@
       <!-- TODO 2 사용자 아이콘
             * 로그인/로그아웃
             * 로그인한 사용자의 이름 또는 아이디 -->
+      <div sec:authorize="!isAuthenticated()" class="float-end my-auto">
+        <a href="/members/login" class="d-inline btn btn-primary">Login</a>
+        <a href="/members/signup" class="d-inline btn btn-outline-primary">SignUp</a>
+      </div>
       <div class="nav-item dropdown">
         <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown"
            aria-label="Open user menu">
           <div class="d-none d-xl-block ps-2">
-            <div sec:authorize="!isAuthenticated()">
-              <span>😁</span>
-            </div>
             <div sec:authorize="isAuthenticated()">
-              <span th:text="${#authentication.name}"></span> Logged In
+              <span th:text="${#authentication.name}"></span> 님 안녕하세요!
             </div>
           </div>
         </a>
         <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-          <div sec:authorize="!isAuthenticated()">
-            <a href="/members/signup" class="dropdown-item">SignUp</a>
-            <a href="/members/login" class="dropdown-item">Login</a>
+          <div sec:authorize="hasRole('ROLE_ADMIN')">
+            <a href="/manager" class="dropdown-item">관리자 페이지</a>
           </div>
-<!--          <div sec:authorize="hasRole('ROLE_USER')">-->
-<!--            <a href="/mypage" class="dropdown-item">마이 페이지</a>-->
-<!--            <a href="/logout" class="dropdown-item">Logout</a>-->
-<!--          </div>-->
-<!--          <div sec:authorize="hasRole('ROLE_ADMIN')">-->
+          <div sec:authorize="hasAnyRole('ROLE_USER', 'ROLE_ADMIN', 'ROLE_AUTHOR')">
+            <a href="/mypage" class="dropdown-item">마이 페이지</a>
+            <a href="/logout" class="dropdown-item">Logout</a>
+          </div>
+<!--          <div>-->
 <!--            <a href="/mypage" class="dropdown-item">마이 페이지</a>-->
 <!--            <a href="/manager" class="dropdown-item">관리자 페이지</a>-->
 <!--            <a href="/logout" class="dropdown-item">Logout</a>-->
 <!--          </div>-->
-          <div>
-            <a href="/mypage" class="dropdown-item">마이 페이지</a>
-            <a href="/manager" class="dropdown-item">관리자 페이지</a>
-            <a href="/logout" class="dropdown-item">Logout</a>
-          </div>
         </div>
       </div>
     </div>

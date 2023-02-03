@@ -44,6 +44,11 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.thymeleaf.extras</groupId>
+            <artifactId>thymeleaf-extras-java8time</artifactId>
+            <version>3.0.4.RELEASE</version>
+        </dependency>
+        <dependency>
             <artifactId>spring-boot-devtools</artifactId>
             <groupId>org.springframework.boot</groupId>
             <optional>true</optional>
@@ -122,12 +127,12 @@
         <dependency>
             <groupId>com.github.NHN-YesAladin</groupId>
             <artifactId>yesaladin_common_utils</artifactId>
-            <version>1.1.1</version>
+            <version>1.3.0</version>
         </dependency>
         <dependency>
             <groupId>com.github.NHN-YesAladin</groupId>
             <artifactId>yesaladin_coupon_utils</artifactId>
-            <version>main-SNAPSHOT</version>
+            <version>1.2.0</version>
         </dependency>
     </dependencies>
     <description>front</description>

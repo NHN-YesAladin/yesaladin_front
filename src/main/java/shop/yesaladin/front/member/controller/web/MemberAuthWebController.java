@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import shop.yesaladin.front.common.exception.ValidationFailedException;
-import shop.yesaladin.front.member.dto.SignUpRequest;
-import shop.yesaladin.front.member.dto.SignUpResponse;
+import shop.yesaladin.front.member.dto.SignUpRequestDto;
+import shop.yesaladin.front.member.dto.SignUpResponseDto;
 import shop.yesaladin.front.member.service.inter.CommandMemberService;
 
 /**
@@ -52,18 +52,16 @@ public class MemberAuthWebController {
      * @since : 1.0
      */
     @PostMapping("/signup")
-    public String signup(@Valid SignUpRequest request, BindingResult bindingResult, Model model) {
+    public String signup(@Valid SignUpRequestDto request, BindingResult bindingResult, Model model) {
         log.info("dto={}", request);
 
         if (bindingResult.hasErrors()) {
             throw new ValidationFailedException(bindingResult);
         }
 
-        SignUpResponse response = commandMemberService.signUp(request);
+        SignUpResponseDto response = commandMemberService.signUp(request);
         log.info("response={}", response);
         model.addAttribute("response", response);
-
-        // TODO: redirect 관련 코드리뷰 반영해야함.
 
         return "auth/signup-success";
     }
