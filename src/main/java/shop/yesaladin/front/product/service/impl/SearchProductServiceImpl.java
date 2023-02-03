@@ -39,7 +39,8 @@ public class SearchProductServiceImpl implements SearchProductService {
                 url.toUriString(),
                 HttpMethod.GET,
                 null,
-                new ParameterizedTypeReference<ResponseDto<SearchedProductResponseDto>>() {}
+                new ParameterizedTypeReference<ResponseDto<SearchedProductResponseDto>>() {
+                }
         );
         return result.getBody().getData();
     }

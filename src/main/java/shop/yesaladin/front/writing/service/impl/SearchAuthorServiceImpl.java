@@ -33,7 +33,7 @@ public class SearchAuthorServiceImpl implements SearchAuthorService {
 
 
     /**
-     *{@inheritDoc}
+     * {@inheritDoc}
      */
     @Override
     public SearchedAuthorResponseDto searchAuthorByName(String name, int offset, int size) {

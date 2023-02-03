@@ -42,8 +42,8 @@
   <!-- TODO 3: BODY -->
   <div class="page-body">
     <div class="container">
-      <form class="card product-form" action="/products/${id}" method="put"
-            enctype="multipart/form-data">
+      <form class="card product-form" th:action="|/products/${productId}|" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="_method" value="put"/>
 
         <div class="card-header">
           <div class="card-title">
@@ -56,24 +56,22 @@
           <div class="mb-3 row divide-x">
             <div class="col-3">
               <div class="form-label">기존 썸네일 파일</div>
-              <img th:src="${productModifyDto.getThumbnailFile()}"/>
+              <img th:src="${productModifyInitDto.getThumbnailFile()}"/>
             </div>
             <div class="col-9">
               <label class="form-label">상품 ISBN</label>
-              <input type="text" class="form-control" id="isbn" name="isbn" placeholder="ISBN..."
-                     maxlength="13" pattern="([0-9]{13})" th:value="${productModifyDto.getIsbn()}" required>
-              <div class="invalid-feedback">'-'을 제외한 13자리 ISBN을 입력해주세요.</div>
+              <p th:text="${productModifyInitDto.getIsbn()}"></p>
 
               <div class="mb-3">
                 <label class="form-label m-2">제목</label>
                 <input type="text" class="form-control" id="title" name="title" placeholder="Title..."
-                       minlength="1" maxlength="255" pattern="^.*(?=.*[가-힣a-z]).*$" th:value="${productModifyDto.getTitle()}" required>
+                       minlength="1" maxlength="255" pattern="^.*(?=.*[가-힣a-z]).*$" th:value="${productModifyInitDto.getTitle()}" required>
                 <div class="invalid-feedback">1자 이상 255자 이하의 제목을 입력해주세요.</div>
               </div>
 
               <div class="form-label m-2 rounded-2">변경 썸네일</div>
               <input type="file" name="thumbnailFile" class="form-control"
-                     accept="image/bmp, image/tiff, image/gif, image/jpeg, image/png" required>
+                     accept="image/bmp, image/tiff, image/gif, image/jpeg, image/png">
               <div class="invalid-feedback">썸네일 파일을 첨부해주세요.</div>
             </div>
           </div>
@@ -81,17 +79,17 @@
           <div class="mb-3">
             <label class="form-label">목차</label>
             <textarea class="form-control" id="contents" name="contents" rows="6" minlength="1"
-                      pattern="^.*(?=.*[가-힣a-z]).*$" th:text="${productModifyDto.getContents()}" required></textarea>
+                      pattern="^.*(?=.*[가-힣a-z]).*$" th:text="${productModifyInitDto.getContents()}" required></textarea>
             <div class="invalid-feedback">1자 이상의 제목을 입력해주세요.</div>
           </div>
           <div class="mb-3">
             <label class="form-label">설명</label>
             <div id="editor"></div>
-            <input type="hidden" id="description" name="description" th:value="${productModifyDto.getDescription()}">
+            <input type="hidden" id="description" name="description" th:value="${productModifyInitDto.getDescription()}">
           </div>
 
           <div class="mb-3">
-            <div class="form-label">E-book 파일 <a th:href="${productModifyDto.getEbookFile()}" th:if="${productModifyDto.getEbookFile() != null}">[기존의 E-book 파일]</a></div>
+            <div class="form-label">E-book 파일 <a th:href="${productModifyInitDto.getEbookFile()}" th:if="${productModifyInitDto.getEbookFile() != null}">[기존의 E-book 파일]</a></div>
             <input type="file" name="ebookFile" class="form-control"
                    accept="application/epub+zip, application/pdf, application/vnd.comicbook+zip">
           </div>
@@ -115,9 +113,23 @@
           </div>
           <div class="mb-1">
             <label class="form-label text-success">선택한 카테고리</label>
-            <table id="selected-category-view-table" class="table" style="table-layout: fixed"></table>
+            <table id="selected-category-view-table" class="table" style="table-layout: fixed">
+              <tbody>
+                <tr th:each="category : ${productModifyInitDto.getCategories()}" th:id="|view-category-${category.id}|">
+                  <td th:text="${category.parentName} + ' >> ' + ${category.name}"></td>
+                  <td th:id="${category.id}">
+                    <button class="btn btn-primary btn-xs my-xs-btn" type="button" th:onclick="|initDataDelete('category', ${category.id})|">
+                      <span class="glyphicon glyphicon-pencil"></span>삭제</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-          <div id="selected-category-checkbox-list" style="display: none"></div>
+          <div id="selected-category-checkbox-list" style="display: none">
+            <input th:each="category : ${productModifyInitDto.getCategories()}" th:id="|checkbox-category-${category.id}|"
+                   name="categories" type="checkbox" th:value="${category.id}" readonly checked>
+          </div>
+
           <div class="mb-3">
             <label class="form-label">저자 검색</label>
             <div class="row g-2">
@@ -135,9 +147,24 @@
           <table class="table" id="searched-author-table" style="table-layout: fixed"></table>
           <div class="mt-1 mb-1">
             <label class="form-label text-success">선택한 저자</label>
-            <table id="selected-author-table" class="table" style="table-layout: fixed"></table>
+            <table id="selected-author-table" class="table" style="table-layout: fixed">
+              <tbody>
+              <tr th:each="author : ${productModifyInitDto.getAuthors()}" th:id="|view-author-${author.id}|">
+                <td th:text="|name: ${author.name}|"></td>
+                <td th:if="${author.loginId} != null" th:text="|loginId: ${author.loginId}|"></td>
+                <td th:id="${author.id}">
+                  <button class="btn btn-primary btn-xs my-xs-btn" type="button" th:onclick="|initDataDelete('author' ,${author.id})|">
+                    <span class="glyphicon glyphicon-pencil"></span>삭제</button>
+                </td>
+              </tr>
+              </tbody>
+            </table>
           </div>
-          <div id="selected-authors-checkbox" style="display:none;"></div>
+          <div id="selected-authors-checkbox" style="display:none;">
+            <input th:each="author : ${productModifyInitDto.getAuthors()}" th:id="|checkbox-author-${author.id}|"
+                   name="authors" type="number" th:value="${author.id}" readonly >
+          </div>
+
           <div class="mb-3">
             <label class="form-label">출판사 검색</label>
             <div class="row g-2">
@@ -157,9 +184,22 @@
           </div>
           <div class="mb-3">
             <label class="form-label text-success">선택한 출판사</label>
-            <table id="selected-publisher-table" class="table" style="table-layout: fixed"></table>
+            <table id="selected-publisher-table" class="table" style="table-layout: fixed">
+              <tbody>
+              <tr th:id="|view-publisher-${productModifyInitDto.getPublisher().id}|">
+                <td th:text="|${productModifyInitDto.getPublisher().name}|"></td>
+                <td th:id="${productModifyInitDto.getPublisher().id}">
+                  <button class="btn btn-primary btn-xs my-xs-btn" type="button" th:onclick="|initDataDelete('publisher', ${productModifyInitDto.getPublisher().id})|">
+                    <span class="glyphicon glyphicon-pencil"></span>삭제</button>
+                </td>
+              </tr>
+              </tbody>
+            </table>
           </div>
-          <div id="selected-publisher-checkbox" style="display: none"></div>
+          <div id="selected-publisher-checkbox" style="display: none">
+            <input th:id="|checkbox-publisher-${productModifyInitDto.getPublisher().id}|"
+                   name="publisher" type="checkbox" th:value="${productModifyInitDto.getPublisher().id}" readonly checked>
+          </div>
 
           <div class="mb-3">
             <label class="form-label">출판일</label>
@@ -179,7 +219,7 @@
                           x1="12" y1="15" x2="12" y2="18"></line></svg>
                 </span>
               <input type="date" class="form-control" name="publishedDate"
-                     id="datepicker-icon-prepend" th:value="${productModifyDto.getPublishedDate()}" required>
+                     id="datepicker-icon-prepend" th:value="${productModifyInitDto.getPublishedDate()}" required>
             </div>
           </div>
 
@@ -188,7 +228,8 @@
             <select type="text" class="form-select tomselected ts-hidden-accessible"
                     name="productTypeCode" id="select-type" tabindex="-1" required>
               <option value="">-- Select Product Type --</option>
-              <option th:each="type : ${types}" th:value="${type.getType()}" th:utext="${type.getKoName()}"></option>
+              <option th:each="type : ${productTypeResponseDtoList}" th:value="${type.getType()}"
+                      th:utext="${type.getKoName()}" th:selected="${type.getType() == productModifyInitDto.getProductTypeCode()}"></option>
             </select>
           </div>
 
@@ -207,53 +248,68 @@
             </div>
             <table id="searched-tag-table" class="table" style="table-layout: fixed"></table>
             <label class="form-label text-success">선택한 태그</label>
-            <table id="selected-tag-table" class="table" style="table-layout: fixed"></table>
-            <div id="selected-tags-checkbox" style="display: none"></div>
+            <table id="selected-tag-table" class="table" style="table-layout: fixed">
+              <tbody>
+                <tr th:each="tag : ${productModifyInitDto.getTags()}" th:id="|view-tag-${tag.id}|">
+                  <td th:text="|${tag.name}|"></td>
+                  <td th:id="${tag.id}">
+                    <button class="btn btn-primary btn-xs my-xs-btn" type="button" th:onclick="|initDataDelete('tag' ,${tag.id})|">
+                      <span class="glyphicon glyphicon-pencil"></span>삭제</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div id="selected-tags-checkbox" style="display: none">
+              <input th:each="tag : ${productModifyInitDto.getTags()}" th:id="|checkbox-tag-${tag.id}|"
+                     name="tags" type="checkbox" th:value="${tag.id}" readonly checked>
+            </div>
           </div>
 
           <div class="mb-3">
             <label class="form-label">정가</label>
             <input type="text" class="form-control" name="actualPrice" placeholder="Actual Price..."
-                   min="1" pattern="([0-9]{1,})" th:value="${productModifyDto.getActualPrice()}" required>
+                   min="1" pattern="([0-9]{1,})" th:value="${productModifyInitDto.getActualPrice()}" required>
             <div class="invalid-feedback">정가를 숫자로 올바르게 입력해주세요.</div>
             <br/>
             <label class="form-check form-switch">
-              <input class="form-check-input" name="isSeparatelyDiscount" value="false"
+              <input class="form-check-input" name="isSeparatelyDiscount" th:value="${productModifyInitDto.isSeparatelyDiscount}"
                      id="check-price"
                      type="checkbox"
+                     th:checked="${productModifyInitDto.isSeparatelyDiscount}"
                      onclick="changeDisplay('discount-info'); changeValue('check-price');">
               <span class="form-check-label">개별 할인 적용</span>
             </label>
-            <div id="discount-info" style="display: none;">
+            <div id="discount-info" th:style="${productModifyInitDto.isSeparatelyDiscount ? '' : 'display: none;'}">
               <div class="mb-3">
                 <label class="form-label">할인율</label>
                 <input type="text" class="form-control" id="discountRate" name="discountRate"
-                       placeholder="Discount Rate..." th:value="${productModifyDto.getDiscountRate()}">
+                       placeholder="Discount Rate..." th:value="${productModifyInitDto.getDiscountRate()}">
               </div>
             </div>
             <label class="form-check form-switch">
-              <input class="form-check-input" name="isGivenPoint" value="false" id="check-point"
+              <input class="form-check-input" name="isGivenPoint" th:value="${productModifyInitDto.isGivenPoint}" id="check-point"
                      type="checkbox"
+                     th:checked="${productModifyInitDto.isGivenPoint}"
                      onclick="changeDisplay('point-info'); changeValue('check-point');">
               <span class="form-check-label">포인트 적립 적용</span>
             </label>
-            <div id="point-info" style="display: none;">
+            <div id="point-info" th:style="${productModifyInitDto.isGivenPoint ? '' : 'display: none;'}">
               <div class="mb-3">
                 <label class="form-label">포인트 적립율</label>
                 <input type="text" class="form-control" id="givenPointRate" name="givenPointRate"
-                       placeholder="Given Point Rate..." th:value="${productModifyDto.getGivenPointRate()}">
+                       placeholder="Given Point Rate..." th:value="${productModifyInitDto.getGivenPointRate()}">
               </div>
               <div class="mb-3">
                 <div class="form-label">포인트 적립 방식</div>
                 <div>
                   <label class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="productSavingMethodCode"
-                           value="ACTUAL_PURCHASE_PRICE" checked>
+                           value="ACTUAL_PURCHASE_PRICE" th:checked="${'ACTUAL_PURCHASE_PRICE' == productModifyInitDto.getProductSavingMethodCode()}">
                     <span class="form-check-label">실구매가</span>
                   </label>
                   <label class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="productSavingMethodCode"
-                           value="SELLING_PRICE">
+                           value="SELLING_PRICE" th:checked="${'SELLING_PRICE' == productModifyInitDto.getProductSavingMethodCode()}">
                     <span class="form-check-label">판매가</span>
                   </label>
                 </div>
@@ -263,17 +319,18 @@
 
           <div class="mb-3">
             <label class="form-check form-switch">
-              <input class="form-check-input" name="isSubscriptionAvailable" value="false"
+              <input class="form-check-input" name="isSubscriptionAvailable" th:value="${productModifyInitDto.isSubscriptionAvailable}"
                      id="check-subscribe"
                      type="checkbox"
+                     th:checked="${productModifyInitDto.isSubscriptionAvailable}"
                      onclick="changeDisplay('subscribe-info'); changeValue('check-subscribe');">
               <span class="form-check-label">구독 적용</span>
             </label>
-            <div id="subscribe-info" style="display: none;">
+            <div id="subscribe-info" th:style="${productModifyInitDto.isSubscriptionAvailable ? '' : 'display: none;'}">
               <div class="mb-3">
                 <label class="form-label">구독 상품 ISSN</label>
                 <input type="text" class="form-control" id='issn' name="issn" placeholder="ISSN..."
-                       maxlength="8" th:value="${productModifyDto.getIssn()}">
+                       maxlength="8" th:value="${productModifyInitDto.getIssn()}">
                 <div class="invalid-feedback">'-'을 제외한 8자리 ISSN을 입력해주세요.</div>
               </div>
             </div>
@@ -282,14 +339,14 @@
           <div class="mb-3">
             <label class="form-label">수량</label>
             <input type="text" class="form-control" id="quantity" name="quantity"
-                   placeholder="Quantity..." pattern="([0-9]{1,})" th:value="${productModifyDto.getQuantity()}" required>
+                   placeholder="Quantity..." pattern="([0-9]{1,})" th:value="${productModifyInitDto.getQuantity()}" required>
             <div class="invalid-feedback">수량을 입력해주세요.</div>
           </div>
 
           <div class="mb-3">
             <label class="form-label">노출 우선 순위</label>
             <input type="text" class="form-control" id="preferentialShowRanking"
-                   name="preferentialShowRanking" th:value="${productModifyDto.getPreferentialShowRanking()}"
+                   name="preferentialShowRanking" th:value="${productModifyInitDto.getPreferentialShowRanking()}"
                    placeholder="Show Ranking..." required>
             <div class="invalid-feedback">노출 우선 순위를 입력해주세요.</div>
           </div>
@@ -309,6 +366,15 @@
 </div>
 <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
 <div class="d-none" id="front-server-url" th:text="${@environment.getProperty('yesaladin.front.url')}"></div>
+<script>
+  function initDataDelete(domain, id) {
+    const view = document.getElementById('view-' + domain + '-' + id);
+    const checkbox = document.getElementById('checkbox-' + domain + '-' + id);
+
+    view.remove();
+    checkbox.remove();
+  }
+</script>
 <script>
   function changeDisplay(target) {
     let element = document.getElementById(target);
@@ -362,8 +428,7 @@
               window.alert(err);
             });
   });
-</script>
-<script>
+
   window.addEventListener('load', () => {
     const productForm = document.getElementsByClassName('product-form');
 
@@ -379,13 +444,6 @@
         if (productForm.checkValidity() === false) {
           event.preventDefault();
           event.stopPropagation();
-        }
-
-        let isbnVal = document.getElementById('isbn').value;
-        if (!isbnRegex.test(isbnVal) || emptyRegex.test(isbnVal)) {
-          alert('ISBN을 - 없이 13자 입력해주세요.');
-          event.preventDefault();
-          return false;
         }
 
         document.querySelector('#description').setAttribute('value', editor.getHTML());
@@ -485,14 +543,15 @@
               deleteButton.innerHTML = '<button class="btn btn-primary btn-xs my-xs-btn" type="button">'
                       + '<span class="glyphicon glyphicon-pencil"></span>삭제</button>';
               deleteButton.id = id;
+
+
               const createSelectedCategory = document.createElement('input');
               createSelectedCategory.name = "categories"
               createSelectedCategory.setAttribute('type', 'checkbox');
               createSelectedCategory.value = id;
               createSelectedCategory.checked = true;
               createSelectedCategory.readOnly = true;
-              document.getElementById('selected-category-checkbox-list').appendChild(
-                      createSelectedCategory)
+              document.getElementById('selected-category-checkbox-list').appendChild(createSelectedCategory);
               deleteButton.addEventListener('click', (e) => {
                 selectedCategoryViewRow.remove()
                 createSelectedCategory.remove()

@@ -135,7 +135,8 @@ public class ProductMainWebController {
                 Map.entry("issn", response.getIssn()),
                 Map.entry("contents", response.getContents()),
                 Map.entry("description", response.getDescription()),
-                Map.entry("onSale", onSale)
+                Map.entry("onSale", onSale),
+                Map.entry("categories", response.getCategories())
         );
     }
 }

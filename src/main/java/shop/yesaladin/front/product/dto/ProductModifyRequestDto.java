@@ -4,15 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import shop.yesaladin.front.category.dto.CategoryResponseDto;
-import shop.yesaladin.front.publish.dto.PublishersResponseDto;
-import shop.yesaladin.front.tag.dto.TagsResponseDto;
-import shop.yesaladin.front.writing.dto.AuthorsResponseDto;
+import org.springframework.web.multipart.MultipartFile;
+import shop.yesaladin.front.file.dto.FileUploadResponseDto;
 
 import java.util.List;
 
 /**
- * 상품 수정 View에 들어갈 정보를 받아오기 위한 Dto 입니다.
+ * 사용자가 요청한 상품 등록 정보를 받아오기 위한 Dto 입니다.
  *
  * @author 이수정
  * @since 1.0
@@ -21,13 +19,10 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductModifyDto {
-
-    // 상품 ISBN
-    private String isbn;
+public class ProductModifyRequestDto {
 
     // 상품 썸네일 파일
-    private String thumbnailFile;
+    private MultipartFile thumbnailFile;
 
     // 상품 기본 설명 부분
     private String title;
@@ -35,35 +30,35 @@ public class ProductModifyDto {
     private String description;
 
     // e-book 파일
-    private String ebookFile;
+    private MultipartFile ebookFile;
 
     // 저자
-    private List<AuthorsResponseDto> authors;
+    private List<Long> authors;
 
     // 출판사
-    private PublishersResponseDto publisher;
+    private long publisher;
     private String publishedDate;
 
     // 상품 유형
     private String productTypeCode;
 
     // 상품 태그
-    private List<TagsResponseDto> tags;
+    private List<Long> tags;
 
     // 정가
     private long actualPrice;
 
     // 개별 할인
-    private Boolean isSeparatelyDiscount;
+    private String isSeparatelyDiscount;
     private int discountRate;
 
     // 포인트 적립
-    private Boolean isGivenPoint;
+    private String isGivenPoint;
     private int givenPointRate;
     private String productSavingMethodCode;
 
     // 구독
-    private Boolean isSubscriptionAvailable;
+    private String isSubscriptionAvailable;
     private String issn;
 
     // 수량
@@ -73,12 +68,11 @@ public class ProductModifyDto {
     private int preferentialShowRanking;
 
     // 카테고리
-    private List<CategoryResponseDto> categories;
+    private List<Long> categories;
 
     @Override
     public String toString() {
-        return "ProductModifyDto{" +
-                "isbn='" + isbn + '\'' +
+        return "ProductModifyRequestDto{" +
                 ", thumbnailFile=" + thumbnailFile +
                 ", title='" + title + '\'' +
                 ", contents='" + contents + '\'' +
@@ -101,5 +95,40 @@ public class ProductModifyDto {
                 ", preferentialShowRanking=" + preferentialShowRanking +
                 ", categories=" + categories +
                 '}';
+    }
+
+    public ProductUpdateDto getProductUpdateDto(
+            FileUploadResponseDto thumbnailFileResponse,
+            FileUploadResponseDto ebookFileResponse
+    ) {
+        return new ProductUpdateDto(
+                title,
+                contents,
+                description,
+                authors,
+                publisher,
+                actualPrice,
+                discountRate,
+                changeStringToBoolean(isSeparatelyDiscount),
+                givenPointRate,
+                changeStringToBoolean(isGivenPoint),
+                issn,
+                changeStringToBoolean(isSubscriptionAvailable),
+                quantity,
+                publishedDate,
+                preferentialShowRanking,
+                thumbnailFileResponse.getUrl(),
+                thumbnailFileResponse.getFileUploadDateTime(),
+                ebookFileResponse.getUrl(),
+                ebookFileResponse.getFileUploadDateTime(),
+                productTypeCode,
+                productSavingMethodCode,
+                tags,
+                categories
+        );
+    }
+
+    private boolean changeStringToBoolean(String target) {
+        return target != null;
     }
 }

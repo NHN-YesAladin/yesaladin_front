@@ -13,9 +13,9 @@ public interface SearchTagService {
     /**
      * 이름으로 저자를 검색하는 메서드
      *
-     * @param name 검색할 저자의 이름
+     * @param name   검색할 저자의 이름
      * @param offset 페이지 위치
-     * @param size 데이터 갯수
+     * @param size   데이터 갯수
      * @return 조회된 저자 리스트
      * @author : 김선홍
      * @since : 1.0

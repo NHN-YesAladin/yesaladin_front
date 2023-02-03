@@ -7,15 +7,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import shop.yesaladin.front.common.dto.PageRequestDto;
 import shop.yesaladin.front.common.dto.PaginatedResponseDto;
-import shop.yesaladin.front.product.dto.ProductCreateRequestDto;
-import shop.yesaladin.front.product.dto.ProductModifyDto;
-import shop.yesaladin.front.product.dto.ProductsResponseDto;
+import shop.yesaladin.front.product.dto.*;
 import shop.yesaladin.front.product.service.inter.CommandProductService;
 import shop.yesaladin.front.product.service.inter.QueryProductService;
 import shop.yesaladin.front.product.service.inter.QueryProductTypeService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -44,62 +43,69 @@ public class ProductManagerWebController {
      * @since 1.0
      */
     @GetMapping("/products/form")
-    public String productForm() {
+    public String productForm(Model model) {
+        List<ProductTypeResponseDto> types = queryProductTypeService.findAll();
+
+        model.addAttribute(types);
+
         return "manager/product/productForm";
     }
 
     /**
      * [POST /products] 상품을 등록합니다.
      *
-     * @param productResponseDto 상품의 수정할 정보를 담고 있는 Dto
+     * @param createRequestDto 상품의 수정할 정보를 담고 있는 Dto
      * @return 등록된 상품의 상세 페이지
      * @author 이수정
      * @since 1.0
      */
     @PostMapping("/products")
-    public String register(@ModelAttribute ProductCreateRequestDto productResponseDto)
+    public String register(@ModelAttribute ProductCreateRequestDto createRequestDto)
             throws IOException {
-        long id = commandProductService.register(productResponseDto);
+        long id = commandProductService.register(createRequestDto);
 
-        return "redirect:/products/" + id;
+        return "redirect:/manager/products";
     }
 
     /**
      * [GET /manager/products/{productId}] 상품 수정 form view를 반환합니다.
      *
      * @param productId 수정할 상품의
-     * @param model 뷰로 데이터 전달
+     * @param model     뷰로 데이터 전달
      * @return 상품 수정 form
      * @author 이수정
      * @since 1.0
      */
     @GetMapping("/manager/products/{productId}")
     public String productModifyForm(@PathVariable String productId, Model model) {
-        ProductModifyDto modifyDto = queryProductService.getProductForForm(productId);
+        ProductModifyInitDto modifyDto = queryProductService.getProductForForm(productId);
+        List<ProductTypeResponseDto> types = queryProductTypeService.findAll();
 
         model.addAttribute(modifyDto);
+        model.addAttribute(types);
+        model.addAttribute(productId);
 
-        return "/manager/product/productModifyForm";
+        return "manager/product/productModifyForm";
     }
 
-//    /**
-//     * [PUT /products/{productId}] 특정 상품을 수정합니다.
-//     *
-//     * @param productResponseDto 상품의 수정할 정보를 담고 있는 Dto
-//     * @param productId 수정할 상품의 Id
-//     * @return 수정된 상품의 상세 페이지
-//     * @author 이수정
-//     * @since 1.0
-//     */
-//    @PutMapping("/products/{productId}")
-//    public String modify(
-//            @ModelAttribute ProductResponseDto productResponseDto,
-//            @PathVariable long productId
-//    ) {
-//        commandProductService.modify(productResponseDto, productId);
-//
-//        return "redirect:/products/" + productId;
-//    }
+    /**
+     * [PUT /products/{productId}] 특정 상품을 수정합니다.
+     *
+     * @param modifyRequestDto 상품의 수정할 정보를 담고 있는 Dto
+     * @param productId        수정할 상품의 Id
+     * @return 수정된 상품의 상세 페이지
+     * @author 이수정
+     * @since 1.0
+     */
+    @PutMapping("/products/{productId}")
+    public String modify(
+            @ModelAttribute ProductModifyRequestDto modifyRequestDto,
+            @PathVariable long productId
+    ) throws IOException {
+        commandProductService.modify(modifyRequestDto, productId);
+
+        return "redirect:/manager/products";
+    }
 
     /**
      * [DELETE /products/{productId}] 특정 상품을 삭제합니다.

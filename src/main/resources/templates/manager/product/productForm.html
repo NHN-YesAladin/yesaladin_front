@@ -42,7 +42,7 @@
   <!-- TODO 3: BODY -->
   <div class="page-body">
     <div class="container">
-      <form class="card product-form" th:action="/products" method="post"
+      <form class="card product-form" action="/products" method="post"
             enctype="multipart/form-data">
 
         <div class="card-header">
@@ -183,7 +183,7 @@
             <select type="text" class="form-select tomselected ts-hidden-accessible"
                     name="productTypeCode" id="select-type" tabindex="-1" required>
               <option value="">-- Select Product Type --</option>
-              <option th:each="type : ${types}" th:value="${type.getType()}" th:utext="${type.getKoName()}"></option>
+              <option th:each="type : ${productTypeResponseDtoList}" th:value="${type.getType()}" th:utext="${type.getKoName()}"></option>
             </select>
           </div>
 
@@ -442,6 +442,8 @@
 
     });
   }, false);
+  </script>
+<script>
 
   const selectedCategoryList = document.getElementsByName('categories')
   const selectedViewCategoryTable = document.getElementById('selected-category-view-table')

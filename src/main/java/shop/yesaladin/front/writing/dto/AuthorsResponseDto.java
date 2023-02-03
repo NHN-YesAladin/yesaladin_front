@@ -3,7 +3,6 @@ package shop.yesaladin.front.writing.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 /**
  * 저자 전체 조회를 하여 Dto로 반환합니다.

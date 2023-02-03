@@ -8,25 +8,18 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-import shop.yesaladin.front.category.dto.CategoryResponseDto;
 import shop.yesaladin.front.common.dto.PageRequestDto;
 import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.product.dto.ProductDetailResponseDto;
-import shop.yesaladin.front.product.dto.ProductModifyDto;
-import shop.yesaladin.front.product.dto.ProductTypeResponseDto;
+import shop.yesaladin.front.product.dto.ProductModifyInitDto;
 import shop.yesaladin.front.product.dto.ProductsResponseDto;
 import shop.yesaladin.front.product.service.inter.QueryProductService;
 import shop.yesaladin.front.product.service.inter.QueryProductTypeService;
-import shop.yesaladin.front.publish.dto.PublisherResponseDto;
 import shop.yesaladin.front.publish.service.inter.QueryPublisherService;
-import shop.yesaladin.front.tag.dto.TagResponseDto;
 import shop.yesaladin.front.tag.service.inter.QueryTagService;
-import shop.yesaladin.front.writing.dto.AuthorResponseDto;
 import shop.yesaladin.front.writing.service.inter.QueryAuthorService;
 
 import java.net.URI;
-import java.util.List;
-import java.util.Map;
 
 /**
  * 상품 조회 요청을 위한 service 구현체 입니다.
@@ -135,7 +128,7 @@ public class QueryProductServiceImpl implements QueryProductService {
      * {@inheritDoc}
      */
     @Override
-    public ProductModifyDto getProductForForm(String productId) {
+    public ProductModifyInitDto getProductForForm(String productId) {
         URI uri = UriComponentsBuilder
                 .fromUriString(url)
                 .path(PATH + "/" + productId + "/manager")
@@ -144,11 +137,11 @@ public class QueryProductServiceImpl implements QueryProductService {
                 .toUri();
 
         HttpEntity httpEntity = getHttpEntity();
-        ResponseEntity<ProductModifyDto> responseEntity = restTemplate.exchange(
+        ResponseEntity<ProductModifyInitDto> responseEntity = restTemplate.exchange(
                 uri,
                 HttpMethod.GET,
                 httpEntity,
-                ProductModifyDto.class
+                ProductModifyInitDto.class
         );
         return responseEntity.getBody();
     }

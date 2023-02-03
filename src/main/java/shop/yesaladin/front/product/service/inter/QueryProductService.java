@@ -3,10 +3,8 @@ package shop.yesaladin.front.product.service.inter;
 import shop.yesaladin.front.common.dto.PageRequestDto;
 import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.product.dto.ProductDetailResponseDto;
-import shop.yesaladin.front.product.dto.ProductModifyDto;
+import shop.yesaladin.front.product.dto.ProductModifyInitDto;
 import shop.yesaladin.front.product.dto.ProductsResponseDto;
-
-import java.util.Map;
 
 /**
  * 상품 조회 요청을 위한 Service Interface 입니다.
@@ -33,7 +31,7 @@ public interface QueryProductService {
      * @param typeId         상품 유형 id
      * @return 응답받은 상품 전체 조회 Dto
      * @author 이수정
-     *  @since 1.0
+     * @since 1.0
      */
     PaginatedResponseDto<ProductsResponseDto> findAllForManager(
             PageRequestDto pageRequestDto,
@@ -62,5 +60,5 @@ public interface QueryProductService {
      * @author 이수정
      * @since 1.0
      */
-    ProductModifyDto getProductForForm(String productId);
+    ProductModifyInitDto getProductForForm(String productId);
 }

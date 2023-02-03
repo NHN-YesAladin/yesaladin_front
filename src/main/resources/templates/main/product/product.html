@@ -76,12 +76,12 @@
                         </div>
                         <div class="col-8 divide-y">
                             <div class="col-12 p-2">
-                                <p th:text="|정가 : ${actualPrice}원|"></p>
-                                <p th:text="|판매가(할인율) : ${sellingPrice}원(${discountRate}%)|"></p>
-                                <p th:text="|포인트 적립금(포인트 적립율) : ${pointPrice}원(${pointRate}%)|"></p>
+                                <p th:text="|정가 : ${#numbers.formatInteger(actualPrice, 1, 'COMMA')}원|"></p>
+                                <p th:text="|판매가(할인율) : ${#numbers.formatInteger(sellingPrice, 1, 'COMMA')}원(${discountRate}%)|"></p>
+                                <p th:text="|포인트 적립금(포인트 적립율) : ${#numbers.formatInteger(pointPrice, 1, 'COMMA')}원(${pointRate}%)|"></p>
                             </div>
                             <div class="col-12 p-2">
-                                <p> 배송비 : 3000원 </p>
+                                 배송비 : <p class="d-inline" th:text="${sellingPrice} >= 30000 ? '0' : '3,000'"></p>원
                             </div>
                             <div class="col-12 p-2" th:if="${onSale}">
                                 <div class="row p-1 text-lg-end">
@@ -197,7 +197,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row g-2 p-3">
+                    <div class="row g-2 p-3" id="relation-div">
                         <div>
                         <h2 class="float-start m-1">연관상품</h2>
                         <ul class="pagination float-end m-1">
@@ -235,11 +235,11 @@
                                 <p th:text="|ISSN11 : ${issn}|" name="issn"></p>
                             </div>
                         </div>
-                        <div class="col-12">
+                        <div class="col-12" th:if="${categories.size() != 0}">
                             <h2>카테고리 분류</h2>
-                            <p>카테고리 1</p>
-                            <p>카테고리 2</p>
-                            <p>카테고리 3</p>
+                            <div th:each="category : ${categories}">
+                                <p th:text="${category.parentName} + ' >> ' + ${category.name}"></p>
+                            </div>
                         </div>
                         <div class="col-12">
                             <h2>목차</h2>
@@ -320,17 +320,17 @@
     });
 
     function preRelation() {
-
         let page = parseInt(relationPage.innerText) - 1;
 
         makeRelations(page);
+
         relationPage.innerText = page.toString();
     }
     function postRelation() {
-
         let page = parseInt(relationPage.innerText) + 1;
 
         makeRelations(page);
+
         relationPage.innerText = page.toString();
 
     }
@@ -345,6 +345,10 @@
         })
             .then(res => res.json())
             .then(response => {
+                if (page === 1 && response.dataList.length === 0) {
+                    document.getElementById('relation-div').classList.add('d-none');
+                }
+
                 while (relationTable.firstChild) {
                     relationTable.removeChild(relationTable.firstChild);
                 }
@@ -377,7 +381,7 @@
                     tdMakers.innerText = response.dataList[i].authors + " 저 | " + response.dataList[i].publisher;
 
                     const tdPrice = document.createElement('td');
-                    tdPrice.innerText = response.dataList[i].sellingPrice + "원(" + response.dataList[i].rate + "%)";
+                    tdPrice.innerText = response.dataList[i].sellingPrice.toLocaleString() + "원(" + response.dataList[i].rate + "%)";
                     tdPrice.classList.add('strong');
 
                     tr.append(tdThumbnail, tdTitle, tdMakers, tdPrice);

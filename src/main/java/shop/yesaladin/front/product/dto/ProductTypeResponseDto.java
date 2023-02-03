@@ -3,7 +3,6 @@ package shop.yesaladin.front.product.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 /**
  * 상품 유형 조회를 받아와 저장한 Dto 입니다.
