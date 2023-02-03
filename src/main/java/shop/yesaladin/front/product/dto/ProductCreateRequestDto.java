@@ -73,34 +73,35 @@ public class ProductCreateRequestDto {
     // 판매 여부
     private String isSale;
 
-//    private List<String> categories;
-
+    // 카테고리
+    private List<Long> categories;
 
     @Override
     public String toString() {
-        return "ProductResponseDto{" +
+        return "ProductCreateRequestDto{" +
                 "isbn='" + isbn + '\'' +
-                ", thumbnailFile=" + thumbnailFile.getOriginalFilename() +
+                ", thumbnailFile=" + thumbnailFile +
                 ", title='" + title + '\'' +
                 ", contents='" + contents + '\'' +
                 ", description='" + description + '\'' +
-                ", ebookFile=" + ebookFile.getOriginalFilename() +
+                ", ebookFile=" + ebookFile +
                 ", authors=" + authors +
                 ", publisher=" + publisher +
                 ", publishedDate='" + publishedDate + '\'' +
                 ", productTypeCode='" + productTypeCode + '\'' +
                 ", tags=" + tags +
                 ", actualPrice=" + actualPrice +
-                ", isSeparatelyDiscount=" + isSeparatelyDiscount +
+                ", isSeparatelyDiscount='" + isSeparatelyDiscount + '\'' +
                 ", discountRate=" + discountRate +
-                ", isGivenPoint=" + isGivenPoint +
+                ", isGivenPoint='" + isGivenPoint + '\'' +
                 ", givenPointRate=" + givenPointRate +
                 ", productSavingMethodCode='" + productSavingMethodCode + '\'' +
-                ", isSubscriptionAvailable=" + isSubscriptionAvailable +
+                ", isSubscriptionAvailable='" + isSubscriptionAvailable + '\'' +
                 ", issn='" + issn + '\'' +
                 ", quantity=" + quantity +
                 ", preferentialShowRanking=" + preferentialShowRanking +
-                ", isSale=" + isSale +
+                ", isSale='" + isSale + '\'' +
+                ", categories=" + categories +
                 '}';
     }
 
@@ -132,11 +133,12 @@ public class ProductCreateRequestDto {
                 ebookFileResponse.getFileUploadDateTime(),
                 productTypeCode,
                 productSavingMethodCode,
-                tags
+                tags,
+                categories
         );
     }
 
     private boolean changeStringToBoolean(String target) {
-        return target != null ? true : false;
+        return target != null;
     }
 }

@@ -55,9 +55,7 @@ public class QueryCategoryServiceImpl implements QueryCategoryService {
                 getHttpEntity(),
                 CATEGORIES_LIST_TYPE
         );
-        if (log.isInfoEnabled()) {
-            log.info("body : {}", responseEntity.getBody());
-        }
+
         return responseEntity.getBody();
     }
 
@@ -69,14 +67,10 @@ public class QueryCategoryServiceImpl implements QueryCategoryService {
             PageRequestDto pageRequestDto,
             Long parentId
     ) {
-        log.info("{}", pageRequestDto);
         UriComponents uriComponents = UriComponentsBuilder.fromHttpUrl(
                         gatewayConfig.getShopUrl() + "/v1/categories")
                 .queryParam("parentId", parentId)
-                .queryParam(
-                        "page",
-                        pageRequestDto.getPage() == null ? 0 : pageRequestDto.getPage()
-                )
+                .queryParam("page", pageRequestDto.getPage() == null ? 0 : pageRequestDto.getPage())
                 .queryParam(
                         "size",
                         pageRequestDto.getSize() == null ? 10 : pageRequestDto.getSize()
@@ -89,10 +83,6 @@ public class QueryCategoryServiceImpl implements QueryCategoryService {
                 getHttpEntity(),
                 PAGING_CATEGORIES_TYPE
         );
-
-        if (log.isInfoEnabled()) {
-            log.info("body : {}", responseEntity.getBody().getDataList());
-        }
         return responseEntity.getBody();
     }
 

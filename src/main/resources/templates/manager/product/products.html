@@ -7,7 +7,7 @@
 * Copyright 2018-2022 codecalm.net Paweł Kuna
 * Licensed under MIT (https://github.com/tabler/tabler/blob/master/LICENSE)
 -->
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
@@ -62,7 +62,7 @@
           <div class="col-md-4">
             <select id="select-type" th:name="productType" class="form-select" onchange="selectType(this.value)">
               <option value="">전체</option>
-              <option th:each="type : ${types}" th:value="${type.id}" th:text="${type.type}" th:selected="${type.id == typeId}"></option>
+              <option th:each="type : ${types}" th:value="${type.id}" th:text="${type.getKoName()}" th:selected="${type.id == typeId}"></option>
             </select>
           </div>
         </div>
@@ -97,7 +97,7 @@
                 </td>
                 <td th:text="${product.publisher}"></td>
                 <td th:text="${product.publishedDate}"></td>
-                <td th:text="|${product.sellingPrice}원(${product.discountRate}% 할인)|"></td>
+                <td th:text="|${#numbers.formatInteger(product.sellingPrice, 1, 'COMMA')}원(${product.discountRate}% 할인)|"></td>
 
                 <td class="text-center"><p th:if="${!product.isDeleted}" th:text="${product.quantity}" style="margin: 0"></p></td>
                 <td class="text-center">
