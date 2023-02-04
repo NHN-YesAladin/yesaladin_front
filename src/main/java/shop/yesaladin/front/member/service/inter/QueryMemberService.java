@@ -1,15 +1,21 @@
 package shop.yesaladin.front.member.service.inter;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import java.time.LocalDate;
+import shop.yesaladin.front.member.dto.MemberBlockRequestDto;
+import shop.yesaladin.front.member.dto.MemberBlockResponseDto;
 import shop.yesaladin.front.member.dto.MemberManagerListResponseDto;
 import shop.yesaladin.front.member.dto.MemberManagerResponseDto;
 import shop.yesaladin.front.member.dto.MemberProfileExistResponseDto;
 import shop.yesaladin.front.member.dto.MemberQueryResponseDto;
+import shop.yesaladin.front.member.dto.MemberUnblockResponseDto;
+import shop.yesaladin.front.member.dto.MemberWithdrawResponseDto;
 
 /**
  * 회원 정보 조회용 Service Interface 입니다.
  *
  * @author : 송학현
+ * @author : 김선홍
  * @since : 1.0
  */
 public interface QueryMemberService {
@@ -119,4 +125,36 @@ public interface QueryMemberService {
      * @since 1.0
      */
     MemberManagerListResponseDto manageMemberInfoBySignUpDate(LocalDate signUpDate, int page, int size);
+
+    /**
+     * 관리자가 회원을 차단하는 메서드
+     *
+     * @param loginId 차단할 회원의 loginId
+     * @param blockReason 차단 사유
+     * @return 차단 결과
+     * @author 김선홍
+     * @since 1.0
+     */
+    MemberBlockResponseDto manageMemberBlockByLoginId(String loginId, MemberBlockRequestDto requestDto)
+            throws JsonProcessingException;
+
+    /**
+     * 관리자가 회원의 차단을 해지하는 메서드
+     *
+     * @param loginId 차단 해지할 회원의 메서드
+     * @return 차단 해지 결과
+     * @author 김선홍
+     * @since 1.0
+     */
+    MemberUnblockResponseDto manageMemberUnBlockByLoginId(String loginId);
+
+    /**
+     * 관리자가 회원을 삭제하는 메서드
+     *
+     * @param loginId 삭제할 회원의 loginId
+     * @return 삭제 결과
+     * @author 김선홍
+     * @since 1.0
+     */
+    MemberWithdrawResponseDto manageMemberWithdrawByLoginId(String loginId);
 }

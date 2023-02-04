@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+  <title>Yes Aladin! - 회원 관리자 화면</title>
+  <!-- CSS files -->
+  <link th:href="@{/css/tabler.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-flags.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-payments.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-vendors.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/demo.min.css}" rel="stylesheet"/>
+</head>
+<body>
+<!-- Libs JS -->
+<script type="text/javascript" th:src="@{/libs/apexcharts/dist/apexcharts.min.js}"></script>
+<!-- Tabler Core -->
+<script type="text/javascript" th:src="@{/js/tabler.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/demo.min.js}"></script>
+<div class="wrapper">
+  <div th:replace="~{common/fragments/header :: fragment-header}"></div>
+  <div th:replace="~{manager/fragments/navbar-vertical :: fragment-nav-vertical}"></div>
+  <div class="page-wrapper">
+    <div class="container-lg">
+        <div class="mb-3">
+          <div class="row g-2">
+            <div class="col-auto">
+              <label for="selected"></label>
+              <select id = "selected" class="form-select">
+                <option value="loginid">로그인 아이디</option>
+                <option value="nickname">닉네임</option>
+                <option value="phone">핸드폰 번호</option>
+                <option value="name">이름</option>
+                <option value="signupdate">회원가입날</option>
+              </select>
+            </div>
+              <div class="col">
+                <label for="input"></label>
+                  <input id="input" type="text" class="form-control" placeholder="Search for…" required>
+              </div>
+              <div class="col-auto">
+                <label for="searchButton"></label>
+                <button id="searchButton" type="button" class="btn btn-blue"></button>
+              </div>
+            </div>
+          </div>
+          <div class="mb-3">
+            <table id="searchedMemberTable" class="table">
+              <thead>
+                <tr>
+                  <th>Login ID</th>
+                  <th>NickName</th>
+                  <th>Phone</th>
+                  <th>Name</th>
+                  <th>SignUpDate</th>
+                  <th>Manage</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:each="member : ${memberList}">
+                  <td th:text="${member.loginId}"></td>
+                  <td th:text="${member.nickname}"></td>
+                  <td th:text="${member.phone}"></td>
+                  <td th:text="${member.name}"></td>
+                  <td th:text="${member.signUpDate}"></td>
+                  <td><button th:text="Manage" type="button" class="btn btn-primary" data-bs-toggle="modal" th:attr="data-bs-target='#Modal' + ${memberStat.count}"></button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+      </div>
+  </div>
+  <div th:each="member: ${memberList}">
+    <div class="modal fade" th:id="'Modal' + ${memberStat.count}">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title">차단 현황</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <!-- Modal body -->
+          <div class="modal-body">
+            <div th:if="${member.isBlocked} == true">
+              <label>
+                <input th:id="blockReason + ${member.loginId}" name="blockedReason" class="form-control" th:text="${member.blockedReason}"/>
+              </label>
+              <button th:onclick=""></button>
+          </div>
+            <div th:if="${member.isBlocked} == false">
+              <label class="form-label">Blocked Reason</label>
+              <label>
+                <input th:id="blockReason + ${member.loginId}" name="blockedReason" class="form-control"/>
+              </label>
+              <button type="button" class="btn" th:id="blockButton + ${member.loginId}" th:attr="block-member=${member.loginId}" onclick="block(this.attributes['block-member'])"></button>
+            </div>
+          <!-- Modal footer -->
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
+</div>
+</div>
+</body>
+<script>
+  const input = document.getElementById('input')
+  const select = document.getElementById('selected')
+  document.getElementById('searchButton').addEventListener('click', (e) => {
+    e.preventDefault()
+    window.open('/product/member?'+select.options[select.selectedIndex].value + '=' + input.value, '_self')
+  })
+</script>
+<script>
+  function block(loginId) {
+    const reason = document.getElementById('blockReason'+loginId.value)
+    console.log(reason.value)
+    let c = confirm(loginId.value + '를 차단하겠습까?')
+    if(c) {
+      fetch("/block/"+loginId.value, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: JSON.stringify(reason.value)
+      })
+      .then((response) => response.json())
+      .then(function (result) {
+        alert(result)
+        window.location.replace('/product/member')
+      })
+    }
+  }
+</script>
+<script>
+  function memberDelete(loginId) {
+    let c = confirm(loginId + '를 삭제하겠습니까?')
+    if(c) {
+      window.open('', '_self')
+    }
+  }
+</script>
+</html>

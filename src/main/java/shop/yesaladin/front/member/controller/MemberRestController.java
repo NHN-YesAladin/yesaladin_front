@@ -1,10 +1,15 @@
 package shop.yesaladin.front.member.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import shop.yesaladin.front.member.dto.MemberBlockRequestDto;
+import shop.yesaladin.front.member.dto.MemberBlockResponseDto;
 import shop.yesaladin.front.member.dto.MemberGradeQueryResponseDto;
 import shop.yesaladin.front.member.dto.MemberProfileExistResponseDto;
 import shop.yesaladin.front.member.service.inter.QueryMemberService;
@@ -27,7 +32,6 @@ public class MemberRestController {
      *
      * @param nickname 사용자가 입력하고자 하는 닉네임 입니다.
      * @return 해당하는 nickname의 존재 여부
-     *
      * @author : 송학현
      * @since : 1.0
      */
@@ -42,7 +46,6 @@ public class MemberRestController {
      *
      * @param loginId 사용자가 입력하고자 하는 loginId 입니다.
      * @return 해당하는 loginId의 존재 여부
-     *
      * @author : 송학현
      * @since : 1.0
      */
@@ -57,7 +60,6 @@ public class MemberRestController {
      *
      * @param email 사용자가 입력하고자 하는 email 입니다.
      * @return 해당하는 email의 존재 여부
-     *
      * @author : 송학현
      * @since : 1.0
      */
@@ -72,7 +74,6 @@ public class MemberRestController {
      *
      * @param phone 사용자가 입력하고자 하는 휴대폰 번호입니다.
      * @return 해당하는 휴대폰 번호의 존재 여부
-     *
      * @author : 송학현
      * @since : 1.0
      */
@@ -85,5 +86,21 @@ public class MemberRestController {
     @GetMapping("/grade")
     public String getMemberGrade() {
         return queryMemberService.getMemberGrade();
+    }
+
+    /**
+     * 관리자가 회원을 차단하는 메서드
+     *
+     * @param blockReason 차단 사유
+     * @param loginId     차단할 회원의 이유
+     * @return 차단 결과
+     */
+    @PostMapping("/block/{loginid}")
+    public MemberBlockResponseDto manageMemberBlockByLoginId(
+            @RequestBody MemberBlockRequestDto requestDto,
+            @PathVariable(name = "loginid") String loginId
+    ) throws JsonProcessingException {
+        log.info("controller loginId :" + loginId);
+        return queryMemberService.manageMemberBlockByLoginId(loginId, requestDto);
     }
 }

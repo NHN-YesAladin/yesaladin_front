@@ -3,9 +3,9 @@ package shop.yesaladin.front.member.controller.web;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.Mapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,13 +19,14 @@ import shop.yesaladin.front.member.service.inter.QueryMemberService;
  * @author 김선홍
  * @since 1.0
  */
+@Slf4j
 @RequiredArgsConstructor
 @Controller
-@RequestMapping("/manager/member")
+@RequestMapping("/product/member")
 public class MemberManagerWebController {
 
     private final QueryMemberService queryMemberService;
-    private static final String VIEW = "manager/member/manage";
+    private static final String VIEW = "manager/member/manager-member-manage";
 
     /**
      *
@@ -44,8 +45,9 @@ public class MemberManagerWebController {
      * @author 김선홍
      * @since 1.0
      */
-    @PostMapping(params = "loginid")
+    @GetMapping(params = "loginid")
     public ModelAndView manageMemberInfoByLoginId(@RequestParam(name = "loginid") String loginId) {
+        log.info("loginId: " + loginId);
         ModelAndView modelAndView = new ModelAndView(VIEW);
         modelAndView.addObject(
                 "memberList",
@@ -63,12 +65,12 @@ public class MemberManagerWebController {
      * @author 김선홍
      * @since 1.0
      */
-    @PostMapping(params = "nickname")
+    @GetMapping(params = "nickname")
     public ModelAndView manageMemberInfoByNickname(@RequestParam(name = "nickname") String nickname) {
         ModelAndView modelAndView = new ModelAndView(VIEW);
         modelAndView.addObject(
                 "memberList",
-                List.of(queryMemberService.manageMemberInfoByLoginId(nickname))
+                List.of(queryMemberService.manageMemberInfoByNickname(nickname))
         );
         modelAndView.addObject("count", 1);
         return modelAndView;
@@ -82,7 +84,7 @@ public class MemberManagerWebController {
      * @author 김선홍
      * @since 1.0
      */
-    @PostMapping(params = "phone")
+    @GetMapping(params = "phone")
     public ModelAndView manageMemberInfoByPhone(@RequestParam(name = "phone") String phone) {
         ModelAndView modelAndView = new ModelAndView(VIEW);
         modelAndView.addObject(
@@ -101,7 +103,7 @@ public class MemberManagerWebController {
      * @author 김선홍
      * @since 1.0
      */
-    @PostMapping(params = "name")
+    @GetMapping(params = "name")
     public ModelAndView manageMemberInfoByName(
             @RequestParam(name = "name") String name,
             int page,
@@ -129,7 +131,7 @@ public class MemberManagerWebController {
      * @author 김선홍
      * @since 1.0
      */
-    @PostMapping(params = "signupdate")
+    @GetMapping(params = "signupdate")
     public ModelAndView manageMemberInfoBySignUpDate(
             @RequestParam(name = "signupdate") LocalDate signUpDate,
             int page,
