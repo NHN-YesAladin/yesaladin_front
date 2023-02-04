@@ -4,7 +4,6 @@ import java.util.Map;
 import java.util.Objects;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -12,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import shop.yesaladin.front.member.dto.MemberResponseDto;
 import shop.yesaladin.front.oauth.Oauth2Factory;
 import shop.yesaladin.front.oauth.dto.Oauth2LoginRequestDto;
 import shop.yesaladin.front.oauth.service.Oauth2Service;
@@ -36,7 +36,6 @@ public class Oauth2Controller {
      *
      * @param code OAuth2에서 발급 받은 code 입니다.
      * @param request HttpServletRequest
-     * @param response HttpServletResponse
      * @return OAuth2 login을 수행하기 위한 페이지
      * @author 송학현
      * @since 1.0
@@ -45,7 +44,6 @@ public class Oauth2Controller {
     public String oauth2Login(
             @RequestParam String code,
             HttpServletRequest request,
-            HttpServletResponse response,
             Model model
     ) {
         log.info("code={}", code);
@@ -76,8 +74,8 @@ public class Oauth2Controller {
             return "/auth/oauth-signup";
         }
 
-        // 회원 정보 Shop에 질의 후 model에 저장 (id, pwd)
-        model.addAttribute("oauthMember", null);
+        MemberResponseDto member = oauth2Service.getMember(email);
+        model.addAttribute("oauthMember", member);
         return "/auth/oauth-login";
     }
 

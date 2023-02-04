@@ -6,6 +6,7 @@ import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import shop.yesaladin.front.member.dto.MemberResponseDto;
 import shop.yesaladin.front.oauth.adapter.Oauth2Adapter;
 
 /**
@@ -103,5 +104,17 @@ public abstract class Oauth2Service {
      */
     public boolean isAlreadyMember(String email) {
         return oauth2Adapter.isAlreadyMember(email);
+    }
+
+    /**
+     * OAuth2 로그인 시 YesAladin 자사 회원을 email 기준으로 불러오기 위한 기능입니다.
+     *
+     * @param email OAuth2에서 제공 받은 회원의 email 입니다.
+     * @return email을 기준으로 Shop API 서버에서 제공 받은 YesAladin 회원 정보
+     * @author 송학현
+     * @since 1.0
+     */
+    public MemberResponseDto getMember(String email) {
+        return oauth2Adapter.getYesaladinMember(email).getBody().getData();
     }
 }

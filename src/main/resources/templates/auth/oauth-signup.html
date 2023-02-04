@@ -81,13 +81,7 @@
                 <button class="checkBtn" type="button" onclick="loginIdCheck()">중복 확인</button>
               </div>
             </div>
-            <div class="mb-3">
-              <label class="form-label">이메일 주소</label>
-              <input type="email" class="form-control" id="email" th:name="email" placeholder="이메일"
-                     disabled
-                     th:value="${oauthMember.email}"
-                     autocomplete="off" required>
-            </div>
+            <input th:value="${oauthMember.email}" id="email" name="email" hidden="hidden">
             <div class="mb-3">
               <label class="form-label">휴대폰 번호</label>
               <input type="text" class="form-control" id="phone" th:name="phone"
