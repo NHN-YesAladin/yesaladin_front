@@ -1,6 +1,7 @@
 package shop.yesaladin.front.product.service.inter;
 
 import shop.yesaladin.front.product.dto.ProductCreateRequestDto;
+import shop.yesaladin.front.product.dto.ProductModifyRequestDto;
 
 import java.io.IOException;
 
@@ -15,14 +16,22 @@ public interface CommandProductService {
     /**
      * 상품을 등록을 요청하여 등록된 상품정보를 반환합니다.
      *
-     * @param productResponseDto 상품 등록 요청 Dto
+     * @param createRequestDto 상품 등록 요청 Dto
      * @return 등록 후 응답받은 상품의 Id
      * @author 이수정
      * @since 1.0
      */
-    long register(ProductCreateRequestDto productResponseDto) throws IOException;
+    long register(ProductCreateRequestDto createRequestDto) throws IOException;
 
-//    void modify(ProductResponseDto productResponseDto, long productId);
+    /**
+     * 상품을 수정을 요청하여 수정된 상품정보를 반환합니다.
+     *
+     * @param modifyRequestDto 상품 수정 요청 Dto
+     * @param productId        수정할 상품의 Id
+     * @author 이수정
+     * @since 1.0
+     */
+    void modify(ProductModifyRequestDto modifyRequestDto, long productId) throws IOException;
 
     /**
      * 상품 삭제를 요청합니다.

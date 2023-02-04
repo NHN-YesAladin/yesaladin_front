@@ -14,7 +14,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import shop.yesaladin.common.dto.ResponseDto;
-import shop.yesaladin.coupon.trigger.CouponTypeCode;
+import shop.yesaladin.coupon.code.CouponTypeCode;
 import shop.yesaladin.front.config.GatewayConfig;
 import shop.yesaladin.front.coupon.dto.AmountCouponCreateDto;
 import shop.yesaladin.front.coupon.dto.CouponCreateDto;

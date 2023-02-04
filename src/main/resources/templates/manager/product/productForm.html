@@ -90,7 +90,7 @@
             <input type="file" name="ebookFile" class="form-control"
                    accept="application/epub+zip, application/pdf, application/vnd.comicbook+zip">
           </div>
-          <!-- TODO: 카테고리 -->
+
           <div class="mb-3">
             <label class="form-label">카테고리 검색</label>
             <div class="row g-2">
@@ -109,11 +109,10 @@
             <table id="searched-category-table" class="table" style="table-layout: fixed"></table>
           </div>
           <div class="mb-1">
-              <label class="form-label text-success">선택한 카테고리</label>
-              <table id="selected-category-view-table" class="table" style="table-layout: fixed"></table>
+            <label class="form-label text-success">선택한 카테고리</label>
+            <table id="selected-category-view-table" class="table" style="table-layout: fixed"></table>
           </div>
           <div id="selected-category-checkbox-list" style="display: none"></div>
-          <!--             TODO: 저자, 출판사 선홍님 검색으로 교체 예정 -->
           <div class="mb-3">
             <label class="form-label">저자 검색</label>
             <div class="row g-2">
@@ -128,13 +127,12 @@
               </div>
             </div>
           </div>
-            <table class="table" id="searched-author-table" style="table-layout: fixed"></table>
+          <table class="table" id="searched-author-table" style="table-layout: fixed"></table>
           <div class="mt-1 mb-1">
             <label class="form-label text-success">선택한 저자</label>
-                <table id="selected-author-table" class="table" style="table-layout: fixed"></table>
+            <table id="selected-author-table" class="table" style="table-layout: fixed"></table>
           </div>
           <div id="selected-authors-checkbox" style="display:none;"></div>
-          <!-- TODO: 출판사 -->
           <div class="mb-3">
             <label class="form-label">출판사 검색</label>
             <div class="row g-2">
@@ -154,30 +152,9 @@
           </div>
           <div class="mb-3">
             <label class="form-label text-success">선택한 출판사</label>
-              <table id="selected-publisher-table" class="table" style="table-layout: fixed"></table>
+            <table id="selected-publisher-table" class="table" style="table-layout: fixed"></table>
           </div>
           <div id="selected-publisher-checkbox" style="display: none"></div>
-
-<!--          테스트용 저자, 출판사-->
-<!--          <div class="mb-3">-->
-<!--            <label class="form-label">저자</label>&lt;!&ndash; 다중 선택 가능하도록! &ndash;&gt;-->
-<!--            <select type="text" class="form-select tomselected ts-hidden-accessible"-->
-<!--                    multiple="multiple" name="authors" id="select-authors" value="" tabindex="-1"-->
-<!--                    required>-->
-<!--              <option value="" disabled>&#45;&#45; Select Authors &#45;&#45;</option>-->
-<!--              <option th:each="author : ${authors}" th:value="${author.getId()}"-->
-<!--                      th:utext="${author.getName()}"/>-->
-<!--            </select>-->
-<!--          </div>-->
-<!--          <div class="mb-3">-->
-<!--            <label class="form-label">출판사</label>-->
-<!--            <select type="text" class="form-select tomselected ts-hidden-accessible"-->
-<!--                    name="publisher" id="select-publishers" value="" tabindex="-1" required>-->
-<!--              <option value="" disabled>&#45;&#45; Select Publisher &#45;&#45;</option>-->
-<!--              <option th:each="publisher : ${publishers}" th:value="${publisher.getId()}"-->
-<!--                      th:utext="${publisher.getName()}"/>-->
-<!--            </select>-->
-<!--          </div>-->
 
           <div class="mb-3">
             <label class="form-label">출판일</label>
@@ -188,13 +165,13 @@
                        stroke-linecap="round" stroke-linejoin="round"><path stroke="none"
                                                                             d="M0 0h24v24H0z"
                                                                             fill="none"></path><rect
-                      x="4" y="5" width="16" height="16" rx="2"></rect><line x1="16" y1="3" x2="16"
-                                                                             y2="7"></line><line
-                      x1="8" y1="3" x2="8" y2="7"></line><line x1="4" y1="11" x2="20"
-                                                               y2="11"></line><line x1="11" y1="15"
-                                                                                    x2="12"
-                                                                                    y2="15"></line><line
-                      x1="12" y1="15" x2="12" y2="18"></line></svg>
+                          x="4" y="5" width="16" height="16" rx="2"></rect><line x1="16" y1="3" x2="16"
+                                                                                 y2="7"></line><line
+                          x1="8" y1="3" x2="8" y2="7"></line><line x1="4" y1="11" x2="20"
+                                                                   y2="11"></line><line x1="11" y1="15"
+                                                                                        x2="12"
+                                                                                        y2="15"></line><line
+                          x1="12" y1="15" x2="12" y2="18"></line></svg>
                 </span>
               <input type="date" class="form-control" name="publishedDate"
                      id="datepicker-icon-prepend" value="" required>
@@ -206,8 +183,7 @@
             <select type="text" class="form-select tomselected ts-hidden-accessible"
                     name="productTypeCode" id="select-type" tabindex="-1" required>
               <option value="">-- Select Product Type --</option>
-              <option th:each="type : ${types}" th:value="${type.getType()}"
-                      th:utext="${type.getType()}"/>
+              <option th:each="type : ${productTypeResponseDtoList}" th:value="${type.getType()}" th:utext="${type.getKoName()}"></option>
             </select>
           </div>
 
@@ -229,7 +205,6 @@
             <table id="selected-tag-table" class="table" style="table-layout: fixed"></table>
             <div id="selected-tags-checkbox" style="display: none"></div>
           </div>
-          Textarea and se
 
           <div class="mb-3">
             <label class="form-label">정가</label>
@@ -379,16 +354,16 @@
 
     console.log(location.origin.toString());
     fetch(location.origin.toString() + "/files/file-upload/product/description",
-        {
-          method: 'POST',
-          body: formData
-        })
-    .then(res => res.json())
-    .then(data => callback(data.url,
-        document.getElementById('toastuiAltTextInput').getAttribute('value')))
-    .catch(err => {
-      window.alert(err);
-    });
+            {
+              method: 'POST',
+              body: formData
+            })
+            .then(res => res.json())
+            .then(data => callback(data.url,
+                    document.getElementById('toastuiAltTextInput').getAttribute('value')))
+            .catch(err => {
+              window.alert(err);
+            });
   });
 
   window.addEventListener('load', () => {
@@ -449,15 +424,15 @@
         }
 
         let quantityVal = document.getElementById('quantity').value;
-        if (!quantityRegex.test(quantityVal) || emptyRegex.test(quantityVal)) {
-          alert('수량을 입력해주세요.');
+        if (!quantityRegex.test(quantityVal) || emptyRegex.test(quantityVal) || quantityVal == 0) {
+          alert('올바른 수량을 입력해주세요.(1 이상의 숫자)');
           event.preventDefault();
           return false;
         }
 
         let preferentialShowRankingVal = document.getElementById('preferentialShowRanking').value;
         if (!preferentialShowRankingRegex.test(preferentialShowRankingVal) || emptyRegex.test(
-            preferentialShowRankingVal)) {
+                preferentialShowRankingVal)) {
           alert('노출 우선순위를 입력해주세요. (음수 가능, 낮을수록 조회 상단에 위치하게 됩니다.)');
           event.preventDefault();
           return false;
@@ -467,6 +442,8 @@
 
     });
   }, false);
+  </script>
+<script>
 
   const selectedCategoryList = document.getElementsByName('categories')
   const selectedViewCategoryTable = document.getElementById('selected-category-view-table')
@@ -491,11 +468,11 @@
           const id = json.searchedCategoryDtoList[i].id;
           const parentName = row.insertCell();
           parentName.innerText = json.searchedCategoryDtoList[i].parentName + " >> "
-              + json.searchedCategoryDtoList[i].name;
+                  + json.searchedCategoryDtoList[i].name;
 
           const select = row.insertCell();
           select.innerHTML = '<button class="btn btn-primary btn-xs my-xs-btn" type="button">'
-              + '<span class="glyphicon glyphicon-pencil"></span>추가</button>';
+                  + '<span class="glyphicon glyphicon-pencil"></span>추가</button>';
           select.addEventListener("click", (s) => {
             s.preventDefault()
             if (selectedCategoryList.length > 2) {
@@ -505,11 +482,11 @@
               const selectedCategoryViewRow = selectedViewCategoryTable.insertRow();
               const selectedCategoryViewCeil = selectedCategoryViewRow.insertCell();
               selectedCategoryViewCeil.innerText  = json.searchedCategoryDtoList[i].parentName
-                  + " >> " + json.searchedCategoryDtoList[i].name;
+                      + " >> " + json.searchedCategoryDtoList[i].name;
 
               const deleteButton = selectedCategoryViewRow.insertCell();
               deleteButton.innerHTML = '<button class="btn btn-primary btn-xs my-xs-btn" type="button">'
-                  + '<span class="glyphicon glyphicon-pencil"></span>삭제</button>';
+                      + '<span class="glyphicon glyphicon-pencil"></span>삭제</button>';
               deleteButton.id = id;
               const createSelectedCategory = document.createElement('input');
               createSelectedCategory.name = "categories"
@@ -518,7 +495,7 @@
               createSelectedCategory.checked = true;
               createSelectedCategory.readOnly = true;
               document.getElementById('selected-category-checkbox-list').appendChild(
-                  createSelectedCategory)
+                      createSelectedCategory)
               deleteButton.addEventListener('click', (e) => {
                 selectedCategoryViewRow.remove()
                 createSelectedCategory.remove()
@@ -556,7 +533,7 @@
 
           const selectedButton = row.insertCell();
           selectedButton.innerHTML = '<button class="btn btn-primary btn-xs my-xs-btn" type="button">'
-              + '<span class="glyphicon glyphicon-pencil"></span>추가</button>';
+                  + '<span class="glyphicon glyphicon-pencil"></span>추가</button>';
           selectedButton.addEventListener('click', (e) => {
             if (!checkValue(tags, json.searchedTagDtoList[i].id)) {
               const row = selectedTagTable.insertRow();
@@ -566,7 +543,7 @@
 
               const deleteButton = row.insertCell();
               deleteButton.innerHTML = '<button class="btn btn-primary btn-xs my-xs-btn" type="button">'
-                  + '<span class="glyphicon glyphicon-pencil"></span>삭제</button>';
+                      + '<span class="glyphicon glyphicon-pencil"></span>삭제</button>';
 
               const tagCheckBox = document.createElement('input');
               tagCheckBox.setAttribute('type', 'checkbox');
@@ -617,35 +594,35 @@
           }
           const selectButton = row.insertCell();
           selectButton.innerHTML = '<button class="btn btn-primary btn-xs my-xs-btn" type="button">'
-              + '<span class="glyphicon glyphicon-pencil"></span>추가</button>';
+                  + '<span class="glyphicon glyphicon-pencil"></span>추가</button>';
           selectButton.addEventListener('click',(e) => {
             if(!checkValue(authors, json.searchedAuthorDtoList[i].id)) {
-            const row = selectedAuthorTable.insertRow();
+              const row = selectedAuthorTable.insertRow();
 
-            const name = row.insertCell()
-            name.innerText = "name: " + json.searchedAuthorDtoList[i].name;
+              const name = row.insertCell()
+              name.innerText = "name: " + json.searchedAuthorDtoList[i].name;
 
               const cellLoginId = row.insertCell();
-            if(json.searchedAuthorDtoList[i].loginId !== null) {
-              cellLoginId.innerText = "loginId: " + json.searchedAuthorDtoList[i].loginId;
-            }
+              if(json.searchedAuthorDtoList[i].loginId !== null) {
+                cellLoginId.innerText = "loginId: " + json.searchedAuthorDtoList[i].loginId;
+              }
 
-            const authorCheckBox = document.createElement('input');
-            authorCheckBox.setAttribute('type', 'number');
-            authorCheckBox.name = "authors";
-            authorCheckBox.value = json.searchedAuthorDtoList[i].id;
-            authorCheckBox.readOnly = true;
-            authorCheckBox.hidden = true;
-            selectedAuthorsCheckBox.appendChild(authorCheckBox)
+              const authorCheckBox = document.createElement('input');
+              authorCheckBox.setAttribute('type', 'number');
+              authorCheckBox.name = "authors";
+              authorCheckBox.value = json.searchedAuthorDtoList[i].id;
+              authorCheckBox.readOnly = true;
+              authorCheckBox.hidden = true;
+              selectedAuthorsCheckBox.appendChild(authorCheckBox)
 
-            const deleteButton = row.insertCell()
-            deleteButton.innerHTML = '<button class="btn btn-primary btn-xs my-xs-btn" type="button">'
-                + '<span class="glyphicon glyphicon-pencil"></span>삭제</button>';
-            deleteButton.addEventListener('click', (e) => {
-              row.remove();
-              authorCheckBox.remove();
-            })
-          }})
+              const deleteButton = row.insertCell()
+              deleteButton.innerHTML = '<button class="btn btn-primary btn-xs my-xs-btn" type="button">'
+                      + '<span class="glyphicon glyphicon-pencil"></span>삭제</button>';
+              deleteButton.addEventListener('click', (e) => {
+                row.remove();
+                authorCheckBox.remove();
+              })
+            }})
         }
       })
     })
@@ -677,7 +654,7 @@
 
           const selectButton = row.insertCell();
           selectButton.innerHTML = '<button class="btn btn-primary btn-xs my-xs-btn" type="button">'
-              + '<span class="glyphicon glyphicon-pencil"></span>추가</button>';
+                  + '<span class="glyphicon glyphicon-pencil"></span>추가</button>';
           selectButton.addEventListener('click',(e) => {
             if(publisher.length == 0) {
               const row = selectedPublisherTable.insertRow();
@@ -695,7 +672,7 @@
 
               const deleteButton = row.insertCell()
               deleteButton.innerHTML = '<button class="btn btn-primary btn-xs my-xs-btn" type="button">'
-                  + '<span class="glyphicon glyphicon-pencil"></span>삭제</button>';
+                      + '<span class="glyphicon glyphicon-pencil"></span>삭제</button>';
               deleteButton.addEventListener('click', (e) => {
                 row.remove()
                 publisherCheckBox.remove()

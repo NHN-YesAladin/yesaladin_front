@@ -9,9 +9,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import shop.yesaladin.front.file.dto.FileUploadResponseDto;
 import shop.yesaladin.front.file.service.inter.FileStorageService;
-import shop.yesaladin.front.product.dto.ProductCreateRequestDto;
-import shop.yesaladin.front.product.dto.ProductOnlyIdDto;
-import shop.yesaladin.front.product.dto.ProductRequestDto;
+import shop.yesaladin.front.product.dto.*;
 import shop.yesaladin.front.product.service.inter.CommandProductService;
 
 import java.io.IOException;
@@ -39,16 +37,18 @@ public class CommandProductServiceImpl implements CommandProductService {
      * {@inheritDoc}
      */
     @Override
-    public long register(ProductCreateRequestDto productResponseDto) throws IOException {
+    public long register(ProductCreateRequestDto createRequestDto) throws IOException {
 
-        MultipartFile thumbnailFile = productResponseDto.getThumbnailFile();
+        log.info("createRequestDto = {}", createRequestDto.toString());
+
+        MultipartFile thumbnailFile = createRequestDto.getThumbnailFile();
         FileUploadResponseDto thumbnailFileResponse = fileStorageService.fileUpload(
                 "product",
                 "thumbnail",
                 thumbnailFile
         );
 
-        MultipartFile ebookFile = productResponseDto.getEbookFile();
+        MultipartFile ebookFile = createRequestDto.getEbookFile();
         FileUploadResponseDto ebookFileResponse = new FileUploadResponseDto(null, null);
         if (Objects.nonNull(ebookFile) && !ebookFile.getOriginalFilename().isBlank()) {
             ebookFileResponse = fileStorageService.fileUpload(
@@ -58,7 +58,7 @@ public class CommandProductServiceImpl implements CommandProductService {
             );
         }
 
-        ProductRequestDto productRequestDto = productResponseDto.getProductCreateRequestDto(
+        ProductRequestDto productRequestDto = createRequestDto.getProductCreateRequestDto(
                 thumbnailFileResponse,
                 ebookFileResponse
         );
@@ -77,16 +77,47 @@ public class CommandProductServiceImpl implements CommandProductService {
         return response.getBody().getId();
     }
 
-//    /**
-//     * 상품 수정을 요청합니다.
-//     *
-//     * @param productResponseDto 상품 수정 요청 Dto
-//     * @param productId 수정할 상품의 Id
-//     * @author 이수정
-//     * @since 1.0
-//     */
-//    @Override
-//    public void modify(ProductResponseDto productResponseDto, long productId) {}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void modify(ProductModifyRequestDto modifyRequestDto, long productId) throws IOException {
+        MultipartFile thumbnailFile = modifyRequestDto.getThumbnailFile();
+        FileUploadResponseDto thumbnailFileResponse = new FileUploadResponseDto(null, null);
+        if (Objects.nonNull(thumbnailFile) && !thumbnailFile.getOriginalFilename().isBlank()) {
+            thumbnailFileResponse = fileStorageService.fileUpload(
+                    "product",
+                    "thumbnail",
+                    thumbnailFile
+            );
+        }
+
+        MultipartFile ebookFile = modifyRequestDto.getEbookFile();
+        FileUploadResponseDto ebookFileResponse = new FileUploadResponseDto(null, null);
+        if (Objects.nonNull(ebookFile) && !ebookFile.getOriginalFilename().isBlank()) {
+            ebookFileResponse = fileStorageService.fileUpload(
+                    "product",
+                    "ebook",
+                    ebookFile
+            );
+        }
+
+        ProductUpdateDto productRequestDto = modifyRequestDto.getProductUpdateDto(
+                thumbnailFileResponse,
+                ebookFileResponse
+        );
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity httpEntity = new HttpEntity(productRequestDto, httpHeaders);
+        ResponseEntity<ProductOnlyIdDto> response = restTemplate.exchange(
+                url + "/v1/products/" + productId,
+                HttpMethod.PUT,
+                httpEntity,
+                ProductOnlyIdDto.class
+        );
+    }
 
     /**
      * {@inheritDoc}

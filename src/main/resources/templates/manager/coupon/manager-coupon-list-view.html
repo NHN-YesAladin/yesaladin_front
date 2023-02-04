@@ -74,22 +74,6 @@
               </tr>
               </thead>
               <tbody class="table-group-divider">
-              <tr>
-                <td>테스트 쿠폰</td>
-                <td>회원가입</td>
-                <td>정률할인(20%)</td>
-                <td>발행일로부터 7일</td>
-                <td>2023-01-01</td>
-                <td><input class="form-check-input" type="checkbox"></td>
-              </tr>
-              <tr>
-                <td>테스트 쿠폰2</td>
-                <td>생일</td>
-                <td>정액할인(1000)</td>
-                <td>발행일로부터 5일</td>
-                <td>2023-01-02</td>
-                <td><input class="form-check-input" type="checkbox"></td>
-              </tr>
               <tr th:each="data: ${dataList}">
                 <td th:text="${data.name}"></td>
                 <td th:text="${data.triggerTypeCode.getDisplayName()}"></td>

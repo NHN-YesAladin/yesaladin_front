@@ -19,10 +19,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductCreateRequestDto {
-
-    // 상품 ISBN
-    private String isbn;
+public class ProductModifyRequestDto {
 
     // 상품 썸네일 파일
     private MultipartFile thumbnailFile;
@@ -70,16 +67,12 @@ public class ProductCreateRequestDto {
     // 노출 우선 순위
     private int preferentialShowRanking;
 
-    // 판매 여부
-    private String isSale;
-
     // 카테고리
     private List<Long> categories;
 
     @Override
     public String toString() {
-        return "ProductCreateRequestDto{" +
-                "isbn='" + isbn + '\'' +
+        return "ProductModifyRequestDto{" +
                 ", thumbnailFile=" + thumbnailFile +
                 ", title='" + title + '\'' +
                 ", contents='" + contents + '\'' +
@@ -100,17 +93,15 @@ public class ProductCreateRequestDto {
                 ", issn='" + issn + '\'' +
                 ", quantity=" + quantity +
                 ", preferentialShowRanking=" + preferentialShowRanking +
-                ", isSale='" + isSale + '\'' +
                 ", categories=" + categories +
                 '}';
     }
 
-    public ProductRequestDto getProductCreateRequestDto(
+    public ProductUpdateDto getProductUpdateDto(
             FileUploadResponseDto thumbnailFileResponse,
             FileUploadResponseDto ebookFileResponse
     ) {
-        return new ProductRequestDto(
-                isbn,
+        return new ProductUpdateDto(
                 title,
                 contents,
                 description,
@@ -123,7 +114,6 @@ public class ProductCreateRequestDto {
                 changeStringToBoolean(isGivenPoint),
                 issn,
                 changeStringToBoolean(isSubscriptionAvailable),
-                changeStringToBoolean(isSale),
                 quantity,
                 publishedDate,
                 preferentialShowRanking,

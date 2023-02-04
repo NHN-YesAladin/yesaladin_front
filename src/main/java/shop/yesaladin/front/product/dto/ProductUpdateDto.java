@@ -12,7 +12,7 @@ import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 
 /**
- * 상품 등록 요청을 보내기 위한 Dto 입니다.
+ * 상품 수정을 위한 Dto 입니다.
  *
  * @author 이수정
  * @since 1.0
@@ -20,12 +20,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductRequestDto {
-
-    @NotBlank
-    @Length(max = 13)
-    private String isbn;
-
+public class ProductUpdateDto {
     // 상품 설명
     @NotBlank
     @Length(max = 255)
@@ -57,21 +52,15 @@ public class ProductRequestDto {
     private String issn;
     private Boolean isSubscriptionAvailable;
 
-    // 판매 여부
-    private Boolean isSale;
-
     // 수량, 출간일, 노출우선순위
     @PositiveOrZero
     private long quantity;
     @NotBlank
     private String publishedDate;
-    @PositiveOrZero
     private int preferentialShowRanking;
 
     // 썸네일 파일
-    @NotBlank
     private String thumbnailFileUrl;
-    @NotBlank
     private String thumbnailFileUploadDateTime;
 
     // e-book 파일
@@ -90,34 +79,4 @@ public class ProductRequestDto {
     // 카테고리
     private List<Long> categories;
 
-
-    @Override
-    public String toString() {
-        return "ProductRequestDto{" +
-                "isbn='" + isbn + '\'' +
-                ", title='" + title + '\'' +
-                ", contents='" + contents + '\'' +
-                ", description='" + description + '\'' +
-                ", authors=" + authors +
-                ", publisherId=" + publisherId +
-                ", actualPrice=" + actualPrice +
-                ", discountRate=" + discountRate +
-                ", isSeparatelyDiscount=" + isSeparatelyDiscount +
-                ", givenPointRate=" + givenPointRate +
-                ", isGivenPoint=" + isGivenPoint +
-                ", issn='" + issn + '\'' +
-                ", isSubscriptionAvailable=" + isSubscriptionAvailable +
-                ", isSale=" + isSale +
-                ", quantity=" + quantity +
-                ", publishedDate='" + publishedDate + '\'' +
-                ", preferentialShowRanking=" + preferentialShowRanking +
-                ", thumbnailFileUrl='" + thumbnailFileUrl + '\'' +
-                ", thumbnailFileUploadDateTime='" + thumbnailFileUploadDateTime + '\'' +
-                ", ebookFileUrl='" + ebookFileUrl + '\'' +
-                ", ebookFileUploadDateTime='" + ebookFileUploadDateTime + '\'' +
-                ", productTypeCode='" + productTypeCode + '\'' +
-                ", productSavingMethodCode='" + productSavingMethodCode + '\'' +
-                ", tags=" + tags +
-                '}';
-    }
 }

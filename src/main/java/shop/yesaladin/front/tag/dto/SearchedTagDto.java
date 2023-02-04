@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 /**
  * 태그 정보 dto
  *
- * @since : 1.0
  * @author : 김선홍
+ * @since : 1.0
  */
 @Getter
 @NoArgsConstructor
