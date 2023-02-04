@@ -13,6 +13,7 @@ import shop.yesaladin.front.common.exception.ValidationFailedException;
 import shop.yesaladin.front.member.dto.SignUpRequestDto;
 import shop.yesaladin.front.member.dto.SignUpResponseDto;
 import shop.yesaladin.front.member.service.inter.CommandMemberService;
+import shop.yesaladin.front.oauth.dto.Oauth2SignUpRequestDto;
 
 /**
  * 회원 관련 페이지를 위한 Controller 입니다.
@@ -52,6 +53,21 @@ public class MemberAuthWebController {
      */
     @PostMapping("/signup")
     public String signup(@Valid SignUpRequestDto request, BindingResult bindingResult, Model model) {
+        log.info("dto={}", request);
+
+        if (bindingResult.hasErrors()) {
+            throw new ValidationFailedException(bindingResult);
+        }
+
+        SignUpResponseDto response = commandMemberService.signUp(request);
+        log.info("response={}", response);
+        model.addAttribute("response", response);
+
+        return "auth/signup-success";
+    }
+
+    @PostMapping("/oauth2/signup")
+    public String oauth2Signup(@Valid Oauth2SignUpRequestDto request, BindingResult bindingResult, Model model) {
         log.info("dto={}", request);
 
         if (bindingResult.hasErrors()) {

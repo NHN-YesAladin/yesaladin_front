@@ -8,10 +8,12 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import shop.yesaladin.front.oauth.Oauth2Factory;
+import shop.yesaladin.front.oauth.dto.Oauth2LoginRequestDto;
 import shop.yesaladin.front.oauth.service.Oauth2Service;
 
 /**
@@ -43,7 +45,8 @@ public class Oauth2Controller {
     public String oauth2Login(
             @RequestParam String code,
             HttpServletRequest request,
-            HttpServletResponse response
+            HttpServletResponse response,
+            Model model
     ) {
         log.info("code={}", code);
         String provider = getProviderFromCookie(request.getCookies());
@@ -62,10 +65,20 @@ public class Oauth2Controller {
         );
 
         log.info("userInfo={}", userInfo);
+        String email = userInfo.get("email").toString();
+        Oauth2LoginRequestDto oauth2LoginRequestDto = new Oauth2LoginRequestDto(email);
+        log.info("dto={}", oauth2LoginRequestDto);
 
-        // TODO: user 정보를 불러와 자사 회원인지 판별 후 페이지 이동(기존 회원이 아니라면 추가 정보를 입력받아 회원가입)
+        boolean isAlreadyMember = oauth2Service.isAlreadyMember(email);
 
-        return "redirect:/";
+        if (!isAlreadyMember) {
+            model.addAttribute("oauthMember", oauth2LoginRequestDto);
+            return "/auth/oauth-signup";
+        }
+
+        // 회원 정보 Shop에 질의 후 model에 저장 (id, pwd)
+        model.addAttribute("oauthMember", null);
+        return "/auth/oauth-login";
     }
 
     /**
