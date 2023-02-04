@@ -51,11 +51,11 @@
                             <div class="m-auto">
                                 <div>
                                     <span class="fs-3 fw-normal">주문자 : </span>
-                                    <span class="fs-3 fw-bolder">구현필요</span>
+                                    <span class="fs-3 fw-bolder" th:text="${response.ordererName}">김최이</span>
                                 </div>
                                 <div>
                                     <span class="fs-3 fw-normal">주문번호 : </span>
-                                    <span class="fs-3 fw-bolder" th:text="${response.orderNumber}"></span>
+                                    <span class="fs-3 fw-bolder" th:text="${response.orderNumber}">12</span>
                                 </div>
                                 <div>
                                     <span class="fs-3 fw-normal">주문명 : </span>
@@ -63,7 +63,7 @@
                                 </div>
                                 <div>
                                     <span class="fs-3 fw-normal">배송지 : </span>
-                                    <span class="fs-3 fw-bolder">구현필요</span>
+                                    <span class="fs-3 fw-bolder" th:text="${response.orderAddress}">광주</span>
                                 </div>
                             </div>
                         </div>
@@ -117,12 +117,12 @@
                 </div>
                 <div class="card-footer">
                     <div class="mt-2 m-auto">
-                        <a href="#" class="btn btn-outline-primary w-100" onclick="processPayment(this)">
+                        <a href="#" class="btn btn-outline-primary w-100">
                             주문 상세 보기
                         </a>
                     </div>
                     <div class="mt-2 m-auto">
-                        <a href="#" class="btn btn-outline-primary w-100" onclick="processPayment(this)">
+                        <a href="#" class="btn btn-outline-primary w-100">
                             홈으로 가기
                         </a>
                     </div>

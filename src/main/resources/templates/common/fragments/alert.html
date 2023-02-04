@@ -1,41 +1,23 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<body th:fragment="fragment-footer">
-<footer class="footer footer-transparent d-print-none">
-  <div class="container-xl">
-    <div class="row text-center align-items-center flex-row-reverse">
-      <div class="col-lg-auto ms-lg-auto">
-        <ul class="list-inline list-inline-dots mb-0">
-            <a href="https://nhnacademy.github.io/" target="_blank" class="link-secondary"
-               rel="noopener">
-              <!-- Download SVG icon from http://tabler-icons.io/i/heart -->
-              <svg xmlns="http://www.w3.org/2000/svg"
-                   class="icon text-pink icon-filled icon-inline" width="24" height="24"
-                   viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                   stroke-linecap="round" stroke-linejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                <path d="M19.5 13.572l-7.5 7.428l-7.5 -7.428m0 0a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"/>
-              </svg>
-              Sponsor by NHN Academy
-            </a>
-          </li>
-        </ul>
-      </div>
-      <div class="col-12 col-lg-auto mt-3 mt-lg-0">
-        <ul class="list-inline list-inline-dots mb-0">
-          <li class="list-inline-item">
-            <a href="https://github.com/NHN-YesAladin" target="_blank" class="link-secondary"
-               rel="noopener">
-              Copyright &copy; 2023
-              YesAladin.
-              All rights reserved.
-            </a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</footer>
+<body th:fragment="custom-alert">
+<div id="alert-box" class="alert alert-warning m-1" role="alert">
+  <span id="alert-text" class="fs-4 fw-bold">22</span>
+</div>
+<script>
+  const alertBox = document.getElementById("alert-box");
+  const alertText = document.getElementById("alert-text");
+
+  window.addEventListener('DOMContentLoaded', (event) => {
+    alertBox.classList.add("d-none");
+  });
+
+  function writeContentToAlert(message) {
+    alertText.innerHTML = message;
+    alertBox.classList.remove("d-none");
+  }
+
+</script>
 </body>
 </html>

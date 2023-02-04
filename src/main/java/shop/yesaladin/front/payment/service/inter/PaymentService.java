@@ -1,6 +1,7 @@
 package shop.yesaladin.front.payment.service.inter;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.payment.dto.PaymentCompleteSimpleResponseDto;
 import shop.yesaladin.front.payment.dto.PaymentRequestDto;
 
@@ -16,7 +17,7 @@ public interface PaymentService {
      * 토스페이먼츠의 successUrl을 통해 결제 승인을 shop서버를 통해 받아오는 메서드
      *
      * @param requestDto 토스 결제를 위한 정보들이 담긴 dto
-     * @return 결제 정보
+     * @return responseDto - 결제 정보
      */
-    PaymentCompleteSimpleResponseDto confirm(PaymentRequestDto requestDto);
+    ResponseDto<PaymentCompleteSimpleResponseDto> confirm(PaymentRequestDto requestDto);
 }

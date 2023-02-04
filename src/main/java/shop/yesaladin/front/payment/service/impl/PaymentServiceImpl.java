@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import java.util.Base64;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -13,8 +14,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
+import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.category.dto.CategoryResponseDto;
 import shop.yesaladin.front.config.GatewayConfig;
+import shop.yesaladin.front.member.dto.SignUpRequestDto;
+import shop.yesaladin.front.member.dto.SignUpResponseDto;
 import shop.yesaladin.front.payment.dto.PaymentCompleteSimpleResponseDto;
 import shop.yesaladin.front.payment.dto.PaymentRequestDto;
 import shop.yesaladin.front.payment.service.inter.PaymentService;
@@ -38,15 +42,22 @@ public class PaymentServiceImpl implements PaymentService {
      *
      */
     @Override
-    public PaymentCompleteSimpleResponseDto confirm(PaymentRequestDto requestDto) {
+    public ResponseDto<PaymentCompleteSimpleResponseDto> confirm(PaymentRequestDto requestDto) {
         UriComponents uriComponents = UriComponentsBuilder.fromHttpUrl(
-                        gatewayConfig.getUrl() + "/v1/payments/confirm")
+                        gatewayConfig.getShopUrl() + "/v1/payments/confirm")
                 .build();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<PaymentRequestDto> entity = new HttpEntity<>(requestDto, headers);
 
-        return restTemplate.postForObject(
+        ResponseEntity<ResponseDto<PaymentCompleteSimpleResponseDto>> exchange = restTemplate.exchange(
                 uriComponents.toUri(),
-                requestDto,
-                PaymentCompleteSimpleResponseDto.class
+                HttpMethod.POST,
+                entity,
+                new ParameterizedTypeReference<>() {
+                }
         );
+
+        return exchange.getBody();
     }
 }

@@ -61,79 +61,84 @@
               <div class="m-auto">
                 <div>
                   <span class="fs-3 fw-normal">주문자 : </span>
-                  <span class="fs-3 fw-bolder">구현필요</span>
+                  <span class="fs-3 fw-bolder" th:text="${response.ordererName}">김최이</span>
                 </div>
                 <div>
                   <span class="fs-3 fw-normal">주문번호 : </span>
-                  <span class="fs-3 fw-bolder" th:text="${orderNumber}"></span>
+                  <span class="fs-3 fw-bolder" th:text="${response.orderNumber}">12</span>
                 </div>
                 <div>
                   <span class="fs-3 fw-normal">주문명 : </span>
-                  <span class="fs-3 fw-bolder" th:text="${orderName}">주문 성공!</span>
+                  <span class="fs-3 fw-bolder" th:text="${response.orderName}">주문 성공!</span>
                 </div>
                 <div>
                   <span class="fs-3 fw-normal">배송지 : </span>
-                  <span class="fs-3 fw-bolder">구현필요</span>
+                  <span class="fs-3 fw-bolder" th:text="${response.orderAddress}">광주</span>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="card card-md">
-            <div class="card-body">
-              <h3 class="card-title fs-2">주문 상태</h3>
-              <div class="m-auto">
-                <div class="card card-md">
-                  <div class="card-body">
-                    <ul class="steps steps-red steps-counter">
-                      <li class="step-item">주문완료</li>
-                      <li class="step-item active">결제대기</li>
-                      <li class="step-item">결제완료</li>
-                      <li class="step-item">배송 준비중</li>
-                      <li class="step-item ">배송중</li>
-                      <li class="step-item">배송 완료</li>
-                    </ul>
+            <div class="card card-md">
+              <div class="card-body">
+                <h3 class="card-title fs-2">주문 상태</h3>
+                <div class="m-auto">
+                  <div class="card card-md">
+                    <div class="card-body">
+                      <ul class="steps steps-red steps-counter">
+                        <li class="step-item">주문완료</li>
+                        <li class="step-item active">결제대기</li>
+                        <li class="step-item">결제완료</li>
+                        <li class="step-item">배송 준비중</li>
+                        <li class="step-item ">배송중</li>
+                        <li class="step-item">배송 완료</li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="card card-md">
-            <div class="card-body">
-              <h3 class="card-title fs-2">결제 정보</h3>
-              <div class="mt-2 m-auto">
-                <div>
-                  <span class="fs-3 fw-normal">결제 필요 금액 : </span>
-                  <span class="fs-3 fw-bolder" th:text="${amount}">1</span>
+            <div class="card card-md">
+              <div class="card-body">
+                <h3 class="card-title fs-2">결제 정보</h3>
+                <div class="mt-2 m-auto">
+                  <div>
+                    <span class="fs-3 fw-normal">결제 필요 금액 : </span>
+                    <span class="fs-3 fw-bolder" th:text="${response.totalAmount}">1</span>
+                  </div>
+                  <a href="#" class="btn btn-outline-danger w-100 fs-4"
+                     onclick="repay(this)">
+                    다시 결제 하기
+                  </a>
                 </div>
-                <a href="#" class="btn btn-outline-danger w-100 fs-4"
-                   onclick="processPayment(this)">
-                  다시 결제 하기
-                </a>
               </div>
             </div>
           </div>
-        </div>
-        <div class="card-footer">
-          <div class="mt-2 m-auto">
-            <a href="#" class="btn btn-outline-primary w-100" onclick="processPayment(this)">
-              주문 상세 보기
-            </a>
-          </div>
-          <div class="mt-2 m-auto">
-            <a href="#" class="btn btn-outline-primary w-100" onclick="processPayment(this)">
-              홈으로 가기
-            </a>
+          <div class="card-footer">
+            <div class="mt-2 m-auto">
+              <a href="#" class="btn btn-outline-primary w-100">
+                주문 상세 보기
+              </a>
+            </div>
+            <div class="mt-2 m-auto">
+              <a href="#" class="btn btn-outline-primary w-100">
+                홈으로 가기
+              </a>
+            </div>
           </div>
         </div>
       </div>
-
-
     </div>
-
+    <!-- TODO 4 : footer -->
+    <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
   </div>
-
-  <!-- TODO 4 : footer -->
-  <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
 </div>
+<script>
+  function repay(event) {
+    let target = event.target;
+    // target에서부터 data-주문번호 등 결제에 필요한 정보 전달받음
+
+    //  processPayment(결제정보들) 실행시킴
+  }
+</script>
+<script th:src="@{/js/payment/toss-payment-event.js}"></script>
 </body>
 </html>

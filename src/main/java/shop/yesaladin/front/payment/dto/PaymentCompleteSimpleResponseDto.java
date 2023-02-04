@@ -34,9 +34,13 @@ public class PaymentCompleteSimpleResponseDto {
     private LocalDateTime approvedDateTime;
 
     @NotBlank
+    private String ordererName;
+    @NotBlank
     private String orderNumber;
     @NotBlank
     private String orderName;
+    @NotBlank
+    private String orderAddress;
 
     @NotBlank
     private String cardCode;
