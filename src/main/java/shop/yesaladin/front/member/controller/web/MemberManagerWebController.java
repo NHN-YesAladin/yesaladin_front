@@ -21,7 +21,7 @@ import shop.yesaladin.front.member.service.inter.QueryMemberService;
  */
 @RequiredArgsConstructor
 @Controller
-@RequestMapping("/manager")
+@RequestMapping("/manager/member")
 public class MemberManagerWebController {
 
     private final QueryMemberService queryMemberService;
