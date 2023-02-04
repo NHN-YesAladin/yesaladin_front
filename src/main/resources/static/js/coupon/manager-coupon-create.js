@@ -36,8 +36,6 @@ function addEventListenerToCouponDuration() {
 function addEventListenerToCouponType() {
   const couponTypeRadioList = document.querySelectorAll(".coupon-type-radio")
   const couponTypePointRadio = document.querySelector("#POINT");
-  const couponDiscountTypeSelect = document.querySelector(
-      "#coupon-discount-type-select");
   const couponTypeRateRadio = document.querySelector("#FIXED_RATE");
   const couponMaxDiscountPriceDiv = document.querySelector(
       "#coupon-max-discount-price-div");
@@ -46,7 +44,6 @@ function addEventListenerToCouponType() {
   const couponBoundSelectDiv = document.querySelector(
       "#coupon-bound-select-div");
   couponTypeRadioList.forEach(radio => radio.addEventListener("click", () => {
-    couponDiscountTypeSelect.disabled = couponTypePointRadio.checked;
     couponBoundSelectDiv.style.display = "";
     couponMinOrderPriceDiv.style.display = "";
     couponMaxDiscountPriceDiv.style.display = "none";

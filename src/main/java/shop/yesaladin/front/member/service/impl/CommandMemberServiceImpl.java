@@ -14,12 +14,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import shop.yesaladin.common.dto.ResponseDto;
-import shop.yesaladin.front.category.dto.CategorySaveRequestDto;
 import shop.yesaladin.front.config.GatewayConfig;
 import shop.yesaladin.front.member.dto.MemberUpdateRequestDto;
 import shop.yesaladin.front.member.dto.MemberWithdrawResponseDto;
-import shop.yesaladin.front.member.dto.SignUpRequest;
-import shop.yesaladin.front.member.dto.SignUpResponse;
+import shop.yesaladin.front.member.dto.SignUpRequestDto;
+import shop.yesaladin.front.member.dto.SignUpResponseDto;
 import shop.yesaladin.front.member.service.inter.CommandMemberService;
 
 /**
@@ -42,15 +41,15 @@ public class CommandMemberServiceImpl implements CommandMemberService {
      * {@inheritDoc}
      */
     @Override
-    public SignUpResponse signUp(SignUpRequest request) {
+    public SignUpResponseDto signUp(SignUpRequestDto request) {
         request.setPassword(passwordEncoder.encode(request.getPassword()));
         log.info("request={}", request);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<SignUpRequest> entity = new HttpEntity<>(request, headers);
+        HttpEntity<SignUpRequestDto> entity = new HttpEntity<>(request, headers);
 
-        ResponseEntity<ResponseDto<SignUpResponse>> response = restTemplate.exchange(
+        ResponseEntity<ResponseDto<SignUpResponseDto>> response = restTemplate.exchange(
                 gatewayConfig.getShopUrl() + "/v1/members/",
                 HttpMethod.POST,
                 entity,

@@ -3,14 +3,20 @@ package shop.yesaladin.front.member.service.impl;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.config.GatewayConfig;
 import shop.yesaladin.front.member.dto.MemberGradeQueryResponseDto;
 import shop.yesaladin.front.member.dto.MemberProfileExistResponseDto;
 import shop.yesaladin.front.member.dto.MemberQueryResponseDto;
-import shop.yesaladin.front.member.dto.MemberResponse;
 import shop.yesaladin.front.member.service.inter.QueryMemberService;
 
 /**
@@ -34,6 +40,10 @@ public class QueryMemberServiceImpl implements QueryMemberService {
     public MemberProfileExistResponseDto nicknameCheck(String nickname) {
         log.info("nickname={}", nickname);
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity entity = new HttpEntity<>(headers);
+
         URI uri = UriComponentsBuilder
                 .fromUriString(gatewayConfig.getShopUrl())
                 .path("/v1/members/checkNick/{nickname}")
@@ -42,10 +52,15 @@ public class QueryMemberServiceImpl implements QueryMemberService {
                 .expand(nickname)
                 .toUri();
 
-        return restTemplate.getForObject(
+        ResponseEntity<ResponseDto<MemberProfileExistResponseDto>> response = restTemplate.exchange(
                 uri,
-                MemberProfileExistResponseDto.class
+                HttpMethod.GET,
+                entity,
+                new ParameterizedTypeReference<>() {
+                }
         );
+
+        return response.getBody().getData();
     }
 
     /**
@@ -56,6 +71,10 @@ public class QueryMemberServiceImpl implements QueryMemberService {
     public MemberProfileExistResponseDto loginIdCheck(String loginId) {
         log.info("nickname={}", loginId);
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity entity = new HttpEntity<>(headers);
+
         URI uri = UriComponentsBuilder
                 .fromUriString(gatewayConfig.getShopUrl())
                 .path("/v1/members/checkId/{loginId}")
@@ -64,10 +83,15 @@ public class QueryMemberServiceImpl implements QueryMemberService {
                 .expand(loginId)
                 .toUri();
 
-        return restTemplate.getForObject(
+        ResponseEntity<ResponseDto<MemberProfileExistResponseDto>> response = restTemplate.exchange(
                 uri,
-                MemberProfileExistResponseDto.class
+                HttpMethod.GET,
+                entity,
+                new ParameterizedTypeReference<>() {
+                }
         );
+
+        return response.getBody().getData();
     }
 
     /**
@@ -78,6 +102,10 @@ public class QueryMemberServiceImpl implements QueryMemberService {
     public MemberProfileExistResponseDto emailCheck(String email) {
         log.info("email={}", email);
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity entity = new HttpEntity<>(headers);
+
         URI uri = UriComponentsBuilder
                 .fromUriString(gatewayConfig.getShopUrl())
                 .path("/v1/members/checkEmail/{email}")
@@ -86,10 +114,15 @@ public class QueryMemberServiceImpl implements QueryMemberService {
                 .expand(email)
                 .toUri();
 
-        return restTemplate.getForObject(
+        ResponseEntity<ResponseDto<MemberProfileExistResponseDto>> response = restTemplate.exchange(
                 uri,
-                MemberProfileExistResponseDto.class
+                HttpMethod.GET,
+                entity,
+                new ParameterizedTypeReference<>() {
+                }
         );
+
+        return response.getBody().getData();
     }
 
     /**
@@ -100,6 +133,10 @@ public class QueryMemberServiceImpl implements QueryMemberService {
     public MemberProfileExistResponseDto phoneCheck(String phone) {
         log.info("phone={}", phone);
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity entity = new HttpEntity<>(headers);
+
         URI uri = UriComponentsBuilder
                 .fromUriString(gatewayConfig.getShopUrl())
                 .path("/v1/members/checkPhone/{phone}")
@@ -108,10 +145,15 @@ public class QueryMemberServiceImpl implements QueryMemberService {
                 .expand(phone)
                 .toUri();
 
-        return restTemplate.getForObject(
+        ResponseEntity<ResponseDto<MemberProfileExistResponseDto>> response = restTemplate.exchange(
                 uri,
-                MemberProfileExistResponseDto.class
+                HttpMethod.GET,
+                entity,
+                new ParameterizedTypeReference<>() {
+                }
         );
+
+        return response.getBody().getData();
     }
 
     /**

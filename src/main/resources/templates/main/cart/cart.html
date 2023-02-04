@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<!--
+* Tabler - Premium and Open Source dashboard template with responsive and high quality UI.
+* @version 1.0.0-beta5
+* @link https://tabler.io
+* Copyright 2018-2022 The Tabler Authors
+* Copyright 2018-2022 codecalm.net Paweł Kuna
+* Licensed under MIT (https://github.com/tabler/tabler/blob/master/LICENSE)
+-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+  <title>Yes Aladin!</title>
+  <!-- CSS files -->
+  <link th:href="@{/css/tabler.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-flags.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-payments.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-vendors.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/demo.min.css}" rel="stylesheet"/>
+</head>
+<body>
+<!-- Libs JS -->
+<script type="text/javascript" th:src="@{/libs/apexcharts/dist/apexcharts.min.js}"></script>
+<!-- Tabler Core -->
+<script type="text/javascript" th:src="@{/js/tabler.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/demo.min.js}"></script>
+
+<div class="wrapper">
+
+  <!-- TODO 1 : HEADER -->
+  <div th:replace="~{common/fragments/header :: fragment-header}"></div>
+
+  <!-- TODO 2 : NAV-BAR -->
+  <div th:replace="~{common/fragments/navbar :: fragment-nav-bar}"></div>
+
+  <!-- TODO 3: BODY -->
+  <div class="page-body container-xl">
+    <div class="card">
+      <div class="card-header row">
+        <div style="justify-content: space-between;" class="row">
+          <!-- 스텝 -->
+          <div style="width: 400px">
+            <ul class="steps steps-blue steps-counter my-4">
+              <li class="step-item active">카트</li>
+              <li class="step-item">주문</li>
+              <li class="step-item">결제</li>
+              <li class="step-item">완료</li>
+            </ul>
+          </div>
+
+          <!-- 나의 계좌 -->
+          <div style="width: 200px" class="d-flex align-items-center">
+            <dl>
+              <dt class="d-inline m-1 p-1">
+                <div class="avatar bg-blue-lt">
+                  나의
+                  <br/>
+                  계좌
+                </div>
+              </dt>
+              <dd class="d-inline m-1">
+                <div class="avatar text-blue bg-transparent">
+                  포인트
+                  <br/>
+                  0원
+                </div>
+              </dd>
+              <dd class="d-inline m-1">
+                <div class="avatar text-blue bg-transparent">
+                  쿠폰
+                  <br/>
+                  0개
+                </div>
+              </dd>
+            </dl>
+          </div>
+        </div>
+
+        <!-- 전체선택/ 주문/ 삭제 -->
+        <div>
+          <label class="form-check form-check-inline ms-2">
+            <input class="form-check-input" type="checkbox" id="all-check">
+            <span class="form-check-label">전체선택</span>
+          </label>
+          <a href="#" class="btn btn-primary btn-pill">
+            주문하기
+          </a>
+          <a href="#" class="btn btn-light btn-pill">
+            삭제
+          </a>
+        </div>
+
+      </div>
+
+      <div class="card-body">
+        <!-- 배송상품 -->
+        <div class="mt-3">
+          <div style="justify-content: space-between;" class="row">
+            <h2 style="width: 300px;">
+              <em><strong>Yes!Aladin 배송</strong></em>
+            </h2>
+            <div style="width: 200px;" class="mx-2">
+              <div class="text-end text-muted">
+                20,000원 이상 구매 시 무료배송
+              </div>
+            </div>
+          </div>
+          <div>
+            <table class="table table-vcenter" style="width: 100%;">
+              <colgroup>
+                <col style="width: 40px;">
+                <col style="width: 100px;">
+                <col>
+                <col style="width: 70px;">
+                <col style="width: 120px;">
+                <col style="width: 90px;">
+              </colgroup>
+              <thead>
+                <tr>
+                  <th colspan="3" scope="col">
+                    <div class="d-flex justify-content-center">
+                      상품정보
+                    </div>
+                  </th>
+                  <th scope="col">
+                    <div class="d-flex justify-content-center">
+                      수량
+                    </div>
+                  </th>
+                  <th scope="col">
+                    <div class="d-flex justify-content-center">
+                      상품금액
+                    </div>
+                  </th>
+                  <th scope="col">
+                    <div class="d-flex justify-content-center">
+                      주문
+                    </div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div class="d-flex justify-content-center">
+                      <input id="1151424581" name="chkCartGoodsYes24" type="checkbox" autocapitalize="off" class="iptChk" value="1151424581">
+                    </div>
+                  </td>
+                  <td>
+                    <a href="https://www.yes24.com/Product/Goods/115142458" target="_new" >
+                      <img src="https://image.yes24.com/Goods/115142458/L" alt="">
+                    </a>
+                  </td>
+                  <td>
+                    <div>
+                      <a href="https://www.yes24.com/Product/Goods/115142458">[도서] 만일 내가 인생을 다시 산다면 : 벌써 마흔이 된 당신에게 해 주고 싶은 말들 42</a>
+                      <a href="https://www.yes24.com/Product/Goods/115142458" target="_blank"></a>
+                    </div>
+                    <div>
+                      <span><del>17,200</del>원</span>
+                      <span><em>15,480</em>원</span><span>(10% 할인)</span><span class="ms-2"><span class="badge bg-blue-lt">P</span> 860원</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="d-flex justify-content-center mb-2">
+                      <span>
+                        <input class="form-control" id="GoodsCnt1151424581" type="number" name="txtGoodsCntYes24"
+                               maxlength="4" style="width: 60px; height: 30px;">
+                      </span>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                      <a href="#" class="btn btn-outline-primary" style="height: 20px">
+                        변경
+                      </a>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="d-flex justify-content-center">
+                      <strong>15,480원</strong>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="d-flex justify-content-center mb-2">
+                      <a href="#" class="btn btn-primary btn-pill" style="width: 70px; height: 30px;">
+                        주문하기
+                      </a>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                      <a href="#" class="btn btn-light btn-pill" style="width: 70px; height: 30px;">
+                        삭제
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="6">
+                    <div class="text-end px-1">
+                      Yes!Aladin 배송 상품 총 금액 :<strong id="lblTotalAmountCartYes24">58,680원</strong>
+                      <span>( + 배송비 <strong class="cost">0원</strong>)</span>
+                      <span class="mx-2">|</span>
+                      YES!Aladin 포인트 총 적립액 :<strong id="lblTotalPointCartYes24">3,260원</strong>
+                      <span id="spnTotalPointDetailCartYes24">(기본 : 3,260원)</span>
+                    </div>
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+        <!-- eBook -->
+        <div class="mt-5">
+          <div style="justify-content: space-between;" class="row">
+            <h2 style="width: 300px;">
+              <em><strong>Yes!Aladin E-book 카트</strong></em>
+            </h2>
+            <div style="width: 400px;" class="mx-2">
+              <div class="text-end text-muted">
+                eBook상품(무배송)은 구매 후 다운로드 시 취소/환불 불가
+              </div>
+            </div>
+          </div>
+          <div>
+            <table class="table table-vcenter" style="width: 100%;">
+              <colgroup>
+                <col style="width: 40px;">
+                <col style="width: 100px;">
+                <col>
+                <col style="width: 70px;">
+                <col style="width: 120px;">
+                <col style="width: 90px;">
+              </colgroup>
+              <thead>
+              <tr>
+                <th colspan="3" scope="col">
+                  <div class="d-flex justify-content-center">
+                    상품정보
+                  </div>
+                </th>
+                <th scope="col">
+                  <div class="d-flex justify-content-center">
+                    수량
+                  </div>
+                </th>
+                <th scope="col">
+                  <div class="d-flex justify-content-center">
+                    상품금액
+                  </div>
+                </th>
+                <th scope="col">
+                  <div class="d-flex justify-content-center">
+                    주문
+                  </div>
+                </th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                <td>
+                  <div class="d-flex justify-content-center">
+                    <input id="115142451" name="chkCartGoodsYes24" type="checkbox" autocapitalize="off" class="iptChk" value="1151424581">
+                  </div>
+                </td>
+                <td>
+                  <a href="https://www.yes24.com/Product/Goods/117105265" target="_new" >
+                    <img src="http://image.yes24.com/goods/117105265/XL" alt="">
+                  </a>
+                </td>
+                <td>
+                  <div>
+                    <a href="https://www.yes24.com/Product/Goods/115142458">[eBook][100% 페이백][대여] 걸을 때마다 조금씩 내가 된다 휘청거리는 삶을 견디며 한 걸음씩 나아가는 법</a>
+                    <a href="https://www.yes24.com/Product/Goods/115142458" target="_blank"></a>
+                  </div>
+                  <div>
+                    <span><del>12,500</del>원</span>
+                    <span><em>5,900</em>원</span><span>(52% 할인)</span><span class="ms-2"><span class="badge bg-blue-lt">P</span> 0원</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="d-flex justify-content-center mb-2">
+                      1
+                  </div>
+                </td>
+                <td>
+                  <div class="d-flex justify-content-center">
+                    <strong>5,900원</strong>
+                  </div>
+                </td>
+                <td>
+                  <div class="d-flex justify-content-center mb-2">
+                    <a href="#" class="btn btn-primary btn-pill" style="width: 70px; height: 30px;">
+                      주문하기
+                    </a>
+                  </div>
+                  <div class="d-flex justify-content-center">
+                    <a href="#" class="btn btn-light btn-pill" style="width: 70px; height: 30px;">
+                      삭제
+                    </a>
+                  </div>
+                </td>
+              </tr>
+              </tbody>
+              <tfoot>
+              <tr>
+                <td colspan="6">
+                  <div class="text-end px-1">
+                    Yes!Aladin eBook 상품 총 금액 :<strong id="elblTotalAmountCartYes24">58,680원</strong>
+                    <span class="mx-2">|</span>
+                    YES!Aladin 포인트 총 적립액 :<strong id="elblTotalPointCartYes24">3,260원</strong>
+                    <span id="espnTotalPointDetailCartYes24">(기본 : 3,260원)</span>
+                  </div>
+                </td>
+              </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+        <!-- 정기구독 상품 -->
+        <div class="mt-5">
+          <div style="justify-content: space-between;" class="row">
+            <h2 style="width: 300px;">
+              <em><strong>Yes!Aladin 정기구독</strong></em>
+            </h2>
+            <div style="width: 500px;" class="mx-2">
+              <div class="text-end text-muted">
+                정기구독 상품 구매 시 최소 6개월, 최대 1년 후 자동 정기 결제
+              </div>
+            </div>
+          </div>
+          <div>
+            <table class="table table-vcenter my-0" style="width: 100%;">
+              <colgroup>
+                <col style="width: 40px;">
+                <col style="width: 100px;">
+                <col>
+                <col style="width: 70px;">
+                <col style="width: 120px;">
+                <col style="width: 90px;">
+              </colgroup>
+              <thead>
+              <tr>
+                <th colspan="3" scope="col">
+                  <div class="d-flex justify-content-center">
+                    상품정보
+                  </div>
+                </th>
+                <th scope="col">
+                  <div class="d-flex justify-content-center">
+                    수량
+                  </div>
+                </th>
+                <th scope="col">
+                  <div class="d-flex justify-content-center">
+                    상품금액
+                  </div>
+                </th>
+                <th scope="col">
+                  <div class="d-flex justify-content-center">
+                    주문
+                  </div>
+                </th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                <td>
+                  <div class="d-flex justify-content-center">
+                    <input id="11514245" name="chkCartGoodsYes24" type="checkbox" autocapitalize="off" class="iptChk" value="1151424581">
+                  </div>
+                </td>
+                <td>
+                  <a href="https://www.yes24.com/Product/Goods/117105265" target="_new" >
+                    <img src="https://image.yes24.com/Goods/116575313/L" alt="">
+                  </a>
+                </td>
+                <td>
+                  <div>
+                    <a href="https://www.yes24.com/Product/Goods/115142458">[도서] 빅 히스토리 : 우주와 지구, 인간을 하나로 잇는 새로운 역사</a>
+                    <a href="https://www.yes24.com/Product/Goods/115142458" target="_blank"></a>
+                  </div>
+                  <div>
+                    <span><del>33,000</del>원</span>
+                    <span><em>29,700</em>원</span><span>(10% 할인)</span><span class="ms-2"><span class="badge bg-blue-lt">P</span> 1,650원</span>
+                  </div>
+                </td>
+                <td>
+                  <div class="d-flex justify-content-center mb-2">
+                      <span>
+                        1
+                      </span>
+                  </div>
+                </td>
+                <td>
+                  <div class="d-flex justify-content-center">
+                    <strong>29,700원</strong>
+                  </div>
+                </td>
+                <td>
+                  <div class="d-flex justify-content-center mb-2">
+                    <a href="#" class="btn btn-primary btn-pill" style="width: 70px; height: 30px;">
+                      주문하기
+                    </a>
+                  </div>
+                  <div class="d-flex justify-content-center">
+                    <a href="#" class="btn btn-light btn-pill" style="width: 70px; height: 30px;">
+                      삭제
+                    </a>
+                  </div>
+                </td>
+              </tr>
+              </tbody>
+              <tfoot>
+              <tr>
+                <td colspan="6">
+                  <div class="text-end px-1">
+                    Yes!Aladin 정기구독 상품 총 금액 :<strong id="slblTotalAmountCartYes24">58,680원</strong>
+                    <span>( + 배송비 <strong class="cost">0원</strong>)</span>
+                    <span class="mx-2">|</span>
+                    YES!Aladin 포인트 총 적립액 :<strong id="slblTotalPointCartYes24">3,260원</strong>
+                    <span id="sspnTotalPointDetailCartYes24">(기본 : 3,260원)</span>
+                  </div>
+                </td>
+              </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+        <div class="pt-4 px-2 text-end bg-azure-lt">
+          <div class="pb-3 text-blue">
+            <strong>Yes!Aladin 배송<label> + eBook 카트</label><label> + 구독상품 카트</label></strong>
+            상품 총 금액 :<strong><em class="text-dark" id="lblTotalAmountCartYes24Digital">64,580원</em></strong> <span class="mx-2">|</span>
+            Yes!Aladin 포인트 총 적립액 :<strong id="lblTotalPointCartYes24Digital">5,260원</strong> <span id="spnTotalPointDetailCartYes24Digital">(기본 : 3,260원 / 추가 : 2,000원)</span>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <!-- 전체선택/ 주문/ 삭제 -->
+        <div class="pt-2">
+          <label class="form-check form-check-inline ms-2">
+            <span class="form-check-label">선택한 상품</span>
+          </label>
+          <a href="#" class="btn btn-primary btn-pill">
+            주문하기
+          </a>
+          <a href="#" class="btn btn-light btn-pill">
+            삭제
+          </a>
+        </div>
+        <!-- 결제 금액 예상 -->
+        <table class="table table-vcenter card-table mt-3">
+          <thead>
+            <tr>
+              <th scope="col" style="font-size: 10pt; ">
+                <div class="d-flex justify-content-center">
+                  총 상품금액
+                </div></th>
+              <th></th>
+              <th scope="col" class="saleCol" style="font-size: 10pt;">
+                <div class="d-flex justify-content-center">
+                  총 할인금액
+                </div></th>
+              <th></th>
+              <th scope="col" class="priceCol lastCol" style="font-size: 10pt;">
+                <div class="d-flex justify-content-center">
+                  최종 결제금액
+                </div></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="font-size: 15pt;">
+                <em class="yes_b d-flex justify-content-center">64,580원</em>
+              </td>
+              <td style="font-size: 15pt;">
+                <em class="icon_settle ico_settle_minus d-flex justify-content-center">-</em>
+              </td>
+              <td class="saleCol" style="font-size: 15pt;"><em class="yes_b d-flex justify-content-center">0원</em>
+              </td>
+              <td style="font-size: 15pt;">
+                <em class="icon_settle ico_settle_equal d-flex justify-content-center">=</em>
+              </td>
+              <td class="priceCol lastCol" style="font-size: 15pt;"><em class="yes_b d-flex justify-content-center">64,580원</em></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- TODO 4 : footer -->
+  <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
+
+</div>
+</div>
+</body>
+</html>

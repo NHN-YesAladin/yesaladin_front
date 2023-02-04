@@ -18,7 +18,7 @@
         prev
       </a>
     </li>
-    <li class="page-item" th:each="num: ${#numbers.sequence(start, last)}"
+    <li class="page-item" th:if="${totalPage != 0}" th:each="num: ${#numbers.sequence(start, last)}"
         th:classappend="${currentPage + 1 == num ? 'disabled': ''}">
       <a class="page-link" th:href="@{${url} + '?page=' + ${num - 1} + ${queryParam}}"
          th:text="${num}"></a>

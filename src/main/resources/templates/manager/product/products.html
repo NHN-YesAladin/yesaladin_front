@@ -7,7 +7,7 @@
 * Copyright 2018-2022 codecalm.net Paweł Kuna
 * Licensed under MIT (https://github.com/tabler/tabler/blob/master/LICENSE)
 -->
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
@@ -62,7 +62,7 @@
           <div class="col-md-4">
             <select id="select-type" th:name="productType" class="form-select" onchange="selectType(this.value)">
               <option value="">전체</option>
-              <option th:each="type : ${types}" th:value="${type.id}" th:text="${type.type}" th:selected="${type.id == typeId}"></option>
+              <option th:each="type : ${types}" th:value="${type.id}" th:text="${type.getKoName()}" th:selected="${type.id == typeId}"></option>
             </select>
           </div>
         </div>
@@ -97,7 +97,7 @@
                 </td>
                 <td th:text="${product.publisher}"></td>
                 <td th:text="${product.publishedDate}"></td>
-                <td th:text="|${product.sellingPrice}원(${product.discountRate}% 할인)|"></td>
+                <td th:text="|${#numbers.formatInteger(product.sellingPrice, 1, 'COMMA')}원(${product.discountRate}% 할인)|"></td>
 
                 <td class="text-center"><p th:if="${!product.isDeleted}" th:text="${product.quantity}" style="margin: 0"></p></td>
                 <td class="text-center">
@@ -121,8 +121,8 @@
                   <a th:href="|/manager/products/${product.id}/relations|" class="btn btn-dark btn-pill w-auto fs-5">
                     연관관계
                   </a>
-                  <a href="#" class="btn btn-dark btn-pill w-auto fs-5"
-                     th:classappend="${product.ebookFileUrl == null ? 'd-none' : ''}">
+                  <a href="#" class="btn btn-dark btn-pill w-auto fs-5 btn-modal" data-bs-toggle="modal" data-bs-target="#modal-ebook-download"
+                     th:data-url="${product.ebookFileUrl}" th:data-title="${product.title}" th:classappend="${product.ebookFileUrl == null ? 'd-none' : ''}">
                     E-book
                   </a>
                 </td>
@@ -167,6 +167,23 @@
       </div>
     </div>
   </div>
+  <div class="modal modal-blur fade" id="modal-ebook-download" tabindex="-1" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-status bg-success"></div>
+        <div class="modal-body text-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-green icon-lg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path><path d="M9 12l2 2l4 -4"></path></svg>
+          <h3>해당 상품의 E-Book을 다운로드 받으시겠습니까?</h3>
+          <div class="text-muted"><br/>다운로드받을 상품: <p style="display: inline;" id="modal-ebook-url"></p></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-link link-secondary me-auto" data-bs-dismiss="modal">취소</button>
+          <a class="btn btn-success" data-bs-dismiss="modal" id="modal-ebook-download-button" download>네, 다운로드합니다.</a>
+        </div>
+      </div>
+    </div>
+  </div>
   <script>
     const modalDelete = document.getElementById('modal-delete-confirm');
     const titleId = document.getElementById('modal-product-title-id');
@@ -205,6 +222,34 @@
         window.location.href = '/manager/products?typeId=' + typeId;
       }
     }
+  </script>
+  <script>
+    const modalDownload = document.getElementById('modal-ebook-download');
+    const ebookUrl = document.getElementById('modal-ebook-url');
+    const downloadButton = document.getElementById('modal-ebook-download-button');
+    let url;
+    modalDownload.addEventListener('show.bs.modal', function (event) {
+      ebookUrl.value = event.relatedTarget.getAttribute('data-url').toString();
+      ebookUrl.innerText = event.relatedTarget.getAttribute('data-title').toString();
+
+      url = `${location.origin}/files/file-download?url=${event.relatedTarget.getAttribute('data-url').toString()}`;
+      downloadButton.href = url;
+    });
+
+    downloadButton.addEventListener('click', async function (event) {
+      const response = await fetch(url);
+      const lastIndex = ebookUrl.value.toString().lastIndexOf("/");
+      const fileName = ebookUrl.value.toString().substring(lastIndex);
+
+      const body = await response.blob();
+      const blobUrl = URL.createObjectURL(body);
+      const a = document.createElement("a");
+      a.href = blobUrl;
+      a.style.display = "hidden";
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+    });
   </script>
 </body>
 </html>

@@ -3,7 +3,6 @@ package shop.yesaladin.front.product.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Max;
@@ -19,14 +18,13 @@ import java.util.List;
  * @since 1.0
  */
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductRequestDto {
 
     @NotBlank
     @Length(max = 13)
-    private String ISBN;
+    private String isbn;
 
     // 상품 설명
     @NotBlank
@@ -56,7 +54,7 @@ public class ProductRequestDto {
 
     // 구독 상품 관련
     @Length(max = 9)
-    private String ISSN;
+    private String issn;
     private Boolean isSubscriptionAvailable;
 
     // 판매 여부
@@ -90,16 +88,13 @@ public class ProductRequestDto {
     private List<Long> tags;
 
     // 카테고리
-//    private List<String> categories;
-
-    // 강제 품절 (수정용)
-//    private Boolean isForcedOutOfStock;
+    private List<Long> categories;
 
 
     @Override
     public String toString() {
         return "ProductRequestDto{" +
-                "ISBN='" + ISBN + '\'' +
+                "isbn='" + isbn + '\'' +
                 ", title='" + title + '\'' +
                 ", contents='" + contents + '\'' +
                 ", description='" + description + '\'' +
@@ -110,7 +105,7 @@ public class ProductRequestDto {
                 ", isSeparatelyDiscount=" + isSeparatelyDiscount +
                 ", givenPointRate=" + givenPointRate +
                 ", isGivenPoint=" + isGivenPoint +
-                ", ISSN='" + ISSN + '\'' +
+                ", issn='" + issn + '\'' +
                 ", isSubscriptionAvailable=" + isSubscriptionAvailable +
                 ", isSale=" + isSale +
                 ", quantity=" + quantity +
