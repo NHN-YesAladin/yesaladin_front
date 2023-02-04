@@ -1,7 +1,9 @@
 package shop.yesaladin.front.oauth.adapter;
 
+import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -9,6 +11,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
+import shop.yesaladin.common.dto.ResponseDto;
+import shop.yesaladin.front.config.GatewayConfig;
+import shop.yesaladin.front.member.dto.MemberProfileExistResponseDto;
 
 /**
  * OAuth2 Login 기능을 수행하기 위한 adapter 클래스 입니다.
@@ -20,6 +26,7 @@ import org.springframework.web.client.RestTemplate;
 @Component
 public class Oauth2Adapter {
 
+    private final GatewayConfig gatewayConfig;
     private final RestTemplate restTemplate;
 
     /**
@@ -64,5 +71,37 @@ public class Oauth2Adapter {
                 new HttpEntity<>(headers),
                 String.class
         );
+    }
+
+    /**
+     * YesAladin 자사 회원 인지 판별하기 위한 기능 입니다.
+     *
+     * @param email OAuth2에서 회원 정보 조회 시 가져온 email 입니다.
+     * @return 해당 유저가 YesAladin 자사 회원 인지에 대한 결과
+     * @author 송학현
+     * @since 1.0
+     */
+    public boolean isAlreadyMember(String email) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity entity = new HttpEntity<>(headers);
+
+        URI uri = UriComponentsBuilder
+                .fromUriString(gatewayConfig.getShopUrl())
+                .path("/v1/members/checkEmail/{email}")
+                .encode()
+                .build()
+                .expand(email)
+                .toUri();
+
+        ResponseEntity<ResponseDto<MemberProfileExistResponseDto>> response = restTemplate.exchange(
+                uri,
+                HttpMethod.GET,
+                entity,
+                new ParameterizedTypeReference<>() {
+                }
+        );
+
+        return response.getBody().getData().isResult();
     }
 }
