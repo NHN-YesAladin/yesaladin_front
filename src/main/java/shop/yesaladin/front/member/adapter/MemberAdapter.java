@@ -69,7 +69,6 @@ public class MemberAdapter {
             String accessToken
     ) {
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setBearerAuth(accessToken);
 
         URI uri = UriComponentsBuilder
                 .fromUriString(gatewayConfig.getShopUrl())
