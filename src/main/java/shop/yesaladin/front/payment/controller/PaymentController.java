@@ -39,12 +39,9 @@ public class PaymentController {
      */
     @GetMapping("/success")
     public String success(
-            HttpServletRequest request,
             @ModelAttribute PaymentRequestDto requestDto,
             Model model
     ) {
-        System.out.println("request = " + request.getQueryString());
-        //TODO 주문이 이미 생성이 되어 있어야 shop서버와 통신하여 결제 완료처리 가능
         PaymentCompleteSimpleResponseDto responseDto = paymentService.confirm(requestDto);
         System.out.println("responseDto = " + responseDto);
         model.addAttribute("response", responseDto);
