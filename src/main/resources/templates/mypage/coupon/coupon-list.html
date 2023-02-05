@@ -19,6 +19,41 @@
   <link rel="stylesheet" th:href="@{/css/tabler-payments.min.css}"/>
   <link rel="stylesheet" th:href="@{/css/tabler-vendors.min.css}"/>
   <link rel="stylesheet" th:href="@{/css/demo.min.css}"/>
+
+  <style>
+    .coupon-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      align-items: center;
+      justify-items: center;
+    }
+
+    .coupon-card {
+      display: flex;
+      width: 12rem;
+      height: 6.5rem;
+      border-radius: 0.4rem;
+      box-shadow: #00000066 0.0rem 0.0rem 0.1rem 0;
+      margin-bottom: 1rem;
+    }
+
+    .coupon-deco {
+      z-index: 0;
+      margin-left: 1rem;
+      background-color: #206bc4;
+      width: 1rem;
+      height: 100%;
+    }
+
+    .coupon-amount {
+      font-size: 2rem;
+    }
+
+    .coupon-description {
+      font-size: 0.8rem;
+      color: #475569;
+    }
+  </style>
 </head>
 <body>
 <!-- Libs JS -->
@@ -69,7 +104,30 @@
                   </div>
                 </div>
                 <div class="page-body">
-                  <div class="container-xl">
+                  <div class="card text-center">
+                    <div class="card-header">
+                      <ul class="nav nav-pills card-header-pills">
+                        <li class="nav-item">
+                          <a aria-current="true" class="nav-link active" href="#">사용 가능</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" href="#">사용 불가능</a>
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="card-body d-grid coupon-container">
+                      <div class="coupon-card">
+                        <div class="coupon-deco">
+                        </div>
+                        <div style="text-align: center; margin: auto">
+                          <div class="coupon-amount">10%</div>
+                          <div class="coupon-description">전체 상품 할인 <br>~2023.02.15</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="container-xl d-flex flex-wrap justify-content-start">
+
                   </div>
                 </div>
               </div>
