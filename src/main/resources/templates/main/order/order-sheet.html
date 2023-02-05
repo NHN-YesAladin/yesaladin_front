@@ -38,7 +38,7 @@
             <input type="text" name="orderer-address-id" hidden="hidden">
             <input type="text" class="form-control" name="orderer-address" placeholder="주소"
                    th:value="${member == null ? '' : member.address}">
-            <label class="form-label required d-lg-inline float-start">희망배송날짜</label>
+            <label class="form-label d-lg-inline float-start">희망배송날짜</label>
             <input class="form-control mb-2" type="date" name="order-expected-date"
                    th:min="${#calendars.format( #calendars.createNow(), 'yyyy-MM-dd')}"
                    id="datepicker">
@@ -63,13 +63,13 @@
               </thead>
               <tbody th:each="product:${orderProducts}">
               <tr>
-                <td th:value="${productStat}"></td>
-                <td><span name="order-product" th:value="${product.id}"></span></td>
+                <td th:value="${productStat.index + 1}"></td>
+                <td><span name="order-product" th:value="${product.isbn}"></span></td>
                 <td th:value="${product.title}"></td>
                 <td th:value="${product.price}"></td>
                 <td th:value="${product.point}"></td>
                 <td th:value="${product.quantity}">
-                  <span name="order-product-quantity" th:value="${product.quantity}"
+                  <span name="order-product-quantity" th:value="${product.quantity}"></span>
                 </td>
                 <td>
                   <!--                  TODO 개별 쿠폰 적용하기-->
