@@ -1,10 +1,16 @@
 package shop.yesaladin.front.oauth.util;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
+/**
+ * OAuth2 관련 상수를 관리하기 위한 Utils Enum 입니다.
+ *
+ * @author 송학현
+ * @since 1.0
+ */
 @Getter
-@AllArgsConstructor
+@RequiredArgsConstructor
 public enum Oauth2Utils {
     GITHUB("github"),
     KAKAO("kakao"),
@@ -21,5 +27,5 @@ public enum Oauth2Utils {
     REDIRECT_URI("redirect_uri"),
     CODE("code");
 
-    private String value;
+    private final String value;
 }

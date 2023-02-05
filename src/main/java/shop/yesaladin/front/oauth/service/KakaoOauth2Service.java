@@ -80,7 +80,7 @@ public class KakaoOauth2Service extends Oauth2Service {
     public String getUserInfoProcessingUrl() {
         return UriComponentsBuilder.newInstance()
                 .scheme(HTTPS.getValue())
-                .host(KAKAO_HOST.getValue())
+                .host("kapi.kakao.com")
                 .path("v2/user/me")
                 .build().toUriString();
     }
