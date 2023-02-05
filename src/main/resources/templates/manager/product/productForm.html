@@ -194,7 +194,7 @@
                 <input type="text" class="form-control" placeholder="Search for…" id="tag-input">
               </div>
               <div class="col-auto">
-                <a href="#" class="btn btn-icon" aria-label="Button" id="tag-search" onclick="search('/api/tags/search', 'tag-input', 'searched-tag-table')">
+                <a href="#" class="btn btn-icon" aria-label="Button" id="tag-search">
                   <!-- Download SVG icon from http://tabler-icons.io/i/search -->
                   <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
                 </a>
@@ -446,6 +446,12 @@
 
 
 <script>
+
+  document.getElementById('tag-search').addEventListener('click', function () {
+    search('/api/tags/search', 'tag-input', 'searched-tag-table')
+  })
+
+
   function search(url, inputId, searchedTableId) {
     const input = document.getElementById(inputId)
     const searchedViewTable = document.getElementById(searchedTableId)
@@ -455,22 +461,37 @@
       return
     }
 
-    fetch(url + '?' + 'name='+input.value, {
+    fetch(url + '?' + 'name=' + input.value + '&offset=0&' + 'size=5', {
       method: 'GET'
     }).then((res) => res.json())
     .then(function (data) {
       initSearchTable(searchedViewTable)
 
       const head = searchedViewTable.createTHead()
-      head.colSpan = 3;
-      const cell = head.insertCell()
-      cell.innerText =  input.value + ' 검색 결과'
 
-      const obj = {count: data.count, list: data.searchedPublisherDtoList || data.searchedTagDtoList}
-      obj.list.forEach(function () {
-        const body = searchedViewTable.createTBody()
-        body.innerText = obj.list.toString()
-      })
+      const headRow = head.insertRow()
+      headRow.colSpan = 3
+
+      const headCell = headRow.insertCell()
+      headCell.innerText =  input.value + ' 검색 결과'
+
+      const body = searchedViewTable.createTBody()
+      // const obj = {count: data.count, list: data.searchedPublisherDtoList || data.searchedTagDtoList || data.searchedAuthorDtoList || data.searchedCategoryDtoList}
+      if(data.searchedPublisherDtoList != null){
+        data.searchedPublisherDtoList.forEach(function (dto) {
+          const bodyRow = body.insertRow();
+          bodyRow.innerText = dto.value
+        })
+      } else if(data.searchedTagDtoList != null) {
+        data.searchedTagDtoList.forEach(function (dto) {
+          const bodyRow = body.insertRow();
+          bodyRow.innerText = dto.value
+        })
+      } else if(data.searchedAuthorDtoList != null) {
+
+      } else {
+
+      }
     })
   }
 </script>

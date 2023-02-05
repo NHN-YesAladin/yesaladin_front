@@ -17,9 +17,4 @@ public class SearchedAuthorDto {
     private Long id;
     private String name;
     private String loginId;
-
-    @Override
-    public String toString() {
-        return "Login ID: " + loginId + ", Name: " + name;
-    }
 }
