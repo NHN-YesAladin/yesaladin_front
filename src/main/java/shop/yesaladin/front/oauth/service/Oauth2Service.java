@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import shop.yesaladin.front.member.dto.MemberResponseDto;
 import shop.yesaladin.front.oauth.adapter.Oauth2Adapter;
+import shop.yesaladin.front.oauth.dto.Oauth2LoginRequestDto;
+import shop.yesaladin.front.oauth.exception.Oauth2ParseProcessingException;
 
 /**
  * OAuth2 Login Service의 추상 클래스 입니다.
@@ -51,6 +53,17 @@ public abstract class Oauth2Service {
     public abstract String getUserInfoProcessingUrl();
 
     /**
+     * OAuth2에서 제공 받은 사용자 정보를 바탕으로 Login 처리를 위한 DTO 클래스를 만들기 위한 기능입니다.
+     * 해당 사용자가 OAuth2 서비스에 등록된 email이 없는 경우, email을 랜덤으로 생성합니다.
+     *
+     * @param userInfo OAuth2에서 제공 받은 사용자 정보 Map
+     * @return Login 처리를 위해 변환된 DTO 클래스
+     * @author 송학현
+     * @since 1.0
+     */
+    public abstract Oauth2LoginRequestDto createOauth2Dto(Map<String, Object> userInfo);
+
+    /**
      * OAuth2에서 accessToken을 발급 받기 위한 기능입니다.
      *
      * @param tokenProcessingUrl accessToken을 발급 받기 위한 경로 입니다.
@@ -66,7 +79,7 @@ public abstract class Oauth2Service {
         try {
             accessToken = objectMapper.readValue(response.getBody(), Map.class);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("parse error");
+            throw new Oauth2ParseProcessingException();
         }
 
         return (String) accessToken.get("access_token");
@@ -88,7 +101,7 @@ public abstract class Oauth2Service {
             ResponseEntity<String> oauth2User = oauth2Adapter.getUser(token, userInfoProcessingUrl);
             user = objectMapper.readValue(oauth2User.getBody(), Map.class);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("parse error");
+            throw new Oauth2ParseProcessingException();
         }
 
         return user;
