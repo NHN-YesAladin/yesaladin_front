@@ -443,255 +443,38 @@
     });
   }, false);
   </script>
+
+
 <script>
-
-  const selectedCategoryList = document.getElementsByName('categories')
-  const selectedViewCategoryTable = document.getElementById('selected-category-view-table')
-  const categoryTable = document.getElementById('searched-category-table');
-
-  document.getElementById('categorySearch').addEventListener('click', (e) => {
-    e.preventDefault()
-    fetch('/api/categories/search?size=5&offset=0&name=' + categoryName.value, {
+  function search(url, input, searchedViewTable) {
+    fetch(url + '?' + 'name='+input, {
       method: 'GET'
-    }).then(function (res) {
-      res.json().then(function (json) {
-        initSearchTable(categoryTable)
-        const head = categoryTable.createTHead()
-        const low = head.insertRow()
-        const cell = low.insertCell();
-        cell.innerHTML = '<b class="font-weight-bold">검색된 카테고리</b>'
-        const body = categoryTable.createTBody()
-        for (let i = 0; i < json.searchedCategoryDtoList.length; i++) {
+    }).then((res) => res.json())
+    .then(function (data) {
+      initSearchTable(searchedViewTable)
 
-          const row = body.insertRow();
+      const head = searchedViewTable.insertRow()
 
-          const id = json.searchedCategoryDtoList[i].id;
-          const parentName = row.insertCell();
-          parentName.innerText = json.searchedCategoryDtoList[i].parentName + " >> "
-                  + json.searchedCategoryDtoList[i].name;
 
-          const select = row.insertCell();
-          select.innerHTML = '<button class="btn btn-primary btn-xs my-xs-btn" type="button">'
-                  + '<span class="glyphicon glyphicon-pencil"></span>추가</button>';
-          select.addEventListener("click", (s) => {
-            s.preventDefault()
-            if (selectedCategoryList.length > 2) {
-              console.log(selectedCategoryList.length)
-              alert("카테고리는 3개까지만 허용합니다.")
-            } else if (!checkValue(selectedCategoryList, id)) {
-              const selectedCategoryViewRow = selectedViewCategoryTable.insertRow();
-              const selectedCategoryViewCeil = selectedCategoryViewRow.insertCell();
-              selectedCategoryViewCeil.innerText  = json.searchedCategoryDtoList[i].parentName
-                      + " >> " + json.searchedCategoryDtoList[i].name;
 
-              const deleteButton = selectedCategoryViewRow.insertCell();
-              deleteButton.innerHTML = '<button class="btn btn-primary btn-xs my-xs-btn" type="button">'
-                      + '<span class="glyphicon glyphicon-pencil"></span>삭제</button>';
-              deleteButton.id = id;
-              const createSelectedCategory = document.createElement('input');
-              createSelectedCategory.name = "categories"
-              createSelectedCategory.setAttribute('type', 'checkbox');
-              createSelectedCategory.value = id;
-              createSelectedCategory.checked = true;
-              createSelectedCategory.readOnly = true;
-              document.getElementById('selected-category-checkbox-list').appendChild(
-                      createSelectedCategory)
-              deleteButton.addEventListener('click', (e) => {
-                selectedCategoryViewRow.remove()
-                createSelectedCategory.remove()
-              })
-            }
-          })
-        }
-      })
     })
-  })
+  }
+</script>
 
-  const selectedTagsCheckBox = document.getElementById('selected-tags-checkbox');
-  const tags = document.getElementsByName('tags');
-  const selectedTagTable = document.getElementById('selected-tag-table');
-  const searchedTagTable = document.getElementById('searched-tag-table');
-  const tagName = document.getElementById('tag-name');
-
-  document.getElementById('tag-search').addEventListener('click', (e) => {
-    e.preventDefault()
-    fetch('/api/tags/search?size=5&offset=0&name=' + tagName.value, {
-      method: 'GET'
-    }).then(function (res) {
-      res.json().then(function (json) {
-        initSearchTable(searchedTagTable)
-        const head = searchedTagTable.createTHead()
-        const low = head.insertRow()
-        const cell = low.insertCell();
-        cell.innerHTML = '<b class="font-weight-bold">검색된 태그</b>'
-        const body = searchedTagTable.createTBody()
-        for (let i = 0; i < json.searchedTagDtoList.length; i++) {
-          const row = body.insertRow();
-
-          const cell = row.insertCell();
-          cell.innerText = json.searchedTagDtoList[i].name;
-
-          const selectedButton = row.insertCell();
-          selectedButton.innerHTML = '<button class="btn btn-primary btn-xs my-xs-btn" type="button">'
-                  + '<span class="glyphicon glyphicon-pencil"></span>추가</button>';
-          selectedButton.addEventListener('click', (e) => {
-            if (!checkValue(tags, json.searchedTagDtoList[i].id)) {
-              const row = selectedTagTable.insertRow();
-
-              const cell = row.insertCell();
-              cell.innerText = json.searchedTagDtoList[i].name;
-
-              const deleteButton = row.insertCell();
-              deleteButton.innerHTML = '<button class="btn btn-primary btn-xs my-xs-btn" type="button">'
-                      + '<span class="glyphicon glyphicon-pencil"></span>삭제</button>';
-
-              const tagCheckBox = document.createElement('input');
-              tagCheckBox.setAttribute('type', 'checkbox');
-              tagCheckBox.value = json.searchedTagDtoList[i].id
-              tagCheckBox.readOnly = true
-              tagCheckBox.checked = true
-              tagCheckBox.name = `tags`
-              tagCheckBox.id = 'tags'
-              selectedTagsCheckBox.appendChild(tagCheckBox)
-
-              deleteButton.addEventListener('click', (e) => {
-                row.remove();
-                tagCheckBox.remove();
-              })
-            }
-          })
-        }
-      })
-    })
-  })
-
-  const selectedAuthorsCheckBox = document.getElementById('selected-authors-checkbox');
-  const authors = document.getElementsByName('authors');
-  const selectedAuthorTable = document.getElementById('selected-author-table');
-  const searchedAuthorTable = document.getElementById('searched-author-table');
-  const inputAuthorName = document.getElementById('input-author-name');
-
-  document.getElementById('author-search').addEventListener('click', (e) => {
-    e.preventDefault();
-    fetch("/api/authors/search?size=5&offset=0&name=" + inputAuthorName.value, {
-      method: 'GET'
-    }).then(function (res) {
-      res.json().then(function (json) {
-        initSearchTable(searchedAuthorTable);
-        const head = searchedAuthorTable.createTHead()
-        const low = head.insertRow()
-        const cell = low.insertCell();
-        cell.innerHTML = '<b class="font-weight-bold">검색된 저자</b>'
-        const body = searchedAuthorTable.createTBody()
-        for(let i = 0; i < json.searchedAuthorDtoList.length; i++) {
-          const row = body.insertRow();
-
-          const cellName = row.insertCell();
-          cellName.innerText = "name: " + json.searchedAuthorDtoList[i].name;
-          const cellLoginId = row.insertCell()
-          if(json.searchedAuthorDtoList[i].loginId !== null) {
-            cellLoginId.innerText = "loginId: " + json.searchedAuthorDtoList[i].loginId
-          }
-          const selectButton = row.insertCell();
-          selectButton.innerHTML = '<button class="btn btn-primary btn-xs my-xs-btn" type="button">'
-                  + '<span class="glyphicon glyphicon-pencil"></span>추가</button>';
-          selectButton.addEventListener('click',(e) => {
-            if(!checkValue(authors, json.searchedAuthorDtoList[i].id)) {
-              const row = selectedAuthorTable.insertRow();
-
-              const name = row.insertCell()
-              name.innerText = "name: " + json.searchedAuthorDtoList[i].name;
-
-              const cellLoginId = row.insertCell();
-              if(json.searchedAuthorDtoList[i].loginId !== null) {
-                cellLoginId.innerText = "loginId: " + json.searchedAuthorDtoList[i].loginId;
-              }
-
-              const authorCheckBox = document.createElement('input');
-              authorCheckBox.setAttribute('type', 'number');
-              authorCheckBox.name = "authors";
-              authorCheckBox.value = json.searchedAuthorDtoList[i].id;
-              authorCheckBox.readOnly = true;
-              authorCheckBox.hidden = true;
-              selectedAuthorsCheckBox.appendChild(authorCheckBox)
-
-              const deleteButton = row.insertCell()
-              deleteButton.innerHTML = '<button class="btn btn-primary btn-xs my-xs-btn" type="button">'
-                      + '<span class="glyphicon glyphicon-pencil"></span>삭제</button>';
-              deleteButton.addEventListener('click', (e) => {
-                row.remove();
-                authorCheckBox.remove();
-              })
-            }})
-        }
-      })
-    })
-  })
-
-  const selectedPublishersCheckBox = document.getElementById('selected-publisher-checkbox');
-  const publisher = document.getElementsByName('publisher');
-  const selectedPublisherTable = document.getElementById('selected-publisher-table');
-  const searchedPublisherTable = document.getElementById('searched-publisher-table');
-  const inputPublisherName = document.getElementById('input-publisher-name');
-
-  document.getElementById('publisher-search').addEventListener('click', (e) => {
-    e.preventDefault();
-    fetch("/api/publishers/search?size=5&offset=0&name=" + inputPublisherName.value, {
-      method: 'GET'
-    }).then(function (res) {
-      res.json().then(function (json) {
-        initSearchTable(searchedPublisherTable);
-        const head = searchedPublisherTable.createTHead()
-        const low = head.insertRow()
-        const cell = low.insertCell();
-        cell.innerHTML = '<b class="font-weight-bold">검색된 출판사</b>'
-        const body = searchedPublisherTable.createTBody()
-        for(let i = 0; i < json.searchedPublisherDtoList.length; i++) {
-          const row = body.insertRow();
-
-          const cell = row.insertCell();
-          cell.innerText = json.searchedPublisherDtoList[i].name;
-
-          const selectButton = row.insertCell();
-          selectButton.innerHTML = '<button class="btn btn-primary btn-xs my-xs-btn" type="button">'
-                  + '<span class="glyphicon glyphicon-pencil"></span>추가</button>';
-          selectButton.addEventListener('click',(e) => {
-            if(publisher.length == 0) {
-              const row = selectedPublisherTable.insertRow();
-
-              const cell = row.insertCell();
-              cell.innerText = json.searchedPublisherDtoList[i].name;
-
-              const publisherCheckBox = document.createElement('input');
-              publisherCheckBox.setAttribute('type', 'checkbox');
-              publisherCheckBox.name = 'publisher';
-              publisherCheckBox.value = json.searchedPublisherDtoList[i].id
-              publisherCheckBox.readOnly = true;
-              publisherCheckBox.checked = true;
-              selectedPublishersCheckBox.appendChild(publisherCheckBox)
-
-              const deleteButton = row.insertCell()
-              deleteButton.innerHTML = '<button class="btn btn-primary btn-xs my-xs-btn" type="button">'
-                      + '<span class="glyphicon glyphicon-pencil"></span>삭제</button>';
-              deleteButton.addEventListener('click', (e) => {
-                row.remove()
-                publisherCheckBox.remove()
-              })
-            }
-          })
-        }
-      })
-    })
-  })
-
+<script>
+  //테이블 초기화
   function initSearchTable(table) {
     const total =  table.rows.length
     for (let i = 0; i < total; i++) {
       table.deleteRow(0)
     }
   }
+</script>
 
+<script>
+  // 중복 확인
   function checkValue(checkBox, id) {
+
     for (let i = 0; i < checkBox.length; i++) {
       if (checkBox[i].value == id) {
         return true;
