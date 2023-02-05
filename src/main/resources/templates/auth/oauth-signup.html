@@ -1,0 +1,254 @@
+<!doctype html>
+<!--
+* Tabler - Premium and Open Source dashboard template with responsive and high quality UI.
+* @version 1.0.0-beta5
+* @link https://tabler.io
+* Copyright 2018-2022 The Tabler Authors
+* Copyright 2018-2022 codecalm.net Paweł Kuna
+* Licensed under MIT (https://github.com/tabler/tabler/blob/master/LICENSE)
+-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+  <title>Yes Aladin! - OAuth2 SignUp</title>
+  <!-- CSS files -->
+  <link th:href="@{/css/tabler.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-flags.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-payments.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-vendors.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/demo.min.css}" rel="stylesheet"/>
+</head>
+<body>
+<!-- Libs JS -->
+<script type="text/javascript" th:src="@{/libs/apexcharts/dist/apexcharts.min.js}"></script>
+<!-- Tabler Core -->
+<script type="text/javascript" th:src="@{/js/tabler.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/demo.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/member/signup.js}"></script>
+
+<div class="wrapper">
+  <!-- TODO 1 : HEADER -->
+  <div th:replace="~{common/fragments/header :: fragment-header}"></div>
+
+  <!-- TODO 2 : NAV-BAR -->
+  <div th:replace="~{common/fragments/navbar :: fragment-nav-bar}"></div>
+
+  <!-- TODO 3: BODY -->
+
+  <div class="page-wrapper">
+    <div class="page page-center">
+      <div class="container container-tight py-4">
+        <div class="text-center mb-4">
+          <a href="." class="navbar-brand navbar-brand-autodark"><img src="./static/logo.svg"
+                                                                      height="36" alt=""></a>
+        </div>
+        <form class="signup-form" id="signup-form" action="/members/oauth2/signup" method="post"
+              autocomplete="off" novalidate="">
+          <div class="card-body">
+            <h2 class="card-title text-center mb-4">OAuth2 Login 시 YesAladin 자사 회원 등록을 위해 추가 정보를 입력해주세요.</h2>
+            <h4>주의사항: 해당 OAuth2 서비스에 등록된 email이 없다면 매번 새로 계정을 등록하셔야 합니다.</h4>
+            <div class="mb-3">
+              <label class="form-label">이름</label>
+              <input type="text" class="form-control" id="name" th:name="name" placeholder="이름"
+                     pattern="^.*(?=.*[가-힣a-z])(?=^.{2,200}).*$"
+                     required>
+              <div class="invalid-feedback">
+                이름을 입력해주세요.
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">닉네임</label>
+              <input type="text" class="form-control" id="nickname" th:name="nickname"
+                     pattern="^.*(?=.*[a-z])(?=.*[a-z\d])(?=.{2,8}).*$"
+                     placeholder="닉네임은 영문으로 2자 이상 15자 이하만 가능합니다." required>
+              <div class="invalid-feedback">
+                닉네임은 영문으로 2자 이상 15자 이하만 가능합니다.
+              </div>
+              <div class="button-box">
+                <button class="nicknameCheckBtn" type="button" onclick="nicknameCheck()">중복 확인</button>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Login Id</label>
+              <input type="text" class="form-control" id="loginId" th:name="loginId"
+                     pattern="^.*(?=.*[a-z])(?=.*\d)(?=^.{8,15}).*$"
+                     placeholder="아이디는 영문(필수)과 숫자(옵션) 순서로 8자 이상 15자 이하만 가능 합니다." required>
+              <div class="invalid-feedback">
+                아이디는 영문(필수)과 숫자(옵션) 순서로 8자 이상 15자 이하만 가능 합니다.
+              </div>
+              <div class="button-box">
+                <button class="checkBtn" type="button" onclick="loginIdCheck()">중복 확인</button>
+              </div>
+            </div>
+            <input th:value="${oauthMember.email}" id="email" name="email" hidden="hidden">
+            <div class="mb-3">
+              <label class="form-label">휴대폰 번호</label>
+              <input type="text" class="form-control" id="phone" th:name="phone"
+                     pattern="([0-9]{11})"
+                     placeholder="휴대폰 번호 ex) 01012345678" required>
+              <div class="invalid-feedback">
+                휴대폰 번호를 - 없이 11자 입력해주세요.
+              </div>
+              <div class="button-box">
+                <button class="checkBtn" type="button" onclick="phoneCheck()">중복 확인</button>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Password</label>
+              <div class="input-group input-group-flat">
+                <input type="password" class="form-control" id="password" th:name="password"
+                       pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$"
+                       placeholder="Password"
+                       autocomplete="off" required>
+                <div class="invalid-feedback">
+                  password는 최소 8자, 하나 이상의 문자와 하나의 숫자 및 하나의 특수 문자로 입력해주세요.
+                </div>
+                <span class="input-group-text">
+                  <a href="#" class="link-secondary" data-bs-toggle="tooltip"
+                     aria-label="Show password" data-bs-original-title="Show password"><!-- Download SVG icon from http://tabler-icons.io/i/eye -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
+                         viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                         stroke-linecap="round" stroke-linejoin="round"><path stroke="none"
+                                                                              d="M0 0h24v24H0z"
+                                                                              fill="none"></path><circle
+                        cx="12" cy="12" r="2"></circle><path
+                        d="M22 12c-2.667 4.667 -6 7 -10 7s-7.333 -2.333 -10 -7c2.667 -4.667 6 -7 10 -7s7.333 2.333 10 7"></path></svg>
+                  </a>
+                </span>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Password 확인</label>
+              <div class="input-group input-group-flat">
+                <input type="password" class="form-control" id="passwordCheck"
+                       th:name="passwordCheck" placeholder="Password 확인"
+                       pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$"
+                       autocomplete="off" required>
+                <div class="invalid-feedback">
+                  password는 최소 8자, 하나 이상의 문자와 하나의 숫자 및 하나의 특수 문자로 입력해주세요.
+                </div>
+                <span class="input-group-text">
+                  <a href="#" class="link-secondary" data-bs-toggle="tooltip"
+                     aria-label="Show password" data-bs-original-title="Show password"><!-- Download SVG icon from http://tabler-icons.io/i/eye -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
+                         viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                         stroke-linecap="round" stroke-linejoin="round"><path stroke="none"
+                                                                              d="M0 0h24v24H0z"
+                                                                              fill="none"></path><circle
+                        cx="12" cy="12" r="2"></circle><path
+                        d="M22 12c-2.667 4.667 -6 7 -10 7s-7.333 -2.333 -10 -7c2.667 -4.667 6 -7 10 -7s7.333 2.333 10 7"></path></svg>
+                  </a>
+                </span>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">생년월일</label>
+              <input type="text" class="form-control" id="birth" placeholder="예시: 20230101"
+                     pattern="([0-9]{8})"
+                     th:name="birth" required>
+              <div class="invalid-feedback">
+                생년월일을 정확하게 입력해주세요.
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">성별</label>
+              <div class="row g-2">
+                <div class="col-5">
+                  <select name="gender" class="form-select" id="gender" required>
+                    <option value="">성별</option>
+                    <option value="MALE">남성</option>
+                    <option value="FEMALE">여성</option>
+                  </select>
+                  <div class="invalid-feedback">
+                    성별을 선택해주세요.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-footer">
+              <button type="submit" class="btn btn-primary w-100">Create new account</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- TODO 4 : footer -->
+  <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
+</div>
+<script>
+  window.addEventListener('load', () => {
+    const signupForm = document.getElementsByClassName('signup-form');
+
+    let emptyRegex = /\s/g;
+    let nameRegex = /^.*(?=.*[가-힣a-z])(?=^.{2,200}).*$/;
+    let nicknameRegex = /^.*(?=.*[a-z])(?=.*[a-z\d])(?=.{2,8}).*$/;
+    let loginIdRegex = /^.*(?=.*[a-z])(?=.*\d)(?=^.{8,15}).*$/;
+    let passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/g
+    let birthdayRegex = /^.*(?=.*\d)(?=^.{6}).*$/;
+    let phoneRegex = /^\d{11}$/;
+
+    Array.prototype.filter.call(signupForm, (signupForm) => {
+      signupForm.addEventListener('submit', function (event) {
+        if (signupForm.checkValidity() === false) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+
+        let nameVal = document.getElementById('name').value;
+        if (!nameRegex.test(nameVal) || emptyRegex.test(nameVal)) {
+          alert('이름을 올바르게 입력해주세요.')
+          return false;
+        }
+
+        let nicknameVal = document.getElementById('nickname').value;
+        if (!nicknameRegex.test(nicknameVal) || emptyRegex.test(nicknameVal)) {
+          alert('닉네임은 영문으로 2자 이상 15자 이하만 가능합니다.');
+          return false;
+        }
+
+        let loginIdVal = document.getElementById('loginId').value;
+        if (!loginIdRegex.test(loginIdVal) || emptyRegex.test(loginIdVal)) {
+          alert('로그인 아이디는 영문(필수)과 숫자(옵션) 순서로 8자 이상 15자 이하만 가능 합니다');
+          return false;
+        }
+
+        let passwordVal = document.getElementById('password').value;
+        let passwordCheckVal = document.getElementById('passwordCheck').value;
+        if (!passwordRegex.test(passwordVal) || emptyRegex.test(passwordVal)) {
+          alert('Password는 최소 8자, 하나 이상의 문자와 하나의 숫자 및 하나의 특수 문자로 입력해주세요.')
+          return false;
+        } else {
+          if (passwordCheckVal) {
+            if (passwordVal !== passwordCheckVal) {
+              alert('Password가 일치하지 않습니다.')
+              return false;
+            }
+          } else {
+            alert('Password 확인을 입력하세요.')
+            return false;
+          }
+        }
+
+        let birthdayVal = document.getElementById('birth').value;
+        if (!birthdayRegex.test(birthdayVal) || emptyRegex.test(birthdayVal)) {
+          alert('생년월일 8자를 - 없이 입력해주세요. ex) 20230101');
+          return false;
+        }
+
+        let phoneVal = document.getElementById('phone').value;
+        if (!phoneRegex.test(phoneVal) || emptyRegex.test(phoneVal)) {
+          alert('휴대폰 번호를 - 없이 13자 입력해주세요.');
+          return false;
+        }
+
+        signupForm.classList.add('was-validated');
+      }, false);
+    });
+  }, false);
+</script>
+</body>
+</html>

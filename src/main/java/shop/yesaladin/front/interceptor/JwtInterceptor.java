@@ -48,7 +48,9 @@ public class JwtInterceptor implements ClientHttpRequestInterceptor {
     public ClientHttpResponse intercept(
             HttpRequest request, byte[] body, ClientHttpRequestExecution execution
     ) throws IOException {
-        log.info("path={}", request.getURI().getPath());
+        String path = request.getURI().getPath();
+        log.info("path={}", path);
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
             HttpServletRequest servletRequest = Objects.requireNonNull(((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()))
