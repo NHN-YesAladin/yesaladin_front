@@ -7,11 +7,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import shop.yesaladin.front.member.dto.MemberBlockRequestDto;
 import shop.yesaladin.front.member.dto.MemberBlockResponseDto;
 import shop.yesaladin.front.member.dto.MemberGradeQueryResponseDto;
 import shop.yesaladin.front.member.dto.MemberProfileExistResponseDto;
+import shop.yesaladin.front.member.dto.MemberUnblockResponseDto;
+import shop.yesaladin.front.member.dto.MemberWithdrawResponseDto;
 import shop.yesaladin.front.member.service.inter.QueryMemberService;
 
 /**
@@ -91,9 +94,11 @@ public class MemberRestController {
     /**
      * 관리자가 회원을 차단하는 메서드
      *
-     * @param blockReason 차단 사유
+     * @param requestDto 차단 사유
      * @param loginId     차단할 회원의 이유
      * @return 차단 결과
+     * @author 김선홍
+     * @since 1.0
      */
     @PostMapping("/block/{loginid}")
     public MemberBlockResponseDto manageMemberBlockByLoginId(
@@ -102,5 +107,31 @@ public class MemberRestController {
     ) throws JsonProcessingException {
         log.info("controller loginId :" + loginId);
         return queryMemberService.manageMemberBlockByLoginId(loginId, requestDto);
+    }
+
+    /**
+     * 관리자가 회원의 차단을 해지하는 메서드
+     *
+     * @param loginId 차단 해지한 로그인 아이디
+     * @return 차단 해지 결과
+     * @author 김선홍
+     * @since 1.0
+     */
+    @GetMapping("/unblock/{loginid}")
+    public MemberUnblockResponseDto manageMemberUnblockByLoginId(@PathVariable(name = "loginid")String loginId) {
+        return queryMemberService.manageMemberUnBlockByLoginId(loginId);
+    }
+
+    /**
+     * 관리자가 삭제할 로그인 아이디
+     *
+     * @param loginId 삭제할 로그인 아이디
+     * @return 삭제 결과
+     * @author 김선홍
+     * @since 1.0
+     */
+    @GetMapping("/withdraw/{loginid}")
+    public MemberWithdrawResponseDto manageMemberWithdrawByLoginId(@PathVariable(name = "loginid")String loginId) {
+        return queryMemberService.manageMemberWithdrawByLoginId(loginId);
     }
 }

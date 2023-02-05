@@ -292,7 +292,7 @@ public class QueryMemberServiceImpl implements QueryMemberService {
                 .toUriString();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-
+        log.info(uri);
         String requestJson = objectMapper.writeValueAsString(requestDto);
         HttpEntity<String> httpEntity = new HttpEntity<>(requestJson, headers);
         log.info(httpEntity.toString());
@@ -341,10 +341,11 @@ public class QueryMemberServiceImpl implements QueryMemberService {
                 .toUriString();
         ResponseEntity<ResponseDto<MemberWithdrawResponseDto>> responseEntity = restTemplate.exchange(
                 uri,
-                HttpMethod.PUT,
+                HttpMethod.DELETE,
                 null,
                 MEMBER_MANAGER_WITHDRAW_RESPONSE_DTO
         );
+        log.info(responseEntity.getBody().getData().getName());
         return Objects.requireNonNull(responseEntity.getBody()).getData();
     }
 }
