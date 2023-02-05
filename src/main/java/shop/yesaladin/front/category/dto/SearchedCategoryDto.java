@@ -19,4 +19,9 @@ public class SearchedCategoryDto {
     private Long id;
     private String name;
     private String parentName;
+
+    @Override
+    public String toString() {
+        return "Category Name: " + parentName + " >> " + name;
+    }
 }

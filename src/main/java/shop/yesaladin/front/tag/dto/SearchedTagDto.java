@@ -16,4 +16,9 @@ import lombok.NoArgsConstructor;
 public class SearchedTagDto {
     private Long id;
     private String name;
+
+    @Override
+    public String toString() {
+        return "Tag Name: " + name;
+    }
 }

@@ -191,10 +191,10 @@
             <label class="form-label">상품 태그</label>
             <div class="row g-2">
               <div class="col">
-                <input type="text" class="form-control" placeholder="Search for…" id="tag-name">
+                <input type="text" class="form-control" placeholder="Search for…" id="tag-input">
               </div>
               <div class="col-auto">
-                <a href="#" class="btn btn-icon" aria-label="Button" id="tag-search">
+                <a href="#" class="btn btn-icon" aria-label="Button" id="tag-search" onclick="search('/api/tags/search', 'tag-input', 'searched-tag-table')">
                   <!-- Download SVG icon from http://tabler-icons.io/i/search -->
                   <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
                 </a>
@@ -446,17 +446,31 @@
 
 
 <script>
-  function search(url, input, searchedViewTable) {
-    fetch(url + '?' + 'name='+input, {
+  function search(url, inputId, searchedTableId) {
+    const input = document.getElementById(inputId)
+    const searchedViewTable = document.getElementById(searchedTableId)
+
+    if(input.value == null) {
+      alert('검색할 단어를 입력해주세요')
+      return
+    }
+
+    fetch(url + '?' + 'name='+input.value, {
       method: 'GET'
     }).then((res) => res.json())
     .then(function (data) {
       initSearchTable(searchedViewTable)
 
-      const head = searchedViewTable.insertRow()
+      const head = searchedViewTable.createTHead()
+      head.colSpan = 3;
+      const cell = head.insertCell()
+      cell.innerText =  input.value + ' 검색 결과'
 
-
-
+      const obj = {count: data.count, list: data.searchedPublisherDtoList || data.searchedTagDtoList}
+      obj.list.forEach(function () {
+        const body = searchedViewTable.createTBody()
+        body.innerText = obj.list.toString()
+      })
     })
   }
 </script>
