@@ -112,27 +112,12 @@
             <label class="form-label text-success">선택한 카테고리</label>
             <table id="selected-category-view-table" class="table" style="table-layout: fixed"></table>
           </div>
-          <div id="selected-category-checkbox-list" style="display: none"></div>
-          <div class="mb-3">
-            <label class="form-label">저자 검색</label>
-            <div class="row g-2">
-              <div class="col">
-                <input type="text" class="form-control" placeholder="Search for…" id="input-author-name">
-              </div>
-              <div class="col-auto">
-                <a href="#" class="btn btn-icon" aria-label="Button" id="author-search">
-                  <!-- Download SVG icon from http://tabler-icons.io/i/search -->
-                  <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
-                </a>
-              </div>
-            </div>
-          </div>
-          <table class="table" id="searched-author-table" style="table-layout: fixed"></table>
+
           <div class="mt-1 mb-1">
             <label class="form-label text-success">선택한 저자</label>
-            <table id="selected-author-table" class="table" style="table-layout: fixed"></table>
           </div>
-          <div id="selected-authors-checkbox" style="display:none;"></div>
+
+
           <div class="mb-3">
             <label class="form-label">출판사 검색</label>
             <div class="row g-2">
@@ -188,22 +173,10 @@
           </div>
 
           <div class="mb-3">
-            <label class="form-label">상품 태그</label>
-            <div class="row g-2">
-              <div class="col">
-                <input type="text" class="form-control" placeholder="Search for…" id="tag-input">
-              </div>
-              <div class="col-auto">
-                <a href="#" class="btn btn-icon" aria-label="Button" id="tag-search">
-                  <!-- Download SVG icon from http://tabler-icons.io/i/search -->
-                  <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
-                </a>
-              </div>
-            </div>
-            <table id="searched-tag-table" class="table" style="table-layout: fixed"></table>
-            <label class="form-label text-success">선택한 태그</label>
-            <table id="selected-tag-table" class="table" style="table-layout: fixed"></table>
-            <div id="selected-tags-checkbox" style="display: none"></div>
+            <label class="form-label">태그 검색</label>
+            <button type="button" class="btn btn-primary form-control mb-3" data-bs-toggle="modal" data-bs-target="#tagModal">Tag Search</button>
+            <label class="form-label">선택한 태그(클릭 시 제거)</label>
+            <div class="form-selectgroup form-selectgroup-pills" id="selected-main-tags-view"></div>
           </div>
 
           <div class="mb-3">
@@ -305,6 +278,84 @@
           </div>
         </div>
       </form>
+    </div>
+  </div>
+  <!-- The Tag Modal -->
+  <div class="modal fade" id="tagModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">태그 검색</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          <div class="row g-2 mb-3">
+            <div class="col">
+              <input type="text" class="form-control" placeholder="Search for…" id="tag-input">
+            </div>
+            <div class="col-auto">
+              <a href="#" class="btn btn-icon" aria-label="Button" id="tag-search">
+                <!-- Download SVG icon from http://tabler-icons.io/i/search -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
+              </a>
+            </div>
+          </div>
+          <table class="table" id="searched-tag-table"></table>
+        </div>
+        <div class="modal-body">
+          <h3><span class="label label-default">선택한 태그(클릭 시 제거)</span></h3>
+          <div class="mb-3">
+            <div class="form-selectgroup form-selectgroup-pills" id="selected-modal-tags-view"></div>
+          </div>
+        </div>
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" id="save-tag-button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- The Tag Modal -->
+  <div class="modal fade" id="authorModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">태그 검색</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          <div class="row g-2 mb-3">
+            <div class="col">
+              <input type="text" class="form-control" placeholder="Search for…" id="author-input">
+            </div>
+            <div class="col-auto">
+              <a href="#" class="btn btn-icon" aria-label="Button" id="author-search">
+                <!-- Download SVG icon from http://tabler-icons.io/i/search -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
+              </a>
+            </div>
+          </div>
+          <table class="table" id="searched-author-table"></table>
+        </div>
+        <div class="modal-body">
+          <h3><span class="label label-default">선택한 태그(클릭 시 제거)</span></h3>
+          <div class="mb-3">
+            <div class="form-selectgroup form-selectgroup-pills" id="selected-modal-tags"></div>
+          </div>
+        </div>
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -446,15 +497,15 @@
 
 
 <script>
-
-  document.getElementById('tag-search').addEventListener('click', function () {
-    search('/api/tags/search', 'tag-input', 'searched-tag-table')
+  document.getElementById('tag-search').addEventListener('click', function (e) {
+    e.preventDefault();
+    searchTag('tag-input')
   })
 
-
-  function search(url, inputId, searchedTableId) {
+  function searchTag(inputId) {
     const input = document.getElementById(inputId)
-    const searchedViewTable = document.getElementById(searchedTableId)
+    const searchedTable = document.getElementById('searched-tag-table')
+    const url = '/api/tags/search'
 
     if(input.value == null) {
       alert('검색할 단어를 입력해주세요')
@@ -465,53 +516,99 @@
       method: 'GET'
     }).then((res) => res.json())
     .then(function (data) {
-      initSearchTable(searchedViewTable)
+      initSearchTable(searchedTable)
 
-      const head = searchedViewTable.createTHead()
+      const head = searchedTable.createTHead()
 
       const headRow = head.insertRow()
       headRow.colSpan = 3
 
       const headCell = headRow.insertCell()
-      headCell.innerText =  input.value + ' 검색 결과'
+      headCell.innerText = input.value + ' 검색 결과'
 
-      const body = searchedViewTable.createTBody()
-      // const obj = {count: data.count, list: data.searchedPublisherDtoList || data.searchedTagDtoList || data.searchedAuthorDtoList || data.searchedCategoryDtoList}
-      if(data.searchedPublisherDtoList != null){
-        data.searchedPublisherDtoList.forEach(function (dto) {
-          const bodyRow = body.insertRow();
-          bodyRow.innerText = dto.value
+      const body = searchedTable.createTBody()
+
+      data.searchedTagDtoList.forEach(function (dto) {
+        const bodyRow = body.insertRow();
+        const nameCell = bodyRow.insertCell()
+        nameCell.className += 'text-center'
+        nameCell.innerText = dto.name
+
+
+        const selectButton = document.createElement('button')
+        selectButton.setAttribute('type', 'button')
+        selectButton.innerText = 'SELECT'
+        selectButton.className = 'btn btn-outline-primary'
+        selectButton.addEventListener('click', function (){selectTags(dto)})
+
+        const buttonCell = bodyRow.insertCell();
+        buttonCell.className += 'text-center'
+        buttonCell.appendChild(selectButton)
         })
-      } else if(data.searchedTagDtoList != null) {
-        data.searchedTagDtoList.forEach(function (dto) {
-          const bodyRow = body.insertRow();
-          bodyRow.innerText = dto.value
-        })
-      } else if(data.searchedAuthorDtoList != null) {
+    })
+  }
 
-      } else {
+  function selectTags(selected) {
+    const modalTagView = document.getElementById('selected-modal-tags-view')
+    const mainTagsView = document.getElementById('selected-main-tags-view')
+    const tags = document.getElementsByName('modal-tags')
 
-      }
+    if(checkValue(tags, selected.id)) {
+      alert('중복 태그입니다.')
+      return
+    }
+    const modal = document.createElement('label')
+    modal.className += 'form-selectgroup-item'
+    modal.innerHTML = '<input type="checkbox" name="modal-tags" value=' + selected.id + ' class="form-selectgroup-input" readonly checked>'
+        + '<span class = "form-selectgroup-label">'+ selected.name + '</span>'
+
+    const main = document.createElement('label')
+    main.className += 'form-selectgroup-item'
+    main.innerHTML = '<input type="checkbox" name="tags" value=' + selected.id + ' class="form-selectgroup-input" readonly checked>'
+        + '<span class = "form-selectgroup-label">'+ selected.name + '</span>'
+
+    modalView.appendChild(modal)
+    mainView.appendChild(main)
+
+    modal.addEventListener('click', function () {
+      modal.remove()
+      main.remove()
+    })
+
+    main.addEventListener('click', function () {
+      modal.remove()
+      main.remove()
     })
   }
 </script>
 
 <script>
-  //테이블 초기화
+  function selectCategories(selected) {
+
+  }
+
+  function selectAuthor(selected) {
+
+  }
+
+  function selectPublisher(selected) {
+
+  }
+</script>
+
+<script>
+  //검색 테이블 초기화
   function initSearchTable(table) {
     const total =  table.rows.length
     for (let i = 0; i < total; i++) {
       table.deleteRow(0)
     }
   }
-</script>
 
-<script>
   // 중복 확인
-  function checkValue(checkBox, id) {
-
-    for (let i = 0; i < checkBox.length; i++) {
-      if (checkBox[i].value == id) {
+  function checkValue(checkbox, id) {
+    for (let i = 0; i < checkbox.length; i++) {
+      if (checkbox[i].value == id) {
         return true;
       }
     }
