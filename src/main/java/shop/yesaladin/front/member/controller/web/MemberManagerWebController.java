@@ -54,7 +54,6 @@ public class MemberManagerWebController {
      */
     @GetMapping(params = "loginid")
     public ModelAndView manageMemberInfoByLoginId(@RequestParam(name = "loginid") String loginId) {
-        log.info("loginId: " + loginId);
         ModelAndView modelAndView = new ModelAndView(VIEW);
         modelAndView.addObject(
                 "memberList",

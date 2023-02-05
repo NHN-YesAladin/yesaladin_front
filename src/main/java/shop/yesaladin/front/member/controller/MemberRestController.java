@@ -105,7 +105,6 @@ public class MemberRestController {
             @RequestBody MemberBlockRequestDto requestDto,
             @PathVariable(name = "loginid") String loginId
     ) throws JsonProcessingException {
-        log.info("controller loginId :" + loginId);
         return queryMemberService.manageMemberBlockByLoginId(loginId, requestDto);
     }
 

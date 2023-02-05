@@ -15,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.config.GatewayConfig;
@@ -222,13 +223,13 @@ public class QueryMemberServiceImpl implements QueryMemberService {
      */
     @Override
     public MemberManagerResponseDto manageMemberInfoByNickname(String nickname) {
-        String uri = UriComponentsBuilder
+        UriComponents uri = UriComponentsBuilder
                 .fromUriString(gatewayConfig.getShopUrl())
                 .path("/v1/members/manage")
                 .queryParam("nickname", nickname)
-                .toUriString();
+                .build();
         ResponseEntity<ResponseDto<MemberManagerResponseDto>> responseEntity = restTemplate.exchange(
-                uri,
+                uri.toUriString(),
                 HttpMethod.GET,
                 null,
                 MEMBER_MANAGER_RESPONSE_DTO
@@ -241,15 +242,15 @@ public class QueryMemberServiceImpl implements QueryMemberService {
      */
     @Override
     public MemberManagerListResponseDto manageMemberInfoByName(String name, int page, int size) {
-        String uri = UriComponentsBuilder
+        UriComponents uri = UriComponentsBuilder
                 .fromUriString(gatewayConfig.getShopUrl())
                 .path("/v1/members/manage")
                 .queryParam("name", name)
                 .queryParam("page", page)
                 .queryParam("size", size)
-                .toUriString();
+                .build();
         ResponseEntity<ResponseDto<MemberManagerListResponseDto>> responseEntity = restTemplate.exchange(
-                uri,
+                uri.toUriString(),
                 HttpMethod.GET,
                 null,
                 MEMBER_MANAGER_LIST_RESPONSE_DTO
