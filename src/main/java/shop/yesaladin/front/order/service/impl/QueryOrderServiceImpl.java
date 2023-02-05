@@ -1,5 +1,10 @@
 package shop.yesaladin.front.order.service.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.net.URI;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
@@ -13,16 +18,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
+import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.common.dto.PeriodQueryRequestDto;
 import shop.yesaladin.front.config.GatewayConfig;
+import shop.yesaladin.front.order.dto.OrderSheetResponseDto;
 import shop.yesaladin.front.order.dto.OrderSummaryResponseDto;
+import shop.yesaladin.front.order.dto.ProductOrderRequestDto;
 import shop.yesaladin.front.order.service.inter.QueryOrderService;
 
 /**
  * 주문 조회 서비스 구현체
  *
  * @author 배수한
+ * @author 최예린
  * @since 1.0
  */
 
@@ -33,14 +42,19 @@ public class QueryOrderServiceImpl implements QueryOrderService {
 
     private final RestTemplate restTemplate;
     private final GatewayConfig gatewayConfig;
+    private final ObjectMapper objectMapper;
+
 
     private static final ParameterizedTypeReference<PaginatedResponseDto<OrderSummaryResponseDto>> PAGING_ORDERS_TYPE
             = new ParameterizedTypeReference<>() {
     };
 
+    private static final ParameterizedTypeReference<ResponseDto<OrderSheetResponseDto>> ORDER_SHEET_TYPE
+            = new ParameterizedTypeReference<>() {
+    };
+
     /**
      * {@inheritDoc}
-     *
      */
     @Override
     public PaginatedResponseDto<OrderSummaryResponseDto> getOrderListInPeriodByMemberId(
@@ -56,7 +70,11 @@ public class QueryOrderServiceImpl implements QueryOrderService {
                 .build();
 
         log.info("pageable : {}", pageable);
-        log.info("startDate : {} | endDate : {} ", requestDto.getStartDate(), requestDto.getEndDate());
+        log.info(
+                "startDate : {} | endDate : {} ",
+                requestDto.getStartDate(),
+                requestDto.getEndDate()
+        );
 
         ResponseEntity<PaginatedResponseDto<OrderSummaryResponseDto>> responseEntity = restTemplate.exchange(
                 uriComponents.toUri(),
@@ -67,10 +85,45 @@ public class QueryOrderServiceImpl implements QueryOrderService {
         return responseEntity.getBody();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ResponseDto<OrderSheetResponseDto> getOrderSheetData(
+            List<String> isbn,
+            List<String> quantity
+    ) {
+        URI uri = UriComponentsBuilder.fromHttpUrl(
+                        gatewayConfig.getShopUrl() + "/v1/order-sheets")
+                .queryParam("isbnList", String.join(",", isbn))
+                .queryParam("quantityList", String.join(",", quantity))
+                .build(true)
+                .encode()
+                .toUri();
+
+        log.info("uri: {}", uri);
+
+        ResponseEntity<ResponseDto<OrderSheetResponseDto>> responseEntity = restTemplate.exchange(
+                uri,
+                HttpMethod.GET,
+                getHttpEntity(),
+                ORDER_SHEET_TYPE
+        );
+        log.info("response : {}", responseEntity.getBody());
+
+        return responseEntity.getBody();
+    }
+
     private HttpEntity<String> getHttpEntity() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> entity = new HttpEntity<>(headers);
         return entity;
     }
+
+//    private HttpEntity<String> getUTFHttpEntity() {
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+//        return new HttpEntity<>(headers);
+//    }
 }

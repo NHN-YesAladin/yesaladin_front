@@ -82,6 +82,11 @@ public class MemberRestController {
         return queryMemberService.phoneCheck(phone);
     }
 
+    /**
+     * 마이페이지에서 회원의 등급을 조회합니다.
+     *
+     * @return 회원의 등급
+     */
     @GetMapping("/grade")
     public String getMemberGrade() {
         return queryMemberService.getMemberGrade();

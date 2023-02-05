@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <body th:fragment="order-sheet">
 <!--토스 결제창을 위해 무조건 제일 위에서 load 되어야함-->
 <script src="https://js.tosspayments.com/v1/payment"></script>
@@ -11,18 +11,26 @@
     </div>
     <div class="card card-md">
       <div class="card-body">
+        <ul class="steps steps-blue steps-counter">
+          <li class="step-item">카트</li>
+          <li class="step-item active">주문</li>
+          <li class="step-item">결제</li>
+          <li class="step-item">완료</li>
+        </ul>
+      </div>
+      <div class="card-body">
         <h3 class="card-title">주문자 정보 입력</h3>
         <div class="card card-md">
           <div class="card-body">
-            <!--        TODO 회원인지에 따라 배송지 선택 disabled 만들기-->
             <label class="form-label required">주문인</label>
             <input type="text" class="form-control" name="orderer" placeholder="홍길동"
-                   th:value="${member == null ? '' : member.name}">
-            <label class="form-label required">전화번호</label>
+                   th:disabled="${name != null}" th:value="${name}">
+            <label class="form-label required mt-2">전화번호</label>
             <input type="text" class="form-control" name="orderer-phone-number" id="phone-number"
-                   maxlength="11" data-mask="000 0000 0000" placeholder="띄어쓰기 없이 붙여주세요.(ex: 01012341234)"
+                   maxlength="11" data-mask="000 0000 0000"
+                   placeholder="띄어쓰기 없이 붙여주세요.(ex: 01012341234)"
                    data-mask-visible="true" autocomplete="off"
-                   th:value="${member == null ? '' : member.phoneNumber}">
+                   th:disabled="${phoneNumber != null}" th:value="${phoneNumber}">
           </div>
         </div>
         <br>
@@ -31,19 +39,31 @@
           <div class="card-body">
             <div>
               <label class="form-label required d-lg-inline float-start">주소</label>
-              <!--              TODO 배송지 선택 버튼-->
-              <a href="#" class="btn btn-outline-secondary btn-sm float-end btn-modal"
+              <a sec:authorize="isAuthenticated()"
+                 class="btn btn-outline-secondary btn-sm float-end btn-modal"
                  data-bs-toggle="modal" data-bs-target="#modal-report">
                 배송지 선택
               </a>
+              <button sec:authorize="!isAuthenticated()" type="button"
+                      class="btn btn-outline-secondary btn-sm float-end" onclick="getAddress();">
+                우편번호 찾기
+              </button>
             </div>
             <input type="text" name="orderer-address-id" hidden="hidden">
-            <input type="text" class="form-control" name="orderer-address" placeholder="주소"
-                   th:value="${member == null ? '' : member.address}">
-            <label class="form-label d-lg-inline float-start">희망배송날짜</label>
+            <div class="w-full">
+              <input type="text" class="form-control col-3" name="orderer-post-address"
+                     placeholder="우편번호" th:value="${address}" disabled>
+              <input type="text" class="form-control col-9" name="orderer-road-address"
+                     placeholder="도로명 주소" th:value="${address}" disabled>
+            </div>
+            <input type="text" class="form-control" name="orderer-detail-address"
+                   placeholder="상세 주소" th:value="${address}">
+
+            <label class="form-label d-lg-inline float-start mt-2">희망배송날짜</label>
             <input class="form-control mb-2" type="date" name="order-expected-date"
                    th:min="${#calendars.format( #calendars.createNow(), 'yyyy-MM-dd')}"
                    id="datepicker">
+            <span class="form-check-description">미선택시 가장 가까운 날로 배송될 예정입니다.</span>
           </div>
         </div>
         <br>
@@ -51,7 +71,7 @@
         <div class="card card-md">
           <div class="table-responsive">
             <table
-                class="table table-vcenter">
+                class="table table-vcenter text-center scroll-x">
               <thead>
               <tr>
                 <th class="w-1"></th>
@@ -63,15 +83,21 @@
                 <th>개별쿠폰 적용</th>
               </tr>
               </thead>
-              <tbody th:each="product:${orderProducts}">
+              <tbody th:each="product:${products}">
               <tr>
-                <td th:value="${productStat.index + 1}"></td>
-                <td><span name="order-product" th:value="${product.isbn}"></span></td>
-                <td th:value="${product.title}"></td>
-                <td th:value="${product.price}"></td>
-                <td th:value="${product.point}"></td>
-                <td th:value="${product.quantity}">
-                  <span name="order-product-quantity" th:value="${product.quantity}"></span>
+                <td th:text="${productStat.index + 1}"></td>
+                <td><span name="order-product" th:value="${product.isbn}"
+                          th:text="${product.isbn}"></span></td>
+                <td th:text="${product.title}"></td>
+                <td>
+                  <del class="fs-6" th:text="${product.actualPrice}"></del>
+                  <span class="text-danger"
+                        th:text="${product.actualPrice * (100 - product.discountRate) / 100}"></span>
+                </td>
+                <td th:text="${product.expectedPoint}"></td>
+                <td>
+                  <span name="order-product-quantity" th:value="${product.quantity}"
+                        th:text="${product.quantity}"></span>
                 </td>
                 <td>
                   <!--                  TODO 개별 쿠폰 적용하기-->
@@ -155,7 +181,8 @@
       <a href="#" class="btn btn-primary w-100" onclick="produceOrder(this)">
         결제
       </a>
-      <<div th:replace="~{common/fragments/alert :: custom-alert}"></div>
+      <
+      <div th:replace="~{common/fragments/alert :: custom-alert}"></div>
     </div>
   </div>
 </form>
@@ -276,10 +303,50 @@
     });
   }
 
+  function getAddress() {
+    new daum.Postcode({
+      oncomplete: function (data) {
+        var addr = '';
+        var extraAddr = '';
+
+        //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+        if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+          addr = data.roadAddress;
+        } else { // 사용자가 지번 주소를 선택했을 경우(J)
+          addr = data.jibunAddress;
+        }
+
+        // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
+        if (data.userSelectedType === 'R') {
+          if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
+            extraAddr += data.bname;
+          }
+          // 건물명이 있고, 공동주택일 경우 추가한다.
+          if (data.buildingName !== '' && data.apartment === 'Y') {
+            extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+          }
+          // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+          if (extraAddr !== '') {
+            extraAddr = ' (' + extraAddr + ')';
+          }
+          addr += ' ' + extraAddr;
+        }
+
+        // 우편번호와 주소 정보를 해당 필드에 넣는다.
+        // document.getElementById('orderer-post-address').value = data.zonecode;
+        document.getElementById("orderer-road-address").value = addr;
+
+        // 커서를 상세주소 필드로 이동한다.
+        document.getElementById("orderer-detail-address").focus();
+      }
+    }).open();
+  }
+
 
 </script>
 <!--주문과의 관계가 확정나면 토스 결제창 띄우기 및 결제 시퀀스를 주문 실패 화면에서도 써서 js화 시킬예정-->
 <!--<script th:src="@{/js/payment/toss-payment-event.js}"></script>-->
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 </body>
 
 
