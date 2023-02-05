@@ -3,6 +3,7 @@ package shop.yesaladin.front.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import shop.yesaladin.front.interceptor.ReissueTokenInterceptor;
@@ -14,6 +15,7 @@ import shop.yesaladin.front.member.adapter.MemberAdapter;
  *
  * @author 김홍대
  * @author 송학현
+ * @author 배수한
  * @since 1.0
  */
 @RequiredArgsConstructor
@@ -38,5 +40,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
         registry.addInterceptor(new ReissueTokenInterceptor(memberAdapter, redisTemplate))
                 .excludePathPatterns("/css/**", "/js/**", "/libs/**", "/**/static/**", "/img/**", "/api/**", "/");
+    }
+
+    //TODO addCorsMappings() not working -> 임시로 서버에서 @CrossOrigin 어노테이션 사용해 전송 중
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**");
     }
 }

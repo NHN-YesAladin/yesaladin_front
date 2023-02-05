@@ -1,5 +1,8 @@
 package shop.yesaladin.front.oauth;
 
+import static shop.yesaladin.front.oauth.util.Oauth2Utils.GITHUB;
+import static shop.yesaladin.front.oauth.util.Oauth2Utils.KAKAO;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -31,9 +34,9 @@ public class Oauth2Factory {
      * @since 1.0
      */
     public Oauth2Service getOauth2Service(String oauthProvider) {
-        if (oauthProvider.equals("github")) {
+        if (oauthProvider.equals(GITHUB.getValue())) {
             return githubOauth2Service;
-        } else if (oauthProvider.equals("kakao")) {
+        } else if (oauthProvider.equals(KAKAO.getValue())) {
             return kakaoOauth2Service;
         } else {
             throw new Oauth2ServiceNotProvidedException();

@@ -66,19 +66,19 @@
                 닉네임은 영문으로 2자 이상 15자 이하만 가능합니다.
               </div>
               <div class="button-box">
-                <button class="nicknameCheckBtn" type="button" onclick="nicknameCheck()">중복 확인</button>
+                <button class="nicknameCheckBtn" id="nicknameCheckBtn" type="button" onclick="nicknameCheck()">중복 확인</button>
               </div>
             </div>
             <div class="mb-3">
               <label class="form-label">Login Id</label>
               <input type="text" class="form-control" id="loginId" th:name="loginId"
-                     pattern="^.*(?=.*[a-z])(?=.*\d)(?=^.{8,15}).*$"
-                     placeholder="아이디는 영문(필수)과 숫자(옵션) 순서로 8자 이상 15자 이하만 가능 합니다." required>
+                     pattern="/([a-z+\d*]{8,15})/g"
+                     placeholder="아이디는 영문 또는 숫자로(조합 가능) 8자 이상 15자 이하만 가능 합니다." required>
               <div class="invalid-feedback">
-                아이디는 영문(필수)과 숫자(옵션) 순서로 8자 이상 15자 이하만 가능 합니다.
+                아이디는 영문 또는 숫자로(조합 가능) 8자 이상 15자 이하만 가능 합니다.
               </div>
               <div class="button-box">
-                <button class="checkBtn" type="button" onclick="loginIdCheck()">중복 확인</button>
+                <button class="loginIdCheckBtn" id="loginIdCheckBtn" type="button" onclick="loginIdCheck()">중복 확인</button>
               </div>
             </div>
             <div class="mb-3">
@@ -90,7 +90,7 @@
                 이메일 주소를 입력해주세요.
               </div>
               <div class="button-box">
-                <button class="checkBtn" type="button" onclick="emailCheck()">중복 확인</button>
+                <button class="emailCheckBtn" id="emailCheckBtn" type="button" onclick="emailCheck()">중복 확인</button>
               </div>
             </div>
             <div class="mb-3">
@@ -102,55 +102,36 @@
                 휴대폰 번호를 - 없이 11자 입력해주세요.
               </div>
               <div class="button-box">
-                <button class="checkBtn" type="button" onclick="phoneCheck()">중복 확인</button>
+                <button class="phoneCheckBtn" id="phoneCheckBtn" type="button" onclick="phoneCheck()">중복 확인</button>
               </div>
             </div>
-            <div class="mb-3">
-              <label class="form-label">Password</label>
-              <div class="input-group input-group-flat">
-                <input type="password" class="form-control" id="password" th:name="password"
-                       pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$"
-                       placeholder="Password"
-                       autocomplete="off" required>
-                <div class="invalid-feedback">
-                  password는 최소 8자, 하나 이상의 문자와 하나의 숫자 및 하나의 특수 문자로 입력해주세요.
+            <div>
+              <div class="mb-3">
+                <label class="form-label">Password</label>
+                <div class="input-group input-group-flat">
+                  <input type="password" class="form-control" id="password" th:name="password"
+                         pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$"
+                         placeholder="Password"
+                         autocomplete="off" required>
+                  <div class="invalid-feedback">
+                    password는 최소 8자, 하나 이상의 문자와 하나의 숫자 및 하나의 특수 문자로 입력해주세요.
+                  </div>
                 </div>
-                <span class="input-group-text">
-                  <a href="#" class="link-secondary" data-bs-toggle="tooltip"
-                     aria-label="Show password" data-bs-original-title="Show password"><!-- Download SVG icon from http://tabler-icons.io/i/eye -->
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
-                         viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                         stroke-linecap="round" stroke-linejoin="round"><path stroke="none"
-                                                                              d="M0 0h24v24H0z"
-                                                                              fill="none"></path><circle
-                        cx="12" cy="12" r="2"></circle><path
-                        d="M22 12c-2.667 4.667 -6 7 -10 7s-7.333 -2.333 -10 -7c2.667 -4.667 6 -7 10 -7s7.333 2.333 10 7"></path></svg>
-                  </a>
-                </span>
               </div>
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Password 확인</label>
-              <div class="input-group input-group-flat">
-                <input type="password" class="form-control" id="passwordCheck"
-                       th:name="passwordCheck" placeholder="Password 확인"
-                       pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$"
-                       autocomplete="off" required>
-                <div class="invalid-feedback">
-                  password는 최소 8자, 하나 이상의 문자와 하나의 숫자 및 하나의 특수 문자로 입력해주세요.
+              <div class="mb-3">
+                <label class="form-label">Password 확인</label>
+                <div class="input-group input-group-flat">
+                  <input type="password" class="form-control" id="passwordCheck"
+                         th:name="passwordCheck" placeholder="Password 확인"
+                         pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$"
+                         autocomplete="off" required>
+                  <div class="invalid-feedback">
+                    password는 최소 8자, 하나 이상의 문자와 하나의 숫자 및 하나의 특수 문자로 입력해주세요.
+                  </div>
                 </div>
-                <span class="input-group-text">
-                  <a href="#" class="link-secondary" data-bs-toggle="tooltip"
-                     aria-label="Show password" data-bs-original-title="Show password"><!-- Download SVG icon from http://tabler-icons.io/i/eye -->
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
-                         viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                         stroke-linecap="round" stroke-linejoin="round"><path stroke="none"
-                                                                              d="M0 0h24v24H0z"
-                                                                              fill="none"></path><circle
-                        cx="12" cy="12" r="2"></circle><path
-                        d="M22 12c-2.667 4.667 -6 7 -10 7s-7.333 -2.333 -10 -7c2.667 -4.667 6 -7 10 -7s7.333 2.333 10 7"></path></svg>
-                  </a>
-                </span>
+                <div class="button-box">
+                  <button class="passwordCheckBtn" id="passwordCheckBtn" type="button" onclick="passwordCheckEvent()">비밀번호 확인</button>
+                </div>
               </div>
             </div>
             <div class="mb-3">
@@ -178,7 +159,7 @@
               </div>
             </div>
             <div class="form-footer">
-              <button type="submit" class="btn btn-primary w-100">Create new account</button>
+              <button type="submit" class="btn btn-primary w-100" id="createAccountBtn" disabled>Create new account</button>
             </div>
           </div>
         </form>
@@ -199,7 +180,7 @@
     let emptyRegex = /\s/g;
     let nameRegex = /^.*(?=.*[가-힣a-z])(?=^.{2,200}).*$/;
     let nicknameRegex = /^.*(?=.*[a-z])(?=.*[a-z\d])(?=.{2,8}).*$/;
-    let loginIdRegex = /^.*(?=.*[a-z])(?=.*\d)(?=^.{8,15}).*$/;
+    let loginIdRegex = /([a-z+\d*]{8,15})/g;
     let passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/g
     let birthdayRegex = /^.*(?=.*\d)(?=^.{6}).*$/;
     let phoneRegex = /^\d{11}$/;
@@ -225,25 +206,8 @@
 
         let loginIdVal = document.getElementById('loginId').value;
         if (!loginIdRegex.test(loginIdVal) || emptyRegex.test(loginIdVal)) {
-          alert('로그인 아이디는 영문(필수)과 숫자(옵션) 순서로 8자 이상 15자 이하만 가능 합니다');
+          alert('아이디는 영문 또는 숫자로(조합 가능) 8자 이상 15자 이하만 가능 합니다.');
           return false;
-        }
-
-        let passwordVal = document.getElementById('password').value;
-        let passwordCheckVal = document.getElementById('passwordCheck').value;
-        if (!passwordRegex.test(passwordVal) || emptyRegex.test(passwordVal)) {
-          alert('Password는 최소 8자, 하나 이상의 문자와 하나의 숫자 및 하나의 특수 문자로 입력해주세요.')
-          return false;
-        } else {
-          if (passwordCheckVal) {
-            if (passwordVal !== passwordCheckVal) {
-              alert('Password가 일치하지 않습니다.')
-              return false;
-            }
-          } else {
-            alert('Password 확인을 입력하세요.')
-            return false;
-          }
         }
 
         let birthdayVal = document.getElementById('birth').value;
@@ -254,7 +218,7 @@
 
         let phoneVal = document.getElementById('phone').value;
         if (!phoneRegex.test(phoneVal) || emptyRegex.test(phoneVal)) {
-          alert('휴대폰 번호를 - 없이 13자 입력해주세요.');
+          alert('휴대폰 번호를 - 없이 11자 입력해주세요.');
           return false;
         }
 
