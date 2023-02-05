@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <body th:fragment="order-sheet">
+<!--토스 결제창을 위해 무조건 제일 위에서 load 되어야함-->
+<script src="https://js.tosspayments.com/v1/payment"></script>
 <form method="post" th:action="@{'/order' + ${member == null ? '/non-member': '/member'}}">
   <div class="container-narrow py-4">
     <div class="text-center mb-4">
@@ -136,7 +138,7 @@
           <span style="float: right">
             <label class="form-check form-switch" style="display: inline">
               <input class="form-check-input" id="wrapping-check" type="checkbox" value="0"
-                   style="display: inline">
+                     style="display: inline">
             </label>
             <small class="float-end">포장비 : 3000원</small>
           </span>
@@ -149,16 +151,36 @@
         </h3>
       </div>
     </div>
-    <!--    TODO 결제 uri 추가-->
     <div class="mt-2">
-      <a href="#" class="btn btn-primary w-100">
+      <a href="#" class="btn btn-primary w-100" onclick="produceOrder(this)">
         결제
       </a>
+      <<div th:replace="~{common/fragments/alert :: custom-alert}"></div>
     </div>
   </div>
 </form>
 <div th:replace="~{main/order/address-modal :: adderss-modal}"></div>
+<div class="d-none" id="shop-server-url"
+     th:text="${@environment.getProperty('yesaladin.gateway.shop')}"></div>
+<div class="d-none" id="front-server-url"
+     th:text="${@environment.getProperty('yesaladin.front.url')}"></div>
+
 <script th:inline="javascript">
+  let FRONT_SERVER;
+  let SHOP_SERVER;
+
+  const clientKey = "test_ck_YPBal2vxj81jnwPmEXA35RQgOAND"; // 상점을 구분하는 키
+  const tossPayments = TossPayments(clientKey); // SDK 초기화
+
+  (function init() {
+    initConnectionInfo();
+  })();
+
+  function initConnectionInfo() {
+    FRONT_SERVER = document.querySelector("#front-server-url").textContent;
+    SHOP_SERVER = document.querySelector("#shop-server-url").textContent;
+  }
+
   /*<![CDATA[*/
   function pointOverCheck(e) {
     const alert = document.getElementById("point-alert");
@@ -198,8 +220,69 @@
     }
     setTotalPrice();
   });
+
+  function produceOrder(e) {
+    // TODO 주문, 배송 , 쿠폰 관련 처리를 위한 클릭 이벤트 함수
+
+    //결제 시퀀스 - 임시 변수 입력중
+    const orderResp = {};
+    processPayment(orderResp);
+
+  }
+
+  function processPayment(orderResp) {
+    let randomON = `0000_${new Date().getDate()}_${new Date().getHours()}_${new Date().getMinutes()}_${new Date().getMilliseconds()}`;
+    orderResp["orderId"] = 12421345325;
+    orderResp["orderNumber"] = randomON;
+    let realOrderName = "테스트 주문 외 4권";
+    orderResp["orderName"] = encodeURI(realOrderName);
+    orderResp["totalAmount"] = 100000;
+    orderResp["shippingFee"] = 3000;
+    orderResp["wrappingFee"] = 2000;
+
+    let orderId = orderResp["orderId"];
+    let orderNumber = orderResp["orderNumber"];
+    let orderName = orderResp["orderName"];
+    let totalAmount = orderResp["totalAmount"] + orderResp["shippingFee"]
+        + orderResp["wrappingFee"];
+    // console.log(decodeURI(orderName))
+
+    let successUrl = `${FRONT_SERVER}/payments/order-pay`;
+    let failUrl = `${FRONT_SERVER}/payments/fail?o-num=${orderNumber}&o-name=${orderName}&o-amount=${totalAmount}`;
+
+    // 토스 페이먼츠 결제 시퀀스
+    tossLink(totalAmount, orderNumber, realOrderName, successUrl, failUrl);
+  }
+
+  function tossLink(totalAmount, orderNumber, orderName, successUrl, failUrl) {
+    tossPayments.requestPayment('카드', { // 결제 수단 파라미터
+      // 결제 정보 파라미터
+      amount: totalAmount,
+      orderId: orderNumber,
+      orderName: orderName,
+      successUrl: successUrl,
+      failUrl: failUrl,
+    })
+    .then(resp => {
+      let data = resp.json;
+      console.log(data)
+    })
+    .catch(function (error) {
+      // 결제 창 off 등의 예외 사항이 발생했을때 감지할 수 있는 곳
+      // TODO 주문의 redis 정보들 삭제 및 쿠폰 상태 rollback
+
+      writeContentToAlert(error.message);
+      console.error(error);
+    });
+  }
+
+
 </script>
+<!--주문과의 관계가 확정나면 토스 결제창 띄우기 및 결제 시퀀스를 주문 실패 화면에서도 써서 js화 시킬예정-->
+<!--<script th:src="@{/js/payment/toss-payment-event.js}"></script>-->
 </body>
+
+
 <script th:src="@{/js/tabler.min.js}"></script>
 <script th:src="@{/js/demo.min.js}"></script>
 </html>
