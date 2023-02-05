@@ -110,12 +110,23 @@ public abstract class Oauth2Service {
     /**
      * OAuth2 로그인시 YesAladin 자사 회원인지 판별하기 위한 기능입니다.
      *
-     * @param email OAuth2에서 회원 정보 조회 시 가져온 email 입니다.
+     * @param userInfo OAuth2에서 제공 받은 사용자 정보
+     * @param provider OAuth2 provider의 종류 입니다.
      * @return 해당 유저가 YesAladin 자사 회원 인지에 대한 결과
      * @author 송학현
      * @since 1.0
      */
-    public boolean isAlreadyMember(String email) {
+    public boolean isAlreadyMember(Map<String, Object> userInfo, String provider) {
+        String email;
+        if (provider.equals("github")) {
+            email = userInfo.get("login") + "@yesaladin.com";
+            return oauth2Adapter.isAlreadyMember(email);
+        } else if (provider.equals("kakao")) {
+            Map<String, String> kakaoAccount = (Map) userInfo.get("kakao_account");
+            email = kakaoAccount.get("email");
+            return oauth2Adapter.isAlreadyMember(email);
+        }
+        email = userInfo.get("email").toString();
         return oauth2Adapter.isAlreadyMember(email);
     }
 

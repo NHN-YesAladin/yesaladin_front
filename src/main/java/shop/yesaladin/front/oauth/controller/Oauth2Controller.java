@@ -63,13 +63,12 @@ public class Oauth2Controller {
         );
 
         log.info("userInfo={}", userInfo);
+        boolean isAlreadyMember = oauth2Service.isAlreadyMember(userInfo, provider);
+
         Oauth2LoginRequestDto oauth2LoginRequestDto = oauth2Service.createOauth2Dto(userInfo);
         log.info("dto={}", oauth2LoginRequestDto);
 
-        boolean isAlreadyMember = oauth2Service.isAlreadyMember(oauth2LoginRequestDto.getEmail());
-
         if (!isAlreadyMember) {
-            // TODO: email이 없는 경우 매번 회원가입 페이지로 넘어가서 새로 등록해야하는 한계가 있음
             model.addAttribute("oauthMember", oauth2LoginRequestDto);
             return "/auth/oauth-signup";
         }

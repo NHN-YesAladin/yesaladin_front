@@ -2,8 +2,6 @@ package shop.yesaladin.front.oauth.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -86,10 +84,6 @@ public class KakaoOauth2Service extends Oauth2Service {
     public Oauth2LoginRequestDto createOauth2Dto(Map<String, Object> userInfo) {
         Map<String, String> kakaoAccount = (Map) userInfo.get("kakao_account");
         String email = kakaoAccount.get("email");
-        if (Objects.isNull(email)) {
-            email = UUID.randomUUID() + "@kakao.com";
-            return new Oauth2LoginRequestDto(email);
-        }
         return new Oauth2LoginRequestDto(email);
     }
 }
