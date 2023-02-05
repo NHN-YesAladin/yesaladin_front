@@ -12,23 +12,23 @@ import shop.yesaladin.front.oauth.adapter.Oauth2Adapter;
 import shop.yesaladin.front.oauth.dto.Oauth2LoginRequestDto;
 
 /**
- * Github OAuth2 로그인을 위한 서비스 클래스 입니다.
+ * Kakao OAuth2 로그인을 위한 서비스 클래스 입니다.
  *
  * @author 송학현
  * @since 1.0
  */
 @Slf4j
 @Service
-public class GithubOauth2Service extends Oauth2Service {
+public class KakaoOauth2Service extends Oauth2Service {
 
-    @Value("${oauth.github.clientId}")
+    @Value("${oauth.kakao.clientId}")
     private String clientId;
-    @Value("${oauth.github.secret}")
+    @Value("${oauth.kakao.secret}")
     private String secret;
-    @Value("${oauth.github.redirectUrl}")
+    @Value("${oauth.kakao.redirectUrl}")
     private String redirectUrl;
 
-    public GithubOauth2Service(
+    public KakaoOauth2Service(
             Oauth2Adapter oauth2Adapter,
             ObjectMapper objectMapper
     ) {
@@ -42,10 +42,11 @@ public class GithubOauth2Service extends Oauth2Service {
     public String getOAuth2ProcessingUrl() {
         return UriComponentsBuilder.newInstance()
                 .scheme("https")
-                .host("github.com")
-                .path("login/oauth/authorize")
+                .host("kauth.kakao.com")
+                .path("oauth/authorize")
                 .queryParam("client_id", clientId)
                 .queryParam("redirect_uri", redirectUrl)
+                .queryParam("response_type", "code")
                 .build().toUriString();
     }
 
@@ -56,8 +57,9 @@ public class GithubOauth2Service extends Oauth2Service {
     public String tokenProcessingUrl(String code) {
         return UriComponentsBuilder.newInstance()
                 .scheme("https")
-                .host("github.com")
-                .path("login/oauth/access_token")
+                .host("kauth.kakao.com")
+                .path("oauth/token")
+                .queryParam("grant_type", "authorization_code")
                 .queryParam("client_id", clientId)
                 .queryParam("client_secret", secret)
                 .queryParam("code", code)
@@ -72,8 +74,8 @@ public class GithubOauth2Service extends Oauth2Service {
     public String getUserInfoProcessingUrl() {
         return UriComponentsBuilder.newInstance()
                 .scheme("https")
-                .host("api.github.com")
-                .path("user")
+                .host("kapi.kakao.com")
+                .path("v2/user/me")
                 .build().toUriString();
     }
 
@@ -82,9 +84,10 @@ public class GithubOauth2Service extends Oauth2Service {
      */
     @Override
     public Oauth2LoginRequestDto createOauth2Dto(Map<String, Object> userInfo) {
-        String email = userInfo.get("email").toString();
+        Map<String, String> kakaoAccount = (Map) userInfo.get("kakao_account");
+        String email = kakaoAccount.get("email");
         if (Objects.isNull(email)) {
-            email = UUID.randomUUID() + "@github.com";
+            email = UUID.randomUUID() + "@kakao.com";
             return new Oauth2LoginRequestDto(email);
         }
         return new Oauth2LoginRequestDto(email);

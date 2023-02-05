@@ -9,7 +9,6 @@ githubLoginBtn.addEventListener("click", () => {
     url: "/oauth/redirect-url",
     data: {"oauthProvider": "github"},
     success: function (result) {
-      console.log("github redirect test")
       location.href = result;
     }
   })
@@ -30,15 +29,13 @@ naverLoginBtn.addEventListener("click", () => {
 })
 
 kakaoLoginBtn.addEventListener("click", () => {
-  // $.ajax({
-  //   type: "get",
-  //   async: true,
-  //   url: "/oauth/redirect-url",
-  //   data: {"oauthProvider": "kakao"},
-  //   success: function (result) {
-  //     console.log("kakao redirect test")
-  //     location.href = result;
-  //   }
-  // })
-  console.log("kakao redirect test")
+  $.ajax({
+    type: "get",
+    async: true,
+    url: "/oauth/redirect-url",
+    data: {"oauthProvider": "kakao"},
+    success: function (result) {
+      location.href = result;
+    }
+  })
 })
