@@ -4,8 +4,6 @@ import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +27,10 @@ public class MemberManagerWebController {
 
     private final QueryMemberService queryMemberService;
     private static final String VIEW = "manager/member/manager-member-manage";
+    private static final String URL = "/manage/member";
+    private static final String DATE_PARAM = "&signupdate=";
+    private static final String NAME_PARAM = "&name=";
+    private static final int SIZE = 5;
 
     /**
      * 관리자의 회원 관리 뷰로 이동
@@ -111,19 +113,22 @@ public class MemberManagerWebController {
     @GetMapping(params = "name")
     public ModelAndView manageMemberInfoByName(
             @RequestParam(name = "name") String name,
-            @PageableDefault Pageable pageable
+            @RequestParam(defaultValue = "0") int page
     ) {
         ModelAndView modelAndView = new ModelAndView(VIEW);
         MemberManagerListResponseDto managerListResponseDto = queryMemberService.manageMemberInfoByName(
                 name,
-                pageable.getPageNumber(),
-                pageable.getPageSize()
+                page * SIZE,
+                SIZE
         );
+        modelAndView.addObject("currentPage", page);
         modelAndView.addObject(
                 "memberList",
                 managerListResponseDto.getMemberManagerResponseDtoList()
         );
-        modelAndView.addObject("count", managerListResponseDto.getCount());
+        modelAndView.addObject("totalPage", managerListResponseDto.getCount()/5);
+        modelAndView.addObject("url", URL);
+        modelAndView.addObject("queryParam", NAME_PARAM+name);
         return modelAndView;
     }
 
@@ -138,17 +143,20 @@ public class MemberManagerWebController {
     @GetMapping(params = "signupdate")
     public ModelAndView manageMemberInfoBySignUpDate(
             @RequestParam(name = "signupdate") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate signUpDate,
-            @PageableDefault Pageable pageable
+            @RequestParam(defaultValue = "0")int page
     ) {
         ModelAndView modelAndView = new ModelAndView(VIEW);
+        modelAndView.addObject("currentPage", page);
         MemberManagerListResponseDto managerListResponseDto = queryMemberService.manageMemberInfoBySignUpDate(
                 signUpDate,
-                pageable.getPageNumber(),
-                pageable.getPageSize()
+                page * SIZE,
+                SIZE
         );
         modelAndView.addObject("memberList",
                 managerListResponseDto.getMemberManagerResponseDtoList());
-        modelAndView.addObject("count", managerListResponseDto.getCount());
+        modelAndView.addObject("totalPage", managerListResponseDto.getCount()/5+1);
+        modelAndView.addObject("url", URL);
+        modelAndView.addObject("queryParam", DATE_PARAM +signUpDate);
         return modelAndView;
     }
 }

@@ -110,6 +110,8 @@ public interface QueryMemberService {
      * 관리자가 회원의 name 으로 해당 회원의 정보를 조회합니다.
      *
      * @param name 회원의 name
+     * @param page 페이지 위치
+     * @param size 데이터 크기
      * @return 해당 name을 가지는 회원들의 정보와 총 갯수
      * @author 김선홍
      * @since 1.0
@@ -120,6 +122,8 @@ public interface QueryMemberService {
      * 관리자가 회원의 signUpDate 으로 해당 회원의 정보를 조회합니다.
      *
      * @param signUpDate 회원의 signUpDate
+     * @param page 페이지 위치
+     * @param size 데이터 크기
      * @return 해당 name을 가지는 회원들의 정보와 총 갯수
      * @author 김선홍
      * @since 1.0
@@ -130,7 +134,7 @@ public interface QueryMemberService {
      * 관리자가 회원을 차단하는 메서드
      *
      * @param loginId 차단할 회원의 loginId
-     * @param blockReason 차단 사유
+     * @param requestDto 차단 사유
      * @return 차단 결과
      * @author 김선홍
      * @since 1.0

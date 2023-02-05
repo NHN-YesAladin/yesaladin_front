@@ -33,6 +33,7 @@ import shop.yesaladin.front.member.service.inter.QueryMemberService;
  * 회원 정보 조회용 Service 구현체 입니다.
  *
  * @author : 송학현
+ * @author : 김선홍
  * @since : 1.0
  */
 @Slf4j

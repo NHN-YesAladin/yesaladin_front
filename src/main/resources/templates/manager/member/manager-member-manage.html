@@ -21,7 +21,6 @@
 <div class="wrapper">
   <div th:replace="~{manager/fragments/navbar-vertical :: fragment-nav-vertical}"></div>
   <div class="page-wrapper">
-    <div th:replace="~{common/fragments/header :: fragment-header}"></div>
     <div class="container-lg">
         <div class="mb-3">
           <div class="row g-3">
@@ -73,6 +72,9 @@
               </tbody>
             </table>
           </div>
+      <div th:if="${totalPage} != null">
+        <div th:replace="~{common/utils/paging}"></div>
+      </div>
       </div>
     <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
   </div>
