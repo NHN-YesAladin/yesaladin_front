@@ -1,5 +1,12 @@
 package shop.yesaladin.front.oauth.service;
 
+import static shop.yesaladin.front.oauth.util.Oauth2Utils.ACCESS_TOKEN;
+import static shop.yesaladin.front.oauth.util.Oauth2Utils.EMAIL;
+import static shop.yesaladin.front.oauth.util.Oauth2Utils.GITHUB;
+import static shop.yesaladin.front.oauth.util.Oauth2Utils.KAKAO;
+import static shop.yesaladin.front.oauth.util.Oauth2Utils.KAKAO_ACCOUNT;
+import static shop.yesaladin.front.oauth.util.Oauth2Utils.YESALADIN_EMAIL;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Map;
@@ -82,7 +89,7 @@ public abstract class Oauth2Service {
             throw new Oauth2ParseProcessingException();
         }
 
-        return (String) accessToken.get("access_token");
+        return (String) accessToken.get(ACCESS_TOKEN.getValue());
     }
 
     /**
@@ -118,15 +125,15 @@ public abstract class Oauth2Service {
      */
     public boolean isAlreadyMember(Map<String, Object> userInfo, String provider) {
         String email;
-        if (provider.equals("github")) {
-            email = userInfo.get("login") + "@yesaladin.com";
+        if (provider.equals(GITHUB.getValue())) {
+            email = userInfo.get("login") + YESALADIN_EMAIL.getValue();
             return oauth2Adapter.isAlreadyMember(email);
-        } else if (provider.equals("kakao")) {
-            Map<String, String> kakaoAccount = (Map) userInfo.get("kakao_account");
-            email = kakaoAccount.get("email");
+        } else if (provider.equals(KAKAO.getValue())) {
+            Map<String, String> kakaoAccount = (Map) userInfo.get(KAKAO_ACCOUNT.getValue());
+            email = kakaoAccount.get(EMAIL.getValue());
             return oauth2Adapter.isAlreadyMember(email);
         }
-        email = userInfo.get("email").toString();
+        email = userInfo.get(EMAIL.getValue()).toString();
         return oauth2Adapter.isAlreadyMember(email);
     }
 

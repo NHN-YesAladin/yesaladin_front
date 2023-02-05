@@ -1,5 +1,15 @@
 package shop.yesaladin.front.oauth.service;
 
+import static shop.yesaladin.front.oauth.util.Oauth2Utils.CLIENT_ID;
+import static shop.yesaladin.front.oauth.util.Oauth2Utils.CLIENT_SECRET;
+import static shop.yesaladin.front.oauth.util.Oauth2Utils.CODE;
+import static shop.yesaladin.front.oauth.util.Oauth2Utils.EMAIL;
+import static shop.yesaladin.front.oauth.util.Oauth2Utils.GITHUB_API_HOST;
+import static shop.yesaladin.front.oauth.util.Oauth2Utils.GITHUB_HOST;
+import static shop.yesaladin.front.oauth.util.Oauth2Utils.HTTPS;
+import static shop.yesaladin.front.oauth.util.Oauth2Utils.REDIRECT_URI;
+import static shop.yesaladin.front.oauth.util.Oauth2Utils.YESALADIN_EMAIL;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Map;
 import java.util.Objects;
@@ -40,11 +50,11 @@ public class GithubOauth2Service extends Oauth2Service {
     @Override
     public String getOAuth2ProcessingUrl() {
         return UriComponentsBuilder.newInstance()
-                .scheme("https")
-                .host("github.com")
+                .scheme(HTTPS.getValue())
+                .host(GITHUB_HOST.getValue())
                 .path("login/oauth/authorize")
-                .queryParam("client_id", clientId)
-                .queryParam("redirect_uri", redirectUrl)
+                .queryParam(CLIENT_ID.getValue(), clientId)
+                .queryParam(REDIRECT_URI.getValue(), redirectUrl)
                 .build().toUriString();
     }
 
@@ -54,13 +64,13 @@ public class GithubOauth2Service extends Oauth2Service {
     @Override
     public String tokenProcessingUrl(String code) {
         return UriComponentsBuilder.newInstance()
-                .scheme("https")
-                .host("github.com")
+                .scheme(HTTPS.getValue())
+                .host(GITHUB_HOST.getValue())
                 .path("login/oauth/access_token")
-                .queryParam("client_id", clientId)
-                .queryParam("client_secret", secret)
-                .queryParam("code", code)
-                .queryParam("redirect_uri", redirectUrl)
+                .queryParam(CLIENT_ID.getValue(), clientId)
+                .queryParam(CLIENT_SECRET.getValue(), secret)
+                .queryParam(CODE.getValue(), code)
+                .queryParam(REDIRECT_URI.getValue(), redirectUrl)
                 .build().toUriString();
     }
 
@@ -70,8 +80,8 @@ public class GithubOauth2Service extends Oauth2Service {
     @Override
     public String getUserInfoProcessingUrl() {
         return UriComponentsBuilder.newInstance()
-                .scheme("https")
-                .host("api.github.com")
+                .scheme(HTTPS.getValue())
+                .host(GITHUB_API_HOST.getValue())
                 .path("user")
                 .build().toUriString();
     }
@@ -81,11 +91,11 @@ public class GithubOauth2Service extends Oauth2Service {
      */
     @Override
     public Oauth2LoginRequestDto createOauth2Dto(Map<String, Object> userInfo) {
-        Object email = userInfo.get("email");
+        Object email = userInfo.get(EMAIL.getValue());
         if (!Objects.isNull(email)) {
             return new Oauth2LoginRequestDto(email.toString());
         }
         String loginId = userInfo.get("login").toString();
-        return new Oauth2LoginRequestDto(loginId + "@yesaladin.com");
+        return new Oauth2LoginRequestDto(loginId + YESALADIN_EMAIL.getValue());
     }
 }

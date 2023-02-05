@@ -1,5 +1,13 @@
 package shop.yesaladin.front.oauth.service;
 
+import static shop.yesaladin.front.oauth.util.Oauth2Utils.CLIENT_ID;
+import static shop.yesaladin.front.oauth.util.Oauth2Utils.CLIENT_SECRET;
+import static shop.yesaladin.front.oauth.util.Oauth2Utils.CODE;
+import static shop.yesaladin.front.oauth.util.Oauth2Utils.HTTPS;
+import static shop.yesaladin.front.oauth.util.Oauth2Utils.KAKAO_ACCOUNT;
+import static shop.yesaladin.front.oauth.util.Oauth2Utils.KAKAO_HOST;
+import static shop.yesaladin.front.oauth.util.Oauth2Utils.REDIRECT_URI;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
@@ -39,11 +47,11 @@ public class KakaoOauth2Service extends Oauth2Service {
     @Override
     public String getOAuth2ProcessingUrl() {
         return UriComponentsBuilder.newInstance()
-                .scheme("https")
-                .host("kauth.kakao.com")
+                .scheme(HTTPS.getValue())
+                .host(KAKAO_HOST.getValue())
                 .path("oauth/authorize")
-                .queryParam("client_id", clientId)
-                .queryParam("redirect_uri", redirectUrl)
+                .queryParam(CLIENT_ID.getValue(), clientId)
+                .queryParam(REDIRECT_URI.getValue(), redirectUrl)
                 .queryParam("response_type", "code")
                 .build().toUriString();
     }
@@ -54,14 +62,14 @@ public class KakaoOauth2Service extends Oauth2Service {
     @Override
     public String tokenProcessingUrl(String code) {
         return UriComponentsBuilder.newInstance()
-                .scheme("https")
-                .host("kauth.kakao.com")
+                .scheme(HTTPS.getValue())
+                .host(KAKAO_HOST.getValue())
                 .path("oauth/token")
                 .queryParam("grant_type", "authorization_code")
-                .queryParam("client_id", clientId)
-                .queryParam("client_secret", secret)
-                .queryParam("code", code)
-                .queryParam("redirect_uri", redirectUrl)
+                .queryParam(CLIENT_ID.getValue(), clientId)
+                .queryParam(CLIENT_SECRET.getValue(), secret)
+                .queryParam(CODE.getValue(), code)
+                .queryParam(REDIRECT_URI.getValue(), redirectUrl)
                 .build().toUriString();
     }
 
@@ -71,8 +79,8 @@ public class KakaoOauth2Service extends Oauth2Service {
     @Override
     public String getUserInfoProcessingUrl() {
         return UriComponentsBuilder.newInstance()
-                .scheme("https")
-                .host("kapi.kakao.com")
+                .scheme(HTTPS.getValue())
+                .host(KAKAO_HOST.getValue())
                 .path("v2/user/me")
                 .build().toUriString();
     }
@@ -82,7 +90,7 @@ public class KakaoOauth2Service extends Oauth2Service {
      */
     @Override
     public Oauth2LoginRequestDto createOauth2Dto(Map<String, Object> userInfo) {
-        Map<String, String> kakaoAccount = (Map) userInfo.get("kakao_account");
+        Map<String, String> kakaoAccount = (Map) userInfo.get(KAKAO_ACCOUNT.getValue());
         String email = kakaoAccount.get("email");
         return new Oauth2LoginRequestDto(email);
     }
