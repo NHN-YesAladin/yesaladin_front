@@ -26,7 +26,7 @@ import shop.yesaladin.front.member.service.inter.QueryMemberService;
 public class MemberManagerWebController {
 
     private final QueryMemberService queryMemberService;
-    private static final String VIEW = "manager/member/manager-member-manage";
+    private static final String VIEW = "manager/member/manager-management";
     private static final String URL = "/manage/member";
     private static final String DATE_PARAM = "&signupdate=";
     private static final String NAME_PARAM = "&name=";
