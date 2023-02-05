@@ -1,9 +1,6 @@
 package shop.yesaladin.front.order.service.impl;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.net.URI;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +21,6 @@ import shop.yesaladin.front.common.dto.PeriodQueryRequestDto;
 import shop.yesaladin.front.config.GatewayConfig;
 import shop.yesaladin.front.order.dto.OrderSheetResponseDto;
 import shop.yesaladin.front.order.dto.OrderSummaryResponseDto;
-import shop.yesaladin.front.order.dto.ProductOrderRequestDto;
 import shop.yesaladin.front.order.service.inter.QueryOrderService;
 
 /**
@@ -40,18 +36,14 @@ import shop.yesaladin.front.order.service.inter.QueryOrderService;
 @Service
 public class QueryOrderServiceImpl implements QueryOrderService {
 
-    private final RestTemplate restTemplate;
-    private final GatewayConfig gatewayConfig;
-    private final ObjectMapper objectMapper;
-
-
     private static final ParameterizedTypeReference<PaginatedResponseDto<OrderSummaryResponseDto>> PAGING_ORDERS_TYPE
             = new ParameterizedTypeReference<>() {
     };
-
     private static final ParameterizedTypeReference<ResponseDto<OrderSheetResponseDto>> ORDER_SHEET_TYPE
             = new ParameterizedTypeReference<>() {
     };
+    private final RestTemplate restTemplate;
+    private final GatewayConfig gatewayConfig;
 
     /**
      * {@inheritDoc}
@@ -101,15 +93,12 @@ public class QueryOrderServiceImpl implements QueryOrderService {
                 .encode()
                 .toUri();
 
-        log.info("uri: {}", uri);
-
         ResponseEntity<ResponseDto<OrderSheetResponseDto>> responseEntity = restTemplate.exchange(
                 uri,
                 HttpMethod.GET,
                 getHttpEntity(),
                 ORDER_SHEET_TYPE
         );
-        log.info("response : {}", responseEntity.getBody());
 
         return responseEntity.getBody();
     }
@@ -120,10 +109,4 @@ public class QueryOrderServiceImpl implements QueryOrderService {
         HttpEntity<String> entity = new HttpEntity<>(headers);
         return entity;
     }
-
-//    private HttpEntity<String> getUTFHttpEntity() {
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
-//        return new HttpEntity<>(headers);
-//    }
 }

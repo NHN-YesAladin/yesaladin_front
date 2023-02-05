@@ -72,9 +72,12 @@ public class OrderMainWebController {
             @RequestParam(value = "quantity") List<String> quantity,
             Model model
     ) {
-        ResponseDto<OrderSheetResponseDto> response = queryOrderService.getOrderSheetData(isbn, quantity);
+        ResponseDto<OrderSheetResponseDto> response = queryOrderService.getOrderSheetData(
+                isbn,
+                quantity
+        );
 
-        if(!response.isSuccess()) {
+        if (!response.isSuccess()) {
             model.addAttribute("error", response.getErrorMessages());
             return "common/errors/error";
         }
