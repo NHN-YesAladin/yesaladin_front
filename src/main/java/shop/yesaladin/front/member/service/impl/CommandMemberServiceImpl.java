@@ -20,6 +20,7 @@ import shop.yesaladin.front.member.dto.MemberWithdrawResponseDto;
 import shop.yesaladin.front.member.dto.SignUpRequestDto;
 import shop.yesaladin.front.member.dto.SignUpResponseDto;
 import shop.yesaladin.front.member.service.inter.CommandMemberService;
+import shop.yesaladin.front.oauth.dto.Oauth2SignUpRequestDto;
 
 /**
  * 회원 등록, 수정, 삭제를 위한 service 구현체 입니다.
@@ -48,6 +49,30 @@ public class CommandMemberServiceImpl implements CommandMemberService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<SignUpRequestDto> entity = new HttpEntity<>(request, headers);
+
+        ResponseEntity<ResponseDto<SignUpResponseDto>> response = restTemplate.exchange(
+                gatewayConfig.getShopUrl() + "/v1/members/",
+                HttpMethod.POST,
+                entity,
+                new ParameterizedTypeReference<>() {
+                }
+        );
+
+        log.info("response={}", response.getBody().getData());
+        return response.getBody().getData();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public SignUpResponseDto signUp(Oauth2SignUpRequestDto request) {
+        request.setPassword(passwordEncoder.encode(request.getPassword()));
+        log.info("request={}", request);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<Oauth2SignUpRequestDto> entity = new HttpEntity<>(request, headers);
 
         ResponseEntity<ResponseDto<SignUpResponseDto>> response = restTemplate.exchange(
                 gatewayConfig.getShopUrl() + "/v1/members/",

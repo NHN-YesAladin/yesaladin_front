@@ -34,10 +34,10 @@ public class OrderMyPageWebController {
     /**
      * 전체 주문 조회 화면 연결 메서드
      *
-     * @param code 조회 필요 일자
+     * @param code          조회 필요 일자
      * @param shouldEndDate 달력 사용시, 원하는 마지막날을 지정
-     * @param pageable 페이징 처리용
-     * @param model view에서 사용
+     * @param pageable      페이징 처리용
+     * @param model         view에서 사용
      * @return
      */
     @GetMapping
@@ -59,7 +59,7 @@ public class OrderMyPageWebController {
         // code가 null이 아닌 경우 경우 : 일자에 맞춰 조회
         if (Objects.isNull(code)) {
             startDate = startDate.minusMonths(3);
-        }else{
+        } else {
             startDate = endDate.minusDays(code);
         }
 
