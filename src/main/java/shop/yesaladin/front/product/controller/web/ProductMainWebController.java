@@ -1,6 +1,7 @@
 package shop.yesaladin.front.product.controller.web;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +24,7 @@ import java.util.Objects;
  * @author 이수정
  * @since 1.0
  */
+@Slf4j
 @RequiredArgsConstructor
 @Controller
 @RequestMapping
@@ -43,7 +45,7 @@ public class ProductMainWebController {
     public String product(@PathVariable long productId, Model model) {
         ProductDetailResponseDto response = queryProductService.getProductDetail(productId);
 
-        model.addAllAttributes(makeAttributeMap(response));
+        model.addAttribute(response);
 
         return "main/product/product";
     }
@@ -100,43 +102,6 @@ public class ProductMainWebController {
                 "currentPage", products.getCurrentPage(),
                 "totalDataCount", products.getTotalDataCount(),
                 "tags", products.getDataList()
-        );
-    }
-
-    /**
-     * 상세 조회로 응답받은 DTO를 바탕으로 Model에 Attribute로 추가할 정보를 담은 Map으로 반환합니다.
-     *
-     * @param response 상세 조회로 응답받은 DTO
-     * @return Model에 Attribute로 추가할 정보를 담은 Map
-     * @author 이수정
-     * @since 1.0
-     */
-    private Map<String, Object> makeAttributeMap(ProductDetailResponseDto response) {
-
-        boolean isEbook = Objects.nonNull(response.getEbookFileUrl()) && !response.getEbookFileUrl().isBlank();
-
-        boolean onSale = response.getQuantity() > 0 && !response.getIsForcedOutOfStock() && response.getIsSale() && !response.getIsDeleted();
-
-        return Map.ofEntries(
-                Map.entry("id", response.getId()),
-                Map.entry("isEbook", isEbook),
-                Map.entry("title", response.getTitle()),
-                Map.entry("authors", response.getAuthors()),
-                Map.entry("publisher", response.getPublisher()),
-                Map.entry("thumbnailFileUrl", response.getThumbnailFileUrl()),
-                Map.entry("actualPrice", response.getActualPrice()),
-                Map.entry("discountRate", response.getDiscountRate()),
-                Map.entry("sellingPrice", response.getSellingPrice()),
-                Map.entry("pointPrice", response.getPointPrice()),
-                Map.entry("pointRate", response.getPointRate()),
-                Map.entry("publishedDate", response.getPublishedDate()),
-                Map.entry("isbn", response.getIsbn()),
-                Map.entry("isSubscriptionAvailable", response.getIsSubscriptionAvailable()),
-                Map.entry("issn", response.getIssn()),
-                Map.entry("contents", response.getContents()),
-                Map.entry("description", response.getDescription()),
-                Map.entry("onSale", onSale),
-                Map.entry("categories", response.getCategories())
         );
     }
 }
