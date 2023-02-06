@@ -148,7 +148,7 @@
                                     </div>
                                 </div>
                                 <!-- 정기구독 불가능 -->
-                                <div class="row px-2 py-1" th:if="${!isSubscriptionAvailable}">
+                                <div class="row px-2 py-1" th:if="${!productDetailResponseDto.isSubscriptionAvailable}">
                                     <button type="submit" class="btn btn-facebook w-100">
                                         <svg xmlns="http://www.w3.org/2000/svg"
                                              class="icon icon-tabler icon-tabler-brand-cashapp" width="24" height="24"
@@ -233,11 +233,11 @@
                     <div class="row g-2 divide-y p-3">
                         <div class="col-12">
                             <h2>품목정보</h2>
-                            <p th:text="|출판일 : ${publishedDate}|"></p>
-                            <p th:text="|ISBN13 : ${isbn}|"></p>
+                            <p th:text="|출판일 : ${productDetailResponseDto.getPublishedDate()}|"></p>
+                            <p th:text="|ISBN13 : ${productDetailResponseDto.getIsbn()}|"></p>
                             <input type="text" name="isbn" th:value="${isbn}" hidden="hidden">
-                            <div th:if="${isSubscriptionAvailable} == true">
-                                <p th:text="|ISSN11 : ${issn}|" name="issn"></p>
+                            <div th:if="${productDetailResponseDto.getIsSubscriptionAvailable()} == true">
+                                <p th:text="|ISSN11 : ${productDetailResponseDto.getIssn()}|" name="issn"></p>
                             </div>
                         </div>
                         <div class="col-12" th:if="${productDetailResponseDto.getCategories().size() != 0}">

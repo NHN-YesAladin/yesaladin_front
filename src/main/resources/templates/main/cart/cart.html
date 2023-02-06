@@ -321,7 +321,7 @@
             </table>
           </div>
         </div>
-        <div class="pt-4 px-2 text-end bg-azure-lt" th:if="${!(eBookCart.size() == 0)}">
+        <div class="pt-4 px-2 text-end bg-azure-lt" th:classappend="${(eBookCart.size() == 0) ? 'd-none' : ''}">
           <div class="pb-3 text-blue">
             <strong>Yes!Aladin 배송<label> + eBook 카트</label></strong>
             상품 총 금액 :<strong><em class="text-dark" id="total-amount-cart-yesaladin-cart">0원</em></strong> <span class="mx-2">|</span>
@@ -580,7 +580,6 @@
 
     deliveryCart.forEach(product => {
       selectProduct('delivery', product.id);
-      setCartTotalAmountAndPoint();
     });
   });
 </script>
@@ -615,7 +614,7 @@
       totalPointProductCart.innerText = (Number(totalPointProductCart.innerText.replaceAll(/[,원]/g, "")) + productPoint).toLocaleString() + "원";
     } else {
       // 상품의 전체 포인트 (-)
-      totalPointProductCart.innerText = Number(totalPointProductCart.innerText.replaceAll(/[,원]/g, "")) - productPoint >= 0 ?
+      totalPointProductCart.innerText = (Number(totalPointProductCart.innerText.replaceAll(/[,원]/g, "")) - productPoint) >= 0 ?
               (Number(totalPointProductCart.innerText.replaceAll(/[,원]/g, "")) - productPoint).toLocaleString() + "원" : "0원"
     }
 
@@ -631,19 +630,24 @@
     const totalPointCartYesAladinCart = document.getElementById('total-point-cart-yesaladin-cart');
 
     const totalDeliveryCost = document.getElementById('total-delivery-cost');
-    const totalAmountEbookProductCart = document.getElementById('total-amount-ebook-product-cart');
     const totalAmountDeliveryProductCart = document.getElementById('total-amount-delivery-product-cart');
-    const totalPointEbookProductCart = document.getElementById('total-point-ebook-product-cart');
     const totalPointDeliveryProductCart = document.getElementById('total-point-delivery-product-cart');
+
+    let totalAmountEbookProductCart = 0;
+    let totalPointEbookProductCart = 0;
+    if (isExistEbook) {
+      totalAmountEbookProductCart = Number(document.getElementById('total-amount-ebook-product-cart').innerText.replaceAll(/[,원]/g, ""));
+      totalPointEbookProductCart = Number(document.getElementById('total-point-ebook-product-cart').innerText.replaceAll(/[,원]/g, ""));
+    }
 
     totalAmountCartYesAladinCart.innerText =
             (Number(totalDeliveryCost.innerText.replaceAll(/[,원]/g, ""))
             + Number(totalAmountDeliveryProductCart.innerText.replaceAll(/[,원]/g, ""))
-            + (isExistEbook ? Number(totalAmountEbookProductCart.innerText.replaceAll(/[,원]/g, "")) : 0)).toLocaleString() + "원";
+            + totalAmountEbookProductCart).toLocaleString() + "원";
 
     totalPointCartYesAladinCart.innerText =
-            (Number(totalPointEbookProductCart.innerText.replaceAll(/[,원]/g, ""))
-            + (isExistEbook ? Number(totalPointDeliveryProductCart.innerText.replaceAll(/[,원]/g, "")) : 0)).toLocaleString() + "원";
+            (Number(totalPointDeliveryProductCart.innerText.replaceAll(/[,원]/g, ""))
+            + totalPointEbookProductCart).toLocaleString() + "원";
 
     changeTotalPay();
   }
