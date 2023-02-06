@@ -40,6 +40,7 @@ import shop.yesaladin.front.member.jwt.AuthInfo;
 public class CustomAuthenticationManager implements AuthenticationManager {
 
     private static final String UUID_HEADER = "UUID_HEADER";
+    private static final String X_EXPIRE_HEADER = "X-Expire";
 
     private final MemberAdapter memberAdapter;
     private final RedisTemplate<String, Object> redisTemplate;
@@ -67,7 +68,7 @@ public class CustomAuthenticationManager implements AuthenticationManager {
         checkValidLoginRequest(exchange);
 
         String uuid = Objects.requireNonNull(exchange.getHeaders().get(UUID_HEADER).get(0));
-        log.info("uuid={}", uuid);
+        String expiredTime = Objects.requireNonNull(exchange.getHeaders().get(X_EXPIRE_HEADER).get(0));
 
         String accessToken = extractAuthorizationHeader(exchange);
 
@@ -95,7 +96,7 @@ public class CustomAuthenticationManager implements AuthenticationManager {
         List<SimpleGrantedAuthority> authorities = getAuthorities(memberResponseDto);
         log.info("authorities={}", authorities);
 
-        AuthInfo authInfo = new AuthInfo(memberResponseDto, accessToken, memberResponseDto.getRoles());
+        AuthInfo authInfo = new AuthInfo(memberResponseDto, accessToken, memberResponseDto.getRoles(), expiredTime);
         log.info("authInfo={}", authInfo);
         redisTemplate.opsForHash().put(uuid, JWT_CODE.getValue(), authInfo);
 

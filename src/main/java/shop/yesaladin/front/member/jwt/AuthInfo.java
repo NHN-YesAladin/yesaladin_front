@@ -29,11 +29,13 @@ public class AuthInfo implements Serializable {
     private String email;
     private String accessToken;
     private List<String> authorities;
+    private String expiredTime;
 
     public AuthInfo(
             MemberResponseDto memberResponseDto,
             String accessToken,
-            List<String> authorities
+            List<String> authorities,
+            String expiredTime
     ) {
         this.id = memberResponseDto.getId();
         this.name = memberResponseDto.getName();
@@ -42,5 +44,6 @@ public class AuthInfo implements Serializable {
         this.email = memberResponseDto.getEmail();
         this.accessToken = accessToken;
         this.authorities = authorities;
+        this.expiredTime = expiredTime;
     }
 }
