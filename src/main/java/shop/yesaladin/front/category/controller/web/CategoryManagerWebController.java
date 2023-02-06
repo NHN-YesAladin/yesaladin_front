@@ -170,8 +170,8 @@ public class CategoryManagerWebController {
      * @param categoryId 삭제하고자 하는 카테고리 id
      * @return redirect:/manager/categories
      */
-    @PostMapping(params = "id")
-    public String deleteCategory(@RequestParam("id") Long categoryId) {
+    @PostMapping(params = "deletedId")
+    public String deleteCategory(@RequestParam("deletedId") Long categoryId) {
         commandCategoryService.delete(categoryId);
         return "redirect:/manager/categories";
     }
