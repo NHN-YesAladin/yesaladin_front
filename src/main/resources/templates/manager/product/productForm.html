@@ -91,61 +91,47 @@
                    accept="application/epub+zip, application/pdf, application/vnd.comicbook+zip">
           </div>
 
-          <div class="mb-3">
-            <label class="form-label">카테고리 검색</label>
-            <div class="row g-2">
-              <div class="col">
-                <input type="text" class="form-control" placeholder="Search for…" id="categoryName">
+          <div class="mb-3 form-control container">
+            <div class="row mb-3 justify-content-center">
+              <button type="button" class="btn btn-primary btn-lg mb-3 w-75" data-bs-toggle="modal" data-bs-target="#categoryModal">Category Search</button>
+            </div>
+            <div class="row">
+              <div class="col-3">
+                <h2 class="text-center">선택한 카테고리<br><span class="text-danger">(클릭 시 제거)</span></h2>
               </div>
-              <div class="col-auto">
-                <a href="#" class="btn btn-icon" aria-label="Button" id="categorySearch">
-                  <!-- Download SVG icon from http://tabler-icons.io/i/search -->
-                  <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
-                </a>
+              <div class="col-8">
+              <div id="selected-main-categories-view" class="form-selectgroup form-selectgroup-pills"></div>
               </div>
             </div>
           </div>
-          <div class="mb-3">
-            <table id="searched-category-table" class="table" style="table-layout: fixed"></table>
-          </div>
-          <div class="mb-1">
-            <label class="form-label text-success">선택한 카테고리</label>
-            <table id="selected-category-view-table" class="table" style="table-layout: fixed"></table>
-          </div>
 
-          <div class="mt-1 mb-1">
-            <label class="form-label text-success">선택한 저자</label>
-            <div class="form-selectgroup form-selectgroup-pills">
-              <label class="form-selectgroup-item">
-                <input type="checkbox" name="authors" class="form-selectgroup-input" required>
-                <span class="form-selectgroup-label">검색해 주세요</span>
-              </label>
+          <div class="mb-3 form-control container">
+            <div class="row mb-3 justify-content-center">
+              <button type="button" class="btn btn-primary btn-lg mb-3 w-75" data-bs-toggle="modal" data-bs-target="#authorModal">Author Search</button>
             </div>
-          </div>
-
-
-          <div class="mb-3">
-            <label class="form-label">출판사 검색</label>
-            <div class="row g-2">
-              <div class="col">
-                <input type="text" class="form-control" placeholder="Search for…" id="input-publisher-name">
+            <div class="row">
+              <div class="col-3">
+                <h2 class="text-center">선택한 저자<br><span class="text-danger">(클릭 시 제거)</span></h2>
               </div>
-              <div class="col-auto">
-                <a href="#" class="btn btn-icon" aria-label="Button" id="publisher-search">
-                  <!-- Download SVG icon from http://tabler-icons.io/i/search -->
-                  <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
-                </a>
+              <div class="col-8">
+                <div id="selected-main-authors-view" class="form-selectgroup form-selectgroup-pills"></div>
               </div>
             </div>
           </div>
-          <div class="mb-3">
-            <table class="table" id="searched-publisher-table" style="table-layout: fixed"></table>
+
+          <div class="mb-3 form-control container">
+            <div class="row mb-3 justify-content-center">
+               <button type="button" class="btn btn-primary btn-lg mb-3 w-75" data-bs-toggle="modal" data-bs-target="#publisherModal">Publisher Search</button>
+              <div class="row">
+                <div class="col-3">
+                  <h2 class="text-center">선택한 출판사<br><span class="text-danger">(클릭 시 제거)</span></h2>
+                </div>
+                <div class="col-8">
+                  <div id="selected-main-publishers-view" class="form-selectgroup form-selectgroup-pills"></div>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="mb-3">
-            <label class="form-label text-success">선택한 출판사</label>
-            <table id="selected-publisher-table" class="table" style="table-layout: fixed"></table>
-          </div>
-          <div id="selected-publisher-checkbox" style="display: none"></div>
 
           <div class="mb-3">
             <label class="form-label">출판일</label>
@@ -178,11 +164,18 @@
             </select>
           </div>
 
-          <div class="mb-3">
-            <label class="form-label">태그 검색</label>
-            <button type="button" class="btn btn-primary form-control mb-3" data-bs-toggle="modal" data-bs-target="#tagModal">Tag Search</button>
-            <label class="form-label">선택한 태그(클릭 시 제거)</label>
-            <div class="form-selectgroup form-selectgroup-pills" id="selected-main-tags-view"></div>
+          <div class="mb-3 mt-3 form-control container">
+            <div class="row justify-content-center">
+              <button type="button" class="btn btn-primary btn-lg mb-3 w-75" data-bs-toggle="modal" data-bs-target="#tagModal">Tag Search</button>
+            </div>
+            <div class="row mb-3">
+              <div class="col-3">
+                <h2 class="text-center">선택한 태그<br><span class="text-danger">(클릭 시 제거)</span></h2>
+              </div>
+              <div class="col-8">
+                <div class="form-selectgroup form-selectgroup-pills" id="selected-main-tags-view"></div>
+              </div>
+            </div>
           </div>
 
           <div class="mb-3">
@@ -316,7 +309,7 @@
           </nav>
         </div>
         <div class="modal-body">
-          <h3><span class="label label-default">선택한 태그(클릭 시 제거)</span></h3>
+          <h3><label class="label label-default">선택한 태그<span class="text-danger">(클릭 시 제거)</span></label></h3>
           <div class="mb-3">
             <div class="form-selectgroup form-selectgroup-pills" id="selected-modal-tags-view"></div>
           </div>
@@ -328,14 +321,14 @@
       </div>
     </div>
   </div>
-  <!-- The Tag Modal -->
+  <!-- The Author Modal -->
   <div class="modal fade" id="authorModal">
     <div class="modal-dialog">
       <div class="modal-content">
 
         <!-- Modal Header -->
         <div class="modal-header">
-          <h4 class="modal-title">태그 검색</h4>
+          <h4 class="modal-title">저자 검색</h4>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
 
@@ -353,11 +346,98 @@
             </div>
           </div>
           <table class="table" id="searched-author-table"></table>
+          <nav aria-label="...">
+            <ul id = 'author-page' class="pagination justify-content-center"></ul>
+          </nav>
         </div>
         <div class="modal-body">
-          <h3><span class="label label-default">선택한 저자(클릭 시 제거)</span></h3>
+          <h3><label class="label label-default">선택한 저자<span class="text-danger">(클릭 시 제거)</span></label></h3>
           <div class="mb-3">
-            <div class="form-selectgroup form-selectgroup-pills" id="selected-modal-tags"></div>
+            <div class="form-selectgroup form-selectgroup-pills" id="selected-modal-authors-view"></div>
+          </div>
+        </div>
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- The Publisher Modal -->
+  <div class="modal fade" id="publisherModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">출판사 검색</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          <div class="row g-2 mb-3">
+            <div class="col">
+              <input type="text" class="form-control" placeholder="Search for…" id="publisher-input">
+            </div>
+            <div class="col-auto">
+              <a href="#" class="btn btn-icon" aria-label="Button" id="publisher-search">
+                <!-- Download SVG icon from http://tabler-icons.io/i/search -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
+              </a>
+            </div>
+          </div>
+          <table class="table" id="searched-publisher-table"></table>
+          <nav aria-label="...">
+            <ul id = 'publisher-page' class="pagination justify-content-center"></ul>
+          </nav>
+        </div>
+        <div class="modal-body">
+          <h3><label class="label label-default">선택한 출판사<span class="text-danger">(클릭 시 제거)</span></label></h3>
+          <div class="mb-3">
+            <div class="form-selectgroup form-selectgroup-pills" id="selected-modal-publishers-view"></div>
+          </div>
+        </div>
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- The Publisher Modal -->
+  <div class="modal fade" id="categoryModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">카테고리 검색</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          <div class="row g-2 mb-3">
+            <div class="col">
+              <input type="text" class="form-control" placeholder="Search for…" id="category-input">
+            </div>
+            <div class="col-auto">
+              <a href="#" class="btn btn-icon" aria-label="Button" id="category-search">
+                <!-- Download SVG icon from http://tabler-icons.io/i/search -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
+              </a>
+            </div>
+          </div>
+          <table class="table" id="searched-category-table"></table>
+          <nav aria-label="...">
+            <ul id = 'category-page' class="pagination justify-content-center"></ul>
+          </nav>
+        </div>
+        <div class="modal-body">
+          <h3><label class="label label-default">선택한 카테고리<span class="text-danger">(클릭 시 제거)</span></label></h3>
+          <div class="mb-3">
+            <div class="form-selectgroup form-selectgroup-pills" id="selected-modal-categories-view"></div>
           </div>
         </div>
         <!-- Modal footer -->
@@ -498,6 +578,31 @@
           return false;
         }
 
+        let categories = document.getElementsByName('categories').length;
+        console.log(categories)
+        if(categories === 0 || categories > 3) {
+          alert('카테고리를 1 ~ 3개까지 선택해주세요')
+          event.preventDefault();
+          return false;
+        }
+        categories.forEach(function (category) {
+          category.checked = true;
+        })
+
+        let publishers = document.getElementsByName('publishers').length;
+        if(publishers === 0 || publishers > 1) {
+          alert('출판사를 1개 선택해주세요')
+          event.preventDefault();
+          return false;
+        }
+
+        let authors = document.getElementsByName('authors').length;
+        if(authors === 0) {
+          alert('저자를 1개 이상 선택해주세요')
+          event.preventDefault();
+          return false;
+        }
+
       }, false);
 
     });
@@ -507,10 +612,18 @@
 
 <script>
   document.getElementById('tag-search').addEventListener('click', function (e) {
-    e.preventDefault();
+    e.preventDefault()
     searchTag(0, 5)
   })
 
+  /**
+   * 1. 입력값이 없으면 경고처리 후 종료
+   * 2. fetch 통신
+   *  2-1. initSearchTable -> 검색 테이블 초기화
+   *  2-2. initPaging
+   * @param offset 페이지 위치
+   * @param size 데이터 갯수
+   */
   function searchTag(offset, size) {
     const input = document.getElementById('tag-input')
     const searchedTable = document.getElementById('searched-tag-table')
@@ -528,23 +641,13 @@
     .then(function (data) {
       initSearchTable(searchedTable)
       initPaging(page, data.count, offset, size)
-
-      const head = searchedTable.createTHead()
-
-      const headRow = head.insertRow()
-      headRow.colSpan = 3
-
-      const headCell = headRow.insertCell()
-      headCell.innerText = input.value + ' 검색 결과'
-
-      const body = searchedTable.createTBody()
+      const body = createHeadAndBody(searchedTable, input)
 
       data.searchedTagDtoList.forEach(function (dto) {
         const bodyRow = body.insertRow();
         const nameCell = bodyRow.insertCell()
         nameCell.className += 'text-center'
         nameCell.innerText = dto.name
-
 
         const selectButton = document.createElement('button')
         selectButton.setAttribute('type', 'button')
@@ -562,7 +665,7 @@
   function selectTags(selected) {
     const modalTagView = document.getElementById('selected-modal-tags-view')
     const mainTagsView = document.getElementById('selected-main-tags-view')
-    const tags = document.getElementsByName('modal-tags')
+    const tags = document.getElementsByName('tags')
 
     if(checkValue(tags, selected.id)) {
       alert('중복 태그입니다.')
@@ -594,37 +697,320 @@
 </script>
 
 <script>
-  document.getElementById('author-search').addEventListener('click', (e) =>
-  e.preventDefault())
+  document.getElementById('author-search').addEventListener('click', (e) => {
+    e.preventDefault()
+    searchAuthor(0, 5)
+  })
 
-  function searchAuthor(inputId) {
-    const input = document.getElementById(inputId)
+  function searchAuthor(offset, size) {
+    const input = document.getElementById('author-input')
     const searchedTable = document.getElementById('searched-author-table')
+    const page = document.getElementById('author-page')
     const url = '/api/authors/search'
 
     if(input.value == null) {
       alert('검색할 단어를 입력해주세요')
       return
     }
-    fetch(url + '?name=' + input.value + '&offset=0&size=5', {
+    fetch(url + '?name=' + input.value + '&offset='+offset+'&size='+size, {
       method: 'GET'
     })
     .then((res) => res.json())
     .then(function (data) {
+      initSearchTable(searchedTable)
+      initPaging(page)
+      const body = createHeadAndBody(searchedTable, input)
+      data.searchedAuthorDtoList.forEach(function (dto){
+        const bodyRow = body.insertRow();
+        const nameCell = bodyRow.insertCell()
+        nameCell.innerText = 'Name: ' + dto.name
 
+        if(dto.loginId !== null) {
+          nameCell.innerText += '\nLogin ID: ' + dto.loginId
+        }
+
+        const selectButton = document.createElement('button')
+        selectButton.setAttribute('type', 'button')
+        selectButton.innerText = 'SELECT'
+        selectButton.className = 'btn btn-outline-primary'
+        selectButton.addEventListener('click', function (){selectAuthor(dto)})
+
+        const buttonCell = bodyRow.insertCell();
+        buttonCell.className += 'text-center'
+        buttonCell.appendChild(selectButton)
+      })
+    })
+  }
+  function selectAuthor(selected) {
+    const authors = document.getElementsByName('authors')
+    const modalAuthorsView = document.getElementById('selected-modal-authors-view')
+    const mainAuthorsView = document.getElementById('selected-main-authors-view')
+
+    if(checkValue(authors, selected.id)) {
+      alert('중복 저자입니다.')
+      return
+    }
+
+    const modalLabel = document.createElement('label')
+    modalLabel.className += 'form-selectgroup-item'
+
+    const modalInput = document.createElement('input')
+    modalInput.setAttribute('type', 'checkbox')
+    modalInput.className += "form-selectgroup-input"
+    modalInput.readOnly = true;
+    modalInput.checked = true;
+    modalInput.value = selected.id
+
+    const modalSpan = document.createElement('span')
+    modalSpan.className += "form-selectgroup-label"
+    modalSpan.innerText = 'Name: ' + selected.name
+
+
+
+    const mainLabel = document.createElement('label')
+    mainLabel.className += 'form-selectgroup-item'
+
+    const mainInput = document.createElement('input')
+    mainInput.setAttribute('type', 'checkbox')
+    mainInput.className += "form-selectgroup-input"
+    mainInput.readOnly = true;
+    mainInput.checked = true;
+    mainInput.value = selected.id
+    mainInput.name = 'authors'
+
+    const mainSpan = document.createElement('span')
+    mainSpan.className += "form-selectgroup-label"
+    mainSpan.innerText = 'Name: ' + selected.name
+
+
+    if(selected.loginId != null) {
+      modalSpan.innerText += '\nLogin ID: ' + selected.loginId
+      mainSpan.innerText += '\nLogin ID: ' + selected.loginId
+    }
+
+    modalLabel.addEventListener('click', function () {
+      modalLabel.remove()
+      mainLabel.remove()
+    })
+    mainLabel.addEventListener('click', function () {
+      modalLabel.remove()
+      mainLabel.remove()
+    })
+
+
+    modalLabel.appendChild(modalInput)
+    modalLabel.appendChild(modalSpan)
+    modalAuthorsView.appendChild(modalLabel)
+
+    mainLabel.appendChild(mainInput)
+    mainLabel.appendChild(mainSpan)
+    mainAuthorsView.appendChild(mainLabel)
+  }
+
+</script>
+
+<script>
+  document.getElementById('category-search').addEventListener('click', function (e){
+    e.preventDefault()
+    searchCategories(0, 5)
+  })
+  function searchCategories(offset, size) {
+    const input = document.getElementById('category-input')
+    const searchedTable = document.getElementById('searched-category-table')
+    const page = document.getElementById('category-page')
+    const url = '/api/categories/search'
+
+    if(input.value === null) {
+      alert('검색할 카테고리를 입력해주세요')
+      return
+    }
+
+    fetch(url + '?offset=' + offset +' &size=' + size + '&name='+input.value, {
+      method: 'GET'
+    })
+    .then((res) => res.json())
+    .then(function (data) {
+      initSearchTable(searchedTable)
+      initPaging(page, data.count, size, offset)
+      const body = createHeadAndBody(searchedTable, input)
+      data.searchedCategoryDtoList.forEach(function (dto) {
+        const row = body.insertRow()
+        const nameCell = row.insertCell()
+        nameCell.innerText = dto.parentName + ' >> ' + dto.name;
+
+        const selectButton = document.createElement('button')
+        selectButton.setAttribute('type', 'button')
+        selectButton.innerText = 'SELECT'
+        selectButton.className = 'btn btn-outline-primary'
+        selectButton.addEventListener('click', function (){selectCategories(dto)})
+
+        const buttonCell = row.insertCell();
+        buttonCell.className += 'text-center'
+        buttonCell.appendChild(selectButton)
+      })
     })
   }
 
   function selectCategories(selected) {
+    const categories = document.getElementsByName('categories')
+    const modalCategoriesView = document.getElementById('selected-modal-categories-view')
+    const mainCategoriesView = document.getElementById('selected-main-categories-view')
+
+    if(checkValue(categories, selected.id)) {
+      alert('중복된 카테고리 입니다.')
+      return
+    }
+
+    if(checkSize(categories, 3)) {
+      alert('카테고리는 최대 3개까지 허용합니다.')
+      return
+    }
+
+    const modalLabel = document.createElement('label')
+    modalLabel.className += 'form-selectgroup-item'
+
+    const modalInput = document.createElement('input')
+    modalInput.setAttribute('type', 'checkbox')
+    modalInput.className += "form-selectgroup-input"
+    modalInput.readOnly = true
+    modalInput.checked = true
+    modalInput.value = selected.id
+
+    const modalSpan = document.createElement('span')
+    modalSpan.className += "form-selectgroup-label"
+    modalSpan.innerText =  selected.parentName + ' >> ' + selected.name;
+
+
+    const mainLabel = document.createElement('label')
+    mainLabel.className += 'form-selectgroup-item'
+
+    const mainInput = document.createElement('input')
+    mainInput.setAttribute('type', 'checkbox')
+    mainInput.className += "form-selectgroup-input"
+    mainInput.value = selected.id
+    mainInput.name = 'categories'
+    mainInput.readOnly = true
+    mainInput.checked = true
+
+    const mainSpan = document.createElement('span')
+    mainSpan.className += "form-selectgroup-label"
+    mainSpan.innerText = selected.parentName + ' >> ' + selected.name;
+
+    modalLabel.addEventListener('click', function () {
+      modalLabel.remove()
+      mainLabel.remove()
+    })
+    mainLabel.addEventListener('click', function () {
+      modalLabel.remove()
+      mainLabel.remove()
+    })
+
+
+    modalLabel.appendChild(modalInput)
+    modalLabel.appendChild(modalSpan)
+    modalCategoriesView.appendChild(modalLabel)
+
+    mainLabel.appendChild(mainInput)
+    mainLabel.appendChild(mainSpan)
+    mainCategoriesView.appendChild(mainLabel)
 
   }
+</script>
 
-  function selectAuthor(selected) {
+<script>
+  document.getElementById('publisher-search').addEventListener('click', (e) => {
+    e.preventDefault()
+    searchPublisher(0, 5)
+  })
+  function searchPublisher(offset, size) {
+    const input = document.getElementById('publisher-input')
+    const searchedTable = document.getElementById('searched-publisher-table')
+    const ul = document.getElementById('publisher-page')
+    const url = '/api/publishers/search'
 
+    fetch(url + '?name=' + input.value + '&offset=' + offset + '&size=' + size, {
+      method: 'GET'
+    })
+    .then((res) => (res.json()))
+    .then(function (data) {
+      initSearchTable(searchedTable)
+      initPaging(ul, data.count, size, offset)
+      const body = createHeadAndBody(searchedTable, input)
+      data.searchedPublisherDtoList.forEach(function (dto){
+        const row = body.insertRow()
+        const nameCell = row.insertCell()
+        nameCell.innerText = dto.name
+
+        const selectButton = document.createElement('button')
+        selectButton.setAttribute('type', 'button')
+        selectButton.innerText = 'SELECT'
+        selectButton.className = 'btn btn-outline-primary'
+        selectButton.addEventListener('click', function (){selectPublishers(dto)})
+
+        const buttonCell = row.insertCell();
+        buttonCell.className += 'text-center'
+        buttonCell.appendChild(selectButton)
+      })
+    })
   }
 
-  function selectPublisher(selected) {
+  function selectPublishers(selected) {
+    const publisher = document.getElementsByName('publisher')
+    const modalCategoriesView = document.getElementById('selected-modal-publishers-view')
+    const mainCategoriesView = document.getElementById('selected-main-publishers-view')
 
+    if(checkSize(publisher, 1)) {
+      alert('출판사는 하나만 선택할 수 있습니다.')
+      return
+    }
+
+    const modalLabel = document.createElement('label')
+    modalLabel.className += 'form-selectgroup-item'
+
+    const modalInput = document.createElement('input')
+    modalInput.setAttribute('type', 'checkbox')
+    modalInput.className += "form-selectgroup-input"
+    modalInput.readOnly = true;
+    modalInput.checked = true;
+    modalInput.value = selected.id
+
+    const modalSpan = document.createElement('span')
+    modalSpan.className += "form-selectgroup-label"
+    modalSpan.innerText = selected.name;
+
+
+    const mainLabel = document.createElement('label')
+    mainLabel.className += 'form-selectgroup-item'
+
+    const mainInput = document.createElement('input')
+    mainInput.setAttribute('type', 'checkbox')
+    mainInput.className += "form-selectgroup-input"
+    mainInput.readOnly = true;
+    mainInput.checked = true;
+    mainInput.value = selected.id
+    mainInput.name = 'publisher'
+
+    const mainSpan = document.createElement('span')
+    mainSpan.className += "form-selectgroup-label"
+    mainSpan.innerText = selected.name;
+
+    modalLabel.addEventListener('click', function () {
+      modalLabel.remove()
+      mainLabel.remove()
+    })
+    mainLabel.addEventListener('click', function () {
+      modalLabel.remove()
+      mainLabel.remove()
+    })
+
+
+    modalLabel.appendChild(modalInput)
+    modalLabel.appendChild(modalSpan)
+    modalCategoriesView.appendChild(modalLabel)
+
+    mainLabel.appendChild(mainInput)
+    mainLabel.appendChild(mainSpan)
+    mainCategoriesView.appendChild(mainLabel)
   }
 </script>
 
@@ -637,9 +1023,10 @@
     }
   }
 
-  // 중복 확인
+  // 중복값 확인
   function checkValue(checkbox, id) {
     for (let i = 0; i < checkbox.length; i++) {
+      console.log(checkbox[i].value)
       if (checkbox[i].value == id) {
         return true;
       }
@@ -648,19 +1035,37 @@
   }
 
   /**
-   * 비동기 통신 후 page 초기화 후 생성
+   * 해당 테이블에 head와 body 생성 후 body 리턴
    *
-   * @param page
-   * @param count
-   * @param currentPage
-   * @param size
+   * @param table 생성할 테이블
+   * @returns {HTMLTableSectionElement} body
+   * @author 김선홍
+   * @since 1.0
    */
-  function initPaging(page, count, currentPage, size) {
-    page.innerHTML = ''
+  function createHeadAndBody(table, input) {
+    const head = table.createTHead()
 
-    console.log('count: ' + count)
-    console.log('current: ' + currentPage)
-    console.log('size: ' + size)
+    const headRow = head.insertRow()
+    const headCell = headRow.insertCell()
+
+    headCell.innerText =  input.value + ' 검색 결과'
+    return  table.createTBody()
+  }
+
+  function checkSize(checkbox, max) {
+    return checkbox.length >= max
+  }
+
+  /**
+   * 비동기 통신 후 page 초기화 후 재생성
+   *
+   * @param ul <li>가 들어갈 ul
+   * @param count 총 갯수
+   * @param size 데이터 갯수
+   * @param currentPage 현재 페이지
+   */
+  function initPaging(ul, count, size, currentPage) {
+    ul.innerHTML = ''
 
     if(currentPage > 0) {
       const pre = document.createElement('li')
@@ -672,7 +1077,7 @@
       preLink.addEventListener('click', function () {searchTag(currentPage -1, size)})
 
       pre.appendChild(preLink)
-      page.appendChild(pre)
+      ul.appendChild(pre)
     }
 
     const now = document.createElement('li')
@@ -681,11 +1086,10 @@
 
     const nowLink = document.createElement('a')
     nowLink.className += "page-link"
-    nowLink.href = '#'
     nowLink.innerText = 'Now'
 
     now.appendChild(nowLink)
-    page.appendChild(now)
+    ul.appendChild(now)
 
     if(Math.ceil(count / size) > currentPage + 1) {
       const next = document.createElement('li')
@@ -697,7 +1101,7 @@
       nextLink.innerText = 'Next'
 
       next.appendChild(nextLink)
-      page.appendChild(next)
+      ul.appendChild(next)
     }
   }
 </script>
