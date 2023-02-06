@@ -115,6 +115,12 @@
 
           <div class="mt-1 mb-1">
             <label class="form-label text-success">선택한 저자</label>
+            <div class="form-selectgroup form-selectgroup-pills">
+              <label class="form-selectgroup-item">
+                <input type="checkbox" name="authors" class="form-selectgroup-input" required>
+                <span class="form-selectgroup-label">검색해 주세요</span>
+              </label>
+            </div>
           </div>
 
 
@@ -305,6 +311,7 @@
             </div>
           </div>
           <table class="table" id="searched-tag-table"></table>
+          <ul id = 'tag-page' class="pagination"></ul>
         </div>
         <div class="modal-body">
           <h3><span class="label label-default">선택한 태그(클릭 시 제거)</span></h3>
@@ -346,7 +353,7 @@
           <table class="table" id="searched-author-table"></table>
         </div>
         <div class="modal-body">
-          <h3><span class="label label-default">선택한 태그(클릭 시 제거)</span></h3>
+          <h3><span class="label label-default">선택한 저자(클릭 시 제거)</span></h3>
           <div class="mb-3">
             <div class="form-selectgroup form-selectgroup-pills" id="selected-modal-tags"></div>
           </div>
@@ -499,11 +506,11 @@
 <script>
   document.getElementById('tag-search').addEventListener('click', function (e) {
     e.preventDefault();
-    searchTag('tag-input')
+    searchTag()
   })
 
-  function searchTag(inputId) {
-    const input = document.getElementById(inputId)
+  function searchTag(offset, size) {
+    const input = document.getElementById('tag-input')
     const searchedTable = document.getElementById('searched-tag-table')
     const url = '/api/tags/search'
 
@@ -512,7 +519,7 @@
       return
     }
 
-    fetch(url + '?' + 'name=' + input.value + '&offset=0&' + 'size=5', {
+    fetch(url + '?' + 'name=' + input.value + '&offset=' +offset  + '&size=' + size, {
       method: 'GET'
     }).then((res) => res.json())
     .then(function (data) {
@@ -583,6 +590,27 @@
 </script>
 
 <script>
+  document.getElementById('author-search').addEventListener('click', (e) =>
+  e.preventDefault())
+
+  function searchAuthor(inputId) {
+    const input = document.getElementById(inputId)
+    const searchedTable = document.getElementById('searched-author-table')
+    const url = '/api/authors/search'
+
+    if(input.value == null) {
+      alert('검색할 단어를 입력해주세요')
+      return
+    }
+    fetch(url + '?name=' + input.value + '&offset=0&size=5', {
+      method: 'GET'
+    })
+    .then((res) => res.json())
+    .then(function (data) {
+
+    })
+  }
+
   function selectCategories(selected) {
 
   }
@@ -613,6 +641,27 @@
       }
     }
     return false;
+  }
+
+  function paging(page, count, currentPage, size) {
+    if(currentPage > 0) {
+      const pre = document.createElement('li')
+      pre.className += 'page-item'
+      pre.innerText = 'Previous'
+      pre.addEventListener('click', function () {
+        searchTag(currentPage - 1, size)
+      })
+      page.appendChild(pre)
+    }
+
+    const now = document.createElement('li')
+    now.className += 'page-item active'
+    now.innerText = 'Now'
+    page.appendChild(now)
+
+    if(count / size > currentPage) {
+      const next
+    }
   }
 </script>
 </body>
