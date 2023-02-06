@@ -311,7 +311,9 @@
             </div>
           </div>
           <table class="table" id="searched-tag-table"></table>
-          <ul id = 'tag-page' class="pagination"></ul>
+          <nav aria-label="...">
+            <ul id = 'tag-page' class="pagination justify-content-center"></ul>
+          </nav>
         </div>
         <div class="modal-body">
           <h3><span class="label label-default">선택한 태그(클릭 시 제거)</span></h3>
@@ -506,12 +508,13 @@
 <script>
   document.getElementById('tag-search').addEventListener('click', function (e) {
     e.preventDefault();
-    searchTag()
+    searchTag(0, 5)
   })
 
   function searchTag(offset, size) {
     const input = document.getElementById('tag-input')
     const searchedTable = document.getElementById('searched-tag-table')
+    const page = document.getElementById('tag-page')
     const url = '/api/tags/search'
 
     if(input.value == null) {
@@ -524,6 +527,7 @@
     }).then((res) => res.json())
     .then(function (data) {
       initSearchTable(searchedTable)
+      initPaging(page, data.count, offset, size)
 
       const head = searchedTable.createTHead()
 
@@ -574,8 +578,8 @@
     main.innerHTML = '<input type="checkbox" name="tags" value=' + selected.id + ' class="form-selectgroup-input" readonly checked>'
         + '<span class = "form-selectgroup-label">'+ selected.name + '</span>'
 
-    modalView.appendChild(modal)
-    mainView.appendChild(main)
+    modalTagView.appendChild(modal)
+    mainTagsView.appendChild(main)
 
     modal.addEventListener('click', function () {
       modal.remove()
@@ -643,24 +647,57 @@
     return false;
   }
 
-  function paging(page, count, currentPage, size) {
+  /**
+   * 비동기 통신 후 page 초기화 후 생성
+   *
+   * @param page
+   * @param count
+   * @param currentPage
+   * @param size
+   */
+  function initPaging(page, count, currentPage, size) {
+    page.innerHTML = ''
+
+    console.log('count: ' + count)
+    console.log('current: ' + currentPage)
+    console.log('size: ' + size)
+
     if(currentPage > 0) {
       const pre = document.createElement('li')
       pre.className += 'page-item'
-      pre.innerText = 'Previous'
-      pre.addEventListener('click', function () {
-        searchTag(currentPage - 1, size)
-      })
+
+      const preLink = document.createElement('a')
+      preLink.className += 'page-link'
+      preLink.innerText = 'Previous'
+      preLink.addEventListener('click', function () {searchTag(currentPage -1, size)})
+
+      pre.appendChild(preLink)
       page.appendChild(pre)
     }
 
     const now = document.createElement('li')
     now.className += 'page-item active'
-    now.innerText = 'Now'
+    now.ariaCurrent = 'page'
+
+    const nowLink = document.createElement('a')
+    nowLink.className += "page-link"
+    nowLink.href = '#'
+    nowLink.innerText = 'Now'
+
+    now.appendChild(nowLink)
     page.appendChild(now)
 
-    if(count / size > currentPage) {
-      const next
+    if(Math.ceil(count / size) > currentPage + 1) {
+      const next = document.createElement('li')
+      next.className += 'page-item'
+
+      const nextLink = document.createElement('a')
+      nextLink.addEventListener('click', function (){searchTag(currentPage + 1, size)})
+      nextLink.className += 'page-link'
+      nextLink.innerText = 'Next'
+
+      next.appendChild(nextLink)
+      page.appendChild(next)
     }
   }
 </script>
