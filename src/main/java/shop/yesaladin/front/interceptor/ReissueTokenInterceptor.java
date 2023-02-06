@@ -53,10 +53,9 @@ public class ReissueTokenInterceptor implements HandlerInterceptor {
         String uuid = getUuidFromCookie(request.getCookies());
         log.info("uuid={}", uuid);
         if (!(authentication instanceof AnonymousAuthenticationToken) && Objects.nonNull(uuid)) {
-            if (!isUuidExist(uuid)) {
+            if (Objects.isNull(uuid)) {
                 return true;
             }
-
             tokenReissue(uuid);
         }
         return true;
@@ -75,27 +74,9 @@ public class ReissueTokenInterceptor implements HandlerInterceptor {
         if (Objects.nonNull(authInfo) && isReissueRequired(authInfo)) {
             String accessToken = memberAdapter.tokenReissue(uuid);
             log.info("Reissued AccessToken={}", accessToken);
-
-            redisTemplate.opsForHash().delete(uuid, JWT_CODE.getValue());
             authInfo.setAccessToken(accessToken);
             redisTemplate.opsForHash().put(uuid, JWT_CODE.getValue(), authInfo);
         }
-    }
-
-    /**
-     * login 시 발급 받아 쿠키에 저장한 uuid 값이 존재 하는지 판단하기 위한 기능 입니다.
-     *
-     * @param uuid login 시 발급 받아 쿠키에 저장한 uuid 값
-     * @return 쿠키에 저장된 uuid의 존재 여부
-     * @author 송학현
-     * @since 1.0
-     */
-    private boolean isUuidExist(String uuid) {
-        if (Objects.isNull(uuid)) {
-            log.info("UUID not exist");
-            return false;
-        }
-        return true;
     }
 
     /**
