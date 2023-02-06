@@ -3,6 +3,10 @@ package shop.yesaladin.front.interceptor;
 import static shop.yesaladin.front.member.jwt.AuthUtil.JWT_CODE;
 import static shop.yesaladin.front.member.jwt.AuthUtil.UUID_CODE;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -50,23 +54,45 @@ public class ReissueTokenInterceptor implements HandlerInterceptor {
         log.info("uuid={}", uuid);
         if (!(authentication instanceof AnonymousAuthenticationToken) && Objects.nonNull(uuid)) {
             if (Objects.isNull(uuid)) {
-                log.info("UUID not exist");
                 return true;
             }
-
-            AuthInfo authInfo = (AuthInfo) redisTemplate.opsForHash()
-                    .get(uuid, JWT_CODE.getValue());
-            if (Objects.nonNull(authInfo)) {
-                String accessToken = memberAdapter.tokenReissue(uuid);
-                log.info("Reissued AccessToken={}", accessToken);
-
-                redisTemplate.opsForHash().delete(uuid, JWT_CODE.getValue());
-                authInfo.setAccessToken(accessToken);
-                redisTemplate.opsForHash().put(uuid, JWT_CODE.getValue(), authInfo);
-            }
-            return true;
+            tokenReissue(uuid);
         }
         return true;
+    }
+
+    /**
+     * JWT 토큰의 유효 시간에 따라 재발급을 요청 하기 위한 기능 입니다.
+     *
+     * @param uuid login 시 발급 받아 쿠키에 저장한 uuid 값
+     * @author 송학현
+     * @since 1.0
+     */
+    private void tokenReissue(String uuid) {
+        AuthInfo authInfo = (AuthInfo) redisTemplate.opsForHash()
+                .get(uuid, JWT_CODE.getValue());
+        if (Objects.nonNull(authInfo) && isReissueRequired(authInfo)) {
+            String accessToken = memberAdapter.tokenReissue(uuid);
+            log.info("Reissued AccessToken={}", accessToken);
+            authInfo.setAccessToken(accessToken);
+            redisTemplate.opsForHash().put(uuid, JWT_CODE.getValue(), authInfo);
+        }
+    }
+
+    /**
+     * AccessToken의 만료 시간과 현재 시간을 비교 하여 토큰 재발급을 처리해야 하는 지 판별하기 위한 기능 입니다.
+     *
+     * @param authInfo AccessToken과 User 정보를 담은 클래스 입니다.
+     * @return AccessToken의 만료 시간이 5분 이하 인지 판단한 결과 입니다.
+     * @author 송학현
+     * @since 1.0
+     */
+    private boolean isReissueRequired(AuthInfo authInfo) {
+        String expiredTime = authInfo.getExpiredTime();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+        LocalDateTime base = LocalDateTime.parse(expiredTime, formatter);
+        return Duration.between(LocalDateTime.now(ZoneId.of("Asia/Seoul")), base)
+                .toMinutes() <= 5;
     }
 
     /**
