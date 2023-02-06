@@ -87,7 +87,7 @@ public class OrderMainWebController {
         model.addAttribute("point", response.getData().getPoint());
         model.addAttribute("address", response.getData().getAddress());
 
-        return "main/order/order-page";
+        return "main/order/order";
     }
 
 }

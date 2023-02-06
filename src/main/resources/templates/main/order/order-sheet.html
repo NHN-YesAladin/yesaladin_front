@@ -3,6 +3,8 @@
 <body th:fragment="order-sheet">
 <!--토스 결제창을 위해 무조건 제일 위에서 load 되어야함-->
 <script src="https://js.tosspayments.com/v1/payment"></script>
+<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+
 <form method="post" th:action="@{'/order' + ${member == null ? '/non-member': '/member'}}">
   <div class="container-narrow py-4">
     <div class="text-center mb-4">
@@ -37,33 +39,45 @@
         <h3 class="card-title">배송 정보 입력</h3>
         <div class="card card-md">
           <div class="card-body">
-            <div>
-              <label class="form-label required d-lg-inline float-start">주소</label>
-              <a sec:authorize="isAuthenticated()"
-                 class="btn btn-outline-secondary btn-sm float-end btn-modal"
-                 data-bs-toggle="modal" data-bs-target="#modal-report">
-                배송지 선택
-              </a>
-              <button sec:authorize="!isAuthenticated()" type="button"
-                      class="btn btn-outline-secondary btn-sm float-end" onclick="getAddress();">
-                우편번호 찾기
-              </button>
+            <div class="row w-full ms-0">
+              <div class="col-9 pe-0 ps-0">
+                <label class="form-label required d-lg-inline col-9">주소</label>
+                <a sec:authorize="isAuthenticated()"
+                   class="btn btn-outline-secondary btn-sm float-end btn-modal col-3"
+                   data-bs-toggle="modal" data-bs-target="#modal-report">
+                  배송지 선택
+                </a>
+              </div>
+              <div class="col-3 pe-0 ps-0">
+                <button sec:authorize="!isAuthenticated()" type="button"
+                        class="btn btn-outline-secondary btn-sm float-end col-3 m-auto w-full" onclick="getAddress();">
+                  우편번호 찾기
+                </button>
+              </div>
             </div>
+            <div class="card">
+              <div class="card-body">
             <input type="text" name="orderer-address-id" hidden="hidden">
-            <div class="w-full">
-              <input type="text" class="form-control col-3" name="orderer-post-address"
+            <div class="row w-full ms-0">
+              <div class="col-3 ps-0">
+              <input type="text" class="form-control" id="orderer-post-address" name="orderer-post-address"
                      placeholder="우편번호" th:value="${address}" disabled>
-              <input type="text" class="form-control col-9" name="orderer-road-address"
+              </div>
+              <div class="col-9 ps-0 pe-0">
+              <input type="text" class="form-control" id="orderer-road-address" name="orderer-road-address"
                      placeholder="도로명 주소" th:value="${address}" disabled>
+              </div>
             </div>
-            <input type="text" class="form-control" name="orderer-detail-address"
+            <input type="text" class="form-control mt-1" id="orderer-detail-address" name="orderer-detail-address"
                    placeholder="상세 주소" th:value="${address}">
-
+              </div>
+            </div>
             <label class="form-label d-lg-inline float-start mt-2">희망배송날짜</label>
             <input class="form-control mb-2" type="date" name="order-expected-date"
                    th:min="${#calendars.format( #calendars.createNow(), 'yyyy-MM-dd')}"
                    id="datepicker">
             <span class="form-check-description">미선택시 가장 가까운 날로 배송될 예정입니다.</span>
+
           </div>
         </div>
         <br>
@@ -90,13 +104,14 @@
                           th:text="${product.isbn}"></span></td>
                 <td th:text="${product.title}"></td>
                 <td>
+                  <span th:text="${'order-product-price-' + productStat.index}"></span>
                   <del class="fs-6" th:text="${product.actualPrice}"></del>
-                  <span class="text-danger"
+                  <span class="text-danger" th:id="${productStat.index}"
                         th:text="${product.actualPrice * (100 - product.discountRate) / 100}"></span>
                 </td>
                 <td th:text="${product.expectedPoint}"></td>
                 <td>
-                  <span name="order-product-quantity" th:value="${product.quantity}"
+                  <span class="quantity" id="productQuantity" name="order-product-quantity" th:value="${product.quantity}"
                         th:text="${product.quantity}"></span>
                 </td>
                 <td>
@@ -173,7 +188,7 @@
         <h3 class="card-title">
           총 결제 금액
           <span style="float: right">원</span>
-          <span style="float: right" id="total-price">0</span>
+          <span style="float: right" id="total-payment-price">0</span>
         </h3>
       </div>
     </div>
@@ -181,7 +196,6 @@
       <a href="#" class="btn btn-primary w-100" onclick="produceOrder(this)">
         결제
       </a>
-      <
       <div th:replace="~{common/fragments/alert :: custom-alert}"></div>
     </div>
   </div>
@@ -333,7 +347,7 @@
         }
 
         // 우편번호와 주소 정보를 해당 필드에 넣는다.
-        // document.getElementById('orderer-post-address').value = data.zonecode;
+        document.getElementById('orderer-post-address').value = data.zonecode;
         document.getElementById("orderer-road-address").value = addr;
 
         // 커서를 상세주소 필드로 이동한다.
@@ -346,7 +360,6 @@
 </script>
 <!--주문과의 관계가 확정나면 토스 결제창 띄우기 및 결제 시퀀스를 주문 실패 화면에서도 써서 js화 시킬예정-->
 <!--<script th:src="@{/js/payment/toss-payment-event.js}"></script>-->
-<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 </body>
 
 

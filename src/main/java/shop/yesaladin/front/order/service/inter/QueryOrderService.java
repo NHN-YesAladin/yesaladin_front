@@ -13,7 +13,7 @@ import shop.yesaladin.front.order.dto.OrderSummaryResponseDto;
  * 주문 조회 서비스 인터페이스
  *
  * @author 배수한
- * @author
+ * @author 최예린
  * @since 1.0
  */
 public interface QueryOrderService {
