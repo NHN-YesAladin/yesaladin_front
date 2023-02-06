@@ -1,5 +1,7 @@
 function nicknameCheck() {
-  let nicknameVal = document.getElementById('nickname').value;
+  let nicknameCheckBtn = document.getElementById('nicknameCheckBtn');
+  let nicknameInput = document.getElementById('nickname');
+  let nicknameVal = nicknameInput.value;
   let nicknameRegex = /^.*(?=.*[a-z])(?=.*[a-z\d])(?=.{2,8}).*$/;
   let emptyRegex = /\s/g;
 
@@ -13,6 +15,8 @@ function nicknameCheck() {
       resp.json().then(resp => {
         if (!resp.result) {
           alert('사용 가능한 닉네임 입니다.');
+          nicknameInput.readOnly = true;
+          nicknameCheckBtn.disabled = true;
         } else {
           alert('이미 사용 중인 닉네임 입니다.');
         }
@@ -24,8 +28,10 @@ function nicknameCheck() {
 }
 
 function loginIdCheck() {
-  let loginIdVal = document.getElementById('loginId').value;
-  let loginIdRegex = /^.*(?=.*[a-z])(?=.*\d)(?=^.{8,15}).*$/;
+  let loginIdCheckBtn = document.getElementById('loginIdCheckBtn');
+  let loginIdInput = document.getElementById('loginId');
+  let loginIdVal = loginIdInput.value;
+  let loginIdRegex = /([a-z+\d*]{8,15})/g;
   let emptyRegex = /\s/g;
 
   if (loginIdRegex.test(loginIdVal) && !emptyRegex.test(loginIdVal)) {
@@ -38,18 +44,22 @@ function loginIdCheck() {
       resp.json().then(resp => {
         if (!resp.result) {
           alert('사용 가능한 아이디 입니다.');
+          loginIdInput.readOnly = true;
+          loginIdCheckBtn.disabled = true;
         } else {
           alert('이미 사용 중인 아이디 입니다.');
         }
       })
     });
   } else {
-    alert('로그인 아이디는 영문(필수)과 숫자(옵션) 순서로 8자 이상 15자 이하만 가능 합니다');
+    alert('아이디는 영문 또는 숫자로(조합 가능) 8자 이상 15자 이하만 가능 합니다.');
   }
 }
 
 function emailCheck() {
-  let emailVal = document.getElementById('email').value;
+  let emailCheckBtn = document.getElementById('emailCheckBtn');
+  let emailInput = document.getElementById('email');
+  let emailVal = emailInput.value;
   let emailRegex = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/;
   let emptyRegex = /\s/g;
 
@@ -63,6 +73,8 @@ function emailCheck() {
       resp.json().then(resp => {
         if (!resp.result) {
           alert('사용 가능한 이메일 입니다.');
+          emailInput.readOnly = true;
+          emailCheckBtn.disabled = true;
         } else {
           alert('이미 사용 중인 이메일 입니다.');
         }
@@ -74,7 +86,9 @@ function emailCheck() {
 }
 
 function phoneCheck() {
-  let phoneVal = document.getElementById('phone').value;
+  let phoneCheckBtn = document.getElementById('phoneCheckBtn');
+  let phoneInput = document.getElementById('phone');
+  let phoneVal = phoneInput.value;
   let phoneRegex = /^\d{11}$/;
   let emptyRegex = /\s/g;
 
@@ -88,6 +102,8 @@ function phoneCheck() {
       resp.json().then(resp => {
         if (!resp.result) {
           alert('사용 가능한 휴대폰 번호 입니다.');
+          phoneInput.readOnly = true;
+          phoneCheckBtn.disabled = true;
         } else {
           alert('이미 사용 중인 휴대폰 번호 입니다.');
         }
@@ -95,5 +111,29 @@ function phoneCheck() {
     });
   } else {
     alert('휴대폰 번호를 - 없이 11자 입력해주세요.');
+  }
+}
+
+function passwordCheckEvent() {
+  let passwordCheckBtn = document.getElementById('passwordCheckBtn');
+  let createAccountBtn = document.getElementById('createAccountBtn');
+  let password = document.getElementById('password');
+  let passwordVal = document.getElementById('password').value;
+  let passwordCheck = document.getElementById('passwordCheck');
+  let passwordCheckVal = document.getElementById('passwordCheck').value;
+
+  let passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/g
+  let emptyRegex = /\s/g;
+
+  if (passwordVal !== passwordCheckVal) {
+    alert('Password가 일치하지 않습니다.');
+  } else if (!passwordRegex.test(passwordVal) || emptyRegex.test(passwordVal)) {
+    alert('Password는 최소 8자, 하나 이상의 문자와 하나의 숫자 및 하나의 특수 문자로 입력해주세요.')
+  } else {
+    console.log("ok");
+    password.readOnly = true;
+    passwordCheck.readOnly = true;
+    passwordCheckBtn.disabled = true;
+    createAccountBtn.disabled = false;
   }
 }

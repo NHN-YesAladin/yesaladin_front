@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<body th:fragment="custom-alert">
+<div id="alert-box" class="alert alert-warning m-1" role="alert">
+  <span id="alert-text" class="fs-4 fw-bold">22</span>
+</div>
+<script>
+  const alertBox = document.getElementById("alert-box");
+  const alertText = document.getElementById("alert-text");
+
+  window.addEventListener('DOMContentLoaded', (event) => {
+    alertBox.classList.add("d-none");
+  });
+
+  function writeContentToAlert(message) {
+    alertText.innerHTML = message;
+    alertBox.classList.remove("d-none");
+  }
+
+</script>
+</body>
+</html>
