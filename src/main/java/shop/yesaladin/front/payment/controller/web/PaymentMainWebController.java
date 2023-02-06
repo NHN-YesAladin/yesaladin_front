@@ -1,4 +1,4 @@
-package shop.yesaladin.front.payment.controller;
+package shop.yesaladin.front.payment.controller.web;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.payment.dto.PaymentCompleteSimpleResponseDto;
 import shop.yesaladin.front.payment.dto.PaymentRequestDto;
+import shop.yesaladin.front.payment.dto.PaymentViewRequestDto;
 import shop.yesaladin.front.payment.service.inter.PaymentService;
 
 /**
@@ -24,9 +25,33 @@ import shop.yesaladin.front.payment.service.inter.PaymentService;
 @RequiredArgsConstructor
 @Controller
 @RequestMapping("/payments")
-public class PaymentController {
+public class PaymentMainWebController {
 
     private final PaymentService paymentService;
+
+    @GetMapping("/pay")
+    public String getPayPage(Model model) {
+
+        //TODO 주문에서 RedirectAttribute 로 GET 요청으로 넘겨줄 예정 -> model로 받아서 적용시키면됨
+        PaymentViewRequestDto viewDto = PaymentViewRequestDto.builder()
+                .ordererName("김박사")
+                .ordererPhoneNumber("01099992023")
+                .receiverName("박박사")
+                .receiverPhoneNumber("01022223333")
+                .receiverAddress("광주 광역시광주 광역시광주 광역시광주 광역시광주 광역시광주 광역시광주 광역시")
+                .receiverExpectedDate("2023-02-07")
+                .orderNumber("123fwaf123wqsadsa")
+                .productAmount(1000000L)
+                .discountAmount(100000L)
+                .shippingFee(3000L)
+                .wrappingFee(3000L)
+                .totalAmount(1000000L - 100000L - 3000L - 3000L)
+                .build();
+
+        model.addAttribute("dto", viewDto);
+
+        return "main/payment/pay-page";
+    }
 
     /**
      * 토스 페이먼츠의 결제 중 결제 승인 시퀀스를 처리하기 위해 successUrl로 지정된 컨트롤러 메서드
