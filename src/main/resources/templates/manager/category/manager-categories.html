@@ -255,10 +255,19 @@
         <!-- TODO 4 : footer -->
         <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
     </div>
-
+  <div class="d-none" id="shop-server-url" th:text="${@environment.getProperty('yesaladin.gateway.shop')}"></div>
+  <div class="d-none" id="front-server-url" th:text="${@environment.getProperty('yesaladin.front.url')}"></div>
 
 </div>
 <script>
+  let FRONT_SERVER;
+  let SHOP_SERVER;
+
+  (async function init() {
+    FRONT_SERVER = document.querySelector("#front-server-url").textContent;
+    SHOP_SERVER = document.querySelector("#shop-server-url").textContent;
+  })();
+
   const t = document.getElementById('select-parent');
   t.addEventListener('change', function (event) {
     const value = event.target.value;
@@ -368,15 +377,16 @@
   const deleteButtons = document.getElementsByClassName("category-delete-button");
   for (const deleteButton of deleteButtons) {
     deleteButton.addEventListener('click', function (event) {
+      const id = event.target.value;
       let delConfirm = confirm("해당 카테고리가 삭제 됩니다.")
       if (delConfirm) {
-        const id = event.target.value;
-        const url = `/manager/categories?id=${id}`;
+
+        const url = `${FRONT_SERVER}/manager/categories?deletedId=${id}`;
         fetch(url, {
           method: "POST"
         }).then((resp) => {
           console.log(resp);
-          const parentId = `${id.substring(0,2)}000`
+          const parentId = Math.round(parseInt(id) / 10000) * 10000;
           location.href = `/manager/categories?id=${parentId}`;
         });
       }
