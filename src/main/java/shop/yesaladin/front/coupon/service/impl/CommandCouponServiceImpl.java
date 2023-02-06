@@ -124,7 +124,7 @@ public class CommandCouponServiceImpl implements CommandCouponService {
                 createDto.isCanBeOverlapped(),
                 createDto.getCouponBoundCode(),
                 null,
-                null
+                createDto.getCategoryId().toString()
         );
     }
 
@@ -144,7 +144,7 @@ public class CommandCouponServiceImpl implements CommandCouponService {
                 createDto.isCanBeOverlapped(),
                 createDto.getCouponBoundCode(),
                 null,
-                null
+                createDto.getCategoryId().toString()
         );
     }
 }
