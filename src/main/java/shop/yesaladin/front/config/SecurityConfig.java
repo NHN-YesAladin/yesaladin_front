@@ -41,7 +41,7 @@ public class SecurityConfig {
      * @author : 송학현
      * @since : 1.0
      */
-    @Profile("dev")
+    @Profile({"dev", "test"})
     @Bean
     SecurityFilterChain securityFilterChainDev(HttpSecurity http) throws Exception {
         http.authorizeRequests()
