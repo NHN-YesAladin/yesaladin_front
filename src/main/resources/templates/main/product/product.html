@@ -56,16 +56,16 @@
                 <form action="/orders" method="get" >
                 <div class="card-header">
                     <div class="card-title">
-                        <div th:if="${isEbook} == true">
+                        <div th:if="${productDetailResponseDto.getIsEbook()} == true">
                             <h2 class="badge bg-azure-lt">E-Book</h2>
                         </div>
-                        <h1 th:text="${title}"></h1>
+                        <h1 th:text="${productDetailResponseDto.getTitle()}"></h1>
                         <h3>저자 :
-                            <div th:each="author, j : ${authors}" style="display: inline">
+                            <div th:each="author, j : ${productDetailResponseDto.getAuthors()}" style="display: inline">
                                 <p th:text="${author}" style="display: inline"></p>
                                 <p th:if="${!j.last}" style="display: inline">,</p>
                             </div>
-                            | 출판사 : <p th:text="${publisher}" style="display: inline"></p></h3>
+                            | 출판사 : <p th:text="${productDetailResponseDto.getPublisher()}" style="display: inline"></p></h3>
                     </div>
                 </div>
 
@@ -73,23 +73,24 @@
                     <div class="row g-2 g-md-3 divide-x">
                         <div class="col-4">
                             <div class="img-responsive img-responsive-3x4 rounded-3 border"
-                                 th:style="|background-image: url(${thumbnailFileUrl})|"></div>
+                                 th:style="|background-image: url(${productDetailResponseDto.getThumbnailFileUrl()})|"></div>
                         </div>
                         <div class="col-8 divide-y">
                             <div class="col-12 p-2">
-                                <p th:text="|정가 : ${#numbers.formatInteger(actualPrice, 1, 'COMMA')}원|"></p>
-                                <p th:text="|판매가(할인율) : ${#numbers.formatInteger(sellingPrice, 1, 'COMMA')}원(${discountRate}%)|"></p>
-                                <p th:text="|포인트 적립금(포인트 적립율) : ${#numbers.formatInteger(pointPrice, 1, 'COMMA')}원(${pointRate}%)|"></p>
+                                <p th:text="|정가 : ${#numbers.formatInteger(productDetailResponseDto.getActualPrice(), 1, 'COMMA')}원|"></p>
+                                <p th:text="|판매가(할인율) : ${#numbers.formatInteger(productDetailResponseDto.getSellingPrice(), 1, 'COMMA')}원(${productDetailResponseDto.getDiscountRate()}%)|"></p>
+                                <p th:text="|포인트 적립금(포인트 적립율) : ${#numbers.formatInteger(productDetailResponseDto.getPointPrice(), 1, 'COMMA')}원(${productDetailResponseDto.getPointRate()}%)|"></p>
                             </div>
                             <div class="col-12 p-2">
-                                 배송비 : <p class="d-inline" th:text="${sellingPrice} >= 30000 ? '0' : '3,000'"></p>원
+                                 배송비 : <p class="d-inline" th:text="${productDetailResponseDto.getSellingPrice()} >= 20000 ? '0' : '3,000'"></p>원
                             </div>
-                            <div class="col-12 p-2" th:if="${onSale}">
+                            <div class="col-12 p-2" th:if="${productDetailResponseDto.isOnSale()}">
                                 <div class="row p-1 text-lg-end">
                                     <div>
                                         <h3 class="p-2 d-inline">수량</h3>
                                         <button type="button" class="btn btn-secondary btn-icon"
-                                                onclick="downQuantity()" style="width: 35px">
+                                                onclick="downQuantity()" style="width: 35px"
+                                                th:disabled="${productDetailResponseDto.getIsEbook() || productDetailResponseDto.getIsSubscriptionAvailable()}">
                                             <svg xmlns="http://www.w3.org/2000/svg"
                                                  class="icon icon-tabler icon-tabler-minus m-0" width="24" height="24"
                                                  viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
@@ -99,9 +100,11 @@
                                             </svg>
                                         </button>
                                         <input type="text" class="form-control d-inline text-center" value="1" min="1"
+                                               th:disabled="${productDetailResponseDto.getIsEbook() || productDetailResponseDto.getIsSubscriptionAvailable()}"
                                                id="quantity" name="quantity"  maxlength="4" style="width:60px">
                                         <button type="button" class="btn btn-secondary btn-icon"
-                                                onclick="upQuantity()" style="width: 35px">
+                                                onclick="upQuantity()" style="width: 35px"
+                                                th:disabled="${productDetailResponseDto.getIsEbook() || productDetailResponseDto.getIsSubscriptionAvailable()}">
                                             <svg xmlns="http://www.w3.org/2000/svg"
                                                  class="icon icon-tabler icon-tabler-plus m-0" width="24" height="24"
                                                  viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
@@ -158,7 +161,7 @@
                                     </button>
                                 </div>
                                 <!-- 정기구독 가능 -->
-                                <div class="row p-1" th:if="${isSubscriptionAvailable}">
+                                <div class="row p-1" th:if="${productDetailResponseDto.getIsSubscriptionAvailable()}">
                                     <div class="col-6 px-1">
                                         <button type="submit" class="btn btn-facebook w-100">
                                             <svg xmlns="http://www.w3.org/2000/svg"
@@ -187,7 +190,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 p-2" th:if="${!onSale}">
+                            <div class="col-12 p-2" th:if="${!productDetailResponseDto.isOnSale()}">
                                 <a href="#" class="btn btn-dark w-100">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-vocabulary-off" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                         <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
@@ -237,20 +240,20 @@
                                 <p th:text="|ISSN11 : ${issn}|" name="issn"></p>
                             </div>
                         </div>
-                        <div class="col-12" th:if="${categories.size() != 0}">
+                        <div class="col-12" th:if="${productDetailResponseDto.getCategories().size() != 0}">
                             <h2>카테고리 분류</h2>
-                            <div th:each="category : ${categories}">
+                            <div th:each="category : ${productDetailResponseDto.getCategories()}">
                                 <p th:text="${category.parentName} + ' >> ' + ${category.name}"></p>
                             </div>
                         </div>
                         <div class="col-12">
                             <h2>목차</h2>
-                            <p th:text="${contents}"></p>
+                            <p th:text="${productDetailResponseDto.getContents()}"></p>
                         </div>
                         <div class="col-12">
                             <h2>책 소개</h2>
                             <div id="viewer"></div>
-                            <input type="hidden" id="description" th:value="${description}">
+                            <input type="hidden" id="description" th:value="${productDetailResponseDto.getDescription()}">
                         </div>
                     </div>
                 </div>
@@ -262,13 +265,17 @@
     <!-- TODO 4 : footer -->
     <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
 </div>
-<input type="hidden" class="d-none" id="product-id" th:value="${id}">
+<input type="hidden" class="d-none" id="product-id" th:value="${productDetailResponseDto.getId()}">
 <div class="d-none" id="shop-server-url" th:text="${@environment.getProperty('yesaladin.gateway.shop')}"></div>
 <div class="d-none" id="front-server-url" th:text="${@environment.getProperty('yesaladin.front.url')}"></div>
-<script>
+<input type="hidden" class="d-none" id="is-ebook" th:value="${productDetailResponseDto.getIsEbook()}">
+<input type="hidden" class="d-none" id="is-subscription-available" th:value="${productDetailResponseDto.getIsSubscriptionAvailable()}">
+<script th:inline="javascript">
+    let PRODUCT_ID = document.getElementById('product-id').value;
     let FRONT_SERVER = document.getElementById('front-server-url').textContent;
     let SHOP_SERVER = document.getElementById('shop-server-url').textContent;
-    let PRODUCT_ID = document.getElementById('product-id').value;
+    let IS_EBOOK = document.getElementById('is-ebook').value;
+    let IS_SUBSCRIPTION_AVAILABLE = document.getElementById('is-subscription-available').value;
 
     const addCart = document.getElementById('add-cart');
     addCart.addEventListener('click', () => {
@@ -276,18 +283,26 @@
 
         const quantity = document.getElementById('quantity').value;
         console.log(quantity);
+
+        console.log(IS_EBOOK);
+        console.log(IS_SUBSCRIPTION_AVAILABLE)
+
         if (!quantityRegex.test(quantity) || quantity == 0) {
             alert('올바른 수량을 입력해주세요.(1 이상의 숫자)');
             return;
         }
 
-        fetch(FRONT_SERVER + '/carts', {
-            "Content-Type": "application/json",
+        fetch(FRONT_SERVER + '/cart', {
+            headers: {
+                "Content-Type": "application/json",
+            },
             method: "POST",
-            body: {
+            body: JSON.stringify({
                 id : PRODUCT_ID,
-                quantity : quantity
-            }
+                quantity : quantity,
+                isEbook : IS_EBOOK,
+                isSubscriptionAvailable: IS_SUBSCRIPTION_AVAILABLE
+            })
         }).then(res => console.log(res));
     });
 </script>
