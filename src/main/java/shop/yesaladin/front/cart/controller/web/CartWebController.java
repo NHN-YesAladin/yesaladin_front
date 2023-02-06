@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.LinkedMultiValueMap;
@@ -20,7 +22,7 @@ import shop.yesaladin.front.config.GatewayConfig;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.net.*;
+import java.net.URISyntaxException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -78,15 +80,16 @@ public class CartWebController {
             HttpEntity<String> entity = new HttpEntity<>(headers);
 
             UriComponents uri = UriComponentsBuilder.fromHttpUrl(gatewayConfig.getShopUrl())
-                        .path("/v1/products/cart")
-                        .queryParams(multiValueMap)
-                        .build();
+                    .path("/v1/products/cart")
+                    .queryParams(multiValueMap)
+                    .build();
 
             List<ViewCartDto> response = restTemplate.exchange(
                     uri.toUri(),
                     HttpMethod.GET,
                     entity,
-                    new ParameterizedTypeReference<List<ViewCartDto>>() {}
+                    new ParameterizedTypeReference<List<ViewCartDto>>() {
+                    }
             ).getBody();
 
             // 상품 종류에 따른 분류
@@ -111,9 +114,9 @@ public class CartWebController {
     /**
      * [POST /cart] 요청을 받아 장바구니에 상품을 추가합니다.
      *
-     * @param cartDto 장바구니에 추가할 상품의 Id, 개수, 상품의 종류를 담은 Dto
-     * @param cookie Redis의 key값을 가진 CART_NO 쿠키
-     * @param member 회원이라면 UUID 쿠키가 존재, 회원용 장바구니 생성을 위한 쿠키
+     * @param cartDto  장바구니에 추가할 상품의 Id, 개수, 상품의 종류를 담은 Dto
+     * @param cookie   Redis의 key값을 가진 CART_NO 쿠키
+     * @param member   회원이라면 UUID 쿠키가 존재, 회원용 장바구니 생성을 위한 쿠키
      * @param response 쿠키 정보를 추가하기 위한 HttpServletResponse
      * @author 이수정
      * @since 1.0
@@ -157,7 +160,7 @@ public class CartWebController {
         log.info("preQuantity = {}", preQuantity);
         int quantity = cartDto.getQuantity();
         if (Objects.nonNull(preQuantity) && !cartDto.getIsEbook() && !cartDto.getIsSubscriptionAvailable()) {
-            quantity += (int)preQuantity;
+            quantity += (int) preQuantity;
         }
         log.info("quantity = {}", quantity);
         redisTemplate.opsForHash().put(cookie.getValue(), cartDto.getId(), quantity);
@@ -175,7 +178,7 @@ public class CartWebController {
      * [DELETE /cart/{productId}] 장바구니에서 특정 상품을 삭제합니다.
      *
      * @param productId 장바구니에서 삭제할 상품의 Id
-     * @param cookie Redis의 key값을 가진 CART_NO 쿠키
+     * @param cookie    Redis의 key값을 가진 CART_NO 쿠키
      * @author 이수정
      * @since 1.0
      */
@@ -196,8 +199,8 @@ public class CartWebController {
      * [PUT /cart/{productId}] 장바구니 내의 상품의 담은 개수를 변경합니다.
      *
      * @param productId 장바구니에서 개수를 변경할 상품의 Id
-     * @param quantity 장바구니 상품의 개수
-     * @param cookie Redis의 key값을 가진 CART_NO 쿠키
+     * @param quantity  장바구니 상품의 개수
+     * @param cookie    Redis의 key값을 가진 CART_NO 쿠키
      * @author 이수정
      * @since 1.0
      */
@@ -214,5 +217,7 @@ public class CartWebController {
         String key = cookie.getValue();
 
         redisTemplate.opsForHash().put(key, productId, quantity.get("quantity"));
-    };
+    }
+
+    ;
 }
