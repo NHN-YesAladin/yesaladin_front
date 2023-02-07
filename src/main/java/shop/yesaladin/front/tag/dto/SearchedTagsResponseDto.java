@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import lombok.ToString;
 
 /**
  * 태그 리스트와 총 갯수
@@ -13,6 +14,7 @@ import java.util.List;
  * @since : 1.0
  */
 @Getter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class SearchedTagsResponseDto {

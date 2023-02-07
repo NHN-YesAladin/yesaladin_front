@@ -37,7 +37,7 @@ public class SearchAuthorServiceImpl implements SearchAuthorService {
      */
     @Override
     public SearchedAuthorResponseDto searchAuthorByName(String name, int offset, int size) {
-        UriComponents uriComponents = UriComponentsBuilder.fromOriginHeader(url)
+        UriComponents uriComponents = UriComponentsBuilder.fromHttpUrl(url)
                 .path(PATH)
                 .queryParam("name", name)
                 .queryParam("offset", offset)
