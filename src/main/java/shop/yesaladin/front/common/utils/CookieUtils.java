@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  * @since 1.0
  */
 @Component
-public class CookieUtil {
+public class CookieUtils {
 
     /**
      * Cookie를 생성하기 위한 기능입니다.

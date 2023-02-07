@@ -25,7 +25,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import shop.yesaladin.common.dto.ResponseDto;
-import shop.yesaladin.front.common.utils.CookieUtil;
+import shop.yesaladin.front.common.utils.CookieUtils;
 import shop.yesaladin.front.common.exception.InvalidHttpHeaderException;
 import shop.yesaladin.front.member.adapter.MemberAdapter;
 import shop.yesaladin.front.member.dto.LoginRequestDto;
@@ -47,7 +47,7 @@ public class CustomAuthenticationManager implements AuthenticationManager {
 
     private final MemberAdapter memberAdapter;
     private final RedisTemplate<String, Object> redisTemplate;
-    private final CookieUtil cookieUtil;
+    private final CookieUtils cookieUtils;
 
     /**
      * Auth 서버에서 발급받은 JWT 토큰을 기반으로 Shop 서버에 유저 정보를 요청 한 뒤,
@@ -92,10 +92,10 @@ public class CustomAuthenticationManager implements AuthenticationManager {
         HttpServletRequest servletRequest = Objects.requireNonNull(((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())).getRequest();
         HttpServletResponse servletResponse = Objects.requireNonNull(((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())).getResponse();
 
-        Cookie authCookie = cookieUtil.createCookie(UUID_CODE.getValue(), uuid, 60 * 30);
+        Cookie authCookie = cookieUtils.createCookie(UUID_CODE.getValue(), uuid, 60 * 30);
 
         moveIntoMemberCart(loginRequestDto.getLoginId(), servletRequest);
-        Cookie cartCookie = cookieUtil.createCookie("CART_NO", loginRequestDto.getLoginId(), 60 * 60 * 24 * 30);
+        Cookie cartCookie = cookieUtils.createCookie("CART_NO", loginRequestDto.getLoginId(), 60 * 60 * 24 * 30);
 
         servletResponse.addCookie(authCookie);
         servletResponse.addCookie(cartCookie);
@@ -124,7 +124,7 @@ public class CustomAuthenticationManager implements AuthenticationManager {
      * @param servletRequest HttpServletRequest
      */
     private void moveIntoMemberCart(String loginId, HttpServletRequest servletRequest) {
-        String cartNo = cookieUtil.getValueFromCookie(servletRequest.getCookies(), "CART_NO");
+        String cartNo = cookieUtils.getValueFromCookie(servletRequest.getCookies(), "CART_NO");
         if (Objects.nonNull(cartNo)) {
             Map<Object, Object> cart = redisTemplate.opsForHash().entries(cartNo);
             Map<Object, Object> login = redisTemplate.opsForHash().entries(loginId);

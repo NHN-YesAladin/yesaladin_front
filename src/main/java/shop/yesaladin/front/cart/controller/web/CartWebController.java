@@ -36,7 +36,7 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 import shop.yesaladin.front.cart.dto.AddToCartDto;
 import shop.yesaladin.front.cart.dto.ViewCartDto;
-import shop.yesaladin.front.common.utils.CookieUtil;
+import shop.yesaladin.front.common.utils.CookieUtils;
 import shop.yesaladin.front.config.GatewayConfig;
 
 /**
@@ -55,7 +55,7 @@ public class CartWebController {
     private final RedisTemplate<String, Object> redisTemplate;
     private final RestTemplate restTemplate;
     private final GatewayConfig gatewayConfig;
-    private final CookieUtil cookieUtil;
+    private final CookieUtils cookieUtils;
 
     /**
      * [GET /cart] 장바구니 View 를 반환합니다.
@@ -154,7 +154,7 @@ public class CartWebController {
         // 회원이 쿠키를 악의적으로 삭제 -> 회원일 때 생성
         if (Objects.nonNull(member)) {
             String loginId = SecurityContextHolder.getContext().getAuthentication().getName();
-            cookie = cookieUtil.createCookie("CART_NO", loginId, 60 * 60 * 24 * 30);
+            cookie = cookieUtils.createCookie("CART_NO", loginId, 60 * 60 * 24 * 30);
 
             response.addCookie(cookie);
         }
@@ -163,7 +163,7 @@ public class CartWebController {
         // 존재하지 않는 경우, 비회원 + 미발급 상태
         if (Objects.isNull(cookie)) {
             String uuid = String.valueOf(UUID.randomUUID());
-            cookie = cookieUtil.createCookie("CART_NO", uuid, 60 * 60 * 24 * 3);
+            cookie = cookieUtils.createCookie("CART_NO", uuid, 60 * 60 * 24 * 3);
 
             response.addCookie(cookie);
         }
