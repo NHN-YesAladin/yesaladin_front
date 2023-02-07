@@ -2,6 +2,7 @@ package shop.yesaladin.front.coupon.service.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -124,7 +125,8 @@ public class CommandCouponServiceImpl implements CommandCouponService {
                 createDto.isCanBeOverlapped(),
                 createDto.getCouponBoundCode(),
                 null,
-                createDto.getCategoryId().toString()
+                Objects.nonNull(createDto.getCategoryId()) ? createDto.getCategoryId().toString()
+                        : null
         );
     }
 
@@ -144,7 +146,8 @@ public class CommandCouponServiceImpl implements CommandCouponService {
                 createDto.isCanBeOverlapped(),
                 createDto.getCouponBoundCode(),
                 null,
-                createDto.getCategoryId().toString()
+                Objects.nonNull(createDto.getCategoryId()) ? createDto.getCategoryId().toString()
+                        : null
         );
     }
 }
