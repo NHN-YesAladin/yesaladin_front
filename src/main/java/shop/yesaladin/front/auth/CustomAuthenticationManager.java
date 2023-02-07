@@ -89,8 +89,8 @@ public class CustomAuthenticationManager implements AuthenticationManager {
 
         log.info("accessToken={}", accessToken);
 
-        HttpServletResponse servletResponse = Objects.requireNonNull(((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())).getResponse();
         HttpServletRequest servletRequest = Objects.requireNonNull(((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())).getRequest();
+        HttpServletResponse servletResponse = Objects.requireNonNull(((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())).getResponse();
 
         Cookie authCookie = cookieUtil.createCookie(UUID_CODE.getValue(), uuid, 60 * 30);
 
