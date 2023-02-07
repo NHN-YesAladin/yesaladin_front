@@ -46,7 +46,7 @@ public class QueryMemberServiceImpl implements QueryMemberService {
     private final RestTemplate restTemplate;
     private final GatewayConfig gatewayConfig;
     private final ObjectMapper objectMapper;
-    private static final ParameterizedTypeReference<PaginatedResponseDto<MemberManagerResponseDto>> MEMBER_MANAGER_RESPONSE_DTO = new ParameterizedTypeReference<>() {
+    private static final ParameterizedTypeReference<ResponseDto<PaginatedResponseDto<MemberManagerResponseDto>>> MEMBER_MANAGER_RESPONSE_DTO = new ParameterizedTypeReference<>() {
     };
     private static final ParameterizedTypeReference<ResponseDto<MemberBlockResponseDto>> MEMBER_MANAGER_BLOCK_RESPONSE_DTO = new ParameterizedTypeReference<>() {
     };
@@ -227,13 +227,13 @@ public class QueryMemberServiceImpl implements QueryMemberService {
                 .queryParam("size", pageable.getPageSize())
                 .toUriString();
         log.info(uri);
-        ResponseEntity<PaginatedResponseDto<MemberManagerResponseDto>> responseEntity = restTemplate.exchange(
+        ResponseEntity<ResponseDto<PaginatedResponseDto<MemberManagerResponseDto>>> responseEntity = restTemplate.exchange(
                 uri,
                 HttpMethod.GET,
                 null,
                 MEMBER_MANAGER_RESPONSE_DTO
         );
-        return Objects.requireNonNull(responseEntity.getBody());
+        return Objects.requireNonNull(Objects.requireNonNull(responseEntity.getBody()).getData());
     }
 
     /**
@@ -248,13 +248,13 @@ public class QueryMemberServiceImpl implements QueryMemberService {
                 .queryParam("page", pageable.getPageNumber())
                 .queryParam("size", 3)
                 .toUriString();
-        ResponseEntity<PaginatedResponseDto<MemberManagerResponseDto>> responseEntity = restTemplate.exchange(
+        ResponseEntity<ResponseDto<PaginatedResponseDto<MemberManagerResponseDto>>> responseEntity = restTemplate.exchange(
                 uri,
                 HttpMethod.GET,
                 null,
                 MEMBER_MANAGER_RESPONSE_DTO
         );
-        return Objects.requireNonNull(responseEntity.getBody());
+        return Objects.requireNonNull(Objects.requireNonNull(responseEntity.getBody()).getData());
     }
 
     /**
@@ -269,13 +269,13 @@ public class QueryMemberServiceImpl implements QueryMemberService {
                 .queryParam("page", pageable.getPageNumber())
                 .queryParam("size", pageable.getPageSize())
                 .build();
-        ResponseEntity<PaginatedResponseDto<MemberManagerResponseDto>> responseEntity = restTemplate.exchange(
+        ResponseEntity<ResponseDto<PaginatedResponseDto<MemberManagerResponseDto>>> responseEntity = restTemplate.exchange(
                 uri.toUriString(),
                 HttpMethod.GET,
                 null,
                 MEMBER_MANAGER_RESPONSE_DTO
         );
-        return Objects.requireNonNull(responseEntity.getBody());
+        return Objects.requireNonNull(Objects.requireNonNull(responseEntity.getBody()).getData());
     }
 
     /**
@@ -290,13 +290,13 @@ public class QueryMemberServiceImpl implements QueryMemberService {
                 .queryParam("page", pageable.getPageNumber())
                 .queryParam("size", pageable.getPageSize())
                 .build();
-        ResponseEntity<PaginatedResponseDto<MemberManagerResponseDto>> responseEntity = restTemplate.exchange(
+        ResponseEntity<ResponseDto<PaginatedResponseDto<MemberManagerResponseDto>>> responseEntity = restTemplate.exchange(
                 uri.toUriString(),
                 HttpMethod.GET,
                 null,
                 MEMBER_MANAGER_RESPONSE_DTO
         );
-        return Objects.requireNonNull(responseEntity.getBody());
+        return Objects.requireNonNull(Objects.requireNonNull(responseEntity.getBody()).getData());
     }
 
     /**
@@ -311,13 +311,13 @@ public class QueryMemberServiceImpl implements QueryMemberService {
                 .queryParam("page", pageable.getPageNumber())
                 .queryParam("size", pageable.getPageSize())
                 .toUriString();
-        ResponseEntity<PaginatedResponseDto<MemberManagerResponseDto>> responseEntity = restTemplate.exchange(
+        ResponseEntity<ResponseDto<PaginatedResponseDto<MemberManagerResponseDto>>> responseEntity = restTemplate.exchange(
                 uri,
                 HttpMethod.GET,
                 null,
                 MEMBER_MANAGER_RESPONSE_DTO
         );
-        return Objects.requireNonNull(responseEntity.getBody());
+        return Objects.requireNonNull(Objects.requireNonNull(responseEntity.getBody()).getData());
     }
 
     /**
