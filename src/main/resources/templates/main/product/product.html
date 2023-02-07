@@ -119,7 +119,7 @@
 
                                 <div class="row p-1">
                                     <div class="col-6 px-1">
-                                        <button type="button" class="btn btn-twitter w-100" id="add-cart">
+                                        <button type="button" class="btn btn-twitter w-100" data-bs-toggle="modal" data-bs-target="#modal-cart-success">
                                             <svg xmlns="http://www.w3.org/2000/svg"
                                                  class="icon icon-tabler icon-tabler-shopping-cart-plus" width="24"
                                                  height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
@@ -270,6 +270,23 @@
 <div class="d-none" id="front-server-url" th:text="${@environment.getProperty('yesaladin.front.url')}"></div>
 <input type="hidden" class="d-none" id="is-ebook" th:value="${productDetailResponseDto.getIsEbook()}">
 <input type="hidden" class="d-none" id="is-subscription-available" th:value="${productDetailResponseDto.getIsSubscriptionAvailable()}">
+<div class="modal modal-blur fade" id="modal-cart-success" tabindex="-1" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-status bg-success"></div>
+            <div class="modal-body text-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-green icon-lg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path><path d="M9 12l2 2l4 -4"></path></svg>
+                <h3>해당 상품이 장바구니에 담겼습니다.</h3>
+                <div class="text-muted"><br/>바로 확인하시겠습니까?<p th:if="${productDetailResponseDto.isSubscriptionAvailable || productDetailResponseDto.isEbook}"><br/>단, E-book 또는 구독상품인 경우,<br/>각 1권씩만 담을 수 있습니다.</p></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-link link-secondary me-auto" data-bs-dismiss="modal">아니요</button>
+                <a href="/cart" class="btn btn-success" data-bs-dismiss="modal">예, 확인하겠습니다.</a>
+            </div>
+        </div>
+    </div>
+</div>
 <script th:inline="javascript">
     let PRODUCT_ID = document.getElementById('product-id').value;
     let FRONT_SERVER = document.getElementById('front-server-url').textContent;
@@ -277,15 +294,11 @@
     let IS_EBOOK = document.getElementById('is-ebook').value;
     let IS_SUBSCRIPTION_AVAILABLE = document.getElementById('is-subscription-available').value;
 
-    const addCart = document.getElementById('add-cart');
-    addCart.addEventListener('click', () => {
+    const modalCart = document.getElementById('modal-cart-success');
+    modalCart.addEventListener('show.bs.modal', function (event) {
         let quantityRegex = /^[+]?\d*(\.?\d*)?$/;
 
         const quantity = document.getElementById('quantity').value;
-        console.log(quantity);
-
-        console.log(IS_EBOOK);
-        console.log(IS_SUBSCRIPTION_AVAILABLE)
 
         if (!quantityRegex.test(quantity) || quantity == 0) {
             alert('올바른 수량을 입력해주세요.(1 이상의 숫자)');
@@ -303,7 +316,9 @@
                 isEbook : IS_EBOOK,
                 isSubscriptionAvailable: IS_SUBSCRIPTION_AVAILABLE
             })
-        }).then(res => console.log(res));
+        }).then(res => {
+            console.log(res);
+        });
     });
 </script>
 <script>
