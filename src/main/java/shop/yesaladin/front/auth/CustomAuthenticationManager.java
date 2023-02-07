@@ -5,8 +5,10 @@ import static shop.yesaladin.front.member.jwt.AuthUtil.JWT_CODE;
 import static shop.yesaladin.front.member.jwt.AuthUtil.UUID_CODE;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -23,6 +25,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import shop.yesaladin.common.dto.ResponseDto;
+import shop.yesaladin.front.common.utils.CookieUtil;
 import shop.yesaladin.front.common.exception.InvalidHttpHeaderException;
 import shop.yesaladin.front.member.adapter.MemberAdapter;
 import shop.yesaladin.front.member.dto.LoginRequestDto;
@@ -44,6 +47,7 @@ public class CustomAuthenticationManager implements AuthenticationManager {
 
     private final MemberAdapter memberAdapter;
     private final RedisTemplate<String, Object> redisTemplate;
+    private final CookieUtil cookieUtil;
 
     /**
      * Auth 서버에서 발급받은 JWT 토큰을 기반으로 Shop 서버에 유저 정보를 요청 한 뒤,
@@ -85,13 +89,16 @@ public class CustomAuthenticationManager implements AuthenticationManager {
 
         log.info("accessToken={}", accessToken);
 
+        HttpServletRequest servletRequest = Objects.requireNonNull(((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())).getRequest();
         HttpServletResponse servletResponse = Objects.requireNonNull(((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())).getResponse();
 
-        Cookie cookie = new Cookie(UUID_CODE.getValue(), uuid);
-        cookie.setHttpOnly(true);
-        cookie.setPath("/");
+        Cookie authCookie = cookieUtil.createCookie(UUID_CODE.getValue(), uuid, 60 * 30);
 
-        servletResponse.addCookie(cookie);
+        moveIntoMemberCart(loginRequestDto.getLoginId(), servletRequest);
+        Cookie cartCookie = cookieUtil.createCookie("CART_NO", loginRequestDto.getLoginId(), 60 * 60 * 24 * 30);
+
+        servletResponse.addCookie(authCookie);
+        servletResponse.addCookie(cartCookie);
 
         List<SimpleGrantedAuthority> authorities = getAuthorities(memberResponseDto);
         log.info("authorities={}", authorities);
@@ -105,6 +112,30 @@ public class CustomAuthenticationManager implements AuthenticationManager {
                 null,
                 authorities
         );
+    }
+
+    /**
+     * 로그인 전 사용자가 cart에 담은 상품을 회원의 cart에 추가하기 위한 기능입니다.
+     * 설계 흐름 상 이 클래스에서 cartNo cookie의 value가 회원을 식별할 수 있는 값으로 update 되지 않는다면,
+     * 장바구니 화면으로 이동 시 회원의 장바구니 목록을 볼 수 없어 임시적으로 인증 flow에서 작동하도록 합니다.
+     * 추 후 인증/인가와 관계 없이 migration 예정 입니다.
+     *
+     * @param loginId 회원의 loginId
+     * @param servletRequest HttpServletRequest
+     */
+    private void moveIntoMemberCart(String loginId, HttpServletRequest servletRequest) {
+        String cartNo = cookieUtil.getValueFromCookie(servletRequest.getCookies(), "CART_NO");
+        if (Objects.nonNull(cartNo)) {
+            Map<Object, Object> cart = redisTemplate.opsForHash().entries(cartNo);
+            Map<Object, Object> login = redisTemplate.opsForHash().entries(loginId);
+
+            cart.keySet().forEach(key -> {
+                int currentQuantity = (int) cart.get(key);
+                login.put(key, ((int) login.getOrDefault(key, 0) + currentQuantity));
+            });
+
+            redisTemplate.opsForHash().putAll(loginId, login);
+        }
     }
 
     /**
