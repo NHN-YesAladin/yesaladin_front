@@ -1,6 +1,8 @@
 package shop.yesaladin.front.member.service.inter;
 
+import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.member.dto.MemberAddressCreateRequestDto;
+import shop.yesaladin.front.member.dto.MemberAddressResponseDto;
 
 /**
  * 회원 배송지 관련 등록, 수정, 삭제 service interface 입니다.
@@ -14,10 +16,11 @@ public interface CommandMemberAddressService {
      * 회원의 배송지를 등록합니다.
      *
      * @param request 회원 배송지 정보
+     * @return
      * @author 최예린
      * @since 1.0
      */
-    void createMemberAddress(MemberAddressCreateRequestDto request);
+    ResponseDto<MemberAddressResponseDto> createMemberAddress(MemberAddressCreateRequestDto request);
 
     /**
      * 해당 배송지를 대표 배송지로 설정합니다.

@@ -53,7 +53,7 @@
     <div class="page-body">
         <div class="container">
             <div class="card">
-                <form action="/orders" method="get" >
+                <form action="/orders" method="get" name="products">
                 <div class="card-header">
                     <div class="card-title">
                         <div th:if="${productDetailResponseDto.getIsEbook()} == true">
@@ -235,7 +235,7 @@
                             <h2>품목정보</h2>
                             <p th:text="|출판일 : ${productDetailResponseDto.getPublishedDate()}|"></p>
                             <p th:text="|ISBN13 : ${productDetailResponseDto.getIsbn()}|"></p>
-                            <input type="text" name="isbn" th:value="${isbn}" hidden="hidden">
+                            <input type="text" name="isbn" th:value="${productDetailResponseDto.getIsbn()}" hidden="hidden">
                             <div th:if="${productDetailResponseDto.getIsSubscriptionAvailable()} == true">
                                 <p th:text="|ISSN11 : ${productDetailResponseDto.getIssn()}|" name="issn"></p>
                             </div>
