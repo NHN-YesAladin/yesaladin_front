@@ -40,9 +40,16 @@
     .coupon-deco {
       z-index: 0;
       margin-left: 1rem;
-      background-color: #206bc4;
       width: 1rem;
       height: 100%;
+    }
+
+    .usable {
+      background-color: #206bc4;
+    }
+
+    .unusable {
+      background-color: #737379;
     }
 
     .coupon-amount {
@@ -108,22 +115,41 @@
                     <div class="card-header">
                       <ul class="nav nav-pills card-header-pills">
                         <li class="nav-item">
-                          <a aria-current="true" class="nav-link active" href="#">사용 가능</a>
+                          <a aria-current="true" class="nav-link"
+                             th:classappend="${(#request.getParameter('usable') == null || #request.getParameter('usable') == 'true') ? 'active' : ''}"
+                             th:href="@{/mypage/coupon(usable=true)}">사용 가능</a>
                         </li>
                         <li class="nav-item">
-                          <a class="nav-link" href="#">사용 불가능</a>
+                          <a class="nav-link"
+                             th:classappend="${#request.getParameter('usable') == 'false' ? 'active' : ''}"
+                             th:href="@{/mypage/coupon(usable=false)}">사용 불가능</a>
                         </li>
                       </ul>
                     </div>
                     <div class="card-body d-grid coupon-container">
-                      <div class="coupon-card">
-                        <div class="coupon-deco">
+
+
+                      <div class="coupon-card" th:each="memberCoupon: ${memberCouponList.dataList}">
+                        <div class="coupon-deco"
+                             th:classappend="${(#request.getParameter('usable') == null || #request.getParameter('usable') == 'true') ? 'usable' : 'unusable'}">
                         </div>
                         <div style="text-align: center; margin: auto">
-                          <div class="coupon-amount">10%</div>
-                          <div class="coupon-description">전체 상품 할인 <br>~2023.02.15</div>
+                          <div class="coupon-amount"
+                               th:text="|${memberCoupon.amount}${memberCoupon.couponTypeCode.name().equals('FIXED_RATE') ? '%' : '₩'}|">
+                            10%
+                          </div>
+                          <div class="coupon-description">
+                            <span th:if="${memberCoupon.couponBoundCode != null}"
+                                  th:text="|${memberCoupon.couponBoundCode.name().equals('ALL') ? '전체 상품' : memberCoupon.couponBound}|">전체 상품 할인</span>
+                            <span th:if="${memberCoupon.couponBoundCode == null}">포인트 충전 쿠폰</span>
+                            <br>
+                            <span th:text="|~${memberCoupon.expireDate}|">~2023.02.15</span>
+                          </div>
+
                         </div>
                       </div>
+
+
                     </div>
                   </div>
                   <div class="container-xl d-flex flex-wrap justify-content-start">
