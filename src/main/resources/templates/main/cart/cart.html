@@ -160,7 +160,7 @@
                     </div>
                     <div>
                       <span><del th:text="${#numbers.formatInteger(product.getActualPrice(), 1, 'COMMA')} + '원'"></del></span>
-                      <span><em th:id="'productSellingPrice' + ${product.getId()}" th:text="${#numbers.formatInteger(product.getSellingPrice(), 1, 'COMMA')}"></em>원</span>
+                      <span><em th:text="${#numbers.formatInteger(product.getSellingPrice(), 1, 'COMMA')}"></em>원</span>
                       <span th:text="'(' + ${#numbers.formatInteger(product.getDiscountRate(), 1, 'COMMA')} + '% 할인)'"></span>
                       <span class="ms-2"><span class="badge bg-blue-lt">P</span><span th:id="product-point- + ${product.getId()}" th:text="${#numbers.formatInteger(product.getPointPrice(), 1, 'COMMA')} + '원'"></span></span>
                     </div>
@@ -278,7 +278,7 @@
                   </div>
                   <div>
                     <span><del th:text="${#numbers.formatInteger(product.getActualPrice(), 1, 'COMMA')} + '원'"></del></span>
-                    <span><em th:id="'productSellingPrice' + ${product.getId()}" th:text="${#numbers.formatInteger(product.getSellingPrice(), 1, 'COMMA')}"></em>원</span>
+                    <span><em  th:text="${#numbers.formatInteger(product.getSellingPrice(), 1, 'COMMA')}"></em>원</span>
                     <span th:text="'(' + ${#numbers.formatInteger(product.getDiscountRate(), 1, 'COMMA')} + '% 할인)'"></span>
                     <span class="ms-2"><span class="badge bg-blue-lt">P</span><span th:id="product-point- + ${product.getId()}" th:text="${#numbers.formatInteger(product.getPointPrice(), 1, 'COMMA')} + '원'"></span></span>
                   </div>
@@ -365,17 +365,17 @@
           <tbody>
           <tr>
             <td style="font-size: 15pt;">
-              <em class="yes_b d-flex justify-content-center" id="all-total-product-amount">0원</em>
+              <em class="d-flex justify-content-center" id="all-total-product-amount">0원</em>
             </td>
             <td style="font-size: 15pt;">
               <em class="icon_settle ico_settle_minus d-flex justify-content-center">-</em>
             </td>
-            <td class="saleCol" style="font-size: 15pt;"><em class="yes_b d-flex justify-content-center">0원</em>
+            <td class="saleCol" style="font-size: 15pt;"><em class="d-flex justify-content-center">0원</em>
             </td>
             <td style="font-size: 15pt;">
               <em class="icon_settle ico_settle_equal d-flex justify-content-center">=</em>
             </td>
-            <td class="priceCol lastCol" style="font-size: 15pt;"><em class="yes_b d-flex justify-content-center" id="all-total-pay-amount">0원</em></td>
+            <td class="priceCol lastCol" style="font-size: 15pt;"><em class="d-flex justify-content-center" id="all-total-product-pay">0원</em></td>
           </tr>
           </tbody>
         </table>
@@ -431,7 +431,8 @@
               <tr th:each="product : ${subscribeCart}">
                 <td>
                   <div class="d-flex justify-content-center">
-                    <input th:id="${product.id}" th:value="${product.id}" name="chkSubscribeCart" type="checkbox" autocapitalize="off">
+                    <input th:id="${product.id}" th:value="${product.id}" name="chkSubscribeCart" type="radio"
+                           autocapitalize="off" th:onclick="|selectSubscription(${product.getId()})|">
                   </div>
                 </td>
                 <td>
@@ -445,9 +446,9 @@
                   </div>
                   <div>
                     <span><del th:text="${#numbers.formatInteger(product.getActualPrice(), 1, 'COMMA')} + '원'"></del></span>
-                    <span><em th:id="'productSellingPrice' + ${product.getId()}" th:text="${#numbers.formatInteger(product.getSellingPrice(), 1, 'COMMA')}"></em>원</span>
+                    <span><em th:text="${#numbers.formatInteger(product.getSellingPrice(), 1, 'COMMA')}"></em>원</span>
                     <span th:text="'(' + ${#numbers.formatInteger(product.getDiscountRate(), 1, 'COMMA')} + '% 할인)'"></span>
-                    <span class="ms-2"><span class="badge bg-blue-lt">P</span><span th:text="${#numbers.formatInteger(product.getPointPrice(), 1, 'COMMA')} + '원'"></span></span>
+                    <span class="ms-2"><span class="badge bg-blue-lt">P</span><span th:id="'product-point-price-' + ${product.getId()}" th:text="${#numbers.formatInteger(product.getPointPrice(), 1, 'COMMA')} + '원'"></span></span>
                   </div>
                 </td>
                 <td>
@@ -480,9 +481,9 @@
               <tr>
                 <td colspan="6">
                   <div class="text-end px-1">
-                    Yes!Aladin 정기구독 상품 총 금액 :<strong id="totalAmountSubscriptionProductCart">0원</strong>
+                    Yes!Aladin 정기구독 상품 총 금액 :<strong id="total-amount-subscription-product-cart">0원</strong>
                     <span class="mx-2">|</span>
-                    YES!Aladin 포인트 총 적립액 :<strong id="totalPointSubscriptionProductCart">0원</strong>
+                    YES!Aladin 포인트 총 적립액 :<strong id="total-point-subscription-product-cart">0원</strong>
                   </div>
                 </td>
               </tr>
@@ -527,17 +528,17 @@
           <tbody>
             <tr>
               <td style="font-size: 15pt;">
-                <em class="yes_b d-flex justify-content-center">64,580원</em>
+                <em class="d-flex justify-content-center" id="all-subscription-product-amount">0원</em>
               </td>
               <td style="font-size: 15pt;">
                 <em class="icon_settle ico_settle_minus d-flex justify-content-center">-</em>
               </td>
-              <td class="saleCol" style="font-size: 15pt;"><em class="yes_b d-flex justify-content-center">0원</em>
+              <td class="saleCol" style="font-size: 15pt;"><em class="d-flex justify-content-center">0원</em>
               </td>
               <td style="font-size: 15pt;">
                 <em class="icon_settle ico_settle_equal d-flex justify-content-center">=</em>
               </td>
-              <td class="priceCol lastCol" style="font-size: 15pt;"><em class="yes_b d-flex justify-content-center">64,580원</em></td>
+              <td class="priceCol lastCol" style="font-size: 15pt;"><em class="yes_b d-flex justify-content-center" id="all-subscription-product-pay">0원</em></td>
             </tr>
           </tbody>
         </table>
@@ -621,6 +622,16 @@
     checkAllChecked();
     setCartTotalAmountAndPoint();
   }
+
+  function selectSubscription(id) {
+    const totalAmountProductCart = document.getElementById('total-amount-subscription-product-cart');
+    const totalPointProductCart = document.getElementById('total-point-subscription-product-cart');
+
+    totalAmountProductCart.innerText = document.getElementById('product-total-price-' + id).innerText;
+    totalPointProductCart.innerText = document.getElementById('product-point-price-' + id).innerText;
+
+    changeSubscriptionPay()
+  }
 </script>
 <script th:inline="javascript">
   const isExistEbook = Object.keys([[${eBookCart}]]).length !== 0;
@@ -695,12 +706,23 @@
 <script>
   function changeTotalPay() {
     let allTotalProductAmount = document.getElementById('all-total-product-amount');
-    let allTotalPayAmount = document.getElementById('all-total-pay-amount');
+    let allTotalProductPay = document.getElementById('all-total-product-pay');
 
     const totalAmountCartYesAladinCart = document.getElementById('total-amount-cart-yesaladin-cart');
 
     allTotalProductAmount.innerText = totalAmountCartYesAladinCart.innerText;
-    allTotalPayAmount.innerText = totalAmountCartYesAladinCart.innerText;
+    allTotalProductPay.innerText = totalAmountCartYesAladinCart.innerText;
+  }
+
+  function changeSubscriptionPay() {
+    let allSubscriptionProductAmount = document.getElementById('all-subscription-product-amount');
+    let allSubscriptionProductPay = document.getElementById('all-subscription-product-pay');
+
+    const totalAmountSubscriptionYesAladinCart = document.getElementById('total-amount-subscription-product-cart');
+    console.log("totalAmountSubscriptionYesAladinCart : " + totalAmountSubscriptionYesAladinCart);
+
+    allSubscriptionProductAmount.innerText = totalAmountSubscriptionYesAladinCart.innerText;
+    allSubscriptionProductPay.innerText = totalAmountSubscriptionYesAladinCart.innerText;
   }
 </script>
 </body>
