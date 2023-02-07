@@ -32,7 +32,7 @@ public class SearchTagServiceImpl implements SearchTagService {
      */
     @Override
     public SearchedTagsResponseDto searchTagByName(String name, int offset, int size) {
-        UriComponents uriComponents = UriComponentsBuilder.fromOriginHeader(gatewayConfig.getShopUrl())
+        UriComponents uriComponents = UriComponentsBuilder.fromHttpUrl(gatewayConfig.getShopUrl())
                 .path(PATH)
                 .queryParam("name", name)
                 .queryParam("offset", offset)

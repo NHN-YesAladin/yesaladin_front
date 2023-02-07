@@ -28,7 +28,7 @@ public class SearchPublisherServiceImpl implements SearchPublisherService {
 
     @Override
     public SearchPublisherResponseDto searchPublisherByName(String name, int offset, int size) {
-        UriComponents uriComponents = UriComponentsBuilder.fromOriginHeader(gatewayConfig.getShopUrl())
+        UriComponents uriComponents = UriComponentsBuilder.fromHttpUrl(gatewayConfig.getShopUrl())
                 .path(PATH)
                 .queryParam("name", name)
                 .queryParam("offset", offset)
