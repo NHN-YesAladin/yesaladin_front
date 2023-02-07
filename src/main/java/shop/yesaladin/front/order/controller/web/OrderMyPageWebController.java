@@ -25,11 +25,10 @@ import shop.yesaladin.front.order.service.inter.QueryOrderService;
 @Slf4j
 @RequiredArgsConstructor
 @Controller
-@RequestMapping("/mypage/orders")
+@RequestMapping("/mypage")
 public class OrderMyPageWebController {
 
     private final QueryOrderService queryOrderService;
-
 
     /**
      * 전체 주문 조회 화면 연결 메서드
@@ -40,7 +39,7 @@ public class OrderMyPageWebController {
      * @param model         view에서 사용
      * @return
      */
-    @GetMapping
+    @GetMapping("/orders")
     public String getOrderList(
             @RequestParam(name = "code", required = false) Integer code,
             @RequestParam(name = "endDate", required = false) String shouldEndDate,
@@ -75,5 +74,10 @@ public class OrderMyPageWebController {
         model.addAttribute("dataList", response.getDataList());
 
         return "mypage/order/order-list-view";
+    }
+
+    @GetMapping("/order-popup")
+    public String getMyPageOrderPopup() {
+        return "mypage/order/my-order-popup";
     }
 }

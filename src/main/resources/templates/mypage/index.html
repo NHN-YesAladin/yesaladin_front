@@ -55,7 +55,8 @@
               </div>
             </div>
             <div class="col-xl-9 col-lg-9" id="mypage"
-                 th:data-url="${@environment.getProperty('yesaladin.front.url')}">
+                 th:data-url="${@environment.getProperty('yesaladin.front.url')}"
+                 th:data-shop-url="${@environment.getProperty('yesaladin.gateway.shop')}">
               <div class="card-body">
                 <!-- TODO 3: BODY -->
                 <h1 class="text-end" th:text="${#authentication.name +' 님 안녕하세요'}"></h1>
@@ -132,8 +133,10 @@
                     <div class="card card-stacked">
                       <div class="card-body text-center">
                         <h3 class="card-title">입금/결제 대기</h3>
-                        <a href="#" class="text-muted btn" data-bs-toggle="modal"
+                        <a href="#" class="text-muted btn order-modal-buttons"
+                           data-bs-toggle="modal"
                            data-bs-target="#modal-full-width">___건</a>
+                        <a href="javascript:openWindowPop('/mypage/order-popup', 'popup');">팝업창 열기</a>
                       </div>
                     </div>
                   </div>
@@ -141,7 +144,9 @@
                     <div class="card card-stacked">
                       <div class="card-body text-center">
                         <h3 class="card-title">배송 대기</h3>
-                        <a class="text-muted">___건</a>
+                        <a href="#" class="text-muted btn order-modal-buttons"
+                           data-bs-toggle="modal"
+                           data-bs-target="#modal-full-width">___건</a>
                       </div>
                     </div>
                   </div>
@@ -149,7 +154,9 @@
                     <div class="card card-stacked">
                       <div class="card-body text-center">
                         <h3 class="card-title">배송중</h3>
-                        <a class="text-muted">___건</a>
+                        <a href="#" class="text-muted btn order-modal-buttons"
+                           data-bs-toggle="modal"
+                           data-bs-target="#modal-full-width">___건</a>
                       </div>
                     </div>
                   </div>
@@ -157,7 +164,8 @@
                     <div class="card card-stacked">
                       <div class="card-body text-center">
                         <h3 class="card-title">배송 완료</h3>
-                        <a class="text-muted">___건</a>
+                        <a href="#" class="text-muted btn modal-buttons" data-bs-toggle="modal"
+                           data-bs-target="#modal-full-width">___건</a>
                       </div>
                     </div>
                   </div>
@@ -198,137 +206,85 @@
     </div>
   </div>
   <!-- modal  -->
-  <div class="modal modal-blur fade" id="modal-full-width" tabindex="-1" style="display: none;" aria-hidden="true">
+  <div class="modal modal-blur fade" id="modal-full-width" tabindex="-1" style="display: none;"
+       aria-hidden="true">
     <div class="modal-dialog modal-full-width modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">Full width modal</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"
+                  aria-label="Close"></button>
         </div>
         <div class="card">
-          <div class="table-responsive p-3 mt-3">
-            <table class="table table-vcenter card-table">
+          <div class="card-body">
+            <table class="table text-center">
               <thead>
               <tr>
-                <th>Name</th>
-                <th>Title</th>
-                <th>Email</th>
-                <th>Role</th>
-                <th class="w-1"></th>
+                <th class="fs-4" scope="col">주문번호</th>
+                <th class="fs-4" scope="col">주문일자</th>
+                <th class="fs-4" scope="col">주문내역</th>
+                <th class="fs-4" scope="col">주문금액</th>
+                <th class="fs-4" scope="col">수령인</th>
+                <th class="fs-4" scope="col">비고</th>
+                <th class="fs-4" scope="col" th:width="100px">조회/삭제</th>
               </tr>
               </thead>
-              <tbody>
-              <tr>
-                <td>Paweł Kuna</td>
-                <td class="text-muted">
-                  UI Designer, Training
-                </td>
-                <td class="text-muted"><a href="#" class="text-reset">paweluna@howstuffworks.com</a></td>
-                <td class="text-muted">
-                  User
-                </td>
-                <td>
-                  <a href="#">Edit</a>
-                </td>
-              </tr>
-              <tr>
-                <td>Jeffie Lewzey</td>
-                <td class="text-muted">
-                  Chemical Engineer, Support
-                </td>
-                <td class="text-muted"><a href="#" class="text-reset">jlewzey1@seesaa.net</a></td>
-                <td class="text-muted">
-                  Admin
-                </td>
-                <td>
-                  <a href="#">Edit</a>
-                </td>
-              </tr>
-              <tr>
-                <td>Mallory Hulme</td>
-                <td class="text-muted">
-                  Geologist IV, Support
-                </td>
-                <td class="text-muted"><a href="#" class="text-reset">mhulme2@domainmarket.com</a></td>
-                <td class="text-muted">
-                  User
-                </td>
-                <td>
-                  <a href="#">Edit</a>
-                </td>
-              </tr>
-              <tr>
-                <td>Dunn Slane</td>
-                <td class="text-muted">
-                  Research Nurse, Sales
-                </td>
-                <td class="text-muted"><a href="#" class="text-reset">dslane3@epa.gov</a></td>
-                <td class="text-muted">
-                  Owner
-                </td>
-                <td>
-                  <a href="#">Edit</a>
-                </td>
-              </tr>
-              <tr>
-                <td>Emmy Levet</td>
-                <td class="text-muted">
-                  VP Product Management, Accounting
-                </td>
-                <td class="text-muted"><a href="#" class="text-reset">elevet4@senate.gov</a></td>
-                <td class="text-muted">
-                  Admin
-                </td>
-                <td>
-                  <a href="#">Edit</a>
-                </td>
-              </tr>
-              <tr>
-                <td>Maryjo Lebarree</td>
-                <td class="text-muted">
-                  Civil Engineer, Product Management
-                </td>
-                <td class="text-muted"><a href="#" class="text-reset">mlebarree5@unc.edu</a></td>
-                <td class="text-muted">
-                  User
-                </td>
-                <td>
-                  <a href="#">Edit</a>
-                </td>
-              </tr>
-              <tr>
-                <td>Egan Poetz</td>
-                <td class="text-muted">
-                  Research Nurse, Engineering
-                </td>
-                <td class="text-muted"><a href="#" class="text-reset">epoetz6@free.fr</a></td>
-                <td class="text-muted">
-                  Admin
-                </td>
-                <td>
-                  <a href="#">Edit</a>
-                </td>
-              </tr>
-              <tr>
-                <td>Kellie Skingley</td>
-                <td class="text-muted">
-                  Teacher, Services
-                </td>
-                <td class="text-muted"><a href="#" class="text-reset">kskingley7@columbia.edu</a></td>
-                <td class="text-muted">
-                  Owner
-                </td>
-                <td>
-                  <a href="#">Edit</a>
-                </td>
-              </tr>
+              <tbody class="table-group-divider">
+
+              <!--              <tr th:each="data: ${dataList}">-->
+              <!--                <td th:text="${data.orderName}"></td>-->
+              <!--                <td th:text="${#temporals.format(data.orderDateTime, 'yyyy-MM-dd')}"></td>-->
+              <!--                <td class="text-start">-->
+              <!--                  <div class="row-cols-2">-->
+              <!--                    <p class="col-12 d-inline-block text-truncate"-->
+              <!--                       th:text="${data.orderName}"-->
+              <!--                       style="max-width: 140px;">-->
+              <!--                    </p>-->
+              <!--                    <p class="col-12 d-inline-block text-truncate"-->
+              <!--                       style="max-width: 140px;">-->
+              <!--                      <span>총</span>&nbsp;-->
+              <!--                      <span th:text="${data.orderProductCount == null } ? 0 : ${data.orderProductCount}">228</span>-->
+              <!--                      <span>종</span>&nbsp;-->
+              <!--                      <span th:text="${data.productTotalCount == null } ? 0 : ${data.productTotalCount}">2445</span>-->
+              <!--                      <span>권</span>-->
+              <!--                    </p>-->
+              <!--                  </div>-->
+              <!--                </td>-->
+              <!--                <td>-->
+              <!--                                                    <span class="d-inline-block text-truncate"-->
+              <!--                                                          style="max-width: 100px;" th:text="${data.orderAmount}">-->
+              <!--                                                        222,500-->
+              <!--                                                    </span>-->
+              <!--                </td>-->
+              <!--                <td class="text-orange" th:text="${data.orderStatusCode}"></td>-->
+              <!--                <td class="fw-bolder" th:text="${data.memberName}"></td>-->
+              <!--                <td class="" th:text="${data.orderCode == 'MEMBER_SUBSCRIBE'} ? '구독 주문':''"></td>-->
+              <!--                <td>-->
+<!--                                <div>-->
+<!--                                  <a href="#" th:value="${data.orderId}" class="btn btn-outline-dark w-full fs-5 fw-bolder m-1">-->
+<!--                                    주문상세조회-->
+<!--                                  </a>-->
+<!--                                  <a href="#" th:value="${data.orderId}" class="btn btn-outline-dark w-full fs-5 fw-bolder m-1">-->
+<!--                                    배송조회-->
+<!--                                  </a>-->
+<!--                                  &lt;!&ndash;                                               // TODO 숨김처리 링크 처리         &ndash;&gt;-->
+<!--                                  <a href="#" th:value="${data.orderId}" class="btn btn-outline-secondary w-full fs-5 m-1">-->
+<!--                                    숨김처리-->
+<!--                                  </a>-->
+<!--                                </div>-->
+              <!--                </td>-->
+              <!--              </tr>-->
               </tbody>
             </table>
           </div>
+          <!--          <div-->
+          <!--              th:replace="~{common/utils/paging :: paging('/mypage/orders', ${code == null ? '' : '&code=' + code})}">-->
+          <!--          </div>-->
         </div>
         <div class="modal-footer">
           <button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Save changes</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Save changes
+          </button>
         </div>
       </div>
     </div>
@@ -342,9 +298,32 @@
   const mainUrl = `${mypage.getAttribute("data-url")}`;
   const innerMemberGradeUrl = `${mypage.getAttribute("data-url")}/grade`;
   const innerMemberPointUrl = `${mypage.getAttribute("data-url")}/point`;
+  const shopUrl = `${mypage.getAttribute("data-shop-url")}`;
+
+  function openWindowPop(url, name){
+    let options = 'top=10, left=10, width=900, height=500, status=no, menubar=no, location=no, toolbar=no, resizable=no';
+    window.open(url, name, options);
+  }
 
   window.onload = function () {
     setMyPageData();
+  }
+
+  function addEventListenerToOrderModalButtons() {
+    const orderModals = document.querySelectorAll(".order-modal-buttons");
+    orderModals.forEach(button => button.addEventListener("click", () => {
+
+    }));
+  }
+
+  function getOrderList() {
+    const response = fetch(shopUrl + "/v1/member-orders", {
+      method: "GET",
+      headers: {
+        "Contest-Type": "application/json"
+      }
+    });
+    return response;
   }
 
   async function setMyPageData() {
