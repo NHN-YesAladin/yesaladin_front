@@ -1,5 +1,15 @@
 package shop.yesaladin.front.cart.controller.web;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
@@ -7,29 +17,33 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 import shop.yesaladin.front.cart.dto.AddToCartDto;
 import shop.yesaladin.front.cart.dto.ViewCartDto;
+import shop.yesaladin.front.common.utils.CookieUtil;
 import shop.yesaladin.front.config.GatewayConfig;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 장바구니 추가 관련 페이지를 위한 Controller 입니다.
  *
  * @author 이수정
+ * @author 송학현
  * @since 1.0
  */
 @Slf4j
@@ -41,6 +55,7 @@ public class CartWebController {
     private final RedisTemplate<String, Object> redisTemplate;
     private final RestTemplate restTemplate;
     private final GatewayConfig gatewayConfig;
+    private final CookieUtil cookieUtil;
 
     /**
      * [GET /cart] 장바구니 View 를 반환합니다.
@@ -116,16 +131,17 @@ public class CartWebController {
      *
      * @param cartDto  장바구니에 추가할 상품의 Id, 개수, 상품의 종류를 담은 Dto
      * @param cookie   Redis의 key값을 가진 CART_NO 쿠키
-     * @param member   회원이라면 UUID 쿠키가 존재, 회원용 장바구니 생성을 위한 쿠키
+     * @param member   회원이라면 YA_AUT 쿠키가 존재, 회원용 장바구니 생성을 위한 쿠키
      * @param response 쿠키 정보를 추가하기 위한 HttpServletResponse
      * @author 이수정
+     * @author 송학현
      * @since 1.0
      */
     @PostMapping
     public void addToCart(
             @RequestBody AddToCartDto cartDto,
             @CookieValue(value = "CART_NO", required = false) Cookie cookie,
-            @CookieValue(value = "UUID", required = false) Cookie member,
+            @CookieValue(value = "YA_AUT", required = false) Cookie member,
             HttpServletResponse response
     ) {
         // 전달받은 상품 아이디, 개수 확인
@@ -136,15 +152,18 @@ public class CartWebController {
 
         // 회원인 경우, 회원의 ID(PK) 존재 [로그인 시 발급][로그아웃 시 삭제]
         // 회원이 쿠키를 악의적으로 삭제 -> 회원일 때 생성
+        if (Objects.nonNull(member)) {
+            String loginId = SecurityContextHolder.getContext().getAuthentication().getName();
+            cookie = cookieUtil.createCookie("CART_NO", loginId, 60 * 60 * 24 * 30);
+
+            response.addCookie(cookie);
+        }
 
         // 비회원인 경우, 비회원용 장바구니 UUID 존재 [장바구니 담기 선택 시 발급][3일 만료]
         // 존재하지 않는 경우, 비회원 + 미발급 상태
         if (Objects.isNull(cookie)) {
             String uuid = String.valueOf(UUID.randomUUID());
-            cookie = new Cookie("CART_NO", uuid);
-
-            cookie.setPath("/");
-            cookie.setMaxAge(60 * 60 * 24 * 3);
+            cookie = cookieUtil.createCookie("CART_NO", uuid, 60 * 60 * 24 * 3);
 
             response.addCookie(cookie);
         }
@@ -218,6 +237,4 @@ public class CartWebController {
 
         redisTemplate.opsForHash().put(key, productId, quantity.get("quantity"));
     }
-
-    ;
 }
