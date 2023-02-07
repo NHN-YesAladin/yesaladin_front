@@ -54,7 +54,8 @@
                 <div th:replace="~{mypage/fragments/sidebar :: fragment-side-bar}"></div>
               </div>
             </div>
-            <div class="col-xl-9 col-lg-9" id="mypage" th:data-url="${@environment.getProperty('yesaladin.front.url')}">
+            <div class="col-xl-9 col-lg-9" id="mypage"
+                 th:data-url="${@environment.getProperty('yesaladin.front.url')}">
               <div class="card-body">
                 <!-- TODO 3: BODY -->
                 <h1 class="text-end" th:text="${#authentication.name +' 님 안녕하세요'}"></h1>
@@ -131,7 +132,8 @@
                     <div class="card card-stacked">
                       <div class="card-body text-center">
                         <h3 class="card-title">입금/결제 대기</h3>
-                        <a class="text-muted">___건</a>
+                        <a href="#" class="text-muted btn" data-bs-toggle="modal"
+                           data-bs-target="#modal-full-width">___건</a>
                       </div>
                     </div>
                   </div>
@@ -194,8 +196,144 @@
         </div>
       </div>
     </div>
-
   </div>
+  <!-- modal  -->
+  <div class="modal modal-blur fade" id="modal-full-width" tabindex="-1" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-full-width modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Full width modal</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="card">
+          <div class="table-responsive p-3 mt-3">
+            <table class="table table-vcenter card-table">
+              <thead>
+              <tr>
+                <th>Name</th>
+                <th>Title</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th class="w-1"></th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                <td>Paweł Kuna</td>
+                <td class="text-muted">
+                  UI Designer, Training
+                </td>
+                <td class="text-muted"><a href="#" class="text-reset">paweluna@howstuffworks.com</a></td>
+                <td class="text-muted">
+                  User
+                </td>
+                <td>
+                  <a href="#">Edit</a>
+                </td>
+              </tr>
+              <tr>
+                <td>Jeffie Lewzey</td>
+                <td class="text-muted">
+                  Chemical Engineer, Support
+                </td>
+                <td class="text-muted"><a href="#" class="text-reset">jlewzey1@seesaa.net</a></td>
+                <td class="text-muted">
+                  Admin
+                </td>
+                <td>
+                  <a href="#">Edit</a>
+                </td>
+              </tr>
+              <tr>
+                <td>Mallory Hulme</td>
+                <td class="text-muted">
+                  Geologist IV, Support
+                </td>
+                <td class="text-muted"><a href="#" class="text-reset">mhulme2@domainmarket.com</a></td>
+                <td class="text-muted">
+                  User
+                </td>
+                <td>
+                  <a href="#">Edit</a>
+                </td>
+              </tr>
+              <tr>
+                <td>Dunn Slane</td>
+                <td class="text-muted">
+                  Research Nurse, Sales
+                </td>
+                <td class="text-muted"><a href="#" class="text-reset">dslane3@epa.gov</a></td>
+                <td class="text-muted">
+                  Owner
+                </td>
+                <td>
+                  <a href="#">Edit</a>
+                </td>
+              </tr>
+              <tr>
+                <td>Emmy Levet</td>
+                <td class="text-muted">
+                  VP Product Management, Accounting
+                </td>
+                <td class="text-muted"><a href="#" class="text-reset">elevet4@senate.gov</a></td>
+                <td class="text-muted">
+                  Admin
+                </td>
+                <td>
+                  <a href="#">Edit</a>
+                </td>
+              </tr>
+              <tr>
+                <td>Maryjo Lebarree</td>
+                <td class="text-muted">
+                  Civil Engineer, Product Management
+                </td>
+                <td class="text-muted"><a href="#" class="text-reset">mlebarree5@unc.edu</a></td>
+                <td class="text-muted">
+                  User
+                </td>
+                <td>
+                  <a href="#">Edit</a>
+                </td>
+              </tr>
+              <tr>
+                <td>Egan Poetz</td>
+                <td class="text-muted">
+                  Research Nurse, Engineering
+                </td>
+                <td class="text-muted"><a href="#" class="text-reset">epoetz6@free.fr</a></td>
+                <td class="text-muted">
+                  Admin
+                </td>
+                <td>
+                  <a href="#">Edit</a>
+                </td>
+              </tr>
+              <tr>
+                <td>Kellie Skingley</td>
+                <td class="text-muted">
+                  Teacher, Services
+                </td>
+                <td class="text-muted"><a href="#" class="text-reset">kskingley7@columbia.edu</a></td>
+                <td class="text-muted">
+                  Owner
+                </td>
+                <td>
+                  <a href="#">Edit</a>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- TODO 4 : footer -->
   <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
 </div>
@@ -218,14 +356,17 @@
       point.value = getMemberPoint();
     } catch (err) {
       console.log(err)
-      if(!alert("회원 정보를 찾을 수 없습니다.")) document.location = mainUrl;
+      if (!alert("회원 정보를 찾을 수 없습니다.")) {
+        document.location = mainUrl;
+      }
     }
   }
+
   function getMemberGrade() {
     const response = fetch(innerMemberGradeUrl, {
-      method : "GET",
+      method: "GET",
       headers: {
-        "Contest-Type" : "application/json"
+        "Contest-Type": "application/json"
       }
     });
     return response;
@@ -233,9 +374,9 @@
 
   function getMemberPoint() {
     const response = fetch(innerMemberPointUrl, {
-      method : "GET",
+      method: "GET",
       headers: {
-        "Contest-Type" : "application/json"
+        "Contest-Type": "application/json"
       }
     });
     return response;
