@@ -494,6 +494,30 @@
           return false;
         }
 
+        let categories = document.getElementsByName('categories').length;
+        if(categories === 0 || categories > 3) {
+          alert('카테고리를 1 ~ 3개까지 선택해주세요')
+          event.preventDefault();
+          return false;
+        }
+        categories.forEach(function (category) {
+          category.checked = true;
+        })
+
+        let publishers = document.getElementsByName('publishers').length;
+        if(publishers === 0 || publishers > 1) {
+          alert('출판사를 1개 선택해주세요')
+          event.preventDefault();
+          return false;
+        }
+
+        let authors = document.getElementsByName('authors').length;
+        if(authors === 0) {
+          alert('저자를 1개 이상 선택해주세요')
+          event.preventDefault();
+          return false;
+        }
+
       }, false);
 
     });
