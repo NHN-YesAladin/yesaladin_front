@@ -2,6 +2,7 @@ package shop.yesaladin.front.order.service.impl;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
@@ -36,9 +37,6 @@ import shop.yesaladin.front.order.service.inter.QueryOrderService;
 @Service
 public class QueryOrderServiceImpl implements QueryOrderService {
 
-    private static final ParameterizedTypeReference<PaginatedResponseDto<OrderSummaryResponseDto>> PAGING_ORDERS_TYPE
-            = new ParameterizedTypeReference<>() {
-    };
     private static final ParameterizedTypeReference<ResponseDto<OrderSheetResponseDto>> ORDER_SHEET_TYPE
             = new ParameterizedTypeReference<>() {
     };
@@ -68,13 +66,14 @@ public class QueryOrderServiceImpl implements QueryOrderService {
                 requestDto.getEndDate()
         );
 
-        ResponseEntity<PaginatedResponseDto<OrderSummaryResponseDto>> responseEntity = restTemplate.exchange(
+        ResponseEntity<ResponseDto<PaginatedResponseDto<OrderSummaryResponseDto>>> responseEntity = restTemplate.exchange(
                 uriComponents.toUri(),
                 HttpMethod.GET,
                 getHttpEntity(),
-                PAGING_ORDERS_TYPE
+                new ParameterizedTypeReference<>() {
+                }
         );
-        return responseEntity.getBody();
+        return Objects.requireNonNull(responseEntity.getBody()).getData();
     }
 
     /**
@@ -106,7 +105,6 @@ public class QueryOrderServiceImpl implements QueryOrderService {
     private HttpEntity<String> getHttpEntity() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> entity = new HttpEntity<>(headers);
-        return entity;
+        return new HttpEntity<>(headers);
     }
 }
