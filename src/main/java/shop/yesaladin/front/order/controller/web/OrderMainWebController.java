@@ -34,8 +34,9 @@ public class OrderMainWebController {
      * @author 최예린
      * @since 1.0
      */
-    @GetMapping
+    @GetMapping("order-sheets")
     public String getOrderSheet(
+            @RequestParam("type") String type,
             @RequestParam("isbn") List<String> isbn,
             @RequestParam("quantity") List<String> quantity,
             Model model
@@ -54,7 +55,8 @@ public class OrderMainWebController {
         model.addAttribute("phoneNumber", response.getData().getPhoneNumber());
         model.addAttribute("point", response.getData().getPoint());
         model.addAttribute("address", response.getData().getAddress());
+        model.addAttribute("coupons", response.getData().getMemberCoupons());
 
-        return "main/order/order";
+        return (type.equals("subscribe")) ? "main/order/subscribe" : "main/order/order";
     }
 }
