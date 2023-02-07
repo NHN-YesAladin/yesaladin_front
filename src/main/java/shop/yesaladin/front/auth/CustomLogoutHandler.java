@@ -55,7 +55,7 @@ public class CustomLogoutHandler implements LogoutHandler {
 
         session.invalidate();
 
-        String uuid = getUuidFromCookie(request.getCookies());
+        String uuid = getValueFromCookie(request.getCookies(), UUID_CODE.getValue());
         log.info("uuid={}", uuid);
         if (Objects.isNull(uuid)) {
             throw new InvalidLogoutRequestException();
@@ -63,6 +63,13 @@ public class CustomLogoutHandler implements LogoutHandler {
 
         AuthInfo auth = (AuthInfo) redisTemplate.opsForHash().get(uuid, JWT_CODE.getValue());
         redisTemplate.opsForHash().delete(uuid, JWT_CODE.getValue());
+        Cookie cart = new Cookie("CART_NO", "");
+        cart.setMaxAge(0);
+        response.addCookie(cart);
+
+        Cookie authCookie = new Cookie(UUID_CODE.getValue(), "");
+        authCookie.setMaxAge(0);
+        response.addCookie(authCookie);
 
         memberAdapter.logout(uuid, auth.getAccessToken());
 
@@ -72,20 +79,19 @@ public class CustomLogoutHandler implements LogoutHandler {
     }
 
     /**
-     * cookie에 들어있는 uuid를 반환하기 위한 기능입니다.
+     * Cookie에 들어있는 value를 반환하기 위한 기능입니다.
      *
      * @param cookies 브라우저에 존재하는 Cookie의 목록입니다.
-     * @return login 시 발급 받아 쿠키에 저장한 uuid 값을 반환합니다.
-     * @author : 송학현
-     * @since : 1.0
+     * @param key 찾고자 하는 Cookie의 key에 해당합니다.
+     * @return 해당 쿠키에 저장된 값을 반환합니다.
      */
-    private String getUuidFromCookie(Cookie[] cookies) {
+    private String getValueFromCookie(Cookie[] cookies, String key) {
         if (Objects.isNull(cookies)) {
             return null;
         }
 
         for (Cookie cookie : cookies) {
-            if (Objects.equals(UUID_CODE.getValue(), cookie.getName())) {
+            if (Objects.equals(key, cookie.getName())) {
                 return cookie.getValue();
             }
         }
