@@ -640,7 +640,7 @@
     }).then((res) => res.json())
     .then(function (data) {
       initSearchTable(searchedTable)
-      initPaging(page, data.count, offset, size)
+      initPaging(page, data.count, offset, offset / size)
       const body = createHeadAndBody(searchedTable, input)
 
       data.searchedTagDtoList.forEach(function (dto) {
@@ -718,7 +718,7 @@
     .then((res) => res.json())
     .then(function (data) {
       initSearchTable(searchedTable)
-      initPaging(page)
+      initPaging(page, data.count, offset, offset / size)
       const body = createHeadAndBody(searchedTable, input)
       data.searchedAuthorDtoList.forEach(function (dto){
         const bodyRow = body.insertRow();
@@ -831,7 +831,7 @@
     .then((res) => res.json())
     .then(function (data) {
       initSearchTable(searchedTable)
-      initPaging(page, data.count, size, offset)
+      initPaging(page, data.count, size, offset / size)
       const body = createHeadAndBody(searchedTable, input)
       data.searchedCategoryDtoList.forEach(function (dto) {
         const row = body.insertRow()
@@ -934,7 +934,7 @@
     .then((res) => (res.json()))
     .then(function (data) {
       initSearchTable(searchedTable)
-      initPaging(ul, data.count, size, offset)
+      initPaging(ul, data.count, size, offset / size)
       const body = createHeadAndBody(searchedTable, input)
       data.searchedPublisherDtoList.forEach(function (dto){
         const row = body.insertRow()
@@ -1066,7 +1066,7 @@
    */
   function initPaging(ul, count, size, currentPage) {
     ul.innerHTML = ''
-
+    console.log(currentPage)
     if(currentPage > 0) {
       const pre = document.createElement('li')
       pre.className += 'page-item'
