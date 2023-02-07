@@ -70,12 +70,12 @@ public class Oauth2Controller {
 
         if (!isAlreadyMember) {
             model.addAttribute("oauthMember", oauth2LoginRequestDto);
-            return "/auth/oauth-signup";
+            return "auth/oauth-signup";
         }
 
         MemberResponseDto member = oauth2Service.getMember(oauth2LoginRequestDto.getEmail());
         model.addAttribute("oauthMember", member);
-        return "/auth/oauth-login";
+        return "auth/oauth-login";
     }
 
     /**

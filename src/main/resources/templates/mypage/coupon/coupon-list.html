@@ -1,0 +1,145 @@
+<!doctype html>
+<!--
+* Tabler - Premium and Open Source dashboard template with responsive and high quality UI.
+* @version 1.0.0-beta5
+* @link https://tabler.io
+* Copyright 2018-2022 The Tabler Authors
+* Copyright 2018-2022 codecalm.net Paweł Kuna
+* Licensed under MIT (https://github.com/tabler/tabler/blob/master/LICENSE)
+-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+  <meta content="ie=edge" http-equiv="X-UA-Compatible"/>
+  <title>Yes Aladin!</title>
+  <!-- CSS files -->
+  <link rel="stylesheet" th:href="@{/css/tabler.min.css}"/>
+  <link rel="stylesheet" th:href="@{/css/tabler-flags.min.css}"/>
+  <link rel="stylesheet" th:href="@{/css/tabler-payments.min.css}"/>
+  <link rel="stylesheet" th:href="@{/css/tabler-vendors.min.css}"/>
+  <link rel="stylesheet" th:href="@{/css/demo.min.css}"/>
+
+  <style>
+    .coupon-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      align-items: center;
+      justify-items: center;
+    }
+
+    .coupon-card {
+      display: flex;
+      width: 12rem;
+      height: 6.5rem;
+      border-radius: 0.4rem;
+      box-shadow: #00000066 0.0rem 0.0rem 0.1rem 0;
+      margin-bottom: 1rem;
+    }
+
+    .coupon-deco {
+      z-index: 0;
+      margin-left: 1rem;
+      background-color: #206bc4;
+      width: 1rem;
+      height: 100%;
+    }
+
+    .coupon-amount {
+      font-size: 2rem;
+    }
+
+    .coupon-description {
+      font-size: 0.8rem;
+      color: #475569;
+    }
+  </style>
+</head>
+<body>
+<!-- Libs JS -->
+<script th:src="@{/libs/apexcharts/dist/apexcharts.min.js}" type="text/javascript"></script>
+<!-- Tabler Core -->
+<script th:src="@{/js/tabler.min.js}" type="text/javascript"></script>
+<script th:src="@{/js/demo.min.js}" type="text/javascript"></script>
+
+<div class="wrapper">
+  <!-- TODO 1 : Head -->
+  <div th:replace="~{common/fragments/header :: fragment-header}"></div>
+  <!-- TODO 2 : NAV-BAR -->
+  <div th:replace="~{common/fragments/navbar :: fragment-nav-bar}"></div>
+
+  <div class="page-wrapper">
+    <div class="page-header d-print-none">
+      <div class="container-xl">
+        <div class="row g-2 align-items-center">
+          <div class="col">
+            <h2 class="page-title">
+              마이 페이지
+            </h2>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-body">
+      <div class="container-xl">
+        <div class="card">
+          <div class="row g-0">
+            <div class="col-xl-3 col-lg-3 bg-secondary-lt">
+              <div class="card-body">
+                <div th:replace="~{mypage/fragments/sidebar :: fragment-side-bar}"></div>
+              </div>
+            </div>
+            <div class="col-xl-9 col-lg-9">
+              <div class="card-body">
+                <!-- TODO 3: BODY -->
+                <div class="page-header d-print-none">
+                  <div class="container-xl">
+                    <div class="row g-2 align-items-center">
+                      <div class="col">
+                        <h2 class="page-title">
+                          보유한 쿠폰 목록
+                        </h2>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="page-body">
+                  <div class="card text-center">
+                    <div class="card-header">
+                      <ul class="nav nav-pills card-header-pills">
+                        <li class="nav-item">
+                          <a aria-current="true" class="nav-link active" href="#">사용 가능</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" href="#">사용 불가능</a>
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="card-body d-grid coupon-container">
+                      <div class="coupon-card">
+                        <div class="coupon-deco">
+                        </div>
+                        <div style="text-align: center; margin: auto">
+                          <div class="coupon-amount">10%</div>
+                          <div class="coupon-description">전체 상품 할인 <br>~2023.02.15</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="container-xl d-flex flex-wrap justify-content-start">
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <!-- TODO 4 : footer -->
+  <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
+</div>
+</body>
+</html>
