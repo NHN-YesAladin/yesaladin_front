@@ -1,6 +1,7 @@
 package shop.yesaladin.front.coupon.dto;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
@@ -8,6 +9,7 @@ import javax.validation.constraints.PositiveOrZero;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Range;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,6 +30,9 @@ public class CouponCreateRequestDto {
     private Boolean isUnlimited;
     @Positive
     private Integer quantity;
+    @Range(min = 1, max = 31)
+    private Integer couponOpenDate;
+    private LocalTime couponOpenTime;
     private MultipartFile couponImage;
     @Positive
     private Integer duration;
