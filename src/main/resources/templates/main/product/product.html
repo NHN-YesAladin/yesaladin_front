@@ -53,7 +53,7 @@
     <div class="page-body">
         <div class="container">
             <div class="card">
-                <form action="/orders" method="get" name="products">
+                <form method="get" name="products">
                 <div class="card-header">
                     <div class="card-title">
                         <div th:if="${productDetailResponseDto.getIsEbook()} == true">
@@ -65,7 +65,8 @@
                                 <p th:text="${author}" style="display: inline"></p>
                                 <p th:if="${!j.last}" style="display: inline">,</p>
                             </div>
-                            | 출판사 : <p th:text="${productDetailResponseDto.getPublisher()}" style="display: inline"></p></h3>
+                            | 출판사 : <p th:text="${productDetailResponseDto.getPublisher()}" style="display: inline"></p>
+                        </h3>
                     </div>
                 </div>
 
@@ -99,9 +100,9 @@
                                                 <path d="M5 12l14 0"></path>
                                             </svg>
                                         </button>
-                                        <input type="text" class="form-control d-inline text-center" value="1" min="1"
-                                               th:disabled="${productDetailResponseDto.getIsEbook() || productDetailResponseDto.getIsSubscriptionAvailable()}"
-                                               id="quantity" name="quantity"  maxlength="4" style="width:60px">
+                                        <input type="text" class="form-control d-inline text-center" min="1"
+                                               th:readonly="${productDetailResponseDto.isEbook}" value="1"
+                                               id="quantity" maxlength="4" name="quantity" style="width:60px">
                                         <button type="button" class="btn btn-secondary btn-icon"
                                                 onclick="upQuantity()" style="width: 35px"
                                                 th:disabled="${productDetailResponseDto.getIsEbook() || productDetailResponseDto.getIsSubscriptionAvailable()}">
@@ -163,7 +164,8 @@
                                 <!-- 정기구독 가능 -->
                                 <div class="row p-1" th:if="${productDetailResponseDto.getIsSubscriptionAvailable()}">
                                     <div class="col-6 px-1">
-                                        <button type="submit" class="btn btn-facebook w-100">
+                                        <button type="submit" class="btn btn-facebook w-100"
+                                                onclick="javascript: form.action='/orders/order-sheets'" >
                                             <svg xmlns="http://www.w3.org/2000/svg"
                                                  class="icon icon-tabler icon-tabler-brand-cashapp" width="24" height="24"
                                                  viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
@@ -175,7 +177,8 @@
                                         </button>
                                     </div>
                                     <div class="col-6 px-1">
-                                        <a href="#" class="btn btn-facebook w-100">
+                                        <button type="submit" class="btn btn-facebook w-100"
+                                           onclick="javascript: form.action='/orders/subscribe-sheets'">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-stats" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                                                 <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4"></path>
@@ -186,7 +189,7 @@
                                                 <path d="M3 11h16"></path>
                                             </svg>
                                             정기구독
-                                        </a>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -235,7 +238,7 @@
                             <h2>품목정보</h2>
                             <p th:text="|출판일 : ${productDetailResponseDto.getPublishedDate()}|"></p>
                             <p th:text="|ISBN13 : ${productDetailResponseDto.getIsbn()}|"></p>
-                            <input type="text" name="isbn" th:value="${productDetailResponseDto.getIsbn()}" hidden="hidden">
+                            <input type="hidden" name="isbn" th:value="${productDetailResponseDto.getIsbn()}">
                             <div th:if="${productDetailResponseDto.getIsSubscriptionAvailable()} == true">
                                 <p th:text="|ISSN11 : ${productDetailResponseDto.getIssn()}|" name="issn"></p>
                             </div>
