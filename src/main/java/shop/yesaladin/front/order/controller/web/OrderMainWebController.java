@@ -2,14 +2,19 @@ package shop.yesaladin.front.order.controller.web;
 
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import shop.yesaladin.common.dto.ResponseDto;
+import shop.yesaladin.front.order.dto.OrderMemberCreateRequestDto;
+import shop.yesaladin.front.order.dto.OrderNonMemberCreateRequestDto;
 import shop.yesaladin.front.order.dto.OrderSheetResponseDto;
 import shop.yesaladin.front.order.service.inter.QueryOrderService;
 
@@ -51,14 +56,26 @@ public class OrderMainWebController {
             model.addAttribute("error", response.getErrorMessages());
             return "common/errors/error";
         }
-        model.addAttribute("products", response.getData().getOrderProducts());
-        model.addAttribute("name", response.getData().getName());
-        model.addAttribute("phoneNumber", response.getData().getPhoneNumber());
-        model.addAttribute("point", response.getData().getPoint());
-        model.addAttribute("address", response.getData().getAddress());
-        model.addAttribute("coupons", response.getData().getMemberCoupons());
+        model.addAttribute("info", response.getData());
 
         return (request.getServletPath().contains("subscribe")) ? "main/order/subscribe"
                 : "main/order/order";
+    }
+
+    @PostMapping("/member")
+    public String createMemberOrder(
+            @Valid @ModelAttribute OrderMemberCreateRequestDto request,
+            Model model
+    ) {
+        log.error("request : {}", request);
+        return "/cart/cart";
+    }
+    @PostMapping("/non-member")
+    public String createNonMemberOrder(
+            @Valid @ModelAttribute OrderNonMemberCreateRequestDto request,
+            Model model
+    ) {
+        log.error("request : {}", request);
+        return "/cart/cart";
     }
 }

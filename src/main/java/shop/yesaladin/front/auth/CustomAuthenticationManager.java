@@ -25,8 +25,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import shop.yesaladin.common.dto.ResponseDto;
-import shop.yesaladin.front.common.utils.CookieUtils;
 import shop.yesaladin.front.common.exception.InvalidHttpHeaderException;
+import shop.yesaladin.front.common.utils.CookieUtils;
 import shop.yesaladin.front.member.adapter.MemberAdapter;
 import shop.yesaladin.front.member.dto.LoginRequestDto;
 import shop.yesaladin.front.member.dto.MemberResponseDto;
@@ -50,8 +50,8 @@ public class CustomAuthenticationManager implements AuthenticationManager {
     private final CookieUtils cookieUtils;
 
     /**
-     * Auth 서버에서 발급받은 JWT 토큰을 기반으로 Shop 서버에 유저 정보를 요청 한 뒤,
-     * UsernamePasswordAuthenticationToken을 만들어 반환합니다.
+     * Auth 서버에서 발급받은 JWT 토큰을 기반으로 Shop 서버에 유저 정보를 요청 한 뒤, UsernamePasswordAuthenticationToken을 만들어
+     * 반환합니다.
      *
      * @param authentication 인증 객체입니다.
      * @return 인증 객체를 반환합니다.
@@ -72,7 +72,9 @@ public class CustomAuthenticationManager implements AuthenticationManager {
         checkValidLoginRequest(exchange);
 
         String uuid = Objects.requireNonNull(exchange.getHeaders().get(UUID_HEADER).get(0));
-        String expiredTime = Objects.requireNonNull(exchange.getHeaders().get(X_EXPIRE_HEADER).get(0));
+        String expiredTime = Objects.requireNonNull(exchange.getHeaders()
+                .get(X_EXPIRE_HEADER)
+                .get(0));
 
         String accessToken = extractAuthorizationHeader(exchange);
 
@@ -89,13 +91,19 @@ public class CustomAuthenticationManager implements AuthenticationManager {
 
         log.info("accessToken={}", accessToken);
 
-        HttpServletRequest servletRequest = Objects.requireNonNull(((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())).getRequest();
-        HttpServletResponse servletResponse = Objects.requireNonNull(((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())).getResponse();
+        HttpServletRequest servletRequest = Objects.requireNonNull(((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()))
+                .getRequest();
+        HttpServletResponse servletResponse = Objects.requireNonNull(((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()))
+                .getResponse();
 
         Cookie authCookie = cookieUtils.createCookie(UUID_CODE.getValue(), uuid, 60 * 30);
 
         moveIntoMemberCart(loginRequestDto.getLoginId(), servletRequest);
-        Cookie cartCookie = cookieUtils.createCookie("CART_NO", loginRequestDto.getLoginId(), 60 * 60 * 24 * 30);
+        Cookie cartCookie = cookieUtils.createCookie(
+                "CART_NO",
+                loginRequestDto.getLoginId(),
+                60 * 60 * 24 * 30
+        );
 
         servletResponse.addCookie(authCookie);
         servletResponse.addCookie(cartCookie);
@@ -103,7 +111,12 @@ public class CustomAuthenticationManager implements AuthenticationManager {
         List<SimpleGrantedAuthority> authorities = getAuthorities(memberResponseDto);
         log.info("authorities={}", authorities);
 
-        AuthInfo authInfo = new AuthInfo(memberResponseDto, accessToken, memberResponseDto.getRoles(), expiredTime);
+        AuthInfo authInfo = new AuthInfo(
+                memberResponseDto,
+                accessToken,
+                memberResponseDto.getRoles(),
+                expiredTime
+        );
         log.info("authInfo={}", authInfo);
         redisTemplate.opsForHash().put(uuid, JWT_CODE.getValue(), authInfo);
 
@@ -115,12 +128,11 @@ public class CustomAuthenticationManager implements AuthenticationManager {
     }
 
     /**
-     * 로그인 전 사용자가 cart에 담은 상품을 회원의 cart에 추가하기 위한 기능입니다.
-     * 설계 흐름 상 이 클래스에서 cartNo cookie의 value가 회원을 식별할 수 있는 값으로 update 되지 않는다면,
-     * 장바구니 화면으로 이동 시 회원의 장바구니 목록을 볼 수 없어 임시적으로 인증 flow에서 작동하도록 합니다.
-     * 추 후 인증/인가와 관계 없이 migration 예정 입니다.
+     * 로그인 전 사용자가 cart에 담은 상품을 회원의 cart에 추가하기 위한 기능입니다. 설계 흐름 상 이 클래스에서 cartNo cookie의 value가 회원을
+     * 식별할 수 있는 값으로 update 되지 않는다면, 장바구니 화면으로 이동 시 회원의 장바구니 목록을 볼 수 없어 임시적으로 인증 flow에서 작동하도록 합니다. 추
+     * 후 인증/인가와 관계 없이 migration 예정 입니다.
      *
-     * @param loginId 회원의 loginId
+     * @param loginId        회원의 loginId
      * @param servletRequest HttpServletRequest
      */
     private void moveIntoMemberCart(String loginId, HttpServletRequest servletRequest) {
@@ -130,8 +142,11 @@ public class CustomAuthenticationManager implements AuthenticationManager {
             Map<Object, Object> login = redisTemplate.opsForHash().entries(loginId);
 
             cart.keySet().forEach(key -> {
-                int currentQuantity = (int) cart.get(key);
-                login.put(key, ((int) login.getOrDefault(key, 0) + currentQuantity));
+                int currentQuantity = Integer.parseInt(cart.get(key).toString());
+                login.put(
+                        key,
+                        (Integer.parseInt(login.getOrDefault(key, 0).toString()) + currentQuantity)
+                );
             });
 
             redisTemplate.opsForHash().putAll(loginId, login);
@@ -139,8 +154,8 @@ public class CustomAuthenticationManager implements AuthenticationManager {
     }
 
     /**
-     * login 요청 시 올바른 결과 인지 판별 하기 위해 Response Header를 검증 하는 기능 입니다.
-     * 예외 발생 시 CustomFailureHandler가 동작합니다.
+     * login 요청 시 올바른 결과 인지 판별 하기 위해 Response Header를 검증 하는 기능 입니다. 예외 발생 시 CustomFailureHandler가
+     * 동작합니다.
      *
      * @param exchange Auth 서버에 login 요청 시 반환 되는 결과 입니다.
      * @author : 송학현
@@ -148,7 +163,8 @@ public class CustomAuthenticationManager implements AuthenticationManager {
      */
     private void checkValidLoginRequest(ResponseEntity<Void> exchange) {
         log.info("Auth server exchange check={}", exchange);
-        if (!exchange.getHeaders().containsKey(UUID_HEADER) || !exchange.getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
+        if (!exchange.getHeaders().containsKey(UUID_HEADER) || !exchange.getHeaders()
+                .containsKey(HttpHeaders.AUTHORIZATION)) {
             throw new BadCredentialsException("자격 증명 실패");
         }
     }
@@ -179,7 +195,9 @@ public class CustomAuthenticationManager implements AuthenticationManager {
      * @since : 1.0
      */
     private String extractAuthorizationHeader(ResponseEntity<Void> exchange) {
-        String accessToken = Objects.requireNonNull(exchange.getHeaders().get(HttpHeaders.AUTHORIZATION).get(0));
+        String accessToken = Objects.requireNonNull(exchange.getHeaders()
+                .get(HttpHeaders.AUTHORIZATION)
+                .get(0));
         if (Objects.isNull(accessToken)) {
             throw new InvalidHttpHeaderException("Authorization Header is empty");
         }

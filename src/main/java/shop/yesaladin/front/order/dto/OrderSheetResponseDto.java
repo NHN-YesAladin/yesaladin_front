@@ -5,8 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 import shop.yesaladin.front.coupon.dto.MemberCouponSummaryDto;
+import shop.yesaladin.front.member.dto.MemberAddressResponseDto;
 import shop.yesaladin.front.product.dto.ProductOrderResponseDto;
 
 /**
@@ -16,7 +16,6 @@ import shop.yesaladin.front.product.dto.ProductOrderResponseDto;
  * @since 1.0
  */
 @Getter
-@ToString
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -25,7 +24,21 @@ public class OrderSheetResponseDto {
     private List<ProductOrderResponseDto> orderProducts;
     private String name;
     private String phoneNumber;
-    private Long point;
-    private String address;
+    private long point;
+    private List<MemberAddressResponseDto> memberAddress;
     private List<MemberCouponSummaryDto> memberCoupons;
+
+    /**
+     * 회원의 대표 배송지를 반환합니다.
+     *
+     * @return 대표 배송지
+     * @author 최예린
+     * @since 1.0
+     */
+    public MemberAddressResponseDto getDefaultAddress() {
+        return memberAddress.stream()
+                .filter(MemberAddressResponseDto::getIsDefault)
+                .findFirst()
+                .orElse(null);
+    }
 }
