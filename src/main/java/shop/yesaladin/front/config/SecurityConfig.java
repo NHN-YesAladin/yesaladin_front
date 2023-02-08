@@ -15,6 +15,7 @@ import shop.yesaladin.front.auth.CustomLoginProcessingFilter;
 import shop.yesaladin.front.auth.CustomAuthenticationManager;
 import shop.yesaladin.front.auth.CustomFailureHandler;
 import shop.yesaladin.front.auth.CustomLogoutHandler;
+import shop.yesaladin.front.common.utils.CookieUtils;
 import shop.yesaladin.front.member.adapter.MemberAdapter;
 
 /**
@@ -29,6 +30,7 @@ public class SecurityConfig {
 
     private final MemberAdapter memberAdapter;
     private final RedisTemplate<String, Object> redisTemplate;
+    private final CookieUtils cookieUtils;
 
     /**
      * Spring Security의 SecurityFilterChain을 설정하고 Bean으로 등록합니다.
@@ -117,7 +119,7 @@ public class SecurityConfig {
      */
     @Bean
     public CustomAuthenticationManager customAuthenticationManager() {
-        return new CustomAuthenticationManager(memberAdapter, redisTemplate);
+        return new CustomAuthenticationManager(memberAdapter, redisTemplate, cookieUtils);
     }
 
     /**

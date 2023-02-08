@@ -1,10 +1,9 @@
 package shop.yesaladin.front.publish.dto;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 /**
  * 출판사 정보 dto 리스트와 총 갯수

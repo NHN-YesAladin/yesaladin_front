@@ -1,6 +1,7 @@
 package shop.yesaladin.front.category.service.impl;
 
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
+import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.category.dto.CategoryResponseDto;
 import shop.yesaladin.front.category.service.inter.QueryCategoryService;
 import shop.yesaladin.front.common.dto.PageRequestDto;
@@ -29,13 +31,6 @@ import shop.yesaladin.front.config.GatewayConfig;
 @RequiredArgsConstructor
 @Service
 public class QueryCategoryServiceImpl implements QueryCategoryService {
-
-    private static final ParameterizedTypeReference<List<CategoryResponseDto>> CATEGORIES_LIST_TYPE
-            = new ParameterizedTypeReference<>() {
-    };
-    private static final ParameterizedTypeReference<PaginatedResponseDto<CategoryResponseDto>> PAGING_CATEGORIES_TYPE
-            = new ParameterizedTypeReference<>() {
-    };
     private final RestTemplate restTemplate;
     private final GatewayConfig gatewayConfig;
 
@@ -49,14 +44,15 @@ public class QueryCategoryServiceImpl implements QueryCategoryService {
                 .queryParam("cate", "parents")
                 .build();
 
-        ResponseEntity<List<CategoryResponseDto>> responseEntity = restTemplate.exchange(
+        ResponseEntity<ResponseDto<List<CategoryResponseDto>>> responseEntity = restTemplate.exchange(
                 uriComponents.toUri(),
                 HttpMethod.GET,
                 getHttpEntity(),
-                CATEGORIES_LIST_TYPE
+                new ParameterizedTypeReference<>() {
+                }
         );
 
-        return responseEntity.getBody();
+        return Objects.requireNonNull(responseEntity.getBody()).getData();
     }
 
     /**
@@ -77,20 +73,20 @@ public class QueryCategoryServiceImpl implements QueryCategoryService {
                 )
                 .build();
 
-        ResponseEntity<PaginatedResponseDto<CategoryResponseDto>> responseEntity = restTemplate.exchange(
+        ResponseEntity<ResponseDto<PaginatedResponseDto<CategoryResponseDto>>> responseEntity = restTemplate.exchange(
                 uriComponents.toUri(),
                 HttpMethod.GET,
                 getHttpEntity(),
-                PAGING_CATEGORIES_TYPE
+                new ParameterizedTypeReference<>() {
+                }
         );
-        return responseEntity.getBody();
+        return Objects.requireNonNull(responseEntity.getBody()).getData();
     }
 
     private HttpEntity<String> getHttpEntity() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> entity = new HttpEntity<>(headers);
-        return entity;
+        return new HttpEntity<>(headers);
     }
 
 

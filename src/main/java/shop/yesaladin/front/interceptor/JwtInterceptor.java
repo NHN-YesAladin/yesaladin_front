@@ -66,9 +66,6 @@ public class JwtInterceptor implements ClientHttpRequestInterceptor {
             AuthInfo auth = (AuthInfo) redisTemplate.opsForHash().get(uuid, JWT_CODE.getValue());
             if (Objects.nonNull(auth)) {
                 log.info("accessToken={}", auth.getAccessToken());
-                log.info("loginId={}", auth.getLoginId());
-                log.info("authorities={}", auth.getAuthorities());
-                log.info("nickname={}", auth.getNickname());
                 request.getHeaders().setBearerAuth(auth.getAccessToken());
                 request.getHeaders().add(UUID_CODE.getValue(), uuid);
             }
