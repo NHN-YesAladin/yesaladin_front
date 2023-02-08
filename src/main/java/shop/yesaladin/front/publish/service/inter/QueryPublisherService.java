@@ -16,14 +16,6 @@ import java.util.List;
 public interface QueryPublisherService {
 
     /**
-     * 출판사 조회를 받아와 저장한 Dto 입니다.
-     *
-     * @author 이수정
-     * @since 1.0
-     */
-    List<PublisherResponseDto> findAll();
-
-    /**
      * 관리자용 출판사 전체 조회를 요청하여 응답받습니다.
      *
      * @param pageRequestDto Pagination을 위한 Dto

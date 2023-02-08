@@ -91,11 +91,11 @@
                 <td><a class="text-dark" th:text="${product.title}" th:href="|/products/${product.id}|"/></td>
                 <td>
                   <div th:each="author, j : ${product.authors}" style="display: inline">
-                    <p th:text="${author}" style="display: inline"></p>
+                    <p th:text="${author.name}" style="display: inline"></p>
                     <p th:if="${!j.last}" style="display: inline">|</p>
                   </div>
                 </td>
-                <td th:text="${product.publisher}"></td>
+                <td th:text="${product.publisher.name}"></td>
                 <td th:text="${product.publishedDate}"></td>
                 <td th:text="|${#numbers.formatInteger(product.sellingPrice, 1, 'COMMA')}원(${product.discountRate}% 할인)|"></td>
 

@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
+import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.cart.dto.AddToCartDto;
 import shop.yesaladin.front.cart.dto.ViewCartDto;
 import shop.yesaladin.front.common.utils.CookieUtils;
@@ -99,19 +100,19 @@ public class CartWebController {
                     .queryParams(multiValueMap)
                     .build();
 
-            List<ViewCartDto> response = restTemplate.exchange(
+            ResponseDto<List<ViewCartDto>> response = restTemplate.exchange(
                     uri.toUri(),
                     HttpMethod.GET,
                     entity,
-                    new ParameterizedTypeReference<List<ViewCartDto>>() {
+                    new ParameterizedTypeReference<ResponseDto<List<ViewCartDto>>>() {
                     }
             ).getBody();
 
             // 상품 종류에 따른 분류
-            Objects.requireNonNull(response).forEach(product -> {
-                if (product.getIsEbook()) {
+            Objects.requireNonNull(response.getData()).forEach(product -> {
+                if (Boolean.TRUE.equals(product.getIsEbook())) {
                     eBookCart.add(product);
-                } else if (product.getIsSubscribeProduct()) {
+                } else if (Boolean.TRUE.equals(product.getIsSubscribeProduct())) {
                     subscribeCart.add(product);
                 } else {
                     deliveryCart.add(product);
@@ -178,7 +179,7 @@ public class CartWebController {
         // 이전에 저장되어 있던 상품
         log.info("preQuantity = {}", preQuantity);
         int quantity = cartDto.getQuantity();
-        if (Objects.nonNull(preQuantity) && !cartDto.getIsEbook() && !cartDto.getIsSubscriptionAvailable()) {
+        if (Boolean.TRUE.equals(Objects.nonNull(preQuantity) && !cartDto.getIsEbook()) && Boolean.TRUE.equals(!cartDto.getIsSubscriptionAvailable())) {
             quantity += (int) preQuantity;
         }
         log.info("quantity = {}", quantity);
