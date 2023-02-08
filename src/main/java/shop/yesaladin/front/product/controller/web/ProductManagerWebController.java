@@ -36,13 +36,13 @@ public class ProductManagerWebController {
     private final QueryProductTypeService queryProductTypeService;
 
     /**
-     * [GET /products/form] 상품 등록 form view를 반환합니다.
+     * [GET /manager/products/form] 상품 등록 form view를 반환합니다.
      *
      * @return 상품 등록 form
      * @author 이수정
      * @since 1.0
      */
-    @GetMapping("/products/form")
+    @GetMapping("/manager/products/form")
     public String productForm(Model model) {
         List<ProductTypeResponseDto> types = queryProductTypeService.findAll();
 
@@ -59,10 +59,10 @@ public class ProductManagerWebController {
      * @author 이수정
      * @since 1.0
      */
-    @PostMapping("/products")
+    @PostMapping("/manager/products")
     public String register(@ModelAttribute ProductCreateRequestDto createRequestDto)
             throws IOException {
-        long id = commandProductService.register(createRequestDto);
+        commandProductService.register(createRequestDto);
 
         return "redirect:/manager/products";
     }
@@ -97,7 +97,7 @@ public class ProductManagerWebController {
      * @author 이수정
      * @since 1.0
      */
-    @PutMapping("/products/{productId}")
+    @PutMapping("/manager/products/{productId}")
     public String modify(
             @ModelAttribute ProductModifyRequestDto modifyRequestDto,
             @PathVariable long productId
@@ -116,7 +116,7 @@ public class ProductManagerWebController {
      * @author 이수정
      * @since 1.0
      */
-    @PostMapping("/products/{productId}")
+    @PostMapping("/manager/products/{productId}")
     public String softDelete(@PathVariable long productId, HttpServletRequest request) {
         commandProductService.softDelete(productId);
 
@@ -130,7 +130,7 @@ public class ProductManagerWebController {
      * @author 이수정
      * @since 1.0
      */
-    @PostMapping("/products/{productId}/is-sale")
+    @PostMapping("/manager/products/{productId}/is-sale")
     public String changeIsSale(@PathVariable long productId, HttpServletRequest request) {
         commandProductService.changeIsSale(productId);
 
@@ -144,7 +144,7 @@ public class ProductManagerWebController {
      * @author 이수정
      * @since 1.0
      */
-    @PostMapping("/products/{productId}/is-forced-out-of-stock")
+    @PostMapping("/manager/products/{productId}/is-forced-out-of-stock")
     public String changeIsForcedOutOfStock(@PathVariable long productId, HttpServletRequest request) {
         commandProductService.changeIsForcedOutOfStock(productId);
 

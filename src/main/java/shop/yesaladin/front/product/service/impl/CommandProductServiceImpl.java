@@ -2,7 +2,6 @@ package shop.yesaladin.front.product.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -73,7 +72,8 @@ public class CommandProductServiceImpl implements CommandProductService {
                 gatewayConfig.getShopUrl() + "/v1/products",
                 HttpMethod.POST,
                 httpEntity,
-                new ParameterizedTypeReference<ResponseDto<ProductOnlyIdDto>>() {}
+                new ParameterizedTypeReference<ResponseDto<ProductOnlyIdDto>>() {
+                }
         );
         return Objects.requireNonNull(response.getBody()).getData().getId();
     }
@@ -116,7 +116,8 @@ public class CommandProductServiceImpl implements CommandProductService {
                 gatewayConfig.getShopUrl() + "/v1/products/" + productId,
                 HttpMethod.PUT,
                 httpEntity,
-                new ParameterizedTypeReference<ResponseDto<ProductOnlyIdDto>>() {}
+                new ParameterizedTypeReference<ResponseDto<ProductOnlyIdDto>>() {
+                }
         );
     }
 

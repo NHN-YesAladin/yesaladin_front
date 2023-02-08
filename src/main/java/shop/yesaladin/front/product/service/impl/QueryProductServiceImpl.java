@@ -15,10 +15,6 @@ import shop.yesaladin.front.product.dto.ProductDetailResponseDto;
 import shop.yesaladin.front.product.dto.ProductModifyInitDto;
 import shop.yesaladin.front.product.dto.ProductsResponseDto;
 import shop.yesaladin.front.product.service.inter.QueryProductService;
-import shop.yesaladin.front.product.service.inter.QueryProductTypeService;
-import shop.yesaladin.front.publish.service.inter.QueryPublisherService;
-import shop.yesaladin.front.tag.service.inter.QueryTagService;
-import shop.yesaladin.front.writing.service.inter.QueryAuthorService;
 
 import java.net.URI;
 import java.util.Objects;
@@ -58,7 +54,8 @@ public class QueryProductServiceImpl implements QueryProductService {
                 uri,
                 HttpMethod.GET,
                 httpEntity,
-                new ParameterizedTypeReference<ResponseDto<ProductDetailResponseDto>>() {}
+                new ParameterizedTypeReference<ResponseDto<ProductDetailResponseDto>>() {
+                }
         );
         return responseEntity.getBody().getData();
     }
@@ -139,7 +136,8 @@ public class QueryProductServiceImpl implements QueryProductService {
                 uri,
                 HttpMethod.GET,
                 httpEntity,
-                new ParameterizedTypeReference<ResponseDto<ProductModifyInitDto>>() {}
+                new ParameterizedTypeReference<ResponseDto<ProductModifyInitDto>>() {
+                }
         );
         return Objects.requireNonNull(responseEntity.getBody()).getData();
     }

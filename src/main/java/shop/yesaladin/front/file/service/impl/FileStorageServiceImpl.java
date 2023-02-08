@@ -60,7 +60,8 @@ public class FileStorageServiceImpl implements FileStorageService {
                 gatewayConfig.getShopUrl() + "/v1/files/file-upload/" + domainName + "/" + typeName,
                 HttpMethod.POST,
                 httpEntity,
-                new ParameterizedTypeReference<ResponseDto<FileUploadResponseDto>>() {}
+                new ParameterizedTypeReference<ResponseDto<FileUploadResponseDto>>() {
+                }
         );
         return Objects.requireNonNull(response.getBody()).getData();
     }

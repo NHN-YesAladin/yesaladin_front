@@ -46,7 +46,8 @@ public class QueryRelationServiceImpl implements QueryRelationService {
                 uriComponents.toUri(),
                 HttpMethod.GET,
                 getHttpEntity(),
-                new ParameterizedTypeReference<ResponseDto<PaginatedResponseDto<RelationsResponseDto>>>() {}
+                new ParameterizedTypeReference<ResponseDto<PaginatedResponseDto<RelationsResponseDto>>>() {
+                }
         );
         return Objects.requireNonNull(response.getBody()).getData();
     }
