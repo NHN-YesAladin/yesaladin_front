@@ -3,16 +3,16 @@ package shop.yesaladin.front.product.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import shop.yesaladin.common.dto.ResponseDto;
+import shop.yesaladin.front.config.GatewayConfig;
 import shop.yesaladin.front.product.dto.ProductTypeResponseDto;
 import shop.yesaladin.front.product.service.inter.QueryProductTypeService;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 상품 유형 조회 요청을 위한 Service 구현체 입니다.
@@ -26,8 +26,8 @@ public class QueryProductTypeServiceImpl implements QueryProductTypeService {
 
     private final RestTemplate restTemplate;
     private final String PATH = "/v1/product-types";
-    @Value("${yesaladin.gateway.shop}")
-    private String url;
+
+    private final GatewayConfig gatewayConfig;
 
     /**
      * 상품 유형 전체 조회를 요청하여 응답을 받습니다.
@@ -38,13 +38,13 @@ public class QueryProductTypeServiceImpl implements QueryProductTypeService {
      */
     @Override
     public List<ProductTypeResponseDto> findAll() {
-        return restTemplate.exchange(
-                url + PATH,
+        ResponseEntity<ResponseDto<List<ProductTypeResponseDto>>> response = restTemplate.exchange(
+                gatewayConfig.getShopUrl() + PATH,
                 HttpMethod.GET,
                 getHttpEntity(),
-                new ParameterizedTypeReference<List<ProductTypeResponseDto>>() {
-                }
-        ).getBody();
+                new ParameterizedTypeReference<ResponseDto<List<ProductTypeResponseDto>>>() {}
+        );
+        return Objects.requireNonNull(response.getBody()).getData();
     }
 
     /**

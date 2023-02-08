@@ -89,7 +89,7 @@
           </div>
 
           <div class="mb-3">
-            <div class="form-label">E-book 파일 <a th:href="${productModifyInitDto.getEbookFile()}" th:if="${productModifyInitDto.getEbookFile() != null}">[기존의 E-book 파일]</a></div>
+            <div class="form-label">E-book 파일 <a th:href="${productModifyInitDto.getEbookFileUrl()()}" th:if="${productModifyInitDto.getEbookFileUrl() != null}">[기존의 E-book 파일]</a></div>
             <input type="file" name="ebookFile" class="form-control"
                    accept="application/epub+zip, application/pdf, application/vnd.comicbook+zip">
           </div>

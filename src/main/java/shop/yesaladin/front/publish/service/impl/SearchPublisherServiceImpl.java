@@ -13,6 +13,8 @@ import shop.yesaladin.front.config.GatewayConfig;
 import shop.yesaladin.front.publish.dto.SearchPublisherResponseDto;
 import shop.yesaladin.front.publish.service.inter.SearchPublisherService;
 
+import java.util.Objects;
+
 /**
  * 엘라스틱서치 출판사 검색 서비스 구현체
  *
@@ -41,6 +43,6 @@ public class SearchPublisherServiceImpl implements SearchPublisherService {
                 new ParameterizedTypeReference<ResponseDto<SearchPublisherResponseDto>>() {
                 }
         );
-        return result.getBody().getData();
+        return Objects.requireNonNull(result.getBody()).getData();
     }
 }

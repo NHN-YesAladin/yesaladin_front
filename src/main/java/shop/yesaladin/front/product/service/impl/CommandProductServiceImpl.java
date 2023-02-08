@@ -3,10 +3,13 @@ package shop.yesaladin.front.product.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
+import shop.yesaladin.common.dto.ResponseDto;
+import shop.yesaladin.front.config.GatewayConfig;
 import shop.yesaladin.front.file.dto.FileUploadResponseDto;
 import shop.yesaladin.front.file.service.inter.FileStorageService;
 import shop.yesaladin.front.product.dto.*;
@@ -30,8 +33,7 @@ public class CommandProductServiceImpl implements CommandProductService {
 
     private final RestTemplate restTemplate;
 
-    @Value("${yesaladin.gateway.shop}")
-    private String url;
+    private final GatewayConfig gatewayConfig;
 
     /**
      * {@inheritDoc}
@@ -67,14 +69,13 @@ public class CommandProductServiceImpl implements CommandProductService {
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
 
         HttpEntity httpEntity = new HttpEntity(productRequestDto, httpHeaders);
-        ResponseEntity<ProductOnlyIdDto> response = restTemplate.exchange(
-                url + "/v1/products",
+        ResponseEntity<ResponseDto<ProductOnlyIdDto>> response = restTemplate.exchange(
+                gatewayConfig.getShopUrl() + "/v1/products",
                 HttpMethod.POST,
                 httpEntity,
-                ProductOnlyIdDto.class
+                new ParameterizedTypeReference<ResponseDto<ProductOnlyIdDto>>() {}
         );
-
-        return response.getBody().getId();
+        return Objects.requireNonNull(response.getBody()).getData().getId();
     }
 
     /**
@@ -111,11 +112,11 @@ public class CommandProductServiceImpl implements CommandProductService {
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
 
         HttpEntity httpEntity = new HttpEntity(productRequestDto, httpHeaders);
-        ResponseEntity<ProductOnlyIdDto> response = restTemplate.exchange(
-                url + "/v1/products/" + productId,
+        ResponseEntity<ResponseDto<ProductOnlyIdDto>> response = restTemplate.exchange(
+                gatewayConfig.getShopUrl() + "/v1/products/" + productId,
                 HttpMethod.PUT,
                 httpEntity,
-                ProductOnlyIdDto.class
+                new ParameterizedTypeReference<ResponseDto<ProductOnlyIdDto>>() {}
         );
     }
 
@@ -128,7 +129,7 @@ public class CommandProductServiceImpl implements CommandProductService {
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         HttpEntity httpEntity = new HttpEntity(headers);
-        restTemplate.postForEntity(url + "/v1/products/" + productId, httpEntity, Void.class);
+        restTemplate.postForEntity(gatewayConfig.getShopUrl() + "/v1/products/" + productId, httpEntity, Void.class);
     }
 
     /**
@@ -140,7 +141,7 @@ public class CommandProductServiceImpl implements CommandProductService {
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         HttpEntity httpEntity = new HttpEntity(headers);
-        restTemplate.exchange(url + "/v1/products/" + productId + "/is-sale", HttpMethod.POST, httpEntity, Void.class);
+        restTemplate.exchange(gatewayConfig.getShopUrl() + "/v1/products/" + productId + "/is-sale", HttpMethod.POST, httpEntity, Void.class);
     }
 
     /**
@@ -152,7 +153,7 @@ public class CommandProductServiceImpl implements CommandProductService {
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         HttpEntity httpEntity = new HttpEntity(headers);
-        restTemplate.exchange(url + "/v1/products/" + productId + "/is-forced-out-of-stock", HttpMethod.POST, httpEntity, Void.class);
+        restTemplate.exchange(gatewayConfig.getShopUrl() + "/v1/products/" + productId + "/is-forced-out-of-stock", HttpMethod.POST, httpEntity, Void.class);
     }
 
 }
