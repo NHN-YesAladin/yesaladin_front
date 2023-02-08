@@ -203,6 +203,13 @@
                   </td>
                   <td>
                     <div class="d-flex justify-content-center mb-2">
+                      <a th:if="${product.isSubscribeProduct}"
+                         th:href="@{/orders/subscribe-sheets(isbn=${product.isbn}, quantity=${product.quantity})}"
+                         class="btn btn-primary btn-pill" style="width: 70px; height: 30px;">
+                        구독하기
+                      </a>
+                    </div>
+                    <div class="d-flex justify-content-center mb-2">
                       <a th:href="@{/orders/order-sheets(isbn=${product.isbn}, quantity=${product.quantity})}"
                          class="btn btn-primary btn-pill" style="width: 70px; height: 30px;">
                         주문하기
@@ -373,18 +380,6 @@
       </div>
       <!-- 일반 상품 Footer -->
       <div class="card-body">
-        <!-- 선택/ 주문/ 삭제 -->
-        <div class="pt-2">
-          <label class="form-check form-check-inline ms-2">
-            <span class="form-check-label">선택한 상품</span>
-          </label>
-          <button type="submit" form="order" class="btn btn-primary btn-pill">
-            주문하기
-          </button>
-          <a href="#" class="btn btn-light btn-pill">
-            삭제
-          </a>
-        </div>
         <!-- 결제 금액 예상 -->
         <table class="table table-vcenter card-table mt-3">
           <thead>
@@ -427,199 +422,12 @@
           </tbody>
         </table>
       </div>
-
-      <!-- 정기 구독 Body -->
-      <div class="card-body" th:if="${!subscribeCart.isEmpty()}">
-        <!-- 정기구독 상품 -->
-        <div class="mt-5">
-          <!-- 정기구독 Header -->
-          <div style="justify-content: space-between;" class="row">
-            <h2 style="width: 300px;">
-              <em><strong>Yes!Aladin 정기구독</strong></em>
-            </h2>
-            <div style="width: 500px;" class="mx-2">
-              <div class="text-end text-muted">
-                정기구독 상품 구매 시 최소 6개월, 최대 1년 후 자동 정기 결제
-              </div>
-            </div>
-          </div>
-          <!-- 정기구독 Body -->
-          <div>
-            <table class="table table-vcenter my-0" style="width: 100%;">
-              <colgroup>
-                <col style="width: 40px;">
-                <col style="width: 100px;">
-                <col>
-                <col style="width: 70px;">
-                <col style="width: 120px;">
-                <col style="width: 90px;">
-              </colgroup>
-              <thead>
-              <tr>
-                <th colspan="3" scope="col">
-                  <div class="d-flex justify-content-center">
-                    상품정보
-                  </div>
-                </th>
-                <th scope="col">
-                  <div class="d-flex justify-content-center">
-                    수량
-                  </div>
-                </th>
-                <th scope="col">
-                  <div class="d-flex justify-content-center">
-                    상품금액
-                  </div>
-                </th>
-                <th scope="col">
-                  <div class="d-flex justify-content-center">
-                    주문
-                  </div>
-                </th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr th:each="product : ${subscribeCart}">
-                <td>
-                  <input type="hidden" name="isbn" th:value="${product.isbn}">
-                </td>
-                <td>
-                  <a th:href="@{'/products/' + ${product.id}}" target="_new">
-                    <img th:src="${product.getThumbnailFileUrl()}" alt="">
-                  </a>
-                </td>
-                <td>
-                  <div>
-                    <a th:href="@{'/products/' + ${product.id}}"
-                       th:text="${'[정기구독] ' + product.getTitle()}" target="_blank"></a>
-                  </div>
-                  <div>
-                      <span><del
-                          th:text="${#numbers.formatInteger(product.getActualPrice(), 1, 'COMMA')} + '원'"></del></span>
-                    <span><em
-                        th:text="${#numbers.formatInteger(product.getSellingPrice(), 1, 'COMMA')}"></em>원</span>
-                    <span
-                        th:text="'(' + ${#numbers.formatInteger(product.getDiscountRate(), 1, 'COMMA')} + '% 할인)'"></span>
-                    <span class="ms-2">
-                        <span class="badge bg-blue-lt">P</span>
-                        <span
-                            th:id="'product-point-price-' + ${product.getId()}"
-                            th:text="${#numbers.formatInteger(product.getPointPrice(), 1, 'COMMA')} + '원'"></span>
-                      </span>
-                  </div>
-                </td>
-                <td>
-                  <div class="d-flex justify-content-center mb-2">
-                    <div class="d-flex justify-content-center mb-2">
-                        <span>
-                          <input class="form-control" th:id="'quantity' + ${product.id}"
-                                 th:value="${product.getQuantity()}" min="1" maxlength="4"
-                                 type="number" style="width: 60px; height: 30px;">
-                          <input type="hidden" th:id="'hidden-quantity-' + ${product.getId()}"
-                                 name="quantity" th:value="${product.getQuantity()}">
-                        </span>
-                    </div>
-                    <div class="d-flex justify-content-center">
-                      <a href="#" class="btn btn-outline-primary" style="height: 20px"
-                         th:onclick="|modifyQuantity(${product.getId()})|">
-                        변경
-                      </a>
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <div class="d-flex justify-content-center">
-                    <strong th:id="'product-total-price-' + ${product.getId()}"
-                            th:text="${#numbers.formatInteger(product.getSellingPrice(), 1, 'COMMA')} + '원'"></strong>
-                  </div>
-                </td>
-                <td>
-                  <div class="d-flex justify-content-center mb-2">
-                    <a th:href="@{/orders/subscribe-sheets(isbn=${product.isbn}, quantity=${product.quantity})}"
-                       class="btn btn-primary btn-pill" style="width: 70px; height: 30px;">
-                      구독하기
-                    </a>
-                  </div>
-                  <div class="d-flex justify-content-center">
-                    <button type="button" class="btn btn-light btn-pill"
-                            th:onclick="|deleteInCart(${product.getId()})|"
-                            style="width: 70px; height: 30px;">
-                      삭제
-                    </button>
-                  </div>
-                </td>
-              </tr>
-              </tbody>
-              <tfoot>
-              <tr>
-                <td colspan="6">
-                  <div class="text-end px-1">
-                    Yes!Aladin 정기구독 상품 총 금액 :<strong
-                      id="total-amount-subscription-product-cart">0원</strong>
-                    <span class="mx-2">|</span>
-                    YES!Aladin 포인트 총 적립액 :<strong
-                      id="total-point-subscription-product-cart">0원</strong>
-                  </div>
-                </td>
-              </tr>
-              </tfoot>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <!-- 정기 구독 Footer : 필요없다고 생각(주무은 무조건 단건 주문 이기 때문) 제거 요망 -->
-      <div class="card-body" th:if="${subscribeCart.size() > 0}">
-        <!-- 정기 구독 합계 예상 -->
-        <table class="table table-vcenter card-table mt-3">
-          <thead>
-          <tr>
-            <th scope="col" style="font-size: 10pt; ">
-              <div class="d-flex justify-content-center">
-                총 상품금액
-              </div>
-            </th>
-            <th></th>
-            <th scope="col" class="saleCol" style="font-size: 10pt;">
-              <div class="d-flex justify-content-center">
-                총 할인금액
-              </div>
-            </th>
-            <th></th>
-            <th scope="col" class="priceCol lastCol" style="font-size: 10pt;">
-              <div class="d-flex justify-content-center">
-                최종 결제금액
-              </div>
-            </th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr>
-            <td style="font-size: 15pt;">
-              <em class="d-flex justify-content-center" id="all-subscription-product-amount">0원</em>
-            </td>
-            <td style="font-size: 15pt;">
-              <em class="icon_settle ico_settle_minus d-flex justify-content-center">-</em>
-            </td>
-            <td class="saleCol" style="font-size: 15pt;"><em class="d-flex justify-content-center">0원</em>
-            </td>
-            <td style="font-size: 15pt;">
-              <em class="icon_settle ico_settle_equal d-flex justify-content-center">=</em>
-            </td>
-            <td class="priceCol lastCol" style="font-size: 15pt;"><em
-                class="yes_b d-flex justify-content-center"
-                id="all-subscription-product-pay">0원</em></td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
     </div>
   </div>
 
   <!-- TODO 4 : footer -->
   <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
 
-</div>
 </div>
 <script>
   function deleteInCart(id) {
