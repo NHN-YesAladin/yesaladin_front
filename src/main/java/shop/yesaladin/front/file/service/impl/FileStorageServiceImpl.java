@@ -2,6 +2,7 @@ package shop.yesaladin.front.file.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -11,12 +12,14 @@ import org.springframework.web.client.RequestCallback;
 import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
+import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.config.GatewayConfig;
 import shop.yesaladin.front.file.dto.FileUploadResponseDto;
 import shop.yesaladin.front.file.service.inter.FileStorageService;
 import shop.yesaladin.front.file.service.inter.StorageAuthService;
 
 import java.io.IOException;
+import java.util.Objects;
 
 /**
  * 파일 업로드/다운로드를 요청하는 Service 구현체 입니다.
@@ -53,14 +56,14 @@ public class FileStorageServiceImpl implements FileStorageService {
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(body, headers);
 
-        ResponseEntity<FileUploadResponseDto> response = restTemplate.exchange(
+        ResponseEntity<ResponseDto<FileUploadResponseDto>> response = restTemplate.exchange(
                 gatewayConfig.getShopUrl() + "/v1/files/file-upload/" + domainName + "/" + typeName,
                 HttpMethod.POST,
                 httpEntity,
-                FileUploadResponseDto.class
+                new ParameterizedTypeReference<ResponseDto<FileUploadResponseDto>>() {
+                }
         );
-
-        return response.getBody();
+        return Objects.requireNonNull(response.getBody()).getData();
     }
 
     /**

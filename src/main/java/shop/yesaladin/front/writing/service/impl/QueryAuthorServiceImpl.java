@@ -7,6 +7,7 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.common.dto.PageRequestDto;
 import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.writing.dto.AuthorResponseDto;
@@ -15,6 +16,7 @@ import shop.yesaladin.front.writing.service.inter.QueryAuthorService;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 저자 조회 요청을 위한 service 구현체 입니다.
@@ -59,15 +61,15 @@ public class QueryAuthorServiceImpl implements QueryAuthorService {
                 .build()
                 .toUri();
 
-        ResponseEntity<PaginatedResponseDto<AuthorsResponseDto>> authors = restTemplate.exchange(
+        ResponseEntity<ResponseDto<PaginatedResponseDto<AuthorsResponseDto>>> authors = restTemplate.exchange(
                 uri,
                 HttpMethod.GET,
                 getHttpEntity(),
-                new ParameterizedTypeReference<PaginatedResponseDto<AuthorsResponseDto>>() {
+                new ParameterizedTypeReference<ResponseDto<PaginatedResponseDto<AuthorsResponseDto>>>() {
                 }
         );
 
-        return authors.getBody();
+        return Objects.requireNonNull(authors.getBody()).getData();
     }
 
     /**

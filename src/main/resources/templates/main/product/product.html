@@ -56,17 +56,17 @@
                 <form id="product" method="get">
                 <div class="card-header">
                     <div class="card-title">
-                        <div th:if="${productDetailResponseDto.getIsEbook()} == true">
-                            <h2 class="badge bg-azure-lt">E-Book</h2>
+                        <div>
+                            <h2 class="badge bg-purple-lt" th:if="${productDetailResponseDto.getIsEbook()} == true" style="display: inline">E-Book</h2>
+                            <h2 class="badge bg-green-lt" th:if="${productDetailResponseDto.getIsSubscriptionAvailable()} == true">구독상품</h2>
                         </div>
                         <h1 th:text="${productDetailResponseDto.getTitle()}"></h1>
                         <h3>저자 :
                             <div th:each="author, j : ${productDetailResponseDto.getAuthors()}" style="display: inline">
-                                <p th:text="${author}" style="display: inline"></p>
+                                <p th:text="${author.name}" style="display: inline"></p>
                                 <p th:if="${!j.last}" style="display: inline">,</p>
                             </div>
-                            | 출판사 : <p th:text="${productDetailResponseDto.getPublisher()}" style="display: inline"></p>
-                        </h3>
+                            | 출판사 : <p th:text="${productDetailResponseDto.getPublisher().name}" style="display: inline"></p></h3>
                     </div>
                 </div>
 
@@ -251,6 +251,10 @@
                                 <p th:text="${category.parentName} + ' >> ' + ${category.name}"></p>
                             </div>
                         </div>
+                        <div class="col-12" th:if="${productDetailResponseDto.getTags().size() != 0}">
+                            <h2>태그</h2>
+                            <span class="badge bg-azure-lt" th:each="tag : ${productDetailResponseDto.getTags()}" th:text="|#${tag.name}|" style="margin: 2px"></span>
+                        </div>
                         <div class="col-12">
                             <h2>목차</h2>
                             <p th:text="${productDetailResponseDto.getContents()}"></p>
@@ -287,7 +291,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-link link-secondary me-auto" data-bs-dismiss="modal">아니요</button>
-                <a href="/cart" class="btn btn-success" data-bs-dismiss="modal">예, 확인하겠습니다.</a>
+                <a href="/cart" class="btn btn-success">예, 확인하겠습니다.</a>
             </div>
         </div>
     </div>
@@ -383,8 +387,9 @@
         })
             .then(res => res.json())
             .then(response => {
-                if (page === 1 && response.dataList.length === 0) {
+                if (page === 1 && response.dataList == null) {
                     document.getElementById('relation-div').classList.add('d-none');
+                    return;
                 }
 
                 while (relationTable.firstChild) {
