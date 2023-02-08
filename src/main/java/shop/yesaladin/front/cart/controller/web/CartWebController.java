@@ -61,9 +61,7 @@ public class CartWebController {
     ) throws IOException, URISyntaxException {
         // eBook 상품 = eBook 파일 존재
         List<ViewCartDto> eBookCart = new ArrayList<>();
-        // 구독 상품 = eBook 파일 존재 안함 && 구독 가능 상품
-        List<ViewCartDto> subscribeCart = new ArrayList<>();
-        // 배송 상품 = eBook 파일 존재 안함 && 구독 불가능 상품
+        // 배송 상품 = eBook 파일 존재 안함 && 구독 불가능 상품 || 구독 상품 = eBook 파일 존재 안함 && 구독 가능 상품
         List<ViewCartDto> deliveryCart = new ArrayList<>();
 
         // CART_NO 쿠키가 존재하지 않는 경우 = 장바구니에 넣은 물건이 없는 경우
@@ -98,11 +96,9 @@ public class CartWebController {
             ).getBody();
 
             // 상품 종류에 따른 분류
-            Objects.requireNonNull(response.getData()).forEach(product -> {
+            Objects.requireNonNull(Objects.requireNonNull(response).getData()).forEach(product -> {
                 if (Boolean.TRUE.equals(product.getIsEbook())) {
                     eBookCart.add(product);
-                } else if (Boolean.TRUE.equals(product.getIsSubscribeProduct())) {
-                    subscribeCart.add(product);
                 } else {
                     deliveryCart.add(product);
                 }
@@ -110,7 +106,6 @@ public class CartWebController {
         }
 
         model.addAttribute("eBookCart", eBookCart);
-        model.addAttribute("subscribeCart", subscribeCart);
         model.addAttribute("deliveryCart", deliveryCart);
 
         return "main/cart/cart";
