@@ -4,6 +4,8 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import shop.yesaladin.front.coupon.dto.MemberCouponSummaryDto;
 import shop.yesaladin.front.product.dto.ProductOrderResponseDto;
 
@@ -14,6 +16,8 @@ import shop.yesaladin.front.product.dto.ProductOrderResponseDto;
  * @since 1.0
  */
 @Getter
+@ToString
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderSheetResponseDto {

@@ -53,7 +53,7 @@
     <div class="page-body">
         <div class="container">
             <div class="card">
-                <form method="get" name="products">
+                <form id="product" method="get">
                 <div class="card-header">
                     <div class="card-title">
                         <div>
@@ -150,7 +150,9 @@
                                 </div>
                                 <!-- 정기구독 불가능 -->
                                 <div class="row px-2 py-1" th:if="${!productDetailResponseDto.isSubscriptionAvailable}">
-                                    <button type="submit" class="btn btn-facebook w-100">
+                                    <button type="submit" form="product"
+                                            onclick="form.action='/orders/order-sheets'"
+                                            class="btn btn-facebook w-100">
                                         <svg xmlns="http://www.w3.org/2000/svg"
                                              class="icon icon-tabler icon-tabler-brand-cashapp" width="24" height="24"
                                              viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
@@ -164,8 +166,8 @@
                                 <!-- 정기구독 가능 -->
                                 <div class="row p-1" th:if="${productDetailResponseDto.getIsSubscriptionAvailable()}">
                                     <div class="col-6 px-1">
-                                        <button type="submit" class="btn btn-facebook w-100"
-                                                onclick="javascript: form.action='/orders/order-sheets'" >
+                                        <button type="submit" form="product" class="btn btn-facebook w-100"
+                                                onclick="form.action='/orders/order-sheets'" >
                                             <svg xmlns="http://www.w3.org/2000/svg"
                                                  class="icon icon-tabler icon-tabler-brand-cashapp" width="24" height="24"
                                                  viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
@@ -178,7 +180,7 @@
                                     </div>
                                     <div class="col-6 px-1">
                                         <button type="submit" class="btn btn-facebook w-100"
-                                           onclick="javascript: form.action='/orders/subscribe-sheets'">
+                                           onclick="form.action='/orders/subscribe-sheets'">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-stats" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                                                 <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4"></path>
