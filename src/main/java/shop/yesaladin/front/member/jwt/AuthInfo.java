@@ -22,9 +22,6 @@ import shop.yesaladin.front.member.dto.MemberResponseDto;
 @AllArgsConstructor
 public class AuthInfo implements Serializable {
 
-    private Long id;
-    private String name;
-    private String nickname;
     private String loginId;
     private String email;
     private String accessToken;
@@ -37,9 +34,6 @@ public class AuthInfo implements Serializable {
             List<String> authorities,
             String expiredTime
     ) {
-        this.id = memberResponseDto.getId();
-        this.name = memberResponseDto.getName();
-        this.nickname = memberResponseDto.getNickname();
         this.loginId = memberResponseDto.getLoginId();
         this.email = memberResponseDto.getEmail();
         this.accessToken = accessToken;
