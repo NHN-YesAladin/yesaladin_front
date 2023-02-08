@@ -163,7 +163,7 @@
                 <td>
                   <div>
                     <a th:href="@{'/products/' + ${product.getId()}}"
-                       th:text="${product.getIsSubscribeProduct() ? '[구독상품] ' + product.getTitle() : '[도서 ] ' + product.getTitle()}" target="_blank"></a>
+                       th:text="${'[도서 ] ' + product.getTitle()}" target="_blank"></a>
                   </div>
                   <div>
                       <span><del
@@ -241,6 +241,7 @@
             </table>
           </div>
         </div>
+
         <!-- eBook -->
         <div class="mt-5" th:if="${eBookCart.size() > 0}">
           <!-- eBook Header -->
@@ -377,6 +378,7 @@
             </div>
           </div>
         </form>
+        <div th:replace="~{common/fragments/alert :: custom-alert}"></div>
       </div>
       <div class="card-footer">
         <!-- 결제 금액 예상 -->
@@ -438,6 +440,11 @@
 
   function modifyQuantity(id) {
     const quantity = document.getElementById('quantity' + id).value;
+    if (quantity <= 0) {
+      writeContentToAlert("0 이하의 수량으로 변경할 수 없습니다.");
+      document.getElementById('quantity' + id).value = document.getElementById('hidden-quantity-' + id).value;
+      return;
+    }
 
     fetch('/cart/' + id, {
       method: "PUT",
