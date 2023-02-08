@@ -116,6 +116,8 @@ public abstract class Oauth2Service {
 
     /**
      * OAuth2 로그인시 YesAladin 자사 회원인지 판별하기 위한 기능입니다.
+     * OAuth2 Provider에서 제공하는 사용자 정보들 중 email은 nullable하기 때문에 이 값이 없다면 제공 받은 정보 중 고유한 값을 기준 으로
+     * 자사 email을 붙여 자사 회원으로 등록되어 있는지 판단 후 해당 email을 기준으로 인증 처리를 하고자 합니다.
      *
      * @param userInfo OAuth2에서 제공 받은 사용자 정보
      * @param provider OAuth2 provider의 종류 입니다.
