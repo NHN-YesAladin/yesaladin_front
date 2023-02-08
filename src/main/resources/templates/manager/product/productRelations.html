@@ -160,8 +160,18 @@
                 <div class="row mb-3 align-items-end">
                     <div class="col">
                         <label class="form-label">[<d id="modal-register-product-base" class="d-inline"></d>]와 연관관계를 맺을 상품</label>
-                        <input type="text" class="form-control" id="relation-target-id">
+                        <input type="text" class="form-control" id="input-title" th:attr="product-id=${product.getId()}">
                     </div>
+                    <div class="col-auto">
+                        <a href="#" class="btn btn-icon" aria-label="Button" id="search-button">
+                            <!-- Download SVG icon from http://tabler-icons.io/i/search -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
+                        </a>
+                    </div>
+                </div>
+                <div id="search-result" style="display: none">
+                    <label id="search-result-label" class="form-label"></label>
+                    <select id="relation-target-id" class="form-select" aria-label="select example"></select>
                 </div>
             </div>
             <div class="modal-footer">
@@ -233,8 +243,41 @@
                 location.reload();
             });
     })
+</script>
 
+<script>
+    const input = document.getElementById('input-title')
+    const searchResult = document.getElementById('search-result')
+    const searchResultLabel = document.getElementById('search-result-label')
+    const searchResultSelect = document.getElementById('relation-target-id')
+    document.getElementById('search-button').addEventListener('click', function() {
+        const productId = input.getAttribute('product-id').toString();
+        const url = '/manager/products/' +  productId  +'/relations?title='+input.value;
 
+        if (input.value.length === 0) {
+            alert('검색할 상품의 제목을 입력해주세요.')
+            return
+        }
+        fetch(url, {
+            method: 'GET'
+        })
+        .then((res) => res.json())
+        .then(function (data) {
+            searchResult.style.display = 'block'
+            initSelect()
+            searchResultLabel.innerText = input.value + " 검색 결과, 총 " + data.totalDataCount + "개"
+            data.dataList.forEach(function (dto) {
+                const option = document.createElement('option')
+                option.value = dto.id
+                option.text = dto.title + '(' + dto.authors[0] + ', ' + dto.publisher + ')';
+                searchResultSelect.add(option, null)
+            })
+        })
+    })
+
+    function initSelect() {
+        searchResultSelect.options.length = 0;
+    }
 </script>
 </body>
 </html>
