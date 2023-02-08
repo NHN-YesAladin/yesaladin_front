@@ -1,12 +1,9 @@
 package shop.yesaladin.front.product.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import shop.yesaladin.front.category.dto.CategoryResponseDto;
-import shop.yesaladin.front.publish.dto.PublishersResponseDto;
-import shop.yesaladin.front.tag.dto.TagsResponseDto;
+import shop.yesaladin.front.publish.dto.PublisherResponseDto;
+import shop.yesaladin.front.tag.dto.TagResponseDto;
 import shop.yesaladin.front.writing.dto.AuthorsResponseDto;
 
 import java.util.List;
@@ -19,9 +16,10 @@ import java.util.List;
  */
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductModifyInitDto {
+public class ProductModifyDto {
 
     // 상품 ISBN
     private String isbn;
@@ -41,14 +39,14 @@ public class ProductModifyInitDto {
     private List<AuthorsResponseDto> authors;
 
     // 출판사
-    private PublishersResponseDto publisher;
+    private PublisherResponseDto publisher;
     private String publishedDate;
 
     // 상품 유형
     private String productTypeCode;
 
     // 상품 태그
-    private List<TagsResponseDto> tags;
+    private List<TagResponseDto> tags;
 
     // 정가
     private long actualPrice;
@@ -74,5 +72,4 @@ public class ProductModifyInitDto {
 
     // 카테고리
     private List<CategoryResponseDto> categories;
-
 }

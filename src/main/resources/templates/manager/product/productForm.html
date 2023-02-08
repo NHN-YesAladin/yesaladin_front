@@ -42,7 +42,7 @@
   <!-- TODO 3: BODY -->
   <div class="page-body">
     <div class="container">
-      <form class="card product-form" action="/products" method="post"
+      <form class="card product-form" action="/manager/products" method="post"
             enctype="multipart/form-data">
 
         <div class="card-header">
@@ -85,9 +85,9 @@
             <input type="hidden" id="description" name="description">
           </div>
 
-          <div class="mb-3">
+          <div class="mb-3" id="ebook-file-form">
             <div class="form-label">E-book 파일</div>
-            <input type="file" name="ebookFile" class="form-control"
+            <input type="file" name="ebookFile" class="form-control" id="ebook-file"
                    accept="application/epub+zip, application/pdf, application/vnd.comicbook+zip">
           </div>
 
@@ -228,7 +228,7 @@
             </div>
           </div>
 
-          <div class="mb-3">
+          <div class="mb-3" id="subscribe-form">
             <label class="form-check form-switch">
               <input class="form-check-input" name="isSubscriptionAvailable" value="false"
                      id="check-subscribe"
@@ -454,22 +454,29 @@
 <div class="d-none" id="front-server-url"
      th:text="${@environment.getProperty('yesaladin.front.url')}"></div>
 <script>
+  document.getElementById('ebook-file').addEventListener('change', () => {
+    document.getElementById('subscribe-form').classList.add('d-none');
+  });
+
   function changeDisplay(target) {
     let element = document.getElementById(target);
     if (element.style.display === 'none') {
       element.style.display = 'block';
+      document.getElementById('ebook-file-form').classList.add('d-none');
     } else {
       element.style.display = 'none';
+      document.getElementById('ebook-file-form').classList.remove('d-none');
     }
-
   }
 
   function changeValue(target) {
     let element = document.getElementById(target);
     if (element.getAttribute('value') === 'false') {
       element.setAttribute('value', 'true');
+      document.getElementById('ebook-file-form').classList.add('d-none');
     } else {
-      element.setAttribute('value', 'false')
+      element.setAttribute('value', 'false');
+      document.getElementById('ebook-file-form').classList.remove('d-none');
     }
     console.log('res: ' + element.getAttribute('value'));
   }

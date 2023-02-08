@@ -7,6 +7,7 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.common.dto.PageRequestDto;
 import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.tag.dto.TagResponseDto;
@@ -15,6 +16,7 @@ import shop.yesaladin.front.tag.service.inter.QueryTagService;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 태그 조회 요청을 위한 service 구현체 입니다.
@@ -59,15 +61,14 @@ public class QueryTagServiceImpl implements QueryTagService {
                 .build()
                 .toUri();
 
-        ResponseEntity<PaginatedResponseDto<TagsResponseDto>> tags = restTemplate.exchange(
+        ResponseEntity<ResponseDto<PaginatedResponseDto<TagsResponseDto>>> tags = restTemplate.exchange(
                 uri,
                 HttpMethod.GET,
                 getHttpEntity(),
-                new ParameterizedTypeReference<PaginatedResponseDto<TagsResponseDto>>() {
+                new ParameterizedTypeReference<ResponseDto<PaginatedResponseDto<TagsResponseDto>>>() {
                 }
         );
-
-        return tags.getBody();
+        return Objects.requireNonNull(tags.getBody()).getData();
     }
 
     /**
