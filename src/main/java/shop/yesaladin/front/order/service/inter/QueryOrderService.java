@@ -13,7 +13,7 @@ import shop.yesaladin.front.order.dto.OrderSummaryResponseDto;
  * 주문 조회 서비스 인터페이스
  *
  * @author 배수한
- * @author
+ * @author 최예린
  * @since 1.0
  */
 public interface QueryOrderService {
@@ -33,11 +33,14 @@ public interface QueryOrderService {
     /**
      * 주문을 하기 위해 주문서에 필요한 데이터를 조회합니다.
      *
-     * @param isbn     상품 isbn 리스트
-     * @param quantity 상품 수량 리스트
+     * @param isbnList     상품 isbn 리스트
+     * @param quantityList 상품 수량 리스트
      * @return 주문서에 필요한 데이터
      * @author 최예린
      * @since 1.0
      */
-    ResponseDto<OrderSheetResponseDto> getOrderSheetData(List<String> isbn, List<String> quantity);
+    ResponseDto<OrderSheetResponseDto> getOrderSheetData(
+            List<String> isbnList,
+            List<String> quantityList
+    );
 }

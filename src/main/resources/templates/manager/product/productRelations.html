@@ -76,10 +76,10 @@
                             <div class="card-body">
                                 <h3 th:text="|제목 : ${product.getTitle()}|"></h3>
                                 저자 : <div th:each="author, i : ${product.authors}" style="display: inline">
-                                    <p th:text="${author}" style="display: inline"></p>
+                                    <p th:text="${author.name}" style="display: inline"></p>
                                     <p th:if="${!i.last}" style="display: inline">|</p>
                                 </div><br>
-                                <p th:text="|출판사 : ${product.getPublisher()}|" style="display:inline;"></p>
+                                <p th:text="|출판사 : ${product.getPublisher().name}|" style="display:inline;"></p>
                                 <p th:text="|출판일 : ${product.getPublishedDate()}|"></p>
                             </div>
                         </div>

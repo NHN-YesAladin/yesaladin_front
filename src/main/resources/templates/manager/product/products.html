@@ -44,7 +44,7 @@
         </div>
         <div class="col-auto ms-auto d-print-none">
           <div class="btn-list">
-            <a th:href="@{/products/form}" class="btn btn-primary d-none d-sm-inline-block">
+            <a th:href="@{/manager/products/form}" class="btn btn-primary d-none d-sm-inline-block">
               <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
               <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
               상품 등록
@@ -88,14 +88,14 @@
             <tbody>
               <tr th:each="product, i : ${products}">
                 <td class="text-center"><span class="text-muted" th:text="${i.count}"></span></td>
-                <td><a class="text-dark" th:text="${product.title}" th:href="|/products/${product.id}|"/></td>
+                <td><a class="text-dark" th:text="${product.title}" th:href="|/manager/products/${product.id}|"/></td>
                 <td>
                   <div th:each="author, j : ${product.authors}" style="display: inline">
-                    <p th:text="${author}" style="display: inline"></p>
+                    <p th:text="${author.name}" style="display: inline"></p>
                     <p th:if="${!j.last}" style="display: inline">|</p>
                   </div>
                 </td>
-                <td th:text="${product.publisher}"></td>
+                <td th:text="${product.publisher.name}"></td>
                 <td th:text="${product.publishedDate}"></td>
                 <td th:text="|${#numbers.formatInteger(product.sellingPrice, 1, 'COMMA')}원(${product.discountRate}% 할인)|"></td>
 
@@ -194,7 +194,7 @@
 
     const deleteButton = document.getElementById('modal-product-delete');
     deleteButton.addEventListener('click', function (event) {
-      fetch(location.origin.toString() + "/products/" + titleId.value, {
+      fetch(location.origin.toString() + "/manager/products/" + titleId.value, {
         method: "POST"
       })
       .then(res => window.location.reload())
@@ -204,13 +204,13 @@
     });
 
     function changeIsSale(id) {
-      fetch(location.origin.toString() + '/products/' + id + "/is-sale", {
+      fetch(location.origin.toString() + '/manager/products/' + id + "/is-sale", {
         method: "POST"
       }).then(res => window.location.reload());
     }
 
     function changeIsForcedOutOfStock(id) {
-      fetch(location.origin.toString() + '/products/' + id + "/is-forced-out-of-stock", {
+      fetch(location.origin.toString() + '/manager/products/' + id + "/is-forced-out-of-stock", {
         method: "POST"
       }).then(res => window.location.reload());
     }

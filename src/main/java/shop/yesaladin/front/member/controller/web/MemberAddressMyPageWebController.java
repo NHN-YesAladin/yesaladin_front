@@ -1,17 +1,17 @@
 package shop.yesaladin.front.member.controller.web;
 
-import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import shop.yesaladin.front.member.dto.MemberAddressCreateRequestDto;
+import shop.yesaladin.front.member.dto.MemberAddressRequestDto;
 import shop.yesaladin.front.member.dto.MemberAddressResponseDto;
 import shop.yesaladin.front.member.service.inter.CommandMemberAddressService;
 import shop.yesaladin.front.member.service.inter.QueryMemberAddressService;
@@ -35,7 +35,8 @@ public class MemberAddressMyPageWebController {
      */
     @GetMapping
     public String address(Model model) {
-        List<MemberAddressResponseDto> data = memberAddressQueryService.getMemberAddresses();
+        List<MemberAddressResponseDto> data = memberAddressQueryService.getMemberAddresses()
+                .getData();
 
         model.addAttribute("data", data);
 
@@ -51,10 +52,11 @@ public class MemberAddressMyPageWebController {
      * @since 1.0
      */
     @PostMapping
-    public String registerAddress(MemberAddressCreateRequestDto request) {
-        log.info("배송지 등록 요청 : {}/ {}", request.getAddress(), request.getIsDefault());
-
-        memberAddressCommandService.createMemberAddress(request);
+    public String registerAddress(
+            @ModelAttribute MemberAddressRequestDto request
+    ) {
+        log.warn("{}", request);
+        memberAddressCommandService.createMemberAddress(request.toCreateRequestDto());
 
         return "mypage/member/address";
     }
@@ -91,21 +93,5 @@ public class MemberAddressMyPageWebController {
         memberAddressCommandService.deleteAddress(addressId);
 
         return "redirect:/mypage/member/address";
-    }
-
-    /**
-     * 회원 배송지 조회 테스트 용입니다.
-     */
-    @GetMapping("/test")
-    public String addressTest(Model model) {
-        List<MemberAddressResponseDto> data = new ArrayList<>();
-
-        data.add(new MemberAddressResponseDto(0L, "address", true, "test"));
-        for (int i = 0; i < 5; i++) {
-            data.add(new MemberAddressResponseDto(i + 1L, "address", false, "test"));
-        }
-        model.addAttribute("data", data);
-
-        return "mypage/member/address";
     }
 }

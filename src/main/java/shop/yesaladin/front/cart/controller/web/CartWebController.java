@@ -1,15 +1,5 @@
 package shop.yesaladin.front.cart.controller.web;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
@@ -22,22 +12,22 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
+import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.cart.dto.AddToCartDto;
 import shop.yesaladin.front.cart.dto.ViewCartDto;
 import shop.yesaladin.front.common.utils.CookieUtils;
 import shop.yesaladin.front.config.GatewayConfig;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 장바구니 추가 관련 페이지를 위한 Controller 입니다.
@@ -99,19 +89,19 @@ public class CartWebController {
                     .queryParams(multiValueMap)
                     .build();
 
-            List<ViewCartDto> response = restTemplate.exchange(
+            ResponseDto<List<ViewCartDto>> response = restTemplate.exchange(
                     uri.toUri(),
                     HttpMethod.GET,
                     entity,
-                    new ParameterizedTypeReference<List<ViewCartDto>>() {
+                    new ParameterizedTypeReference<ResponseDto<List<ViewCartDto>>>() {
                     }
             ).getBody();
 
             // 상품 종류에 따른 분류
-            Objects.requireNonNull(response).forEach(product -> {
-                if (product.getIsEbook()) {
+            Objects.requireNonNull(response.getData()).forEach(product -> {
+                if (Boolean.TRUE.equals(product.getIsEbook())) {
                     eBookCart.add(product);
-                } else if (product.getIsSubscribeProduct()) {
+                } else if (Boolean.TRUE.equals(product.getIsSubscribeProduct())) {
                     subscribeCart.add(product);
                 } else {
                     deliveryCart.add(product);
@@ -178,8 +168,8 @@ public class CartWebController {
         // 이전에 저장되어 있던 상품
         log.info("preQuantity = {}", preQuantity);
         int quantity = cartDto.getQuantity();
-        if (Objects.nonNull(preQuantity) && !cartDto.getIsEbook() && !cartDto.getIsSubscriptionAvailable()) {
-            quantity += (int) preQuantity;
+        if (Boolean.TRUE.equals(Objects.nonNull(preQuantity) && !cartDto.getIsEbook()) && Boolean.TRUE.equals(!cartDto.getIsSubscriptionAvailable())) {
+            quantity += Integer.parseInt((String) preQuantity);
         }
         log.info("quantity = {}", quantity);
         redisTemplate.opsForHash().put(cookie.getValue(), cartDto.getId(), quantity);

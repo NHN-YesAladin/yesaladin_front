@@ -1,20 +1,20 @@
 package shop.yesaladin.front.publish.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.common.dto.PageRequestDto;
 import shop.yesaladin.front.common.dto.PaginatedResponseDto;
-import shop.yesaladin.front.publish.dto.PublisherResponseDto;
+import shop.yesaladin.front.config.GatewayConfig;
 import shop.yesaladin.front.publish.dto.PublishersResponseDto;
 import shop.yesaladin.front.publish.service.inter.QueryPublisherService;
 
 import java.net.URI;
-import java.util.List;
+import java.util.Objects;
 
 /**
  * 출판사 조회 요청을 위한 service 구현체 입니다.
@@ -28,22 +28,8 @@ public class QueryPublisherServiceImpl implements QueryPublisherService {
 
     private final RestTemplate restTemplate;
     private final String PATH = "/v1/publishers";
-    @Value("${yesaladin.gateway.shop}")
-    private String url;
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<PublisherResponseDto> findAll() {
-        return restTemplate.exchange(
-                url + PATH,
-                HttpMethod.GET,
-                getHttpEntity(),
-                new ParameterizedTypeReference<List<PublisherResponseDto>>() {
-                }
-        ).getBody();
-    }
+    private final GatewayConfig gatewayConfig;
 
     /**
      * {@inheritDoc}
@@ -51,7 +37,7 @@ public class QueryPublisherServiceImpl implements QueryPublisherService {
     @Override
     public PaginatedResponseDto<PublishersResponseDto> findAllForManager(PageRequestDto pageRequestDto) {
         URI uri = UriComponentsBuilder
-                .fromUriString(url)
+                .fromUriString(gatewayConfig.getShopUrl())
                 .path(PATH + "/manager")
                 .queryParam("page", pageRequestDto.getPage())
                 .queryParam("size", pageRequestDto.getSize())
@@ -59,15 +45,14 @@ public class QueryPublisherServiceImpl implements QueryPublisherService {
                 .build()
                 .toUri();
 
-        ResponseEntity<PaginatedResponseDto<PublishersResponseDto>> publishers = restTemplate.exchange(
+        ResponseEntity<ResponseDto<PaginatedResponseDto<PublishersResponseDto>>> publishers = restTemplate.exchange(
                 uri,
                 HttpMethod.GET,
                 getHttpEntity(),
-                new ParameterizedTypeReference<PaginatedResponseDto<PublishersResponseDto>>() {
+                new ParameterizedTypeReference<ResponseDto<PaginatedResponseDto<PublishersResponseDto>>>() {
                 }
         );
-
-        return publishers.getBody();
+        return Objects.requireNonNull(publishers.getBody()).getData();
     }
 
     /**
