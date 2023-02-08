@@ -38,7 +38,9 @@
   <!-- TODO 3: BODY -->
   <div class="page-body container-xl">
     <div class="card">
+      <!-- 장바구니 헤더 + 전체선택-->
       <div class="card-header row">
+        <!-- 장바구니 헤더 -->
         <div style="justify-content: space-between;" class="row">
           <!-- 스텝 -->
           <div style="width: 400px">
@@ -84,40 +86,43 @@
             <input class="form-check-input" type="checkbox" id="all-check">
             <span class="form-check-label">배송 + E-book 전체선택</span>
           </label>
-          <a href="#" class="btn btn-primary btn-pill">
-            주문하기
-          </a>
+          <button type="submit" form="order" class="btn btn-primary btn-pill">
+            전체 주문하기
+          </button>
           <a href="#" class="btn btn-light btn-pill">
-            삭제
+            전체 삭제
           </a>
         </div>
 
       </div>
-
+      <!-- 일반 상품 Body -->
       <div class="card-body">
-        <!-- 배송상품 -->
-        <div class="mt-3">
-          <div style="justify-content: space-between;" class="row">
-            <h2 style="width: 300px;">
-              <em><strong>Yes!Aladin 배송</strong></em>
-            </h2>
-            <div style="width: 200px;" class="mx-2">
-              <div class="text-end text-muted">
-                20,000원 이상 구매 시 무료배송
+        <form id="order" method="get" action="/orders/order-sheets">
+          <!-- 배송상품 -->
+          <div class="mt-3">
+            <!-- 배송상품 Header -->
+            <div style="justify-content: space-between;" class="row">
+              <h2 style="width: 300px;">
+                <em><strong>Yes!Aladin 배송</strong></em>
+              </h2>
+              <div style="width: 200px;" class="mx-2">
+                <div class="text-end text-muted">
+                  20,000원 이상 구매 시 무료배송
+                </div>
               </div>
             </div>
-          </div>
-          <div>
-            <table class="table table-vcenter" style="width: 100%;">
-              <colgroup>
-                <col style="width: 40px;">
-                <col style="width: 100px;">
-                <col>
-                <col style="width: 70px;">
-                <col style="width: 120px;">
-                <col style="width: 90px;">
-              </colgroup>
-              <thead>
+            <!-- 배송상품 Body -->
+            <div>
+              <table class="table table-vcenter" style="width: 100%;">
+                <colgroup>
+                  <col style="width: 40px;">
+                  <col style="width: 100px;">
+                  <col>
+                  <col style="width: 70px;">
+                  <col style="width: 120px;">
+                  <col style="width: 90px;">
+                </colgroup>
+                <thead>
                 <tr>
                   <th colspan="3" scope="col">
                     <div class="d-flex justify-content-center">
@@ -140,204 +145,242 @@
                     </div>
                   </th>
                 </tr>
-              </thead>
-              <tbody>
+                </thead>
+                <tbody>
                 <tr th:each="product : ${deliveryCart}">
                   <td>
                     <div class="d-flex justify-content-center">
-                      <input th:id="${product.getId()}" th:value="${product.getId()}" name="chkDeliveryCart" type="checkbox" autocapitalize="off"
+                      <input th:id="${product.getId()}" th:value="${product.isbn}"
+                             name="isbn" type="checkbox" autocapitalize="off"
                              th:onclick="|selectProduct('delivery', ${product.getId()})|" checked>
                     </div>
                   </td>
                   <td>
-                    <a th:href="@{'/products/' + ${product.getId()}}" target="_new" >
+                    <a th:href="@{'/products/' + ${product.getId()}}" target="_new">
                       <img th:src="${product.getThumbnailFileUrl()}" alt="">
                     </a>
                   </td>
                   <td>
                     <div>
-                      <a th:href="@{'/products/' + ${product.getId()}}" th:text="${'[도서] ' + product.getTitle()}" target="_blank"></a>
+                      <a th:href="@{'/products/' + ${product.getId()}}"
+                         th:text="${'[도서] ' + product.getTitle()}" target="_blank"></a>
                     </div>
                     <div>
-                      <span><del th:text="${#numbers.formatInteger(product.getActualPrice(), 1, 'COMMA')} + '원'"></del></span>
-                      <span><em th:text="${#numbers.formatInteger(product.getSellingPrice(), 1, 'COMMA')}"></em>원</span>
-                      <span th:text="'(' + ${#numbers.formatInteger(product.getDiscountRate(), 1, 'COMMA')} + '% 할인)'"></span>
-                      <span class="ms-2"><span class="badge bg-blue-lt">P</span><span th:id="product-point- + ${product.getId()}" th:text="${#numbers.formatInteger(product.getPointPrice(), 1, 'COMMA')} + '원'"></span></span>
+                      <span><del
+                          th:text="${#numbers.formatInteger(product.getActualPrice(), 1, 'COMMA')} + '원'"></del></span>
+                      <span><em
+                          th:text="${#numbers.formatInteger(product.getSellingPrice(), 1, 'COMMA')}"></em>원</span>
+                      <span
+                          th:text="'(' + ${#numbers.formatInteger(product.getDiscountRate(), 1, 'COMMA')} + '% 할인)'"></span>
+                      <span class="ms-2"><span class="badge bg-blue-lt">P</span><span
+                          th:id="'product-point-' + ${product.getId()}"
+                          th:text="${#numbers.formatInteger(product.getPointPrice(), 1, 'COMMA')} + '원'"></span></span>
                     </div>
                   </td>
                   <td>
                     <div class="d-flex justify-content-center mb-2">
-                      <span>
-                        <input class="form-control" th:id="'quantity' + ${product.id}" type="number"
-                               th:value="${product.getQuantity()}" min="1" maxlength="4" style="width: 60px; height: 30px;">
-                        <input type="hidden" th:id="hidden-quantity- + ${product.getId()}" th:value="${product.getQuantity()}" name="deliveryProductQuantity">
-                      </span>
+                        <span>
+                          <input class="form-control" th:id="'quantity' + ${product.id}"
+                                 type="number"
+                                 th:value="${product.getQuantity()}" min="1" maxlength="4"
+                                 style="width: 60px; height: 30px;">
+                          <input type="hidden" th:id="'hidden-quantity-' + ${product.getId()}"
+                                 th:value="${product.getQuantity()}" name="quantity">
+                        </span>
                     </div>
                     <div class="d-flex justify-content-center">
-                      <a href="#" class="btn btn-outline-primary" style="height: 20px" th:onclick="|modifyQuantity(${product.getId()})|">
+                      <a href="#" class="btn btn-outline-primary" style="height: 20px"
+                         th:onclick="|modifyQuantity(${product.getId()})|">
                         변경
                       </a>
                     </div>
                   </td>
                   <td>
                     <div class="d-flex justify-content-center">
-                      <strong th:id="'product-total-price-' + ${product.getId()}" th:text="${#numbers.formatInteger(product.getSellingPrice() * product.getQuantity(), 1, 'COMMA')} + '원'"></strong>
+                      <strong th:id="'product-total-price-' + ${product.getId()}"
+                              th:text="${#numbers.formatInteger(product.getSellingPrice() * product.getQuantity(), 1, 'COMMA')} + '원'"></strong>
                     </div>
                   </td>
                   <td>
                     <div class="d-flex justify-content-center mb-2">
-                      <a href="#" class="btn btn-primary btn-pill" style="width: 70px; height: 30px;">
+                      <a th:href="@{/orders/order-sheets(isbn=${product.isbn}, quantity=${product.quantity})}"
+                         class="btn btn-primary btn-pill" style="width: 70px; height: 30px;">
                         주문하기
                       </a>
                     </div>
                     <div class="d-flex justify-content-center">
-                      <button type="button" class="btn btn-light btn-pill" th:onclick="|deleteInCart(${product.getId()})|" style="width: 70px; height: 30px;">
+                      <button type="button" class="btn btn-light btn-pill"
+                              th:onclick="|deleteInCart(${product.getId()})|"
+                              style="width: 70px; height: 30px;">
                         삭제
                       </button>
                     </div>
                   </td>
                 </tr>
-              </tbody>
-              <tfoot>
+                </tbody>
+                <tfoot>
                 <tr>
                   <td colspan="6">
                     <div class="text-end px-1">
-                      Yes!Aladin 배송 상품 총 금액 :<strong id="total-amount-delivery-product-cart"></strong>
+                      Yes!Aladin 배송 상품 총 금액 :<strong
+                        id="total-amount-delivery-product-cart"></strong>
                       <span>( + 배송비 <strong id="total-delivery-cost"></strong>)</span>
                       <span class="mx-2">|</span>
                       YES!Aladin 포인트 총 적립액 :<strong id="total-point-delivery-product-cart"></strong>
                     </div>
                   </td>
                 </tr>
-              </tfoot>
-            </table>
-          </div>
-        </div>
-        <!-- eBook -->
-        <div class="mt-5" th:if="${eBookCart.size() > 0}">
-          <div style="justify-content: space-between;" class="row">
-            <h2 style="width: 300px;">
-              <em><strong>Yes!Aladin E-book 카트</strong></em>
-            </h2>
-            <div style="width: 400px;" class="mx-2">
-              <div class="text-end text-muted">
-                eBook상품(무배송)은 구매 후 다운로드 시 취소/환불 불가
-              </div>
+                </tfoot>
+              </table>
             </div>
           </div>
-          <div>
-            <table class="table table-vcenter" style="width: 100%;">
-              <colgroup>
-                <col style="width: 40px;">
-                <col style="width: 100px;">
-                <col>
-                <col style="width: 70px;">
-                <col style="width: 120px;">
-                <col style="width: 90px;">
-              </colgroup>
-              <thead>
-              <tr>
-                <th colspan="3" scope="col">
-                  <div class="d-flex justify-content-center">
-                    상품정보
-                  </div>
-                </th>
-                <th scope="col">
-                  <div class="d-flex justify-content-center">
-                    수량
-                  </div>
-                </th>
-                <th scope="col">
-                  <div class="d-flex justify-content-center">
-                    상품금액
-                  </div>
-                </th>
-                <th scope="col">
-                  <div class="d-flex justify-content-center">
-                    주문
-                  </div>
-                </th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr th:each="product : ${eBookCart}">
-                <td>
-                  <div class="d-flex justify-content-center">
-                    <input th:id="${product.getId()}" th:value="${product.getId()}" name="chkEbookCart" type="checkbox" autocapitalize="off"
-                           th:onclick="|selectProduct('ebook', ${product.getId()})|">
-                  </div>
-                </td>
-                <td>
-                  <a th:href="@{'/products/' + ${product.id}}" target="_new" >
-                    <img th:src="${product.getThumbnailFileUrl()}" alt="">
-                  </a>
-                </td>
-                <td>
-                  <div>
-                    <a th:href="@{'/products/' + ${product.id}}" th:text="${'[eBook] ' + product.getTitle()}" target="_blank"></a>
-                  </div>
-                  <div>
-                    <span><del th:text="${#numbers.formatInteger(product.getActualPrice(), 1, 'COMMA')} + '원'"></del></span>
-                    <span><em  th:text="${#numbers.formatInteger(product.getSellingPrice(), 1, 'COMMA')}"></em>원</span>
-                    <span th:text="'(' + ${#numbers.formatInteger(product.getDiscountRate(), 1, 'COMMA')} + '% 할인)'"></span>
-                    <span class="ms-2"><span class="badge bg-blue-lt">P</span><span th:id="product-point- + ${product.getId()}" th:text="${#numbers.formatInteger(product.getPointPrice(), 1, 'COMMA')} + '원'"></span></span>
-                  </div>
-                </td>
-                <td>
-                  <div class="d-flex justify-content-center mb-2">
-                      1
-                  </div>
-                </td>
-                <td>
-                  <div class="d-flex justify-content-center">
-                    <strong th:id="'product-total-price-' + ${product.getId()}" th:text="${#numbers.formatInteger(product.getSellingPrice(), 1, 'COMMA')} + '원'"></strong>
-                  </div>
-                </td>
-                <td>
-                  <div class="d-flex justify-content-center mb-2">
-                    <a href="#" class="btn btn-primary btn-pill" style="width: 70px; height: 30px;">
-                      주문하기
+          <!-- eBook -->
+          <div class="mt-5" th:if="${eBookCart.size() > 0}">
+            <!-- eBook Header -->
+            <div style="justify-content: space-between;" class="row">
+              <h2 style="width: 300px;">
+                <em><strong>Yes!Aladin E-book 카트</strong></em>
+              </h2>
+              <div style="width: 400px;" class="mx-2">
+                <div class="text-end text-muted">
+                  eBook상품(무배송)은 구매 후 다운로드 시 취소/환불 불가
+                </div>
+              </div>
+            </div>
+            <!-- eBook Body -->
+            <div>
+              <table class="table table-vcenter" style="width: 100%;">
+                <colgroup>
+                  <col style="width: 40px;">
+                  <col style="width: 100px;">
+                  <col>
+                  <col style="width: 70px;">
+                  <col style="width: 120px;">
+                  <col style="width: 90px;">
+                </colgroup>
+                <thead>
+                <tr>
+                  <th colspan="3" scope="col">
+                    <div class="d-flex justify-content-center">
+                      상품정보
+                    </div>
+                  </th>
+                  <th scope="col">
+                    <div class="d-flex justify-content-center">
+                      수량
+                    </div>
+                  </th>
+                  <th scope="col">
+                    <div class="d-flex justify-content-center">
+                      상품금액
+                    </div>
+                  </th>
+                  <th scope="col">
+                    <div class="d-flex justify-content-center">
+                      주문
+                    </div>
+                  </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="product : ${eBookCart}">
+                  <td>
+                    <div class="d-flex justify-content-center">
+                      <input th:id="${product.getId()}" th:value="${product.isbn}"
+                             name="isbn" type="checkbox" autocapitalize="off"
+                             th:onclick="|selectProduct('ebook', ${product.getId()})|">
+                    </div>
+                  </td>
+                  <td>
+                    <a th:href="@{'/products/' + ${product.id}}" target="_new">
+                      <img th:src="${product.getThumbnailFileUrl()}" alt="">
                     </a>
-                  </div>
-                  <div class="d-flex justify-content-center">
-                    <button type="button" class="btn btn-light btn-pill" th:onclick="|deleteInCart(${product.getId()})|" style="width: 70px; height: 30px;">
-                      삭제
-                    </button>
-                  </div>
-                </td>
-              </tr>
-              </tbody>
-              <tfoot>
-              <tr>
-                <td colspan="6">
-                  <div class="text-end px-1">
-                    Yes!Aladin eBook 상품 총 금액 :<strong id="total-amount-ebook-product-cart">0원</strong>
-                    <span class="mx-2">|</span>
-                    YES!Aladin 포인트 총 적립액 :<strong id="total-point-ebook-product-cart">0원</strong>
-                  </div>
-                </td>
-              </tr>
-              </tfoot>
-            </table>
+                  </td>
+                  <td>
+                    <div>
+                      <a th:href="@{'/products/' + ${product.id}}"
+                         th:text="${'[eBook] ' + product.getTitle()}" target="_blank"></a>
+                    </div>
+                    <div>
+                      <span><del
+                          th:text="${#numbers.formatInteger(product.getActualPrice(), 1, 'COMMA')} + '원'"></del></span>
+                      <span><em
+                          th:text="${#numbers.formatInteger(product.getSellingPrice(), 1, 'COMMA')}"></em>원</span>
+                      <span
+                          th:text="'(' + ${#numbers.formatInteger(product.getDiscountRate(), 1, 'COMMA')} + '% 할인)'"></span>
+                      <span class="ms-2"><span class="badge bg-blue-lt">P</span><span
+                          th:id="'product-point-' + ${product.getId()}"
+                          th:text="${#numbers.formatInteger(product.getPointPrice(), 1, 'COMMA')} + '원'"></span></span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="d-flex justify-content-center mb-2">
+                      1
+                      <input type="hidden" value="1" name="quantity">
+                    </div>
+                  </td>
+                  <td>
+                    <div class="d-flex justify-content-center">
+                      <strong th:id="'product-total-price-' + ${product.getId()}"
+                              th:text="${#numbers.formatInteger(product.getSellingPrice(), 1, 'COMMA')} + '원'"></strong>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="d-flex justify-content-center mb-2">
+                      <a th:href="@{/orders/order-sheets(isbn=${product.isbn}, quantity=${product.quantity})}"
+                         class="btn btn-primary btn-pill"
+                         style="width: 70px; height: 30px;">
+                        주문하기
+                      </a>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                      <button type="button" class="btn btn-light btn-pill"
+                              th:onclick="|deleteInCart(${product.getId()})|"
+                              style="width: 70px; height: 30px;">
+                        삭제
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                </tbody>
+                <tfoot>
+                <tr>
+                  <td colspan="6">
+                    <div class="text-end px-1">
+                      Yes!Aladin eBook 상품 총 금액 :<strong
+                        id="total-amount-ebook-product-cart">0원</strong>
+                      <span class="mx-2">|</span>
+                      YES!Aladin 포인트 총 적립액 :<strong id="total-point-ebook-product-cart">0원</strong>
+                    </div>
+                  </td>
+                </tr>
+                </tfoot>
+              </table>
+            </div>
           </div>
-        </div>
-        <div class="pt-4 px-2 text-end bg-azure-lt" th:classappend="${(eBookCart.size() == 0) ? 'd-none' : ''}">
-          <div class="pb-3 text-blue">
-            <strong>Yes!Aladin 배송<label> + eBook 카트</label></strong>
-            상품 총 금액 :<strong><em class="text-dark" id="total-amount-cart-yesaladin-cart">0원</em></strong> <span class="mx-2">|</span>
-            Yes!Aladin 포인트 총 적립액 :<strong id="total-point-cart-yesaladin-cart">0원</strong>
+          <!-- 배송상품 + ebook 합계 예상 -->
+          <div class="pt-4 px-2 text-end bg-azure-lt"
+               th:classappend="${(eBookCart.size() == 0) ? 'd-none' : ''}">
+            <div class="pb-3 text-blue">
+              <strong>Yes!Aladin 배송<label> + eBook 카트</label></strong>
+              상품 총 금액 :<strong><em class="text-dark"
+                                   id="total-amount-cart-yesaladin-cart">0원</em></strong> <span
+                class="mx-2">|</span>
+              Yes!Aladin 포인트 총 적립액 :<strong id="total-point-cart-yesaladin-cart">0원</strong>
+            </div>
           </div>
-        </div>
+        </form>
       </div>
+      <!-- 일반 상품 Footer -->
       <div class="card-body">
         <!-- 선택/ 주문/ 삭제 -->
         <div class="pt-2">
           <label class="form-check form-check-inline ms-2">
             <span class="form-check-label">선택한 상품</span>
           </label>
-          <a href="#" class="btn btn-primary btn-pill">
+          <button type="submit" form="order" class="btn btn-primary btn-pill">
             주문하기
-          </a>
+          </button>
           <a href="#" class="btn btn-light btn-pill">
             삭제
           </a>
@@ -349,17 +392,20 @@
             <th scope="col" style="font-size: 10pt; ">
               <div class="d-flex justify-content-center">
                 총 상품금액
-              </div></th>
+              </div>
+            </th>
             <th></th>
             <th scope="col" class="saleCol" style="font-size: 10pt;">
               <div class="d-flex justify-content-center">
                 총 할인금액
-              </div></th>
+              </div>
+            </th>
             <th></th>
             <th scope="col" class="priceCol lastCol" style="font-size: 10pt;">
               <div class="d-flex justify-content-center">
                 최종 결제금액
-              </div></th>
+              </div>
+            </th>
           </tr>
           </thead>
           <tbody>
@@ -375,14 +421,18 @@
             <td style="font-size: 15pt;">
               <em class="icon_settle ico_settle_equal d-flex justify-content-center">=</em>
             </td>
-            <td class="priceCol lastCol" style="font-size: 15pt;"><em class="d-flex justify-content-center" id="all-total-product-pay">0원</em></td>
+            <td class="priceCol lastCol" style="font-size: 15pt;"><em
+                class="d-flex justify-content-center" id="all-total-product-pay">0원</em></td>
           </tr>
           </tbody>
         </table>
       </div>
-      <div class="card-body">
+
+      <!-- 정기 구독 Body -->
+      <div class="card-body" th:if="${!subscribeCart.isEmpty()}">
         <!-- 정기구독 상품 -->
-        <div class="mt-5" th:if="${subscribeCart.size() > 0}">
+        <div class="mt-5">
+          <!-- 정기구독 Header -->
           <div style="justify-content: space-between;" class="row">
             <h2 style="width: 300px;">
               <em><strong>Yes!Aladin 정기구독</strong></em>
@@ -393,6 +443,7 @@
               </div>
             </div>
           </div>
+          <!-- 정기구독 Body -->
           <div>
             <table class="table table-vcenter my-0" style="width: 100%;">
               <colgroup>
@@ -430,47 +481,69 @@
               <tbody>
               <tr th:each="product : ${subscribeCart}">
                 <td>
-                  <div class="d-flex justify-content-center">
-                    <input th:id="${product.id}" th:value="${product.id}" name="chkSubscribeCart" type="radio"
-                           autocapitalize="off" th:onclick="|selectSubscription(${product.getId()})|">
-                  </div>
+                  <input type="hidden" name="isbn" th:value="${product.isbn}">
                 </td>
                 <td>
-                  <a th:href="@{'/products/' + ${product.id}}" target="_new" >
+                  <a th:href="@{'/products/' + ${product.id}}" target="_new">
                     <img th:src="${product.getThumbnailFileUrl()}" alt="">
                   </a>
                 </td>
                 <td>
                   <div>
-                    <a th:href="@{'/products/' + ${product.id}}" th:text="${'[정기구독] ' + product.getTitle()}" target="_blank"></a>
+                    <a th:href="@{'/products/' + ${product.id}}"
+                       th:text="${'[정기구독] ' + product.getTitle()}" target="_blank"></a>
                   </div>
                   <div>
-                    <span><del th:text="${#numbers.formatInteger(product.getActualPrice(), 1, 'COMMA')} + '원'"></del></span>
-                    <span><em th:text="${#numbers.formatInteger(product.getSellingPrice(), 1, 'COMMA')}"></em>원</span>
-                    <span th:text="'(' + ${#numbers.formatInteger(product.getDiscountRate(), 1, 'COMMA')} + '% 할인)'"></span>
-                    <span class="ms-2"><span class="badge bg-blue-lt">P</span><span th:id="'product-point-price-' + ${product.getId()}" th:text="${#numbers.formatInteger(product.getPointPrice(), 1, 'COMMA')} + '원'"></span></span>
-                  </div>
-                </td>
-                <td>
-                  <div class="d-flex justify-content-center mb-2">
-                      <span>
-                        1
+                      <span><del
+                          th:text="${#numbers.formatInteger(product.getActualPrice(), 1, 'COMMA')} + '원'"></del></span>
+                    <span><em
+                        th:text="${#numbers.formatInteger(product.getSellingPrice(), 1, 'COMMA')}"></em>원</span>
+                    <span
+                        th:text="'(' + ${#numbers.formatInteger(product.getDiscountRate(), 1, 'COMMA')} + '% 할인)'"></span>
+                    <span class="ms-2">
+                        <span class="badge bg-blue-lt">P</span>
+                        <span
+                            th:id="'product-point-price-' + ${product.getId()}"
+                            th:text="${#numbers.formatInteger(product.getPointPrice(), 1, 'COMMA')} + '원'"></span>
                       </span>
                   </div>
                 </td>
                 <td>
+                  <div class="d-flex justify-content-center mb-2">
+                    <div class="d-flex justify-content-center mb-2">
+                        <span>
+                          <input class="form-control" th:id="'quantity' + ${product.id}"
+                                 th:value="${product.getQuantity()}" min="1" maxlength="4"
+                                 type="number" style="width: 60px; height: 30px;">
+                          <input type="hidden" th:id="'hidden-quantity-' + ${product.getId()}"
+                                 name="quantity" th:value="${product.getQuantity()}">
+                        </span>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                      <a href="#" class="btn btn-outline-primary" style="height: 20px"
+                         th:onclick="|modifyQuantity(${product.getId()})|">
+                        변경
+                      </a>
+                    </div>
+                  </div>
+                </td>
+                <td>
                   <div class="d-flex justify-content-center">
-                    <strong th:id="'product-total-price-' + ${product.getId()}" th:text="${#numbers.formatInteger(product.getSellingPrice(), 1, 'COMMA')} + '원'"></strong>
+                    <strong th:id="'product-total-price-' + ${product.getId()}"
+                            th:text="${#numbers.formatInteger(product.getSellingPrice(), 1, 'COMMA')} + '원'"></strong>
                   </div>
                 </td>
                 <td>
                   <div class="d-flex justify-content-center mb-2">
-                    <a href="#" class="btn btn-primary btn-pill" style="width: 70px; height: 30px;">
-                      주문하기
+                    <a th:href="@{/orders/subscribe-sheets(isbn=${product.isbn}, quantity=${product.quantity})}"
+                       class="btn btn-primary btn-pill" style="width: 70px; height: 30px;">
+                      구독하기
                     </a>
                   </div>
                   <div class="d-flex justify-content-center">
-                    <button type="button" class="btn btn-light btn-pill" th:onclick="|deleteInCart(${product.getId()})|" style="width: 70px; height: 30px;">
+                    <button type="button" class="btn btn-light btn-pill"
+                            th:onclick="|deleteInCart(${product.getId()})|"
+                            style="width: 70px; height: 30px;">
                       삭제
                     </button>
                   </div>
@@ -481,9 +554,11 @@
               <tr>
                 <td colspan="6">
                   <div class="text-end px-1">
-                    Yes!Aladin 정기구독 상품 총 금액 :<strong id="total-amount-subscription-product-cart">0원</strong>
+                    Yes!Aladin 정기구독 상품 총 금액 :<strong
+                      id="total-amount-subscription-product-cart">0원</strong>
                     <span class="mx-2">|</span>
-                    YES!Aladin 포인트 총 적립액 :<strong id="total-point-subscription-product-cart">0원</strong>
+                    YES!Aladin 포인트 총 적립액 :<strong
+                      id="total-point-subscription-product-cart">0원</strong>
                   </div>
                 </td>
               </tr>
@@ -492,54 +567,49 @@
           </div>
         </div>
       </div>
+
+      <!-- 정기 구독 Footer : 필요없다고 생각(주무은 무조건 단건 주문 이기 때문) 제거 요망 -->
       <div class="card-body" th:if="${subscribeCart.size() > 0}">
-        <!-- 선택/ 주문/ 삭제 -->
-        <div class="pt-2">
-          <label class="form-check form-check-inline ms-2">
-            <span class="form-check-label">선택한 상품</span>
-          </label>
-          <a href="#" class="btn btn-primary btn-pill">
-            주문하기
-          </a>
-          <a href="#" class="btn btn-light btn-pill">
-            삭제
-          </a>
-        </div>
-        <!-- 결제 금액 예상 -->
+        <!-- 정기 구독 합계 예상 -->
         <table class="table table-vcenter card-table mt-3">
           <thead>
-            <tr>
-              <th scope="col" style="font-size: 10pt; ">
-                <div class="d-flex justify-content-center">
-                  총 상품금액
-                </div></th>
-              <th></th>
-              <th scope="col" class="saleCol" style="font-size: 10pt;">
-                <div class="d-flex justify-content-center">
-                  총 할인금액
-                </div></th>
-              <th></th>
-              <th scope="col" class="priceCol lastCol" style="font-size: 10pt;">
-                <div class="d-flex justify-content-center">
-                  최종 결제금액
-                </div></th>
-            </tr>
+          <tr>
+            <th scope="col" style="font-size: 10pt; ">
+              <div class="d-flex justify-content-center">
+                총 상품금액
+              </div>
+            </th>
+            <th></th>
+            <th scope="col" class="saleCol" style="font-size: 10pt;">
+              <div class="d-flex justify-content-center">
+                총 할인금액
+              </div>
+            </th>
+            <th></th>
+            <th scope="col" class="priceCol lastCol" style="font-size: 10pt;">
+              <div class="d-flex justify-content-center">
+                최종 결제금액
+              </div>
+            </th>
+          </tr>
           </thead>
           <tbody>
-            <tr>
-              <td style="font-size: 15pt;">
-                <em class="d-flex justify-content-center" id="all-subscription-product-amount">0원</em>
-              </td>
-              <td style="font-size: 15pt;">
-                <em class="icon_settle ico_settle_minus d-flex justify-content-center">-</em>
-              </td>
-              <td class="saleCol" style="font-size: 15pt;"><em class="d-flex justify-content-center">0원</em>
-              </td>
-              <td style="font-size: 15pt;">
-                <em class="icon_settle ico_settle_equal d-flex justify-content-center">=</em>
-              </td>
-              <td class="priceCol lastCol" style="font-size: 15pt;"><em class="yes_b d-flex justify-content-center" id="all-subscription-product-pay">0원</em></td>
-            </tr>
+          <tr>
+            <td style="font-size: 15pt;">
+              <em class="d-flex justify-content-center" id="all-subscription-product-amount">0원</em>
+            </td>
+            <td style="font-size: 15pt;">
+              <em class="icon_settle ico_settle_minus d-flex justify-content-center">-</em>
+            </td>
+            <td class="saleCol" style="font-size: 15pt;"><em class="d-flex justify-content-center">0원</em>
+            </td>
+            <td style="font-size: 15pt;">
+              <em class="icon_settle ico_settle_equal d-flex justify-content-center">=</em>
+            </td>
+            <td class="priceCol lastCol" style="font-size: 15pt;"><em
+                class="yes_b d-flex justify-content-center"
+                id="all-subscription-product-pay">0원</em></td>
+          </tr>
           </tbody>
         </table>
       </div>
@@ -590,33 +660,44 @@
 
     const totalDeliveryCost = document.getElementById('total-delivery-cost');
     const totalPointProductCart = document.getElementById('total-point-' + type + '-product-cart');
-    const totalAmountProductCart = document.getElementById('total-amount-' + type + '-product-cart');
+    const totalAmountProductCart = document.getElementById(
+        'total-amount-' + type + '-product-cart');
 
     let productTotalPrice;
     if (checkBox.checked) {
       // 상품의 전체 금액 (+)
       productTotalPrice = Number(totalAmountProductCart.innerText.replaceAll(/[,원]/g, ""))
-              + Number(document.getElementById('product-total-price-' + id).innerText.replaceAll(/[,원]/g, ""));
+          + Number(
+              document.getElementById('product-total-price-' + id).innerText.replaceAll(/[,원]/g,
+                  ""));
     } else {
       productTotalPrice = Number(totalAmountProductCart.innerText.replaceAll(/[,원]/g, ""))
-              - Number(document.getElementById('product-total-price-' + id).innerText.replaceAll(/[,원]/g, ""));
+          - Number(
+              document.getElementById('product-total-price-' + id).innerText.replaceAll(/[,원]/g,
+                  ""));
     }
     totalAmountProductCart.innerText = productTotalPrice.toLocaleString() + "원";
 
     // 배송 상품인 경우
-    let productPoint = Number(document.getElementById('product-point-' + id).innerText.replaceAll(/[,원]/g, ""));
+    let productPoint = Number(
+        document.getElementById('product-point-' + id).innerText.replaceAll(/[,원]/g, ""));
     if (type === 'delivery') {
       productPoint = Number(document.getElementById('hidden-quantity-' + id).value) * productPoint;
-      totalDeliveryCost.innerText = (productTotalPrice >= 20000 || productTotalPrice <= 0 ? 0 : 3000).toLocaleString() + "원";
+      totalDeliveryCost.innerText = (productTotalPrice >= 20000 || productTotalPrice <= 0 ? 0
+          : 3000).toLocaleString() + "원";
     }
 
     if (checkBox.checked) {
       // 상품의 전체 포인트 (+)
-      totalPointProductCart.innerText = (Number(totalPointProductCart.innerText.replaceAll(/[,원]/g, "")) + productPoint).toLocaleString() + "원";
+      totalPointProductCart.innerText = (Number(
+              totalPointProductCart.innerText.replaceAll(/[,원]/g, "")) + productPoint).toLocaleString()
+          + "원";
     } else {
       // 상품의 전체 포인트 (-)
-      totalPointProductCart.innerText = (Number(totalPointProductCart.innerText.replaceAll(/[,원]/g, "")) - productPoint) >= 0 ?
-              (Number(totalPointProductCart.innerText.replaceAll(/[,원]/g, "")) - productPoint).toLocaleString() + "원" : "0원"
+      totalPointProductCart.innerText = (Number(
+          totalPointProductCart.innerText.replaceAll(/[,원]/g, "")) - productPoint) >= 0 ?
+          (Number(totalPointProductCart.innerText.replaceAll(/[,원]/g, ""))
+              - productPoint).toLocaleString() + "원" : "0원"
     }
 
     checkAllChecked();
@@ -624,11 +705,14 @@
   }
 
   function selectSubscription(id) {
-    const totalAmountProductCart = document.getElementById('total-amount-subscription-product-cart');
+    const totalAmountProductCart = document.getElementById(
+        'total-amount-subscription-product-cart');
     const totalPointProductCart = document.getElementById('total-point-subscription-product-cart');
 
-    totalAmountProductCart.innerText = document.getElementById('product-total-price-' + id).innerText;
-    totalPointProductCart.innerText = document.getElementById('product-point-price-' + id).innerText;
+    totalAmountProductCart.innerText = document.getElementById(
+        'product-total-price-' + id).innerText;
+    totalPointProductCart.innerText = document.getElementById(
+        'product-point-price-' + id).innerText;
 
     changeSubscriptionPay()
   }
@@ -637,27 +721,34 @@
   const isExistEbook = Object.keys([[${eBookCart}]]).length !== 0;
 
   function setCartTotalAmountAndPoint() {
-    const totalAmountCartYesAladinCart = document.getElementById('total-amount-cart-yesaladin-cart');
+    const totalAmountCartYesAladinCart = document.getElementById(
+        'total-amount-cart-yesaladin-cart');
     const totalPointCartYesAladinCart = document.getElementById('total-point-cart-yesaladin-cart');
 
     const totalDeliveryCost = document.getElementById('total-delivery-cost');
-    const totalAmountDeliveryProductCart = document.getElementById('total-amount-delivery-product-cart');
-    const totalPointDeliveryProductCart = document.getElementById('total-point-delivery-product-cart');
+    const totalAmountDeliveryProductCart = document.getElementById(
+        'total-amount-delivery-product-cart');
+    const totalPointDeliveryProductCart = document.getElementById(
+        'total-point-delivery-product-cart');
 
     let totalAmountEbookProductCart = 0;
     let totalPointEbookProductCart = 0;
     if (isExistEbook) {
-      totalAmountEbookProductCart = Number(document.getElementById('total-amount-ebook-product-cart').innerText.replaceAll(/[,원]/g, ""));
-      totalPointEbookProductCart = Number(document.getElementById('total-point-ebook-product-cart').innerText.replaceAll(/[,원]/g, ""));
+      totalAmountEbookProductCart = Number(
+          document.getElementById('total-amount-ebook-product-cart').innerText.replaceAll(/[,원]/g,
+              ""));
+      totalPointEbookProductCart = Number(
+          document.getElementById('total-point-ebook-product-cart').innerText.replaceAll(/[,원]/g,
+              ""));
     }
 
     totalAmountCartYesAladinCart.innerText =
-            (Number(totalDeliveryCost.innerText.replaceAll(/[,원]/g, ""))
+        (Number(totalDeliveryCost.innerText.replaceAll(/[,원]/g, ""))
             + Number(totalAmountDeliveryProductCart.innerText.replaceAll(/[,원]/g, ""))
             + totalAmountEbookProductCart).toLocaleString() + "원";
 
     totalPointCartYesAladinCart.innerText =
-            (Number(totalPointDeliveryProductCart.innerText.replaceAll(/[,원]/g, ""))
+        (Number(totalPointDeliveryProductCart.innerText.replaceAll(/[,원]/g, ""))
             + totalPointEbookProductCart).toLocaleString() + "원";
 
     changeTotalPay();
@@ -708,7 +799,8 @@
     let allTotalProductAmount = document.getElementById('all-total-product-amount');
     let allTotalProductPay = document.getElementById('all-total-product-pay');
 
-    const totalAmountCartYesAladinCart = document.getElementById('total-amount-cart-yesaladin-cart');
+    const totalAmountCartYesAladinCart = document.getElementById(
+        'total-amount-cart-yesaladin-cart');
 
     allTotalProductAmount.innerText = totalAmountCartYesAladinCart.innerText;
     allTotalProductPay.innerText = totalAmountCartYesAladinCart.innerText;
@@ -718,7 +810,8 @@
     let allSubscriptionProductAmount = document.getElementById('all-subscription-product-amount');
     let allSubscriptionProductPay = document.getElementById('all-subscription-product-pay');
 
-    const totalAmountSubscriptionYesAladinCart = document.getElementById('total-amount-subscription-product-cart');
+    const totalAmountSubscriptionYesAladinCart = document.getElementById(
+        'total-amount-subscription-product-cart');
     console.log("totalAmountSubscriptionYesAladinCart : " + totalAmountSubscriptionYesAladinCart);
 
     allSubscriptionProductAmount.innerText = totalAmountSubscriptionYesAladinCart.innerText;

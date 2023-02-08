@@ -91,7 +91,7 @@ public class MemberRestController {
      *
      * @return 회원의 등급
      */
-    @GetMapping("/grade")
+    @GetMapping("/grades")
     public String getMemberGrade() {
         return queryMemberService.getMemberGrade();
     }
