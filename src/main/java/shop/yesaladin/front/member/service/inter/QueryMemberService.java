@@ -2,9 +2,10 @@ package shop.yesaladin.front.member.service.inter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.time.LocalDate;
+import org.springframework.data.domain.Pageable;
+import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.member.dto.MemberBlockRequestDto;
 import shop.yesaladin.front.member.dto.MemberBlockResponseDto;
-import shop.yesaladin.front.member.dto.MemberManagerListResponseDto;
 import shop.yesaladin.front.member.dto.MemberManagerResponseDto;
 import shop.yesaladin.front.member.dto.MemberProfileExistResponseDto;
 import shop.yesaladin.front.member.dto.MemberQueryResponseDto;
@@ -84,51 +85,51 @@ public interface QueryMemberService {
      * @author 김선홍
      * @since 1.0
      */
-    MemberManagerResponseDto manageMemberInfoByLoginId(String loginId);
+    PaginatedResponseDto<MemberManagerResponseDto> manageMemberInfoByLoginId(String loginId, Pageable pageable);
 
     /**
      * 관리자가 회원의 phone 로 해당 회원의 정보를 조회합니다.
      *
      * @param phone 회원의 phone
+     * @param pageable 페이징 정보
      * @return 해당 phone 의 회원 정보
      * @author 김선홍
      * @since 1.0
      */
-    MemberManagerResponseDto manageMemberInfoByPhone(String phone);
+    PaginatedResponseDto<MemberManagerResponseDto> manageMemberInfoByPhone(String phone, Pageable pageable);
 
     /**
      * 관리자가 회원의 nickname 으로 해당 회원의 정보를 조회합니다.
      *
      * @param nickname 회원의 nickname
+     * @param pageable 페이징 정보
      * @return 해당 nickname 의 회원 정보
      * @author 김선홍
      * @since 1.0
      */
-    MemberManagerResponseDto manageMemberInfoByNickname(String nickname);
+    PaginatedResponseDto<MemberManagerResponseDto> manageMemberInfoByNickname(String nickname, Pageable pageable);
 
     /**
      * 관리자가 회원의 name 으로 해당 회원의 정보를 조회합니다.
      *
      * @param name 회원의 name
-     * @param page 페이지 위치
-     * @param size 데이터 크기
+     * @param pageable 페이징 정보
      * @return 해당 name을 가지는 회원들의 정보와 총 갯수
      * @author 김선홍
      * @since 1.0
      */
-    MemberManagerListResponseDto manageMemberInfoByName(String name, int page, int size);
+    PaginatedResponseDto<MemberManagerResponseDto> manageMemberInfoByName(String name, Pageable pageable);
 
     /**
      * 관리자가 회원의 signUpDate 으로 해당 회원의 정보를 조회합니다.
      *
      * @param signUpDate 회원의 signUpDate
-     * @param page 페이지 위치
-     * @param size 데이터 크기
+     * @param pageable 페이징 정보
      * @return 해당 name을 가지는 회원들의 정보와 총 갯수
      * @author 김선홍
      * @since 1.0
      */
-    MemberManagerListResponseDto manageMemberInfoBySignUpDate(LocalDate signUpDate, int page, int size);
+    PaginatedResponseDto<MemberManagerResponseDto> manageMemberInfoBySignUpDate(LocalDate signUpDate, Pageable pageable);
 
     /**
      * 관리자가 회원을 차단하는 메서드
