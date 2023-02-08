@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -33,6 +35,8 @@ public class ReissueTokenInterceptor implements HandlerInterceptor {
 
     private final MemberAdapter memberAdapter;
     private final RedisTemplate<String, Object> redisTemplate;
+
+    private static final String X_EXPIRE_HEADER = "X-Expire";
 
     /**
      * JWT Token 재발급을 위한 기능입니다.
@@ -72,9 +76,11 @@ public class ReissueTokenInterceptor implements HandlerInterceptor {
         AuthInfo authInfo = (AuthInfo) redisTemplate.opsForHash()
                 .get(uuid, JWT_CODE.getValue());
         if (Objects.nonNull(authInfo) && isReissueRequired(authInfo)) {
-            String accessToken = memberAdapter.tokenReissue(uuid);
-            log.info("Reissued AccessToken={}", accessToken);
+            ResponseEntity<Void> response = memberAdapter.tokenReissue(uuid);
+            String accessToken = response.getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
+            String expiredTime = response.getHeaders().get(X_EXPIRE_HEADER).get(0);
             authInfo.setAccessToken(accessToken);
+            authInfo.setExpiredTime(expiredTime);
             redisTemplate.opsForHash().put(uuid, JWT_CODE.getValue(), authInfo);
         }
     }

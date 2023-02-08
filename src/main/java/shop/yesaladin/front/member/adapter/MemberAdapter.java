@@ -127,7 +127,7 @@ public class MemberAdapter {
      * @author 송학현
      * @since 1.0
      */
-    public String tokenReissue(String uuid) {
+    public ResponseEntity<Void> tokenReissue(String uuid) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(APPLICATION_JSON);
         httpHeaders.add("UUID", uuid);
@@ -140,13 +140,11 @@ public class MemberAdapter {
                 .toUri();
 
         HttpEntity entity = new HttpEntity<>(httpHeaders);
-        ResponseEntity<Void> response = restTemplate.exchange(
+        return restTemplate.exchange(
                 uri,
                 HttpMethod.POST,
                 entity,
                 Void.class
         );
-
-        return response.getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
     }
 }
