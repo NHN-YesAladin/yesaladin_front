@@ -1,7 +1,6 @@
 package shop.yesaladin.front.publish.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -11,12 +10,10 @@ import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.common.dto.PageRequestDto;
 import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.config.GatewayConfig;
-import shop.yesaladin.front.publish.dto.PublisherResponseDto;
 import shop.yesaladin.front.publish.dto.PublishersResponseDto;
 import shop.yesaladin.front.publish.service.inter.QueryPublisherService;
 
 import java.net.URI;
-import java.util.List;
 import java.util.Objects;
 
 /**

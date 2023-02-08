@@ -2,10 +2,7 @@ package shop.yesaladin.front.publish.service.inter;
 
 import shop.yesaladin.front.common.dto.PageRequestDto;
 import shop.yesaladin.front.common.dto.PaginatedResponseDto;
-import shop.yesaladin.front.publish.dto.PublisherResponseDto;
 import shop.yesaladin.front.publish.dto.PublishersResponseDto;
-
-import java.util.List;
 
 /**
  * 출판사 조회 요청을 위한 service 구현체 입니다.

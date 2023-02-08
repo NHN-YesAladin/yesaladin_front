@@ -1,7 +1,6 @@
 package shop.yesaladin.front.product.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -42,7 +41,8 @@ public class QueryProductTypeServiceImpl implements QueryProductTypeService {
                 gatewayConfig.getShopUrl() + PATH,
                 HttpMethod.GET,
                 getHttpEntity(),
-                new ParameterizedTypeReference<ResponseDto<List<ProductTypeResponseDto>>>() {}
+                new ParameterizedTypeReference<ResponseDto<List<ProductTypeResponseDto>>>() {
+                }
         );
         return Objects.requireNonNull(response.getBody()).getData();
     }
