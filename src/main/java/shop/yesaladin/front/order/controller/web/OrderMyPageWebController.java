@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.common.dto.PeriodQueryRequestDto;
+import shop.yesaladin.front.order.dto.OrderStatusResponseDto;
 import shop.yesaladin.front.order.dto.OrderSummaryResponseDto;
 import shop.yesaladin.front.order.service.inter.QueryOrderService;
 
@@ -76,8 +77,22 @@ public class OrderMyPageWebController {
         return "mypage/order/order-list-view";
     }
 
-    @GetMapping("/order-popup")
-    public String getMyPageOrderPopup() {
+    @GetMapping(value = "/order-popup", params = "code")
+    public String getMyPageOrderPopup(
+            @RequestParam("code") Long status,
+            Pageable pageable,
+            Model model
+    ) {
+        PaginatedResponseDto<OrderStatusResponseDto> response = queryOrderService.getOrderListByOrderStatus(
+                pageable,
+                status
+        );
+
+        model.addAttribute("code", status);
+        model.addAttribute("currentPage", response.getCurrentPage());
+        model.addAttribute("totalPage", response.getTotalPage());
+        model.addAttribute("totalDataCount", response.getTotalDataCount());
+        model.addAttribute("dataList", response.getDataList());
         return "mypage/order/my-order-popup";
     }
 }

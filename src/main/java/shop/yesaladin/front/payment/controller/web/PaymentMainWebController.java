@@ -45,10 +45,11 @@ public class PaymentMainWebController {
                 .discountAmount(100000L)
                 .shippingFee(3000L)
                 .wrappingFee(3000L)
-                .totalAmount(1000000L - 100000L - 3000L - 3000L)
+                .orderName("주문주문주문주문")
+                .totalAmount(1000000L - 100000L + 3000L + 3000L)
                 .build();
 
-        model.addAttribute("dto", viewDto);
+        model.addAttribute("data", viewDto);
 
         return "main/payment/pay-page";
     }
