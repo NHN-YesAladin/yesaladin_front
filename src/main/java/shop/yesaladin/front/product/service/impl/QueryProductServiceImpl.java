@@ -166,6 +166,8 @@ public class QueryProductServiceImpl implements QueryProductService {
                 .fromUriString(url)
                 .path(PATH + "/{id}/relation")
                 .queryParam("title", title)
+                .queryParam("size", pageable.getPageSize())
+                .queryParam("page", pageable.getPageNumber())
                 .buildAndExpand(id)
                 .toUriString();
 
