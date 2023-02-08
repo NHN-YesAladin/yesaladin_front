@@ -92,7 +92,8 @@
                          min="1" name="quantity" th:field="*{quantity}">
                   <input type="checkbox" id="coupon-unlimited-quantity-check"
                          class="form-check-input ms-3" name="isUnlimited" th:field="*{isUnlimited}">
-                  <label for="coupon-unlimited-quantity-check" class="col form-check-label">무제한</label>
+                  <label class="col form-check-label"
+                         for="coupon-unlimited-quantity-check">무제한</label>
                 </div>
                 <div class="mb-3 row">
                   <label for="coupon-trigger-select" class="col-sm-2 col-form-label">발행트리거</label>
@@ -101,6 +102,18 @@
                     <option th:each="trigger: ${triggerTypeCodes}" th:value="${trigger.name()}"
                             th:text="${trigger.displayName}"></option>
                   </select>
+                </div>
+                <div id="coupon-of-month-only" style="display: none">
+                  <div class="mb-3 row">
+                    <label class="col-sm-2 col-form-label" for="coupon-open-date">쿠폰 오픈일</label>
+                    <input class="form-control w-50" id="coupon-open-date" name="couponOpenDate" required
+                           type="number">
+                  </div>
+                  <div class="mb-3 row">
+                    <label class="col-sm-2 col-form-label" for="coupon-open-time">쿠폰 오픈 시간</label>
+                    <input class="form-control w-50" id="coupon-open-time" name="couponOpenTime" required
+                           type="time">
+                  </div>
                 </div>
                 <div class="mb-3 row">
                   <label for="coupon-image-input" class="col-sm-2 col-form-label">쿠폰 이미지</label>
@@ -162,31 +175,23 @@
                   </div>
                 </div>
                 <div class="mb-3 row">
-                  <span class="col-sm-2">만료일</span>
-                  <div class="col">
-                    <div class="form-check">
-                      <input class="form-check-input coupon-duration-type-radio" type="radio"
-                             name="coupon-duration-type-radio"
-                             id="coupon-duration-type-duration" checked>
-                      <label class="form-check-label" for="coupon-duration-type-duration">쿠폰이 발행된
-                        날부터
-                        <input type="text" id="coupon-duration-input"
-                               class="form-control form-control-sm w-4 d-inline-block"
-                               name="duration" th:field="*{duration}"> 일 후까지 사용 가능
-                      </label>
-                    </div>
-                    <div class="form-check">
-                      <input class="form-check-input coupon-duration-type-radio" type="radio"
-                             name="coupon-duration-type-radio"
-                             id="coupon-duration-type-date">
-                      <label class="form-check-label" for="coupon-duration-type-date">
-                        <input type="date" id="coupon-duration-start-date-input" disabled
-                               class="form-control form-control-sm w-25 d-inline-block"> ~
-                        <input type="date" id="coupon-duration-end-date-input" disabled
-                               name="expirationDate" th:field="*{expirationDate}"
-                               class="form-control form-control-sm w-25 d-inline-block">
-                      </label>
-                    </div>
+                  <label class="col-sm-2 col-form-label">만료일</label>
+                  <div class="col" id="duration">
+                    <label class="form-check-label">쿠폰이 발행된
+                      날부터
+                      <input class="form-control w-4 d-inline-block" id="coupon-duration-input"
+                             name="duration"
+                             th:field="*{duration}" type="text"> 일 후까지 사용 가능
+                    </label>
+                  </div>
+                  <div class="col" id="expire-date" style="display: none">
+                    <label class="form-check-label">
+                      <input class="form-control w-25 d-inline-block" disabled id="coupon-duration-start-date-input"
+                             type="date"> ~
+                      <input class="form-control w-25 d-inline-block" disabled id="coupon-duration-end-date-input"
+                             name="expirationDate" th:field="*{expirationDate}"
+                             type="date">
+                    </label>
                   </div>
                 </div>
                 <div class="mb-3 row">
