@@ -1,6 +1,7 @@
 package shop.yesaladin.front.order.controller.web;
 
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -34,11 +35,11 @@ public class OrderMainWebController {
      * @author 최예린
      * @since 1.0
      */
-    @GetMapping("order-sheets")
+    @GetMapping(path = {"/order-sheets", "/subscribe-sheets"})
     public String getOrderSheet(
-            @RequestParam("type") String type,
             @RequestParam("isbn") List<String> isbn,
             @RequestParam("quantity") List<String> quantity,
+            HttpServletRequest request,
             Model model
     ) {
         ResponseDto<OrderSheetResponseDto> response = queryOrderService.getOrderSheetData(
@@ -57,6 +58,7 @@ public class OrderMainWebController {
         model.addAttribute("address", response.getData().getAddress());
         model.addAttribute("coupons", response.getData().getMemberCoupons());
 
-        return (type.equals("subscribe")) ? "main/order/subscribe" : "main/order/order";
+        return (request.getServletPath().contains("subscribe")) ? "main/order/subscribe"
+                : "main/order/order";
     }
 }
