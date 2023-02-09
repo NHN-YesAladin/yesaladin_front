@@ -1,10 +1,10 @@
 package shop.yesaladin.front.order.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.order.dto.OrderCreateResponseDto;
 import shop.yesaladin.front.order.dto.OrderMemberCreateRequestDto;
@@ -17,6 +17,7 @@ import shop.yesaladin.front.order.service.inter.CommandOrderService;
  * @since 1.0
  */
 @RequiredArgsConstructor
+@RestController
 @RequestMapping("/orders")
 public class OrderRestController {
 
@@ -36,5 +37,4 @@ public class OrderRestController {
     ) {
         return commandOrderService.createMemberOrder(request);
     }
-
 }

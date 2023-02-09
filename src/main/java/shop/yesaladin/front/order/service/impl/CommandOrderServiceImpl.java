@@ -11,9 +11,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import shop.yesaladin.common.dto.ResponseDto;
+import shop.yesaladin.common.exception.ClientException;
 import shop.yesaladin.front.config.GatewayConfig;
 import shop.yesaladin.front.order.dto.OrderCreateResponseDto;
 import shop.yesaladin.front.order.dto.OrderMemberCreateRequestDto;
+import shop.yesaladin.front.order.service.inter.CommandOrderService;
 
 /**
  * 주문 생성과 관련한 service 구현체 입니다.
@@ -23,15 +25,17 @@ import shop.yesaladin.front.order.dto.OrderMemberCreateRequestDto;
  */
 @RequiredArgsConstructor
 @Service
-public class CommandOrderServiceImpl {
+public class CommandOrderServiceImpl implements CommandOrderService {
+
     private final RestTemplate restTemplate;
     private final GatewayConfig gatewayConfig;
 
-    private static final ParameterizedTypeReference<ResponseDto<OrderCreateResponseDto>> ORDER_CREATE = new ParameterizedTypeReference<ResponseDto<OrderCreateResponseDto>>() {};
+    private static final ParameterizedTypeReference<ResponseDto<OrderCreateResponseDto>> ORDER_CREATE = new ParameterizedTypeReference<>() {};
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public ResponseDto<OrderCreateResponseDto> createMemberOrder(OrderMemberCreateRequestDto request) {
         URI uri = UriComponentsBuilder.fromHttpUrl(gatewayConfig.getShopUrl())
                 .path("/v1/orders/member")
@@ -42,6 +46,17 @@ public class CommandOrderServiceImpl {
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<OrderMemberCreateRequestDto> httpEntity = new HttpEntity<>(request, headers);
 
-        return restTemplate.exchange(uri, HttpMethod.POST,httpEntity, ORDER_CREATE).getBody();
+        ResponseDto<OrderCreateResponseDto> response = new ResponseDto<>();
+        try {
+            response = restTemplate.exchange(
+                    uri,
+                    HttpMethod.POST,
+                    httpEntity,
+                    ORDER_CREATE
+            ).getBody();
+        } catch (ClientException ce) {
+            return response;
+        }
+        return response;
     }
 }
