@@ -496,7 +496,7 @@
     formData.append("data", blob);
 
     if (blob.size > 12582912) {
-      return window.alert("File size : " + blob.size + " => 이미지 파일 최대 용량 초과");
+      return alert("File size : " + blob.size + " => 이미지 파일 최대 용량 초과");
     }
 
     console.log(location.origin.toString());
