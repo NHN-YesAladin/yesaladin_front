@@ -97,10 +97,12 @@ public class CartWebController {
 
             // 상품 종류에 따른 분류
             Objects.requireNonNull(Objects.requireNonNull(response).getData()).forEach(product -> {
-                if (Boolean.TRUE.equals(product.getIsEbook())) {
-                    eBookCart.add(product);
-                } else {
-                    deliveryCart.add(product);
+                if (Boolean.FALSE.equals(product.getIsDeleted())) {
+                    if (Boolean.TRUE.equals(product.getIsEbook())) {
+                        eBookCart.add(product);
+                    } else {
+                        deliveryCart.add(product);
+                    }
                 }
             });
         }
