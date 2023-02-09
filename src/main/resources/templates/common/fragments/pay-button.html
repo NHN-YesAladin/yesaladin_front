@@ -1,23 +1,75 @@
+<!-- 각각 화면마다 실패 처리가 달라서 해당 모듈은 사용 불가-->
+
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-
-<body th:fragment="custom-alert">
-<div id="alert-box" class="alert alert-warning m-1" role="alert">
-  <span id="alert-text" class="fs-4 fw-bold">22</span>
-</div>
+<body th:fragment="pay-button">
+<a href="#" class="btn btn-primary w-full m-1" onclick="processPayment(this)"
+   th:data-order-number="${data.orderNumber}"
+   th:data-total-amount-="${data.totalAmount}"
+   th:data-order-name-="${data.orderName}">
+  결제
+</a>
+<div class="d-none" id="shop-server-url"
+     th:text="${@environment.getProperty('yesaladin.gateway.shop')}"></div>
+<div class="d-none" id="front-server-url"
+     th:text="${@environment.getProperty('yesaladin.front.url')}"></div>
 <script>
-  const alertBox = document.getElementById("alert-box");
-  const alertText = document.getElementById("alert-text");
+  let FRONT_SERVER;
+  let SHOP_SERVER;
 
-  window.addEventListener('DOMContentLoaded', (event) => {
-    alertBox.classList.add("d-none");
-  });
-
-  function writeContentToAlert(message) {
-    alertText.innerHTML = message;
-    alertBox.classList.remove("d-none");
+  function initConnectionInfo() {
+    FRONT_SERVER = document.querySelector("#front-server-url").textContent;
+    SHOP_SERVER = document.querySelector("#shop-server-url").textContent;
   }
 
+  window.addEventListener('DOMContentLoaded', (event) => {
+    initConnectionInfo();
+  });
+
+  const clientKey = "test_ck_YPBal2vxj81jnwPmEXA35RQgOAND"; // 상점을 구분하는 키
+  const tossPayments = TossPayments(clientKey); // SDK 초기화
+  function processPayment(event) {
+    //더미 데이터
+    let randomON = `0000_${new Date().getDate()}_${new Date().getHours()}_${new Date().getMinutes()}_${new Date().getMilliseconds()}`;
+    let realOrderName = "테스트 주문 외 4권";
+    let orderNumber = randomON;
+    let orderName = encodeURI(realOrderName);
+    let totalAmount = 100000 + 3000 + 2000;
+
+    //실제 적용 코드
+    const target = event.target;
+    // let orderNumber = target.dataset["orderNumber"];
+    // let orderName = target.dataset["orderName"];
+    // let totalAmount = target.dataset["totalAmount"];
+
+    let successUrl = `${FRONT_SERVER}/payments/order-pay`;
+    let failUrl = `${FRONT_SERVER}/payments/fail?o-num=${orderNumber}&o-name=${orderName}&o-amount=${totalAmount}`;
+
+    // 토스 페이먼츠 결제 시퀀스
+    tossLink(totalAmount, orderNumber, realOrderName, successUrl, failUrl);
+  }
+
+  function tossLink(totalAmount, orderNumber, orderName, ordererName, successUrl, failUrl) {
+    tossPayments.requestPayment('카드', { // 결제 수단 파라미터
+      // 결제 정보 파라미터
+      amount: totalAmount,
+      orderId: orderNumber,
+      orderName: orderName,
+      // successUrl: successUrl,
+      // failUrl: failUrl,
+    })
+    .then(resp => {
+      console.log(resp);
+      window.location.href = `${successUrl}?paymentKey=${resp["paymentKey"]}&orderId=${resp["orderId"]}&amount=${resp["amount"]}`;
+    })
+    .catch(function (error) {
+      // 결제 창 off 등의 예외 사항이 발생했을때 감지할 수 있는 곳
+      // TODO 주문의 redis 정보들 삭제 및 쿠폰 상태 rollback
+
+      writeContentToAlert(error.message);
+      console.error(error);
+    });
+  }
 </script>
 </body>
 </html>

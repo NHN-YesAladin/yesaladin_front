@@ -133,9 +133,31 @@
         </div>
 
     </div>
-
     <!-- TODO 4 : footer -->
     <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
 </div>
+<script>
+    function replacePage() {
+
+        let currentUrl = window.location.href;
+
+        if (!currentUrl.endsWith("&is-first=true")) {
+            let url = `${currentUrl}&is-first=true`;
+            console.log(url)
+            window.location.replace(url);
+        }
+    }
+
+    function sleep(ms) {
+        const wakeUpTime = Date.now() + ms;
+        while (Date.now() < wakeUpTime) {}
+    }
+
+    window.addEventListener('DOMContentLoaded', (event) => {
+        replacePage();
+    });
+
+</script>
 </body>
+
 </html>

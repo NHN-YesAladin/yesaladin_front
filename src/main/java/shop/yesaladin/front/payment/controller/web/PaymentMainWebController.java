@@ -1,5 +1,7 @@
 package shop.yesaladin.front.payment.controller.web;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -9,6 +11,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import shop.yesaladin.common.dto.ResponseDto;
+import shop.yesaladin.front.order.dto.OrderPaymentRequestDto;
+import shop.yesaladin.front.order.dto.OrderStatusResponseDto;
 import shop.yesaladin.front.payment.dto.PaymentCompleteSimpleResponseDto;
 import shop.yesaladin.front.payment.dto.PaymentRequestDto;
 import shop.yesaladin.front.payment.dto.PaymentViewRequestDto;
@@ -54,6 +58,13 @@ public class PaymentMainWebController {
         return "main/payment/pay-page";
     }
 
+    @GetMapping("/empty-pay")
+    public String getEmptyPage(@ModelAttribute OrderPaymentRequestDto requestDto, Model model) {
+        System.out.println("requestDto = " + requestDto);
+        model.addAttribute("data", requestDto);
+        return "main/payment/empty-pay";
+    }
+
     /**
      * 토스 페이먼츠의 결제 중 결제 승인 시퀀스를 처리하기 위해 successUrl로 지정된 컨트롤러 메서드
      *
@@ -74,6 +85,7 @@ public class PaymentMainWebController {
         model.addAttribute("response", responseDto);
 
         if (!confirmResponse.isSuccess()) {
+            model.addAttribute("isAfterOrder", true);
             return "main/order/order-fail";
         }
 
@@ -89,20 +101,29 @@ public class PaymentMainWebController {
     public String failPayment(
             @RequestParam(required = false) String message,
             @RequestParam(required = false) String code,
-            @RequestParam(name = "o-num") String orderNumber,
-            @RequestParam(name = "o-name") String orderName,
-            @RequestParam(name = "o-amount") String amount,
+            @ModelAttribute PaymentRequestDto requestDto,
             Model model
     ) {
         //TODO 결제 실패시 정책 수립 후 화면 꾸미기
+        OrderStatusResponseDto responseDto = OrderStatusResponseDto.builder()
+                .orderName("Retry Pay")
+                .orderNumber(requestDto.getOrderId())
+                .totalAmount(requestDto.getAmount())
+                .build();
+
         model.addAttribute("message", message);
         model.addAttribute("code", code);
-        model.addAttribute("orderNumber", orderNumber);
-        model.addAttribute("orderName", orderName);
-        model.addAttribute("amount", amount);
+        model.addAttribute("isAfterOrder", false);
+        model.addAttribute("response", responseDto);
+
 
         log.info("{} / {}", code, message);
-        log.info("{} / {} / {}", orderNumber, orderName, amount);
+        log.info(
+                "{} / {} / {}",
+                responseDto.getOrderId(),
+                responseDto.getOrderName(),
+                responseDto.getTotalAmount()
+        );
         return "main/order/order-fail";
     }
 }

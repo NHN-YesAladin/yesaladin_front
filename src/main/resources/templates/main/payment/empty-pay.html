@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+  <title>Yes Aladin!</title>
+  <!-- CSS files -->
+  <link th:href="@{/css/tabler.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-flags.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-payments.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-vendors.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/demo.min.css}" rel="stylesheet"/>
+</head>
+<body>
+
+<!-- Tabler Core -->
+<script type="text/javascript" th:src="@{/js/tabler.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/demo.min.js}"></script>
+<script src="https://js.tosspayments.com/v1/payment"></script>
+
+</div>
+<div class="d-none" id="shop-server-url"
+     th:text="${@environment.getProperty('yesaladin.gateway.shop')}"></div>
+<div class="d-none" id="front-server-url"
+     th:text="${@environment.getProperty('yesaladin.front.url')}"></div>
+
+<div id="data-setter" class="d-none"
+     th:data-order-number="${data.orderNumber}"
+     th:data-total-amount="${data.totalAmount}"
+     th:data-order-name="${data.orderName}">
+</div>
+
+</body>
+<script>
+  let FRONT_SERVER;
+  let SHOP_SERVER;
+
+  const clientKey = "test_ck_YPBal2vxj81jnwPmEXA35RQgOAND"; // 상점을 구분하는 키
+  const tossPayments = TossPayments(clientKey); // SDK 초기화
+
+  window.addEventListener('DOMContentLoaded', (event) => {
+    initConnectionInfo();
+    processPayment();
+  });
+
+  function initConnectionInfo() {
+    FRONT_SERVER = document.querySelector("#front-server-url").textContent;
+    SHOP_SERVER = document.querySelector("#shop-server-url").textContent;
+  }
+
+  function processPayment() {
+    //실제 적용 코드
+    const target = document.getElementById("data-setter")
+    let orderNumber = target.dataset["orderNumber"];
+    let orderName = target.dataset["orderName"];
+    let totalAmount = target.dataset["totalAmount"];
+
+    console.log(orderNumber);
+    console.log(orderName);
+    console.log(totalAmount);
+
+    let successUrl = `${FRONT_SERVER}/payments/order-pay`;
+    let failUrl = `${FRONT_SERVER}/payments/fail`;
+//?o-num=${orderNumber}&o-name=${orderName}&o-amount=${totalAmount}
+
+    // 토스 페이먼츠 결제 시퀀스
+    tossLink(totalAmount, orderNumber, orderName, successUrl, failUrl);
+  }
+
+  function tossLink(totalAmount, orderNumber, orderName, successUrl, failUrl) {
+    tossPayments.requestPayment('카드', { // 결제 수단 파라미터
+      // 결제 정보 파라미터
+      amount: totalAmount,
+      orderId: orderNumber,
+      orderName: orderName,
+      successUrl: successUrl,
+      failUrl: failUrl,
+    })
+    .then(resp => {
+      let data = resp.json;
+      console.log(data)
+      // window.history.back();
+    })
+    .catch(function (error) {
+      console.error(error);
+      window.location.replace(`${FRONT_SERVER}/mypage`);
+    });
+  }
+
+</script>
+</html>

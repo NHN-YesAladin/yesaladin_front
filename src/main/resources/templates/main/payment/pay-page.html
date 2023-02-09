@@ -56,9 +56,9 @@
                 <div class="card card-md">
                   <div class="card-body p-2">
                     <label class="form-label">주문인 이름</label>
-                    <span class="p-2 fw-bolder fs-2" th:text="${dto.ordererName}">김김김</span>
+                    <span class="p-2 fw-bolder fs-2" th:text="${data.ordererName}">김김김</span>
                     <label class="form-label mt-2">전화번호</label>
-                    <span class="p-2 fw-bolder fs-2" th:text="${dto.ordererPhoneNumber}">010-9991-4501</span>
+                    <span class="p-2 fw-bolder fs-2" th:text="${data.ordererPhoneNumber}">010-9991-4501</span>
                   </div>
                 </div>
               </div>
@@ -67,9 +67,9 @@
                 <div class="card card-md">
                   <div class="card-body p-2">
                     <label class="form-label">수령인 이름</label>
-                    <span class="p-2 fw-bolder fs-2" th:text="${dto.receiverName}">박박박</span>
+                    <span class="p-2 fw-bolder fs-2" th:text="${data.receiverName}">박박박</span>
                     <label class="form-label mt-2">전화번호</label>
-                    <span class="p-2 fw-bolder fs-2" th:text="${dto.receiverPhoneNumber}">010-9991-4501</span>
+                    <span class="p-2 fw-bolder fs-2" th:text="${data.receiverPhoneNumber}">010-9991-4501</span>
                   </div>
                 </div>
               </div>
@@ -81,11 +81,11 @@
                 <div class="card-body p-0">
                   <label class="form-label">배송지 주소</label>
                   <span
-                      class="p-2 fw-bolder fs-2" th:text="${dto.receiverAddress}">광주광역시 광주광역시 광주광역시 광주광역시 광주광역시 광주광역시 광주광역시 광주광역시</span>
+                      class="p-2 fw-bolder fs-2" th:text="${data.receiverAddress}">광주광역시 광주광역시 광주광역시 광주광역시 광주광역시 광주광역시 광주광역시 광주광역시</span>
                 </div>
                 <label class="form-label mt-2">희망 배송 일자</label>
                 <span class="p-2 fw-bolder fs-2"
-                      th:text="${dto.receiverExpectedDate}">2023-02-07</span>
+                      th:text="${data.receiverExpectedDate}">2023-02-07</span>
 
               </div>
             </div>
@@ -115,19 +115,19 @@
                         알라라라딘dddddd 외 2445권</span>
                     </td>
                     <td class="fs-3 fw-bold"
-                        th:text="|${#numbers.formatInteger(dto.productAmount, 1, 'COMMA')}원|">
+                        th:text="|${#numbers.formatInteger(data.productAmount, 1, 'COMMA')}원|">
                       100,000원
                     </td>
                     <td class="fs-3 fw-bold text-orange"
-                        th:text="|-${#numbers.formatInteger(dto.discountAmount, 1, 'COMMA')}원|">
+                        th:text="|-${#numbers.formatInteger(data.discountAmount, 1, 'COMMA')}원|">
                       10,000원
                     </td>
                     <td class="fs-3 fw-bold text-orange"
-                        th:text="|${#numbers.formatInteger(dto.shippingFee, 1, 'COMMA')}원/${#numbers.formatInteger(dto.wrappingFee, 1, 'COMMA')}원|">
+                        th:text="|${#numbers.formatInteger(data.shippingFee, 1, 'COMMA')}원/${#numbers.formatInteger(data.wrappingFee, 1, 'COMMA')}원|">
                       90,000원
                     </td>
                     <td class="fs-3 fw-bolder"
-                        th:text="|${#numbers.formatInteger(dto.totalAmount, 1, 'COMMA')}원|">90,000원
+                        th:text="|${#numbers.formatInteger(data.totalAmount, 1, 'COMMA')}원|">90,000원
                     </td>
                   </tr>
                   </tbody>
@@ -152,7 +152,10 @@
           <div class="card-footer">
             <div class="row">
               <div class="col-6 mt-2">
-                <a href="#" class="btn btn-primary w-100" onclick="processPayment(this)">
+                <a href="#" class="btn btn-primary w-full" onclick="processPayment(this)"
+                   th:data-order-number="${data.orderNumber}"
+                   th:data-total-amount="${data.totalAmount}"
+                   th:data-order-name="${data.orderName}">
                   결제
                 </a>
               </div>
@@ -185,9 +188,7 @@
      th:text="${@environment.getProperty('yesaladin.gateway.shop')}"></div>
 <div class="d-none" id="front-server-url"
      th:text="${@environment.getProperty('yesaladin.front.url')}"></div>
-<div id="data-setter" th:data-order-number="${dto.orderNumber}"
-     th:data-order-name="${dto.orderName}" th:data-orderer-name="${dto.ordererName}"
-     th:data-total-amount="${dto.totalAmount}"></div>
+
 </body>
 <script>
   let FRONT_SERVER;
@@ -206,32 +207,21 @@
   }
 
   function processPayment(event) {
-    let orderResp = {};
+    //더미 데이터
     let randomON = `0000_${new Date().getDate()}_${new Date().getHours()}_${new Date().getMinutes()}_${new Date().getMilliseconds()}`;
-    orderResp["orderId"] = 12421345325;
-    orderResp["orderNumber"] = randomON;
     let realOrderName = "테스트 주문 외 4권";
-    orderResp["orderName"] = encodeURI(realOrderName);
-    orderResp["totalAmount"] = 100000;
-    orderResp["shippingFee"] = 3000;
-    orderResp["wrappingFee"] = 2000;
+    let orderNumber = randomON;
+    let orderName = encodeURI(realOrderName);
+    let totalAmount = 100000 + 3000 + 2000;
 
-
-    let orderId = orderResp["orderId"];
-    let orderNumber = orderResp["orderNumber"];
-    let orderName = orderResp["orderName"];
-    let totalAmount = orderResp["totalAmount"] + orderResp["shippingFee"]
-        + orderResp["wrappingFee"];
-    // console.log(decodeURI(orderName))
-
-    let dataDiv = document.getElementById("data-setter");
-    // let orderNumber = dataDiv.dataset["orderNumber"];
-    // let orderName = dataDiv.dataset["orderName"];
-    // let ordererName = dataDiv.dataset["ordererName"];
-    // let totalAmount = dataDiv.dataset["totalAmount"];
+    //실제 적용 코드
+    const target = event.target;
+    // let orderNumber = target.dataset["orderNumber"];
+    // let orderName = target.dataset["orderName"];
+    // let totalAmount = target.dataset["totalAmount"];
 
     let successUrl = `${FRONT_SERVER}/payments/order-pay`;
-    let failUrl = `${FRONT_SERVER}/payments/fail?o-num=${orderNumber}&o-name=${orderName}&o-amount=${totalAmount}`;
+    let failUrl = `${FRONT_SERVER}/payments/fail`;
 
     // 토스 페이먼츠 결제 시퀀스
     tossLink(totalAmount, orderNumber, realOrderName, successUrl, failUrl);
