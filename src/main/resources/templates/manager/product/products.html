@@ -88,7 +88,7 @@
             <tbody>
               <tr th:each="product, i : ${products}">
                 <td class="text-center"><span class="text-muted" th:text="${i.count}"></span></td>
-                <td><a class="text-dark" th:text="${product.title}" th:href="|/manager/products/${product.id}|"/></td>
+                <td><a class="text-dark" th:text="${product.title}" th:href="|/products/${product.id}|"/></td>
                 <td>
                   <div th:each="author, j : ${product.authors}" style="display: inline">
                     <p th:text="${author.name}" style="display: inline"></p>

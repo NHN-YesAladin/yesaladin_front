@@ -164,7 +164,7 @@ public class CartWebController {
         log.info("preQuantity = {}", preQuantity);
         int quantity = cartDto.getQuantity();
         if (Boolean.TRUE.equals(Objects.nonNull(preQuantity) && !cartDto.getIsEbook()) && Boolean.TRUE.equals(!cartDto.getIsSubscriptionAvailable())) {
-            quantity += Integer.parseInt((String) preQuantity);
+            quantity += Integer.parseInt(preQuantity.toString());
         }
         log.info("quantity = {}", quantity);
         redisTemplate.opsForHash().put(cookie.getValue(), cartDto.getId(), quantity);
