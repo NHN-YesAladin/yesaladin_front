@@ -133,8 +133,8 @@ public abstract class Oauth2Service {
             return oauth2Adapter.isAlreadyMember(email);
         } else { // KAKAO 인 경우
             Map<String, String> kakaoAccount = (Map) userInfo.get(KAKAO_ACCOUNT.getValue());
-            email = Objects.nonNull(kakaoAccount.get(EMAIL.getValue())) ? userInfo.get(EMAIL.getValue())
-                    .toString() : userInfo.get("id") + YESALADIN_EMAIL.getValue();
+            email = Objects.nonNull(kakaoAccount.get(EMAIL.getValue())) ? kakaoAccount.get(EMAIL.getValue())
+                    : userInfo.get("id") + YESALADIN_EMAIL.getValue();
             return oauth2Adapter.isAlreadyMember(email);
         }
     }
