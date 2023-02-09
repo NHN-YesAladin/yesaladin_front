@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+  <title>Yes Aladin!</title>
+  <!-- CSS files -->
+  <link th:href="@{/css/tabler.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-flags.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-payments.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-vendors.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/demo.min.css}" rel="stylesheet"/>
+</head>
+<body>
+
+<!-- Tabler Core -->
+<script type="text/javascript" th:src="@{/js/tabler.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/demo.min.js}"></script>
+<script src="https://js.tosspayments.com/v1/payment"></script>
+
+<span sec:authorize="isAuthenticated()" th:with="auth=true"></span>
+<span sec:authorize="!isAuthenticated()" th:with="auth=false"></span>
+<div class="wrapper">
+  <!-- TODO 1 : HEADER -->
+  <div th:replace="~{common/fragments/header :: fragment-header}"></div>
+
+  <!-- TODO 2 : NAV-BAR -->
+  <div th:replace="~{common/fragments/navbar :: fragment-nav-bar}"></div>
+
+  <div class="page-wrapper">
+    <div class="container-xl p-4 py-4 col-12">
+      <div class="row row-cards">
+        <div class="col-12">
+          <div class="text-center mb-4">
+            <h1 class="h-auto">결제</h1>
+          </div>
+        </div>
+      </div>
+      <div class="row row-cards">
+        <div class="card card-md">
+          <div class="card-body p-0">
+            <ul class="steps steps-blue steps-counter m-2">
+              <li class="step-item">카트</li>
+              <li class="step-item">주문</li>
+              <li class="step-item active">결제</li>
+              <li class="step-item">완료</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card card-md">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-6">
+                <h3 class="card-title">주문인 정보 확인</h3>
+                <div class="card card-md">
+                  <div class="card-body p-2">
+                    <label class="form-label">주문인 이름</label>
+                    <span class="p-2 fw-bolder fs-2" th:text="${data.ordererName}">김김김</span>
+                    <label class="form-label mt-2">전화번호</label>
+                    <span class="p-2 fw-bolder fs-2" th:text="${data.ordererPhoneNumber}">010-9991-4501</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-6">
+                <h3 class="card-title">수령인 정보 확인</h3>
+                <div class="card card-md">
+                  <div class="card-body p-2">
+                    <label class="form-label">수령인 이름</label>
+                    <span class="p-2 fw-bolder fs-2" th:text="${data.receiverName}">박박박</span>
+                    <label class="form-label mt-2">전화번호</label>
+                    <span class="p-2 fw-bolder fs-2" th:text="${data.receiverPhoneNumber}">010-9991-4501</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <br/>
+            <h3 class="card-title">배송 정보 확인</h3>
+            <div class="card card-md">
+              <div class="card-body">
+                <div class="card-body p-0">
+                  <label class="form-label">배송지 주소</label>
+                  <span
+                      class="p-2 fw-bolder fs-2" th:text="${data.receiverAddress}">광주광역시 광주광역시 광주광역시 광주광역시 광주광역시 광주광역시 광주광역시 광주광역시</span>
+                </div>
+                <label class="form-label mt-2">희망 배송 일자</label>
+                <span class="p-2 fw-bolder fs-2"
+                      th:text="${data.receiverExpectedDate}">2023-02-07</span>
+
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <h3 class="card-title">주문 상품 정보</h3>
+            <div class="card card-md">
+              <div class="table-responsive">
+                <table
+                    class="table table-vcenter text-center scroll-x">
+                  <thead>
+                  <tr>
+                    <th class="w-1"></th>
+                    <th class="fs-4">주문내역</th>
+                    <th class="fs-4">상품금액</th>
+                    <th class="fs-4">할인금액</th>
+                    <th class="fs-4">배송비/포장비</th>
+                    <th class="fs-4">결제금액</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr>
+                    <td></td>
+                    <td>
+                      <span class="col-12 fs-3 fw-bolder text-truncate"
+                            style="max-width: 190px;">
+                        알라라라딘dddddd 외 2445권</span>
+                    </td>
+                    <td class="fs-3 fw-bold"
+                        th:text="|${#numbers.formatInteger(data.productAmount, 1, 'COMMA')}원|">
+                      100,000원
+                    </td>
+                    <td class="fs-3 fw-bold text-orange"
+                        th:text="|-${#numbers.formatInteger(data.discountAmount, 1, 'COMMA')}원|">
+                      10,000원
+                    </td>
+                    <td class="fs-3 fw-bold text-orange"
+                        th:text="|${#numbers.formatInteger(data.shippingFee, 1, 'COMMA')}원/${#numbers.formatInteger(data.wrappingFee, 1, 'COMMA')}원|">
+                      90,000원
+                    </td>
+                    <td class="fs-3 fw-bolder"
+                        th:text="|${#numbers.formatInteger(data.totalAmount, 1, 'COMMA')}원|">90,000원
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <!--          <div class="card-body">-->
+          <!--            <h3 class="card-title">결제 정보</h3>-->
+
+          <!--            <div class="row">-->
+          <!--              <div class="col-8">-->
+
+          <!--              </div>-->
+          <!--              <div class="col-4">-->
+          <!--                <div class="card card-md">-->
+          <!--                  <h1>sdws</h1>-->
+          <!--                </div>-->
+          <!--              </div>-->
+          <!--            </div>-->
+          <!--          </div>-->
+          <div class="card-footer">
+            <div class="row">
+              <div class="col-6 mt-2">
+                <a href="#" class="btn btn-primary w-full" onclick="processPayment(this)"
+                   th:data-order-number="${data.orderNumber}"
+                   th:data-total-amount="${data.totalAmount}"
+                   th:data-order-name="${data.orderName}">
+                  결제
+                </a>
+              </div>
+              <div class="col-6 mt-2">
+                <a href="#" class="btn btn-outline-danger w-100" onclick="">
+                  주문 취소
+                </a>
+              </div>
+              <div class="col-12 mt-2">
+                <a href="/mypage" class="btn btn-outline-info w-100" onclick="">
+                  마이페이지로 가기
+                </a>
+              </div>
+              <div class="col-12 p-2">
+                <span class="">결제 및 주문 취소는 <strong>마이페이지 > 주문상태</strong>에서 다시 진행할 수 있습니다.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div th:replace="~{common/fragments/alert :: custom-alert}"></div>
+    </div>
+  </div>
+</div>
+
+<!-- TODO 4 : footer -->
+<div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
+</div>
+<div class="d-none" id="shop-server-url"
+     th:text="${@environment.getProperty('yesaladin.gateway.shop')}"></div>
+<div class="d-none" id="front-server-url"
+     th:text="${@environment.getProperty('yesaladin.front.url')}"></div>
+
+</body>
+<script>
+  let FRONT_SERVER;
+  let SHOP_SERVER;
+
+  const clientKey = "test_ck_YPBal2vxj81jnwPmEXA35RQgOAND"; // 상점을 구분하는 키
+  const tossPayments = TossPayments(clientKey); // SDK 초기화
+
+  (function init() {
+    initConnectionInfo();
+  })();
+
+  function initConnectionInfo() {
+    FRONT_SERVER = document.querySelector("#front-server-url").textContent;
+    SHOP_SERVER = document.querySelector("#shop-server-url").textContent;
+  }
+
+  function processPayment(event) {
+    //더미 데이터
+    let randomON = `0000_${new Date().getDate()}_${new Date().getHours()}_${new Date().getMinutes()}_${new Date().getMilliseconds()}`;
+    let realOrderName = "테스트 주문 외 4권";
+    let orderNumber = randomON;
+    let orderName = encodeURI(realOrderName);
+    let totalAmount = 100000 + 3000 + 2000;
+
+    //실제 적용 코드
+    const target = event.target;
+    // let orderNumber = target.dataset["orderNumber"];
+    // let orderName = target.dataset["orderName"];
+    // let totalAmount = target.dataset["totalAmount"];
+
+    let successUrl = `${FRONT_SERVER}/payments/order-pay`;
+    let failUrl = `${FRONT_SERVER}/payments/fail`;
+
+    // 토스 페이먼츠 결제 시퀀스
+    tossLink(totalAmount, orderNumber, realOrderName, successUrl, failUrl);
+  }
+
+  function tossLink(totalAmount, orderNumber, orderName, successUrl, failUrl) {
+    tossPayments.requestPayment('카드', { // 결제 수단 파라미터
+      // 결제 정보 파라미터
+      amount: totalAmount,
+      orderId: orderNumber,
+      orderName: orderName,
+      successUrl: successUrl,
+      failUrl: failUrl,
+    })
+    .then(resp => {
+      let data = resp.json;
+      console.log(data)
+    })
+    .catch(function (error) {
+      // 결제 창 off 등의 예외 사항이 발생했을때 감지할 수 있는 곳
+      // TODO 주문의 redis 정보들 삭제 및 쿠폰 상태 rollback
+
+      writeContentToAlert(error.message);
+      console.error(error);
+    });
+  }
+
+</script>
+</html>

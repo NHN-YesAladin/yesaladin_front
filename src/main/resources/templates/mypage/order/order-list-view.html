@@ -123,7 +123,7 @@
                                                 </td>
                                                 <td>
                                                     <span class="d-inline-block text-truncate"
-                                                          style="max-width: 100px;" th:text="${data.orderAmount}">
+                                                          style="max-width: 100px;" th:text="|${#numbers.formatInteger(data.orderAmount, 1, 'COMMA')}원|">
                                                         222,500
                                                     </span>
                                                 </td>
