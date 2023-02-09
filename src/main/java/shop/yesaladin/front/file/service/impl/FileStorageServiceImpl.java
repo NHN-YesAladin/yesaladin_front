@@ -16,7 +16,6 @@ import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.config.GatewayConfig;
 import shop.yesaladin.front.file.dto.FileUploadResponseDto;
 import shop.yesaladin.front.file.service.inter.FileStorageService;
-import shop.yesaladin.front.file.service.inter.StorageAuthService;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -34,7 +33,6 @@ public class FileStorageServiceImpl implements FileStorageService {
 
     private final RestTemplate restTemplate;
     private final GatewayConfig gatewayConfig;
-    private final StorageAuthService storageAuthService;
 
     /**
      * {@inheritDoc}
@@ -71,7 +69,14 @@ public class FileStorageServiceImpl implements FileStorageService {
      */
     @Override
     public byte[] fileDownload(String url) {
-        String tokenId = storageAuthService.getAuthToken();
+        ResponseEntity<ResponseDto<String>> tokenResponse = restTemplate.exchange(
+                gatewayConfig.getShopUrl() + "/v1/files/auth-token/",
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<ResponseDto<String>>() {
+                }
+        );
+        String tokenId = Objects.requireNonNull(tokenResponse.getBody()).getData();
 
         RequestCallback requestCallback = (request) -> request.getHeaders().set("X-Auth-Token", tokenId);
         ResponseExtractor<byte[]> responseExtractor = (response) -> response.getBody().readAllBytes();
