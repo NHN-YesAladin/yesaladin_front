@@ -23,16 +23,16 @@ public class CouponIssueController {
     private final GatewayConfig gatewayConfig;
     private final RestTemplate restTemplate;
 
-    @GetMapping(value = "/issuance", params = {"trigger", "couponid"})
+    @GetMapping(value = "/issuance", params = {"type", "couponid"})
     public CouponIssueResponseDto requestCouponIssue(
-            @RequestParam("trigger") String triggerType, @RequestParam("couponid") Long couponId
+            @RequestParam("type") String triggerType, @RequestParam("couponid") Long couponId
     ) {
         log.info("********* request coupon issue to shop server ********");
         // request issue coupon with triggerType and couponid to shop server
         UriComponents uriComponents = UriComponentsBuilder.fromHttpUrl(gatewayConfig.getShopUrl())
-                .pathSegment("v1", "member-coupons", "issue")
-                .queryParam("triggerType", triggerType)
-                .queryParam("couponId", couponId).build();
+                .pathSegment("v1", "member-coupons", "issuance")
+                .queryParam("type", triggerType)
+                .queryParam("couponid", couponId).build();
 
         log.info("=== coupon issue request url {} ===", uriComponents);
 

@@ -2,6 +2,7 @@ package shop.yesaladin.front.coupon.controller.web;
 
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
@@ -30,6 +31,7 @@ import shop.yesaladin.front.coupon.service.inter.QueryCouponService;
  * @author 김홍대, 서민지
  * @since 1.0
  */
+@Slf4j
 @RequiredArgsConstructor
 @Controller
 @RequestMapping("/manager/coupon")
@@ -59,6 +61,7 @@ public class CouponManagerWebController {
     public CouponCreateResponseDto createCouponTemplate(
             @ModelAttribute @Valid CouponCreateRequestDto requestDto
     ) {
+        log.info("=== [COUPON] coupon create request dto : {} ===", requestDto);
         return commandCouponService.createCouponTemplate(requestDto);
     }
 

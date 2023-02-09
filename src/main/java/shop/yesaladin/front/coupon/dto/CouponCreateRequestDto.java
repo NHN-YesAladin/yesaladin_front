@@ -9,6 +9,7 @@ import javax.validation.constraints.PositiveOrZero;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
  * @author 김홍대
  * @since 1.0
  */
+@ToString
 @Getter
 @Setter
 @NoArgsConstructor
@@ -32,6 +34,7 @@ public class CouponCreateRequestDto {
     private Integer quantity;
     @Range(min = 1, max = 31)
     private Integer couponOpenDate;
+    @DateTimeFormat(pattern = "HH:mm")
     private LocalTime couponOpenTime;
     private MultipartFile couponImage;
     @Positive

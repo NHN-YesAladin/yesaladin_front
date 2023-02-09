@@ -91,12 +91,15 @@ public class QueryCouponServiceImpl implements QueryCouponService {
     }
 
     private String getDisplayBound(MemberCouponSummaryDto data) {
+        if (Objects.isNull(data.getCouponBoundCode())) {
+            return "포인트 쿠폰";
+        }
         if (data.getCouponBoundCode().equals(CouponBoundCode.CATEGORY)) {
             return getProductNameByIsbn(data.getCouponBound());
         } else if (data.getCouponBoundCode().equals(CouponBoundCode.PRODUCT)) {
             return getCategoryNameByCategoryId(data.getCouponBound());
         }
-        return "포인트 쿠폰";
+        return null;
     }
 
     private String getProductNameByIsbn(String isbn) {
