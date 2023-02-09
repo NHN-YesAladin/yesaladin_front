@@ -17,9 +17,9 @@ public class PointRestController {
      * @author 최예린
      * @since 1.0
      */
-    @GetMapping("/point")
+    @GetMapping("/points")
     public long getMemberPoint() {
-        return queryPointHistoryService.getMemberPoint().getBody().getAmount();
+        return queryPointHistoryService.getMemberPoint();
     }
 
 }

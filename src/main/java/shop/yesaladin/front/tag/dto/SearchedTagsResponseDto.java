@@ -3,9 +3,9 @@ package shop.yesaladin.front.tag.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.List;
-import lombok.ToString;
 
 /**
  * 태그 리스트와 총 갯수

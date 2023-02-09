@@ -55,6 +55,9 @@ public class QueryMemberServiceImpl implements QueryMemberService {
     private static final ParameterizedTypeReference<ResponseDto<MemberWithdrawResponseDto>> MEMBER_MANAGER_WITHDRAW_RESPONSE_DTO = new ParameterizedTypeReference<>() {
     };
 
+    private static final ParameterizedTypeReference<ResponseDto<MemberGradeQueryResponseDto>> MEMBER_GRADE_DTO = new ParameterizedTypeReference<>() {
+    };
+
     /**
      * {@inheritDoc}
      */
@@ -202,16 +205,29 @@ public class QueryMemberServiceImpl implements QueryMemberService {
     public String getMemberGrade() {
         URI uri = UriComponentsBuilder
                 .fromUriString(gatewayConfig.getShopUrl())
-                .path("/v1/members/{loginId}/grade")
+                .path("/v1/members")
+                .queryParam("type", "grade")
                 .encode()
                 .build()
-                .expand("admin")
                 .toUri();
-        MemberGradeQueryResponseDto response = restTemplate.getForObject(
-                uri, MemberGradeQueryResponseDto.class
-        );
-        log.info("membergraderesponse : {}", response);
-        return response.getGradeEn();
+
+        ResponseDto<MemberGradeQueryResponseDto> response = restTemplate.exchange(
+                uri,
+                HttpMethod.GET,
+                getEntity(),
+                MEMBER_GRADE_DTO
+        ).getBody();
+        if (response != null && response.isSuccess()) {
+            return response.getData().getGradeEn() + "(" + response.getData().getGradeKo() + ")";
+        }
+        return "";
+    }
+
+    private static HttpEntity getEntity() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity entity = new HttpEntity<>(headers);
+        return entity;
     }
 
     /**

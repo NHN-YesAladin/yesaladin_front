@@ -76,10 +76,10 @@
                             <div class="card-body">
                                 <h3 th:text="|제목 : ${product.getTitle()}|"></h3>
                                 저자 : <div th:each="author, i : ${product.authors}" style="display: inline">
-                                    <p th:text="${author}" style="display: inline"></p>
+                                    <p th:text="${author.name}" style="display: inline"></p>
                                     <p th:if="${!i.last}" style="display: inline">|</p>
                                 </div><br>
-                                <p th:text="|출판사 : ${product.getPublisher()}|" style="display:inline;"></p>
+                                <p th:text="|출판사 : ${product.getPublisher().name}|" style="display:inline;"></p>
                                 <p th:text="|출판일 : ${product.getPublishedDate()}|"></p>
                             </div>
                         </div>
@@ -160,9 +160,22 @@
                 <div class="row mb-3 align-items-end">
                     <div class="col">
                         <label class="form-label">[<d id="modal-register-product-base" class="d-inline"></d>]와 연관관계를 맺을 상품</label>
-                        <input type="text" class="form-control" id="relation-target-id">
+                        <input type="text" class="form-control" id="input-title" th:attr="product-id=${product.getId()}">
+                    </div>
+                    <div class="col-auto">
+                        <a href="#" class="btn btn-icon" aria-label="Button" id="search-button">
+                            <!-- Download SVG icon from http://tabler-icons.io/i/search -->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
+                        </a>
                     </div>
                 </div>
+                <div id="search-result" class="mb-3" style="display: none">
+                    <label id="search-result-label" class="form-label"></label>
+                    <select id="relation-target-id" class="form-select" aria-label="select example"></select>
+                </div>
+                <nav aria-label="Page navigation example">
+                    <ul id="search-page" class="d-flex justify-content-center pagination" style="display: none;"></ul>
+                </nav>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn me-auto" data-bs-dismiss="modal">취소</button>
@@ -233,8 +246,80 @@
                 location.reload();
             });
     })
+</script>
 
+<script>
+    const input = document.getElementById('input-title')
+    const searchResult = document.getElementById('search-result')
+    const searchResultLabel = document.getElementById('search-result-label')
+    const searchResultSelect = document.getElementById('relation-target-id')
+    document.getElementById('search-button').addEventListener('click', function() {searchProduct(0, 5)})
+    function searchProduct(page, size) {
+        const productId = input.getAttribute('product-id').toString();
+        const url = '/manager/products/' +  productId  +'/relations?title='+input.value+'&page=' + page + '&size=' + size;
+        if (input.value.length === 0) {
+            alert('검색할 상품의 제목을 입력해주세요.')
+            return
+        }
+        fetch(url, {
+            method: 'GET'
+        })
+        .then((res) => res.json())
+        .then(function (data) {
+            searchResult.style.display = 'block'
+            initSelect()
+            initPagination(data.totalPage, data.currentPage, size)
+            searchResultLabel.innerText = input.value + " 검색 결과, 총 " + data.totalDataCount + "개"
+            data.dataList.forEach(function (dto) {
+                const option = document.createElement('option')
+                option.value = dto.id
+                option.text = dto.title + '(' + dto.authors[0] + ', ' + dto.publisher + ')'
+                searchResultSelect.add(option, null)
+            })
+        })
+    }
 
+    function initSelect() {
+        searchResultSelect.options.length = 0
+    }
+
+    function initPagination(totalPage, currentPage, pageSize) {
+        const page = document.getElementById('search-page')
+        page.style.display = 'block'
+        while (page.hasChildNodes()) {
+            page.removeChild(page.firstChild)
+        }
+        if(currentPage > 0) {
+            const pre = document.createElement('li')
+            pre.className += 'page-item'
+            const preLink = document.createElement('a')
+            preLink.className += 'page-link'
+            preLink.innerText = 'Previous'
+            preLink.addEventListener('click', function () {searchProduct((currentPage - 1 ), pageSize)})
+            pre.appendChild(preLink)
+            page.appendChild(pre)
+        }
+        console.log(currentPage, totalPage)
+        const now = document.createElement('li')
+        now.className += 'page-item active'
+        const nowLink = document.createElement('a')
+        nowLink.className += 'page-link'
+        nowLink.innerText = currentPage
+        now.appendChild(nowLink)
+        page.appendChild(now)
+
+        if(currentPage !== totalPage - 1) {
+            const next = document.createElement('li')
+            next.className += 'page-item'
+            const nextLink = document.createElement('a')
+            nextLink.className += 'page-link'
+            nextLink.href = '#'
+            nextLink.innerText = 'Next'
+            nextLink.addEventListener('click', function () {searchProduct(currentPage + 1 , pageSize)})
+            next.appendChild(nextLink)
+            page.appendChild(next)
+        }
+    }
 </script>
 </body>
 </html>

@@ -1,6 +1,7 @@
 package shop.yesaladin.front.member.service.inter;
 
 import java.util.List;
+import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.member.dto.MemberAddressResponseDto;
 
 /**
@@ -19,5 +20,5 @@ public interface QueryMemberAddressService {
      * @author 최예린
      * @since 1.0
      */
-    List<MemberAddressResponseDto> getMemberAddresses();
+    ResponseDto<List<MemberAddressResponseDto>> getMemberAddresses();
 }

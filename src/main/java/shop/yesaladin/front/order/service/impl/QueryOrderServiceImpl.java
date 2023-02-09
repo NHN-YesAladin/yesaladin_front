@@ -13,6 +13,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -82,13 +84,16 @@ public class QueryOrderServiceImpl implements QueryOrderService {
      */
     @Override
     public ResponseDto<OrderSheetResponseDto> getOrderSheetData(
-            List<String> isbn,
-            List<String> quantity
+            List<String> isbnList,
+            List<String> quantityList
     ) {
-        URI uri = UriComponentsBuilder.fromHttpUrl(
-                        gatewayConfig.getShopUrl() + "/v1/order-sheets")
-                .queryParam("isbnList", String.join(",", isbn))
-                .queryParam("quantityList", String.join(",", quantity))
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.put("isbn", isbnList);
+        params.put("quantity", quantityList);
+
+        URI uri = UriComponentsBuilder.fromHttpUrl(gatewayConfig.getShopUrl())
+                .path("/v1/order-sheets")
+                .queryParams(params)
                 .build(true)
                 .encode()
                 .toUri();

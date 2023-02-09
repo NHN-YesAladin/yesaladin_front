@@ -53,19 +53,20 @@
     <div class="page-body">
         <div class="container">
             <div class="card">
-                <form action="/orders" method="get" >
+                <form id="product" method="get">
                 <div class="card-header">
                     <div class="card-title">
-                        <div th:if="${productDetailResponseDto.getIsEbook()} == true">
-                            <h2 class="badge bg-azure-lt">E-Book</h2>
+                        <div>
+                            <h2 class="badge bg-purple-lt" th:if="${productDetailResponseDto.getIsEbook()} == true" style="display: inline">E-Book</h2>
+                            <h2 class="badge bg-green-lt" th:if="${productDetailResponseDto.getIsSubscriptionAvailable()} == true">구독상품</h2>
                         </div>
                         <h1 th:text="${productDetailResponseDto.getTitle()}"></h1>
                         <h3>저자 :
                             <div th:each="author, j : ${productDetailResponseDto.getAuthors()}" style="display: inline">
-                                <p th:text="${author}" style="display: inline"></p>
+                                <p th:text="${author.name}" style="display: inline"></p>
                                 <p th:if="${!j.last}" style="display: inline">,</p>
                             </div>
-                            | 출판사 : <p th:text="${productDetailResponseDto.getPublisher()}" style="display: inline"></p></h3>
+                            | 출판사 : <p th:text="${productDetailResponseDto.getPublisher().name}" style="display: inline"></p></h3>
                     </div>
                 </div>
 
@@ -99,9 +100,9 @@
                                                 <path d="M5 12l14 0"></path>
                                             </svg>
                                         </button>
-                                        <input type="text" class="form-control d-inline text-center" value="1" min="1"
-                                               th:disabled="${productDetailResponseDto.getIsEbook() || productDetailResponseDto.getIsSubscriptionAvailable()}"
-                                               id="quantity" name="quantity"  maxlength="4" style="width:60px">
+                                        <input type="text" class="form-control d-inline text-center" min="1"
+                                               th:readonly="${productDetailResponseDto.isEbook}" value="1"
+                                               id="quantity" maxlength="4" name="quantity" style="width:60px">
                                         <button type="button" class="btn btn-secondary btn-icon"
                                                 onclick="upQuantity()" style="width: 35px"
                                                 th:disabled="${productDetailResponseDto.getIsEbook() || productDetailResponseDto.getIsSubscriptionAvailable()}">
@@ -149,7 +150,9 @@
                                 </div>
                                 <!-- 정기구독 불가능 -->
                                 <div class="row px-2 py-1" th:if="${!productDetailResponseDto.isSubscriptionAvailable}">
-                                    <button type="submit" class="btn btn-facebook w-100">
+                                    <button type="submit" form="product"
+                                            onclick="form.action='/orders/order-sheets'"
+                                            class="btn btn-facebook w-100">
                                         <svg xmlns="http://www.w3.org/2000/svg"
                                              class="icon icon-tabler icon-tabler-brand-cashapp" width="24" height="24"
                                              viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
@@ -163,7 +166,8 @@
                                 <!-- 정기구독 가능 -->
                                 <div class="row p-1" th:if="${productDetailResponseDto.getIsSubscriptionAvailable()}">
                                     <div class="col-6 px-1">
-                                        <button type="submit" class="btn btn-facebook w-100">
+                                        <button type="submit" form="product" class="btn btn-facebook w-100"
+                                                onclick="form.action='/orders/order-sheets'" >
                                             <svg xmlns="http://www.w3.org/2000/svg"
                                                  class="icon icon-tabler icon-tabler-brand-cashapp" width="24" height="24"
                                                  viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
@@ -175,7 +179,8 @@
                                         </button>
                                     </div>
                                     <div class="col-6 px-1">
-                                        <a href="#" class="btn btn-facebook w-100">
+                                        <button type="submit" class="btn btn-facebook w-100"
+                                           onclick="form.action='/orders/subscribe-sheets'">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-stats" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                                                 <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4"></path>
@@ -186,7 +191,7 @@
                                                 <path d="M3 11h16"></path>
                                             </svg>
                                             정기구독
-                                        </a>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -235,7 +240,7 @@
                             <h2>품목정보</h2>
                             <p th:text="|출판일 : ${productDetailResponseDto.getPublishedDate()}|"></p>
                             <p th:text="|ISBN13 : ${productDetailResponseDto.getIsbn()}|"></p>
-                            <input type="text" name="isbn" th:value="${isbn}" hidden="hidden">
+                            <input type="hidden" name="isbn" th:value="${productDetailResponseDto.getIsbn()}">
                             <div th:if="${productDetailResponseDto.getIsSubscriptionAvailable()} == true">
                                 <p th:text="|ISSN11 : ${productDetailResponseDto.getIssn()}|" name="issn"></p>
                             </div>
@@ -245,6 +250,10 @@
                             <div th:each="category : ${productDetailResponseDto.getCategories()}">
                                 <p th:text="${category.parentName} + ' >> ' + ${category.name}"></p>
                             </div>
+                        </div>
+                        <div class="col-12" th:if="${productDetailResponseDto.getTags().size() != 0}">
+                            <h2>태그</h2>
+                            <span class="badge bg-azure-lt" th:each="tag : ${productDetailResponseDto.getTags()}" th:text="|#${tag.name}|" style="margin: 2px"></span>
                         </div>
                         <div class="col-12">
                             <h2>목차</h2>
@@ -282,7 +291,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-link link-secondary me-auto" data-bs-dismiss="modal">아니요</button>
-                <a href="/cart" class="btn btn-success" data-bs-dismiss="modal">예, 확인하겠습니다.</a>
+                <a href="/cart" class="btn btn-success">예, 확인하겠습니다.</a>
             </div>
         </div>
     </div>
@@ -378,8 +387,9 @@
         })
             .then(res => res.json())
             .then(response => {
-                if (page === 1 && response.dataList.length === 0) {
+                if (page === 1 && response.dataList == null) {
                     document.getElementById('relation-div').classList.add('d-none');
+                    return;
                 }
 
                 while (relationTable.firstChild) {
