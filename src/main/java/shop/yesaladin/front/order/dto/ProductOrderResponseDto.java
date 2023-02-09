@@ -1,8 +1,9 @@
-package shop.yesaladin.front.product.dto;
+package shop.yesaladin.front.order.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import shop.yesaladin.front.order.dto.ProductOrderRequestDto;
 
 /**
  * 주문한 상품의 정보를 반환하기 위한 dto 클래스입니다.

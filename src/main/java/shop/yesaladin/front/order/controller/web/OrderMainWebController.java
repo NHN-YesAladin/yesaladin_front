@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import shop.yesaladin.common.dto.ResponseDto;
@@ -24,7 +25,6 @@ import shop.yesaladin.front.order.service.inter.QueryOrderService;
  * @author 최예린
  * @since 1.0
  */
-@Slf4j
 @RequiredArgsConstructor
 @Controller
 @RequestMapping("/orders")
@@ -60,22 +60,5 @@ public class OrderMainWebController {
 
         return (request.getServletPath().contains("subscribe")) ? "main/order/subscribe"
                 : "main/order/order";
-    }
-
-    @PostMapping("/member")
-    public String createMemberOrder(
-            @Valid @ModelAttribute OrderMemberCreateRequestDto request,
-            Model model
-    ) {
-        log.error("request : {}", request);
-        return "/cart/cart";
-    }
-    @PostMapping("/non-member")
-    public String createNonMemberOrder(
-            @Valid @ModelAttribute OrderNonMemberCreateRequestDto request,
-            Model model
-    ) {
-        log.error("request : {}", request);
-        return "/cart/cart";
     }
 }

@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import shop.yesaladin.coupon.code.CouponBoundCode;
 import shop.yesaladin.coupon.code.CouponTypeCode;
 
@@ -15,6 +16,7 @@ import shop.yesaladin.coupon.code.CouponTypeCode;
  * @since 1.0
  */
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

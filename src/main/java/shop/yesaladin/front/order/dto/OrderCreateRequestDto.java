@@ -12,6 +12,7 @@ import javax.validation.constraints.Pattern;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
 
 /**
@@ -21,6 +22,7 @@ import org.hibernate.validator.constraints.Length;
  * @since 1.0
  */
 @Getter
+@ToString
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class OrderCreateRequestDto {
 
@@ -41,6 +43,4 @@ public abstract class OrderCreateRequestDto {
     @NotBlank
     @Pattern(regexp = "^01([0|1])([0-9]{8})$")
     protected String recipientPhoneNumber;
-
-
 }

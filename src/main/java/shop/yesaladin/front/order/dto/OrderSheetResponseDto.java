@@ -1,13 +1,13 @@
 package shop.yesaladin.front.order.dto;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import shop.yesaladin.front.coupon.dto.MemberCouponSummaryDto;
 import shop.yesaladin.front.member.dto.MemberAddressResponseDto;
-import shop.yesaladin.front.product.dto.ProductOrderResponseDto;
 
 /**
  * 회원 주문서에 필요한 데이터를 반환하는 dto 클래스입니다.
@@ -40,5 +40,19 @@ public class OrderSheetResponseDto {
                 .filter(MemberAddressResponseDto::getIsDefault)
                 .findFirst()
                 .orElse(null);
+    }
+
+    /**
+     * 주문 상품의 isbn 과 수량을 반환합니다.
+     *
+     * @return 상품의 isbn과 수량
+     * @author 최예린
+     * @since 1.0
+     */
+    public List<ProductOrderRequestDto> getProductOrderRequest() {
+        return orderProducts.stream().map(product -> new ProductOrderRequestDto(
+                product.getIsbn(),
+                product.getQuantity()
+        )).collect(Collectors.toList());
     }
 }

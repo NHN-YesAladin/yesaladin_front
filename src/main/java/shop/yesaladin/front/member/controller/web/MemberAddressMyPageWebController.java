@@ -56,7 +56,7 @@ public class MemberAddressMyPageWebController {
     ) {
         memberAddressCommandService.createMemberAddress(request.toCreateRequestDto());
 
-        return "mypage/member/address";
+        return "redirect:/mypage/address";
     }
 
     /**

@@ -40,8 +40,8 @@
   <!-- TODO 2 : NAV-BAR -->
   <div th:replace="~{common/fragments/navbar :: fragment-nav-bar}"></div>
 
+  <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
   <div class="page-wrapper">
-    <form method="post">
       <div class="container-xxl py-4 col-12">
         <!-- 주문서 Header -->
         <div class="row row-cards">
@@ -51,6 +51,8 @@
             </div>
           </div>
         </div>
+        <form method="post" action="/orders/member">
+          <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
         <!-- 주문서 Body -->
         <div class="row row-cards">
           <!-- 주문서 Detail -->
@@ -100,18 +102,18 @@
                       <!-- 주문인과 동일시 시키는 버튼 -->
                       <span class="float-end text-muted">
                         <small>주문인과 동일</small>
-                        <input id="receiver-check-box" class="form-check-input" type="checkbox">
+                        <input id="recipient-check-box" class="form-check-input" type="checkbox">
                       </span>
                     </h3>
                     <div class="card card-md">
                       <div class="card-body p-2">
                         <label class="form-label required">수령인 이름</label>
-                        <input type="text" class="form-control" id="receiver-name"
-                               name="recipientName"
+                        <input type="text" class="form-control" id="recipient-name"
+                               name="recipientName" value=""
                                placeholder="홍길동" maxlength="20">
                         <label class="form-label required mt-2">전화번호</label>
-                        <input type="text" class="form-control" id="receiver-phone-number"
-                               name="recipientPhoneNumber"
+                        <input type="text" class="form-control" id="recipient-phone-number"
+                               name="recipientPhoneNumber" value=""
                                maxlength="11" autocomplete="off" placeholder="띄어쓰기 없이 붙여주세요."
                                data-mask="000 0000 0000" data-mask-visible="true"
                                pattern="/^01([0|1])\d{4}\d{4}$/"
@@ -147,27 +149,28 @@
                     </div>
                     <!-- 배송 정보 Body -->
                     <div class="card-body p-0">
-                      <input sec:authorize="isAuthenticated()" name="ordererAddressId" type="hidden"
+                      <input sec:authorize="isAuthenticated()" id="orderer-address-id"
+                             name="ordererAddressId" type="hidden"
                              th:value="${info.getDefaultAddress() != null ? info.getDefaultAddress().id : ''}">
                       <div class="row w-full ms-0">
                         <div class="col-3 ps-0">
                           <input type="text" class="form-control" id="orderer-post-address"
                                  name="ordererPostAddress" placeholder="우편번호" readonly
-                                 th:value="${info.getDefaultAddress() != null ? info.getDefaultAddress().getPostAddress() : ''}">
+                                 th:value="${info.memberAddress != null && info.getDefaultAddress() != null ? info.getDefaultAddress().getPostAddress() : ''}">
                         </div>
                         <div class="col-9 ps-0 pe-0">
                           <input type="text" class="form-control" id="orderer-road-address"
                                  name="ordererRoadAddress" placeholder="도로명 주소" readonly
-                                 th:value="${info.getDefaultAddress() != null ? info.getDefaultAddress().getRoadAddress() : ''}">
+                                 th:value="${info.memberAddress != null && info.getDefaultAddress() != null ? info.getDefaultAddress().getRoadAddress() : ''}">
                         </div>
                       </div>
                       <input type="text" class="form-control mt-1" id="orderer-detail-address"
                              name="ordererDetailAddress" placeholder="상세 주소"
-                             th:value="${info.getDefaultAddress() != null ? info.getDefaultAddress().getDetailAddress() : ''}">
+                             th:value="${info.memberAddress != null && info.getDefaultAddress() != null ? info.getDefaultAddress().getDetailAddress() : ''}">
                     </div>
                     <label class="form-label d-lg-inline float-start mt-2">희망배송날짜</label>
                     <input class="form-control mb-2" id="datepicker"
-                           type="date" name="orderExpectedDate"
+                           type="date" name="expectedShippingDate"
                            th:min="${#calendars.format( #calendars.createNow(), 'yyyy-MM-dd')}">
                     <span class="form-check-description text-end">미선택시 가장 가까운 날로 배송될 예정입니다.</span>
                   </div>
@@ -177,6 +180,7 @@
                 <h3 class="card-title">주문 상품 정보</h3>
                 <div class="card card-md">
                   <div class="table-responsive">
+                    <input type="hidden" name="orderProducts" th:value="${info.getProductOrderRequest()}">
                     <table class="table table-vcenter text-center scrollable scroll-x">
                       <thead>
                       <tr>
@@ -191,11 +195,10 @@
                       </thead>
                       <tbody th:each="product:${info.orderProducts}">
                       <tr>
-                        <td th:text="${productStat.index + 1}">
-                          <input type="hidden" name="orderProducts"
-                                 th:value="${info.orderProducts}">
+                        <td th:text="${productStat.index + 1}"></td>
+                        <td th:text="${product.isbn}">
+                          <input type="hidden" name="isbn" th:value="${product.isbn}">
                         </td>
-                        <td th:text="${product.isbn}"></td>
                         <td th:text="${product.title}"></td>
                         <td>
                           <del class="fs-6"
@@ -208,7 +211,9 @@
                         </td>
                         <td th:text="${product.expectedPoint}"></td>
                         <td th:id="${'order-product-quantity-' + productStat.index}"
-                            th:text="${product.quantity}"></td>
+                            th:text="${product.quantity}">
+                          <input type="hidden" name="quantity" th:value="${product.quantity}">
+                        </td>
                         <td>
                           <!--회원 : 쿠폰 사용 -->
                           <div sec:authorize="isAuthenticated()">
@@ -302,7 +307,7 @@
                   <div class="row text-end">
                     <small class="float-end d-inline">
                       <label class="form-check form-switch d-inline">
-                        <input type="hidden" name="wrappingFee" value="0">
+                        <input type="hidden" id="wrapping-fee-hidden" name="wrappingFee" value="0">
                         <input class="form-check-input m-auto" id="wrapping-check" type="checkbox">
                       </label>
                       포장비 : 3,000원
@@ -316,11 +321,11 @@
                   </h3>
                   <div class="mt-2">
                     <button sec:authorize="isAuthenticated()" class="btn btn-primary w-100"
-                            type="submit" onclick="form.action='/orders/member'">
+                            id="member-order" type="submit">
                       주문서 작성 완료
                     </button>
-                    <button sec:authorize="!isAuthenticated()" class="btn btn-primary w-100"
-                            type="submit" onclick="form.action='/orders/non-member'">
+                    <button sec:authorize="!isAuthenticated()"
+                            id="non-member-order" class="btn btn-primary w-100">
                       비회원 주문서 작성 완료
                     </button>
                     <div th:replace="~{common/fragments/alert :: custom-alert}"></div>
@@ -330,8 +335,8 @@
             </div>
           </div>
         </div>
+        </form>
       </div>
-    </form>
   </div>
 </div>
 
@@ -466,15 +471,13 @@
 
 <!--버튼 이벤트 관련 함수-->
 <script th:inline="javascript">
-  const wrappingFee = document.getElementById("wrapping-fee");
-
   // "주문인과 동일" 버튼 이벤트
-  document.getElementById("receiver-check-box").addEventListener('change', (event) => {
+  document.getElementById("recipient-check-box").addEventListener('change', (event) => {
     const orderer = document.getElementById("orderer-name");
     const ordererPhoneNumber = document.getElementById("orderer-phone-number");
 
-    const receiver = document.getElementById("receiver-name");
-    const receiverPhoneNumber = document.getElementById("receiver-phone-number");
+    const recipient = document.getElementById("recipient-name");
+    const recipientPhoneNumber = document.getElementById("recipient-phone-number");
 
     if (event.currentTarget.checked) {
       if (orderer.value === "" || ordererPhoneNumber.value === "") {
@@ -482,22 +485,24 @@
         event.currentTarget.checked = false;
         return;
       }
-      receiver.value = orderer.value;
-      receiverPhoneNumber.value = ordererPhoneNumber.value;
+      recipient.value = orderer.value;
+      recipientPhoneNumber.value = ordererPhoneNumber.value;
 
-      receiver.disabled = true;
-      receiverPhoneNumber.disabled = true;
+      recipient.readOnly = true;
+      recipientPhoneNumber.readOnly = true;
     } else {
-      receiver.disabled = false;
-      receiverPhoneNumber.disabled = false;
+      recipient.readOnly = false;
+      recipientPhoneNumber.readOnly = false;
     }
   })
   // "포장" 버튼 이벤트
   document.getElementById("wrapping-check").addEventListener('change', function () {
+    const wrappingFeeHidden = document.getElementById("wrapping-fee-hidden");
+
     if (this.checked) {
-      this.text = wrappingFee.value = 3000;
+      this.text = wrappingFeeHidden.value = 3000;
     } else {
-      this.text = wrappingFee.value = 0;
+      this.text = wrappingFeeHidden.value = 0;
     }
     setPaymentTotalPrice();
   });
@@ -535,30 +540,116 @@
     }
     e.value = amount;
     setProductTotalPrice();
+
   }
 </script>
 
 <!-- 주문 -->
 <script th:inline="javascript">
-  const ordererName = document.getElementById("orderer-name");
-  const ordererPhoneNumber = document.getElementById("orderer-phone-number");
-  const recipientName = document.getElementById("recipient-name");
-  const recipientPhoneNumber = document.getElementById("recipient-phone-number");
+  const expectedShippingDateDoc = document.getElementById("datepicker");
+  const ordererNameDoc = document.getElementById("orderer-name");
+  const ordererPhoneNumberDoc = document.getElementById("orderer-phone-number");
+  const recipientNameDoc = document.getElementById("recipient-name");
+  const recipientPhoneNumberDoc = document.getElementById("recipient-phone-number");
   const ordererPostAddress = document.getElementById("orderer-post-address");
   const ordererRoadAddress = document.getElementById("orderer-road-address");
   const ordererDetailAddress = document.getElementById("orderer-detail-address");
+  const ordererAddressIdDoc = document.getElementById("orderer-address-id");
 
-  const address = [ordererPostAddress.value, ordererRoadAddress.value, ordererDetailAddress.value];
+  const pointAppliedAmount = document.getElementById("point-applied-amount");
+  const shippingFeeDoc = document.getElementById("shipping-fee");
+  const wrappingFeeDoc = document.getElementById("wrapping-fee-hidden");
+  const totalProductPrice = document.getElementById("total-product-price");
+
+  var shopUrl = [[${@environment.getProperty('yesaladin.gateway.shop')}]];
+  console.log(shopUrl);
+
+  document.getElementById("member-order").addEventListener('click', function memberOrder(e) {
+    const expectedShippingDate = expectedShippingDateDoc.value;
+    const orderProducts = [[${info.getProductOrderRequest()}]];
+    const productTotalAmount = totalProductPrice.innerText.replace(/\D/g, '');
+    const shippingFee = shippingFeeDoc.value;
+    const wrappingFee = wrappingFeeDoc.value;
+    const recipientName = recipientNameDoc.value;
+    const recipientPhoneNumber = recipientPhoneNumberDoc.value;
+
+    const ordererAddressId = ordererAddressIdDoc.value;
+    const orderCoupons = [];
+    const orderPoint = pointAppliedAmount.value;
+
+    orderCheck(this);
+
+    const csrfName = [[${_csrf.parameterName}]];
+    const csrfToken = [[${_csrf.token}]];
+
+    const responsePromise = fetch(`/orders/member`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        expectedShippingDate: expectedShippingDate,
+        orderProducts: orderProducts,
+        productTotalAmount: productTotalAmount,
+        shippingFee: shippingFee,
+        wrappingFee: wrappingFee,
+        recipientName: recipientName,
+        recipientPhoneNumber: recipientPhoneNumber,
+        ordererAddressId : ordererAddressId,
+        orderCoupons : orderCoupons,
+        orderPoint : orderPoint,
+        `${csrfName}`: csrfToken
+      })
+    });
+    responsePromise.then((resp) => resp.json()).then((data) => console.log(data.success));
+  });
+
+  document.getElementById("non-member-order").addEventListener('click', function nonMemberOrder(e) {
+    const expectedShippingDate = expectedShippingDateDoc.value;
+    const orderProducts = [[${info.orderProducts}]];
+    const productTotalAmount = totalProductPrice.innerText.replace(/\D/g, '');
+    const shippingFee = shippingFeeDoc.value;
+    const wrappingFee = wrappingFeeDoc.value;
+    const recipientName = recipientNameDoc.value;
+    const recipientPhoneNumber = recipientPhoneNumberDoc.value;
+
+    const ordererName = ordererNameDoc.value;
+    const ordererPhoneNumber = ordererPhoneNumberDoc.value;
+    const address = [ordererPostAddress.value, ordererRoadAddress.value,
+      ordererDetailAddress.value].join("/");
+
+    orderCheck(this);
+
+    const responsePromise = fetch(`${shopUrl}/v1/orders/non-member`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        expectedShippingDate: expectedShippingDate,
+        orderProducts: orderProducts,
+        productTotalAmount: productTotalAmount,
+        shippingFee: shippingFee,
+        wrappingFee: wrappingFee,
+        recipientName: recipientName,
+        recipientPhoneNumber: recipientPhoneNumber,
+        ordererName: ordererName,
+        ordererPhoneNumber: ordererPhoneNumber,
+        ordererAddress: address
+      })
+    });
+    responsePromise.then((resp) => resp.json()).then((data) => console.log(data.success));
+  });
 
   function orderCheck(e) {
     //1.입력값유효성검사
-    if (ordererName.value.toString() == ""
-        || ordererPhoneNumber.value.toString() == ""
-        || recipientName.value.toString() == ""
-        || recipientPhoneNumber.value.toString() == ""
-        || ordererPostAddress.value.toString() == ""
-        || ordererRoadAddress.value.toString() == ""
-        || ordererDetailAddress.value.toString() == ""
+    if (ordererName.value.empty()
+        || ordererPhoneNumber.empty()
+        || recipientName.empty()
+        || recipientPhoneNumber.empty()
+        || ordererPostAddress.empty()
+        || ordererRoadAddress.empty()
+        || ordererDetailAddress.empty()
     ) {
       alert("빈칸을 전부 채워주세요.");
       return;
@@ -569,7 +660,47 @@
     }
 
     // 2. 쿠폰 검증(회원)
-    // 3. 주문
+
+  }
+</script>
+<script>
+  function getAddress() {
+    new daum.Postcode({
+      oncomplete: function (data) {
+        var addr = '';
+        var extraAddr = '';
+
+        //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+        if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+          addr = data.roadAddress;
+        } else { // 사용자가 지번 주소를 선택했을 경우(J)
+          addr = data.jibunAddress;
+        }
+
+        // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
+        if (data.userSelectedType === 'R') {
+          if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
+            extraAddr += data.bname;
+          }
+          // 건물명이 있고, 공동주택일 경우 추가한다.
+          if (data.buildingName !== '' && data.apartment === 'Y') {
+            extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+          }
+          // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+          if (extraAddr !== '') {
+            extraAddr = ' (' + extraAddr + ')';
+          }
+          addr += ' ' + extraAddr;
+        }
+
+        // 우편번호와 주소 정보를 해당 필드에 넣는다.
+        document.getElementById('orderer-post-address').value = data.zonecode;
+        document.getElementById("orderer-road-address").value = addr;
+
+        // 커서를 상세주소 필드로 이동한다.
+        document.getElementById("orderer-detail-address").focus();
+      }
+    }).open();
   }
 </script>
 </html>

@@ -4,6 +4,8 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 /**
@@ -13,6 +15,8 @@ import lombok.ToString;
  * @since 1.0
  */
 @Getter
+@Setter
+@NoArgsConstructor
 @ToString
 @AllArgsConstructor
 public class ProductOrderRequestDto {
