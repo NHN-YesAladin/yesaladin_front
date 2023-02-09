@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" class="h-100">
+<html lang="en" class="h-100" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -98,11 +98,18 @@
     <h2 id="sample02"></h2>
     <p class="lead">쿠폰 이미지 들어갈 자리</p>
     <p class="lead">
-      <form action="/coupon"
-      <button type="submit"
+    <div sec:authorize="!isAuthenticated()">
+      <button onclick="location.href='/members/login'"
+              class="btn btn-lg btn-light fw-bold border-white bg-white">
+        로그인
+      </button>
+    </div>
+    <div sec:authorize="isAuthenticated()">
+      <button type="submit" onclick="location.href='/coupon/issuance?trigger=COUPON_OF_THE_MONTH&couponid=5'"
               class="btn btn-lg btn-light fw-bold border-white bg-white">
         발급
       </button>
+    </div>
     </p>
   </main>
 
@@ -151,7 +158,5 @@
 
   countDownTimer('sample01', dateObj); // 내일까지
   countDownTimer('sample02', '03/01/2023 00:00 AM'); // 2024년 4월 1일까지, 시간을 표시하려면 01:00 AM과 같은 형식을 사용한다.
-  countDownTimer('sample03', '04/01/2024'); // 2024년 4월 1일까지
-  countDownTimer('sample04', '04/01/2019'); // 2024년 4월 1일까지
 </script>
 </html>

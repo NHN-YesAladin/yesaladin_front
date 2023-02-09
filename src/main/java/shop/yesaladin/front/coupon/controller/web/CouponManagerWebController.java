@@ -1,4 +1,4 @@
-package shop.yesaladin.front.coupon.controller;
+package shop.yesaladin.front.coupon.controller.web;
 
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
