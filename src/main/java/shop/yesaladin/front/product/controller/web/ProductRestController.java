@@ -16,9 +16,9 @@ import shop.yesaladin.front.product.service.inter.QueryProductService;
  * @author 김선홍
  * @since 1.0
  */
+@RequiredArgsConstructor
 @RestController
 @RequestMapping
-@RequiredArgsConstructor
 public class ProductRestController {
 
     private final QueryProductService queryProductService;

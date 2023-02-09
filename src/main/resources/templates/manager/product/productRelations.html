@@ -273,14 +273,14 @@
             data.dataList.forEach(function (dto) {
                 const option = document.createElement('option')
                 option.value = dto.id
-                option.text = dto.title + '(' + dto.authors[0] + ', ' + dto.publisher + ')';
+                option.text = dto.title + '(' + dto.authors[0] + ', ' + dto.publisher + ')'
                 searchResultSelect.add(option, null)
             })
         })
     }
 
     function initSelect() {
-        searchResultSelect.options.length = 0;
+        searchResultSelect.options.length = 0
     }
 
     function initPagination(totalPage, currentPage, pageSize) {
@@ -304,7 +304,7 @@
         now.className += 'page-item active'
         const nowLink = document.createElement('a')
         nowLink.className += 'page-link'
-        nowLink.innerText = 'Now'
+        nowLink.innerText = currentPage
         now.appendChild(nowLink)
         page.appendChild(now)
 

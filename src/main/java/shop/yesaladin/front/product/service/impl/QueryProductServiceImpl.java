@@ -172,7 +172,12 @@ public class QueryProductServiceImpl implements QueryProductService {
                 .toUriString();
 
         HttpEntity httpEntity = getHttpEntity();
-        ResponseEntity<ResponseDto<PaginatedResponseDto<RelationsResponseDto>>> responseEntity = restTemplate.exchange(uri, HttpMethod.GET, httpEntity, RELATION_PRODUCTION_CODE);
+        ResponseEntity<ResponseDto<PaginatedResponseDto<RelationsResponseDto>>> responseEntity = restTemplate.exchange(
+                uri,
+                HttpMethod.GET,
+                httpEntity,
+                RELATION_PRODUCTION_CODE
+        );
         return Objects.requireNonNull(responseEntity.getBody()).getData();
     }
 
