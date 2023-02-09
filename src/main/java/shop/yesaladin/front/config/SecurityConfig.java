@@ -6,15 +6,17 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import shop.yesaladin.front.auth.CustomLoginProcessingFilter;
 import shop.yesaladin.front.auth.CustomAuthenticationManager;
 import shop.yesaladin.front.auth.CustomFailureHandler;
+import shop.yesaladin.front.auth.CustomLoginProcessingFilter;
 import shop.yesaladin.front.auth.CustomLogoutHandler;
+import shop.yesaladin.front.auth.RedirectToUrlAuthenticationSuccessHandler;
 import shop.yesaladin.front.common.utils.CookieUtils;
 import shop.yesaladin.front.member.adapter.MemberAdapter;
 
@@ -33,9 +35,8 @@ public class SecurityConfig {
     private final CookieUtils cookieUtils;
 
     /**
-     * Spring Security의 SecurityFilterChain을 설정하고 Bean으로 등록합니다.
-     * develop 환경에서 팀원들의 개발상 편의를 위해 권한 별 접근 제어를 하지 않는 설정 입니다.
-     * (추 후 이 Bean 설정은 제거할 예정입니다.)
+     * Spring Security의 SecurityFilterChain을 설정하고 Bean으로 등록합니다. develop 환경에서 팀원들의 개발상 편의를 위해 권한 별 접근
+     * 제어를 하지 않는 설정 입니다. (추 후 이 Bean 설정은 제거할 예정입니다.)
      *
      * @param http http의 filter 등록을 위한 객체 입니다.
      * @return Bean으로 등록한 SecurityFilterChain 입니다.
@@ -47,8 +48,11 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChainDev(HttpSecurity http) throws Exception {
         http.authorizeRequests()
+                .mvcMatchers("/mypage/**").authenticated()
                 .anyRequest().permitAll();
-        http.formLogin().disable();
+        http.formLogin()
+                .loginPage("/members/login")
+                .loginProcessingUrl("/auth-login");
         http.logout()
                 .logoutUrl("/logout")
                 .addLogoutHandler(customLogoutHandler())
@@ -81,7 +85,9 @@ public class SecurityConfig {
                 .antMatchers("/mypage/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                 .antMatchers("/manager/**").hasAnyAuthority("ROLE_ADMIN")
                 .anyRequest().permitAll();
-        http.formLogin().disable();
+        http.formLogin()
+                .loginPage("/members/login")
+                .loginProcessingUrl("/auth-login");
         http.logout()
                 .logoutUrl("/logout")
                 .addLogoutHandler(customLogoutHandler())
@@ -123,8 +129,8 @@ public class SecurityConfig {
     }
 
     /**
-     * UsernamePasswordAuthenticationFilter를 대체하기 위해 custom한 filter 입니다.
-     * form login 요청 시 동작하는 filter 입니다.
+     * UsernamePasswordAuthenticationFilter를 대체하기 위해 custom한 filter 입니다. form login 요청 시 동작하는 filter
+     * 입니다.
      *
      * @return UsernamePasswordAuthenticationFilter를 대체하기 위해 custom한 filter 를 반환합니다.
      * @author : 송학현
@@ -136,6 +142,7 @@ public class SecurityConfig {
                 "/auth-login");
         customLoginProcessingFilter.setAuthenticationManager(customAuthenticationManager());
         customLoginProcessingFilter.setAuthenticationFailureHandler(authenticationFailureHandler());
+        customLoginProcessingFilter.setAuthenticationSuccessHandler(new RedirectToUrlAuthenticationSuccessHandler());
 
         return customLoginProcessingFilter;
     }
