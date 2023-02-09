@@ -78,6 +78,14 @@ public class OrderMyPageWebController {
         return "mypage/order/order-list-view";
     }
 
+    /**
+     * 주문 상태에 따른 주문 조회
+     *
+     * @param status 주문 상태 코드의 숫자값
+     * @param pageable 페이징 처리용
+     * @param model 모델
+     * @return 주문 팝업창 위치
+     */
     @GetMapping(value = "/order-popup", params = "code")
     public String getMyPageOrderPopup(
             @RequestParam("code") Long status,

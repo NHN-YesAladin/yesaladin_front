@@ -35,6 +35,12 @@ public class PaymentMainWebController {
 
     private final PaymentService paymentService;
 
+    /**
+     * 주문 이후에 결제 화면으로 넘기기 위해 사용
+     *
+     * @param model 모델
+     * @return 결제 페이지
+     */
     @GetMapping("/pay")
     public String getPayPage(Model model) {
 
@@ -60,6 +66,13 @@ public class PaymentMainWebController {
         return "main/payment/pay-page";
     }
 
+    /**
+     * 팝업창에서 다시 결제를 할때, 팝업창에서 결제창이 띄어지지 않게 새창에서 결제 시키기 위해 사용
+     *
+     * @param requestDto 결제 승인을 위한 dto
+     * @param model 모델
+     * @return 결제창만 뜨는 화면
+     */
     @GetMapping("/empty-pay")
     public String getEmptyPage(@ModelAttribute OrderPaymentRequestDto requestDto, Model model) {
         System.out.println("requestDto = " + requestDto);
@@ -96,8 +109,13 @@ public class PaymentMainWebController {
 
 
     /**
-     * 임시 구현 : 토스 failUrl의 대처 방법 고안
-     * 2023.02.05 배수한
+     * 결제 실패시 동작하는 메서드
+     *
+     * @param message 실패 메시지
+     * @param code 실패 코드
+     * @param requestDto 바로 결제시도를 위한 정보를 담는 dto
+     * @param model 모델
+     * @return 결제 실패 페이지
      */
     @RequestMapping("/fail")
     public String failPayment(
