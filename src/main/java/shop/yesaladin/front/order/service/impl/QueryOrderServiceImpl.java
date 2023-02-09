@@ -23,6 +23,7 @@ import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.common.dto.PeriodQueryRequestDto;
 import shop.yesaladin.front.config.GatewayConfig;
 import shop.yesaladin.front.order.dto.OrderSheetResponseDto;
+import shop.yesaladin.front.order.dto.OrderStatusResponseDto;
 import shop.yesaladin.front.order.dto.OrderSummaryResponseDto;
 import shop.yesaladin.front.order.service.inter.QueryOrderService;
 
@@ -105,6 +106,31 @@ public class QueryOrderServiceImpl implements QueryOrderService {
         );
 
         return responseEntity.getBody();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public PaginatedResponseDto<OrderStatusResponseDto> getOrderListByOrderStatus(
+            Pageable pageable,
+            Long status
+    ) {
+        UriComponents uriComponents = UriComponentsBuilder.fromHttpUrl(
+                        gatewayConfig.getShopUrl() + "/v1/member-orders")
+                .queryParam("page", pageable.getPageNumber())
+                .queryParam("size", pageable.getPageSize() == 20 ? 5 : pageable.getPageSize())
+                .queryParam("status", status.toString())
+                .build();
+
+        ResponseEntity<ResponseDto<PaginatedResponseDto<OrderStatusResponseDto>>> responseEntity = restTemplate.exchange(
+                uriComponents.toUri(),
+                HttpMethod.GET,
+                getHttpEntity(),
+                new ParameterizedTypeReference<>() {
+                }
+        );
+        return Objects.requireNonNull(responseEntity.getBody()).getData();
     }
 
     private HttpEntity<String> getHttpEntity() {

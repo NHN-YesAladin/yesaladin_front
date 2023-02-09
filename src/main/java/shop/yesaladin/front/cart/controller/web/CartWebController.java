@@ -97,10 +97,12 @@ public class CartWebController {
 
             // 상품 종류에 따른 분류
             Objects.requireNonNull(Objects.requireNonNull(response).getData()).forEach(product -> {
-                if (Boolean.TRUE.equals(product.getIsEbook())) {
-                    eBookCart.add(product);
-                } else {
-                    deliveryCart.add(product);
+                if (Boolean.FALSE.equals(product.getIsDeleted())) {
+                    if (Boolean.TRUE.equals(product.getIsEbook())) {
+                        eBookCart.add(product);
+                    } else {
+                        deliveryCart.add(product);
+                    }
                 }
             });
         }
@@ -164,7 +166,7 @@ public class CartWebController {
         log.info("preQuantity = {}", preQuantity);
         int quantity = cartDto.getQuantity();
         if (Boolean.TRUE.equals(Objects.nonNull(preQuantity) && !cartDto.getIsEbook()) && Boolean.TRUE.equals(!cartDto.getIsSubscriptionAvailable())) {
-            quantity += Integer.parseInt((String) preQuantity);
+            quantity += Integer.parseInt(preQuantity.toString());
         }
         log.info("quantity = {}", quantity);
         redisTemplate.opsForHash().put(cookie.getValue(), cartDto.getId(), quantity);
