@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import shop.yesaladin.common.code.ErrorCode;
 import shop.yesaladin.common.dto.ResponseDto;
+import shop.yesaladin.common.exception.ClientException;
 import shop.yesaladin.front.order.dto.OrderPaymentRequestDto;
 import shop.yesaladin.front.order.dto.OrderStatusResponseDto;
 import shop.yesaladin.front.payment.dto.PaymentCompleteSimpleResponseDto;
@@ -104,18 +106,19 @@ public class PaymentMainWebController {
             @ModelAttribute PaymentRequestDto requestDto,
             Model model
     ) {
-        //TODO 결제 실패시 정책 수립 후 화면 꾸미기
+
+        if (code.equals("PAY_PROCESS_ABORTED")) {
+            log.error("PAY_PROCESS_ABORTED : {}", message);
+            return "common/errors/4xx";
+        }
+
         OrderStatusResponseDto responseDto = OrderStatusResponseDto.builder()
                 .orderName("Retry Pay")
                 .orderNumber(requestDto.getOrderId())
                 .totalAmount(requestDto.getAmount())
                 .build();
-
-        model.addAttribute("message", message);
-        model.addAttribute("code", code);
         model.addAttribute("isAfterOrder", false);
         model.addAttribute("response", responseDto);
-
 
         log.info("{} / {}", code, message);
         log.info(

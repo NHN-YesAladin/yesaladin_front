@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.common.dto.PeriodQueryRequestDto;
+import shop.yesaladin.front.order.dto.OrderStatusCode;
 import shop.yesaladin.front.order.dto.OrderStatusResponseDto;
 import shop.yesaladin.front.order.dto.OrderSummaryResponseDto;
 import shop.yesaladin.front.order.service.inter.QueryOrderService;
@@ -83,12 +84,14 @@ public class OrderMyPageWebController {
             Pageable pageable,
             Model model
     ) {
+        OrderStatusCode code = OrderStatusCode.getOrderStatusCodeByNumber(status);
         PaginatedResponseDto<OrderStatusResponseDto> response = queryOrderService.getOrderListByOrderStatus(
                 pageable,
                 status
         );
 
-        model.addAttribute("code", status);
+        model.addAttribute("code", code.getStatusCode());
+        model.addAttribute("title", code.getKoName());
         model.addAttribute("currentPage", response.getCurrentPage());
         model.addAttribute("totalPage", response.getTotalPage());
         model.addAttribute("totalDataCount", response.getTotalDataCount());

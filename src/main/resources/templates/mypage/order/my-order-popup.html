@@ -49,7 +49,7 @@
             <div class="col-md-12 col-lg-12">
               <!--        TODO 3 :  Body          -->
               <div class="card-body">
-                <h1 class="fw-bold mb-3">입급/결제 대기</h1>
+                <h1 class="fw-bold mb-3" th:text="${title}">입급/결제 대기</h1>
 
                 <div class="card p-3">
                   <div class="card-body">
@@ -62,34 +62,53 @@
                         <th class="fs-4" scope="col">주문금액</th>
                         <th class="fs-4" scope="col">수령인</th>
                         <th class="fs-4" scope="col">비고</th>
-                        <th class="fs-4" scope="col" th:width="100px">조회/삭제</th>
+                        <th class="fs-4" scope="col" th:width="100px"></th>
                       </tr>
                       </thead>
                       <tbody class="table-group-divider">
                       <tr th:each="data: ${dataList}">
-                        <td th:text="${data.orderNumber}"></td>
+                        <td>
+                          <a th:text="${data.orderNumber}" href="#" class="text-muted fw-bolder">
+                            주문상세조회
+                          </a>
+                        </td>
                         <td th:text="${#temporals.format(data.orderDateTime, 'yyyy-MM-dd')}"></td>
                         <td>
                           <p class="col-12 d-inline-block" th:text="${data.orderName}"></p>
                         </td>
                         <td>
-                          <span class="d-inline-block" th:text="|${#numbers.formatInteger(data.totalAmount, 1, 'COMMA')}원|">222,500</span>
+                          <span class="d-inline-block"
+                                th:text="|${#numbers.formatInteger(data.totalAmount, 1, 'COMMA')}원|">222,500</span>
                         </td>
                         <td>
                           <span class="d-inline-block" th:text="${data.receiverName}">김김</span>
                         </td>
-                        <td></td>
+                        <td class=""
+                            th:text="${data.orderCode == 'MEMBER_SUBSCRIBE'} ? '구독 주문':''"></td>
                         <td>
                           <div>
-                            <a href="#" class="btn btn-outline-primary w-full m-1" onclick="processPayment(this)"
-                               th:data-order-number="${data.orderNumber}"
-                               th:data-total-amount="${data.totalAmount}"
-                               th:data-order-name="${data.orderName}">
-                              결제
-                            </a>
-                            <a href="#" class="btn btn-outline-dark w-full m-1">
-                              주문상세조회
-                            </a>
+                            <div th:if="${code == 1}">
+                              <a href="#" class="btn btn-primary w-full m-1"
+                                 onclick="processPayment(this)"
+                                 th:data-order-number="${data.orderNumber}"
+                                 th:data-total-amount="${data.totalAmount}"
+                                 th:data-order-name="${data.orderName}">
+                                결제
+                              </a>
+                            </div>
+                            <div th:if="${code != 4}">
+                              <div th:if="${code != 5}">
+                                <a th:text="${code != 1} ? '결제취소':'주문취소'"
+                                   href="#" class="btn btn-outline-red w-full m-1">
+                                  주문취소
+                                </a>
+                              </div>
+                              <div th:if="${code == 5}">
+                                <a href="#" class="btn btn-outline-red w-full m-1">
+                                  환불
+                                </a>
+                              </div>
+                            </div>
                           </div>
                         </td>
                       </tr>
@@ -142,7 +161,6 @@
     // let orderNumber = target.dataset["orderNumber"];
     // let orderName = target.dataset["orderName"];
     // let totalAmount = target.dataset["totalAmount"];
-
 
     opener.window.location.href = `${FRONT_SERVER}/payments/empty-pay?orderNumber=${randomON}&orderName=${orderName}&totalAmount=${totalAmount}`;
     window.close();
