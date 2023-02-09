@@ -127,8 +127,7 @@ function addEventListenerToParentCategoryItems() {
 }
 
 function addParentCategoryItemsToDiv() {
-  const parentCategoryGroup = document.querySelector(
-      "#parent-category-group");
+  const parentCategoryGroup = document.querySelector("#parent-category-group");
   parentCategoryGroup.innerHTML = "";
 
   parentCategories.forEach(c => {
@@ -147,8 +146,7 @@ async function initParentCategories() {
     return;
   }
   try {
-    const response = await fetch(
-        `${SHOP_SERVER}/v1/categories?cate=parents`);
+    const response = await fetch(`${SHOP_SERVER}/v1/categories?cate=parents`);
     const parsedBody = await response.json();
     parsedBody.forEach(c => parentCategories.push(c));
     addParentCategoryItemsToDiv()
@@ -235,8 +233,49 @@ function initAlert() {
   return errorAlert(parsedResponseData.errorMessageList);
 }
 
+function addEventListenerToCouponTriggerCode() {
+  const couponOfMonthMetaInput = document.querySelector(
+      '#coupon-of-month-only');
+  const couponTriggerSelect = document.querySelector('#coupon-trigger-select');
+  const couponDurationInput = document.querySelector("#coupon-duration-input");
+  const couponDurationStartDateInput = document.querySelector(
+      "#coupon-duration-start-date-input");
+  const couponDurationEndDateInput = document.querySelector(
+      "#coupon-duration-end-date-input");
+  const duration = document.querySelector('#duration');
+  const expireDate = document.querySelector('#expire-date');
+
+  couponTriggerSelect.addEventListener("change", async () => {
+    couponDurationInput.disabled = true;
+    couponDurationStartDateInput.disabled = true;
+    couponDurationEndDateInput.disabled = true;
+
+    if (couponTriggerSelect.options[couponTriggerSelect.selectedIndex].value
+        === 'COUPON_OF_THE_MONTH') {
+      couponOfMonthMetaInput.style.display = 'block';
+    } else {
+      couponOfMonthMetaInput.style.display = 'none';
+    }
+
+    if (couponTriggerSelect.options[couponTriggerSelect.selectedIndex].value
+        === 'SIGN_UP'
+        || couponTriggerSelect.options[couponTriggerSelect.selectedIndex].value
+        === 'BIRTHDAY') {
+      couponDurationInput.disabled = false;
+      expireDate.style.display = 'none';
+      duration.style.display = 'block';
+    } else {
+      couponDurationStartDateInput.disabled = false;
+      couponDurationEndDateInput.disabled = false;
+      expireDate.style.display = 'block';
+      duration.style.display = 'none';
+    }
+  });
+}
+
 (function init() {
-  initAlert()
+  initAlert();
+  addEventListenerToCouponTriggerCode();
   addEventListenerToCouponQuantity();
   addEventListenerToCouponType();
   addEventListenerToCouponDuration();

@@ -12,5 +12,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class PointResponseDto {
+
     private Long amount;
 }

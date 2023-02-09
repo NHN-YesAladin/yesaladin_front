@@ -34,8 +34,8 @@ public class ProductModifyInitDto {
     private String contents;
     private String description;
 
-    // e-book 파일
-    private String ebookFile;
+    // e-book 파일 url
+    private String ebookFileUrl;
 
     // 저자
     private List<AuthorsResponseDto> authors;
@@ -75,31 +75,4 @@ public class ProductModifyInitDto {
     // 카테고리
     private List<CategoryResponseDto> categories;
 
-    @Override
-    public String toString() {
-        return "ProductModifyDto{" +
-                "isbn='" + isbn + '\'' +
-                ", thumbnailFile=" + thumbnailFile +
-                ", title='" + title + '\'' +
-                ", contents='" + contents + '\'' +
-                ", description='" + description + '\'' +
-                ", ebookFile=" + ebookFile +
-                ", authors=" + authors +
-                ", publisher=" + publisher +
-                ", publishedDate='" + publishedDate + '\'' +
-                ", productTypeCode='" + productTypeCode + '\'' +
-                ", tags=" + tags +
-                ", actualPrice=" + actualPrice +
-                ", isSeparatelyDiscount='" + isSeparatelyDiscount + '\'' +
-                ", discountRate=" + discountRate +
-                ", isGivenPoint='" + isGivenPoint + '\'' +
-                ", givenPointRate=" + givenPointRate +
-                ", productSavingMethodCode='" + productSavingMethodCode + '\'' +
-                ", isSubscriptionAvailable='" + isSubscriptionAvailable + '\'' +
-                ", issn='" + issn + '\'' +
-                ", quantity=" + quantity +
-                ", preferentialShowRanking=" + preferentialShowRanking +
-                ", categories=" + categories +
-                '}';
-    }
 }

@@ -59,7 +59,7 @@
             <div class="card-body">
               <h3 class="card-title fs-2">주문 정보</h3>
               <div class="m-auto">
-                <div>
+                <div th:if="${isAfterOrder}">
                   <span class="fs-3 fw-normal">주문자 : </span>
                   <span class="fs-3 fw-bolder" th:text="${response.ordererName}">김최이</span>
                 </div>
@@ -71,7 +71,7 @@
                   <span class="fs-3 fw-normal">주문명 : </span>
                   <span class="fs-3 fw-bolder" th:text="${response.orderName}">주문 성공!</span>
                 </div>
-                <div>
+                <div th:if="${isAfterOrder}">
                   <span class="fs-3 fw-normal">배송지 : </span>
                   <span class="fs-3 fw-bolder" th:text="${response.orderAddress}">광주</span>
                 </div>
@@ -102,7 +102,7 @@
                 <div class="mt-2 m-auto">
                   <div>
                     <span class="fs-3 fw-normal">결제 필요 금액 : </span>
-                    <span class="fs-3 fw-bolder" th:text="${response.totalAmount}">1</span>
+                    <span class="fs-3 fw-bolder" th:text="|${#numbers.formatInteger(response.totalAmount, 1, 'COMMA')}원|">1</span>
                   </div>
                   <a href="#" class="btn btn-outline-danger w-100 fs-4"
                      onclick="repay(this)">
@@ -132,13 +132,8 @@
   </div>
 </div>
 <script>
-  function repay(event) {
-    let target = event.target;
-    // target에서부터 data-주문번호 등 결제에 필요한 정보 전달받음
 
-    //  processPayment(결제정보들) 실행시킴
-  }
 </script>
-<script th:src="@{/js/payment/toss-payment-event.js}"></script>
+
 </body>
 </html>

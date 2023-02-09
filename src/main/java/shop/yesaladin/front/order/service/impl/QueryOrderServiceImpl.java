@@ -13,6 +13,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -21,6 +23,7 @@ import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.common.dto.PeriodQueryRequestDto;
 import shop.yesaladin.front.config.GatewayConfig;
 import shop.yesaladin.front.order.dto.OrderSheetResponseDto;
+import shop.yesaladin.front.order.dto.OrderStatusResponseDto;
 import shop.yesaladin.front.order.dto.OrderSummaryResponseDto;
 import shop.yesaladin.front.order.service.inter.QueryOrderService;
 
@@ -81,13 +84,16 @@ public class QueryOrderServiceImpl implements QueryOrderService {
      */
     @Override
     public ResponseDto<OrderSheetResponseDto> getOrderSheetData(
-            List<String> isbn,
-            List<String> quantity
+            List<String> isbnList,
+            List<String> quantityList
     ) {
-        URI uri = UriComponentsBuilder.fromHttpUrl(
-                        gatewayConfig.getShopUrl() + "/v1/order-sheets")
-                .queryParam("isbnList", String.join(",", isbn))
-                .queryParam("quantityList", String.join(",", quantity))
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.put("isbn", isbnList);
+        params.put("quantity", quantityList);
+
+        URI uri = UriComponentsBuilder.fromHttpUrl(gatewayConfig.getShopUrl())
+                .path("/v1/order-sheets")
+                .queryParams(params)
                 .build(true)
                 .encode()
                 .toUri();
@@ -100,6 +106,31 @@ public class QueryOrderServiceImpl implements QueryOrderService {
         );
 
         return responseEntity.getBody();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public PaginatedResponseDto<OrderStatusResponseDto> getOrderListByOrderStatus(
+            Pageable pageable,
+            Long status
+    ) {
+        UriComponents uriComponents = UriComponentsBuilder.fromHttpUrl(
+                        gatewayConfig.getShopUrl() + "/v1/member-orders")
+                .queryParam("page", pageable.getPageNumber())
+                .queryParam("size", pageable.getPageSize() == 20 ? 5 : pageable.getPageSize())
+                .queryParam("status", status.toString())
+                .build();
+
+        ResponseEntity<ResponseDto<PaginatedResponseDto<OrderStatusResponseDto>>> responseEntity = restTemplate.exchange(
+                uriComponents.toUri(),
+                HttpMethod.GET,
+                getHttpEntity(),
+                new ParameterizedTypeReference<>() {
+                }
+        );
+        return Objects.requireNonNull(responseEntity.getBody()).getData();
     }
 
     private HttpEntity<String> getHttpEntity() {

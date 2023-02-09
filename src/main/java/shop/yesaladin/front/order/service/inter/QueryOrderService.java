@@ -7,13 +7,14 @@ import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.common.dto.PeriodQueryRequestDto;
 import shop.yesaladin.front.order.dto.OrderSheetResponseDto;
+import shop.yesaladin.front.order.dto.OrderStatusResponseDto;
 import shop.yesaladin.front.order.dto.OrderSummaryResponseDto;
 
 /**
  * 주문 조회 서비스 인터페이스
  *
  * @author 배수한
- * @author
+ * @author 최예린
  * @since 1.0
  */
 public interface QueryOrderService {
@@ -33,11 +34,26 @@ public interface QueryOrderService {
     /**
      * 주문을 하기 위해 주문서에 필요한 데이터를 조회합니다.
      *
-     * @param isbn     상품 isbn 리스트
-     * @param quantity 상품 수량 리스트
+     * @param isbnList     상품 isbn 리스트
+     * @param quantityList 상품 수량 리스트
      * @return 주문서에 필요한 데이터
      * @author 최예린
      * @since 1.0
      */
+
     ResponseDto<OrderSheetResponseDto> getOrderSheetData(List<String> isbn, List<String> quantity);
+
+    /**
+     * 주문상태에 따른 회원 주문 조회
+     *
+     * @param pageable 페이징 처리시 사용
+     * @param status 주문 상태 번호
+     * @return 페이징 된 주문 조회 정보
+     */
+    PaginatedResponseDto<OrderStatusResponseDto> getOrderListByOrderStatus(
+            Pageable pageable,
+            Long status
+    );
+
+
 }

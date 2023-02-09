@@ -21,6 +21,8 @@
 <!-- Tabler Core -->
 <script type="text/javascript" th:src="@{/js/tabler.min.js}"></script>
 <script type="text/javascript" th:src="@{/js/demo.min.js}"></script>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+
 <script type="text/javascript">
   $(document).ready(function(){
     $("input:text[numberOnly]").on("keyup", function() {
@@ -42,10 +44,30 @@
   <!-- TODO 4 : footer -->
   <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
 </div>
+<div id="test">asdf</div>
 </body>
 <script>
-  function setExpectedPurchaseAmount() {
+  document.addEventListener("DOMContentLoaded", () => {
+    var expectedPurchaseAmount = document.getElementById("expected-purchase-amount");
+
+    var priceList = document.getElementsByName("order-product-price");
+    var quantityList = document.getElementsByName("order-product-quantity");
+
+    var sum = 0;
+    for (let i = 0; i < priceList.size; i++) {
+      var price = Number(priceList.get(i).innerText);
+      console.log("price : " + price + " ")
+      document.getElementById("test").i.innerText="sdf" + priceList.get(i).width;
+      var quantity = Number(quantityList.get(i).innerText);
+
+      sum += price * quantity;
+    }
+    expectedPurchaseAmount.innerText = sum;
+
     setTotalPrice();
+  });
+  function setExpectedPurchaseAmount() {
+
   }
   function setTotalPrice() {
     var expectedPurchaseAmount = document.getElementById("expected-purchase-amount");

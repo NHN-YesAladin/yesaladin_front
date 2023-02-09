@@ -2,6 +2,7 @@ package shop.yesaladin.front.member.service.impl;
 
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -9,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.common.dto.PeriodQueryRequestDto;
 import shop.yesaladin.front.config.GatewayConfig;
 import shop.yesaladin.front.member.dto.MemberAddressCreateRequestDto;
@@ -28,27 +30,30 @@ public class CommandMemberAddressServiceImpl implements CommandMemberAddressServ
     private final GatewayConfig gatewayConfig;
     private final RestTemplate restTemplate;
 
+    private static final ParameterizedTypeReference<ResponseDto<MemberAddressResponseDto>> MEMBER_ADDRESS_RESPONSE = new ParameterizedTypeReference<>() {};
+
     /**
      * {@inheritDoc}
+     *
+     * @return
      */
     @Override
-    public void createMemberAddress(MemberAddressCreateRequestDto request) {
+    public ResponseDto<MemberAddressResponseDto> createMemberAddress(MemberAddressCreateRequestDto request) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         HttpEntity<MemberAddressCreateRequestDto> entity = new HttpEntity<>(request, headers);
 
         URI uri = UriComponentsBuilder.fromHttpUrl(gatewayConfig.getShopUrl())
-                .path("/v1/members/{loginId}/addresses")
+                .path("/v1/member-addresses")
                 .build()
-                .expand("")
                 .encode().toUri();
 
-        restTemplate.exchange(
+        return restTemplate.exchange(
                 uri,
                 HttpMethod.POST,
                 entity,
-                MemberAddressResponseDto.class
+                MEMBER_ADDRESS_RESPONSE
         ).getBody();
     }
 
@@ -58,18 +63,12 @@ public class CommandMemberAddressServiceImpl implements CommandMemberAddressServ
     @Override
     public void updateDefaultAddress(Long addressId) {
         URI uri = UriComponentsBuilder.fromHttpUrl(gatewayConfig.getShopUrl())
-                .path("/v1/members/{loginId}/addresses/{addressId}")
+                .path("/v1/member-addresses/{addressId}")
                 .build()
-                .expand("")
                 .expand(addressId)
                 .encode().toUri();
 
-        restTemplate.exchange(
-                uri,
-                HttpMethod.PUT,
-                getEntity(),
-                MemberAddressResponseDto.class
-        ).getBody();
+        restTemplate.put(uri, null);
     }
 
     /**
@@ -78,18 +77,12 @@ public class CommandMemberAddressServiceImpl implements CommandMemberAddressServ
     @Override
     public void deleteAddress(Long addressId) {
         URI uri = UriComponentsBuilder.fromHttpUrl(gatewayConfig.getShopUrl())
-                .path("/v1/members/{loginId}/addresses/{addressId}")
+                .path("/v1/member-addresses/{addressId}")
                 .build()
-                .expand("")
                 .expand(addressId)
                 .encode().toUri();
 
-        restTemplate.exchange(
-                uri,
-                HttpMethod.DELETE,
-                getEntity(),
-                MemberAddressResponseDto.class
-        ).getBody();
+        restTemplate.delete(uri);
     }
 
     private static HttpEntity<PeriodQueryRequestDto> getEntity() {

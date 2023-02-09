@@ -1,0 +1,173 @@
+<!doctype html>
+<!--
+* Tabler - Premium and Open Source dashboard template with responsive and high quality UI.
+* @version 1.0.0-beta5
+* @link https://tabler.io
+* Copyright 2018-2022 The Tabler Authors
+* Copyright 2018-2022 codecalm.net Paweł Kuna
+* Licensed under MIT (https://github.com/tabler/tabler/blob/master/LICENSE)
+-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+  <title>Yes Aladin!</title>
+  <!-- CSS files -->
+  <link th:href="@{/css/tabler.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-flags.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-payments.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-vendors.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/demo.min.css}" rel="stylesheet"/>
+</head>
+<body>
+<!-- Libs JS -->
+<script type="text/javascript" th:src="@{/libs/apexcharts/dist/apexcharts.min.js}"></script>
+<!-- Tabler Core -->
+<script type="text/javascript" th:src="@{/js/tabler.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/demo.min.js}"></script>
+<script src="https://js.tosspayments.com/v1/payment"></script>
+
+
+<div class="wrapper">
+  <div class="page-wrapper">
+    <div class="page-header d-print-none">
+      <div class="container-xl">
+        <div class="row g-2 align-items-center">
+          <div class="col">
+            <h2 class="page-title">
+              주문 상태 조회
+            </h2>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="page-body">
+      <div class="container-xl">
+        <div class="card">
+          <div class="row g-0">
+            <div class="col-md-12 col-lg-12">
+              <!--        TODO 3 :  Body          -->
+              <div class="card-body">
+                <h1 class="fw-bold mb-3" th:text="${title}">입급/결제 대기</h1>
+
+                <div class="card p-3">
+                  <div class="card-body">
+                    <table class="table text-center">
+                      <thead>
+                      <tr>
+                        <th class="fs-4" scope="col">주문번호</th>
+                        <th class="fs-4" scope="col">주문일자</th>
+                        <th class="fs-4" scope="col">주문내역</th>
+                        <th class="fs-4" scope="col">주문금액</th>
+                        <th class="fs-4" scope="col">수령인</th>
+                        <th class="fs-4" scope="col">비고</th>
+                        <th class="fs-4" scope="col" th:width="100px"></th>
+                      </tr>
+                      </thead>
+                      <tbody class="table-group-divider">
+                      <tr th:each="data: ${dataList}">
+                        <td>
+                          <a th:text="${data.orderNumber}" href="#" class="text-muted fw-bolder">
+                            주문상세조회
+                          </a>
+                        </td>
+                        <td th:text="${#temporals.format(data.orderDateTime, 'yyyy-MM-dd')}"></td>
+                        <td>
+                          <p class="col-12 d-inline-block" th:text="${data.orderName}"></p>
+                        </td>
+                        <td>
+                          <span class="d-inline-block"
+                                th:text="|${#numbers.formatInteger(data.totalAmount, 1, 'COMMA')}원|">222,500</span>
+                        </td>
+                        <td>
+                          <span class="d-inline-block" th:text="${data.receiverName}">김김</span>
+                        </td>
+                        <td class=""
+                            th:text="${data.orderCode == 'MEMBER_SUBSCRIBE'} ? '구독 주문':''"></td>
+                        <td>
+                          <div>
+                            <div th:if="${code == 1}">
+                              <a href="#" class="btn btn-primary w-full m-1"
+                                 onclick="processPayment(this)"
+                                 th:data-order-number="${data.orderNumber}"
+                                 th:data-total-amount="${data.totalAmount}"
+                                 th:data-order-name="${data.orderName}">
+                                결제
+                              </a>
+                            </div>
+                            <div th:if="${code != 4}">
+                              <div th:if="${code != 5}">
+                                <a th:text="${code != 1} ? '결제취소':'주문취소'"
+                                   href="#" class="btn btn-outline-red w-full m-1">
+                                  주문취소
+                                </a>
+                              </div>
+                              <div th:if="${code == 5}">
+                                <a href="#" class="btn btn-outline-red w-full m-1">
+                                  환불
+                                </a>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div
+                      th:replace="~{common/utils/paging :: paging('/mypage/order-popup', ${code == null ? '' : '&code=' + code})}">
+                  </div>
+                </div>
+              </div>
+              <div th:replace="~{common/fragments/alert :: custom-alert}"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+<div class="d-none" id="shop-server-url"
+     th:text="${@environment.getProperty('yesaladin.gateway.shop')}"></div>
+<div class="d-none" id="front-server-url"
+     th:text="${@environment.getProperty('yesaladin.front.url')}"></div>
+<script>
+  let FRONT_SERVER;
+  let SHOP_SERVER;
+
+  function initConnectionInfo() {
+    FRONT_SERVER = document.querySelector("#front-server-url").textContent;
+    SHOP_SERVER = document.querySelector("#shop-server-url").textContent;
+  }
+
+  window.addEventListener('DOMContentLoaded', (event) => {
+    initConnectionInfo();
+    opener.popupCloseEvent(this); //부모 창의 이벤트  - 닫힐때 적용
+  });
+
+  const clientKey = "test_ck_YPBal2vxj81jnwPmEXA35RQgOAND"; // 상점을 구분하는 키
+  const tossPayments = TossPayments(clientKey); // SDK 초기화
+  function processPayment(event) {
+    //더미 데이터
+    let randomON = `0000_${new Date().getDate()}_${new Date().getHours()}_${new Date().getMinutes()}_${new Date().getMilliseconds()}`;
+    let realOrderName = "테스트 주문 외 4권";
+    let orderNumber = randomON;
+    let orderName = encodeURI(realOrderName);
+    let totalAmount = 100000 + 3000 + 2000;
+
+    //실제 적용 코드
+    const target = event.target;
+    // let orderNumber = target.dataset["orderNumber"];
+    // let orderName = target.dataset["orderName"];
+    // let totalAmount = target.dataset["totalAmount"];
+
+    opener.window.location.href = `${FRONT_SERVER}/payments/empty-pay?orderNumber=${randomON}&orderName=${orderName}&totalAmount=${totalAmount}`;
+    window.close();
+
+  }
+
+</script>
+</body>
+</html>

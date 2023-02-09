@@ -1,15 +1,18 @@
 package shop.yesaladin.front.product.service.inter;
 
+import org.springframework.data.domain.Pageable;
 import shop.yesaladin.front.common.dto.PageRequestDto;
 import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.product.dto.ProductDetailResponseDto;
 import shop.yesaladin.front.product.dto.ProductModifyInitDto;
 import shop.yesaladin.front.product.dto.ProductsResponseDto;
+import shop.yesaladin.front.product.dto.RelationsResponseDto;
 
 /**
  * 상품 조회 요청을 위한 Service Interface 입니다.
  *
  * @author 이수정
+ * @author 김선홍
  * @since 1.0
  */
 public interface QueryProductService {
@@ -61,4 +64,16 @@ public interface QueryProductService {
      * @since 1.0
      */
     ProductModifyInitDto getProductForForm(String productId);
+
+    /**
+     * 연관 상품 등록을 위한 상품을 검색하는 메서드
+     *
+     * @param id 메인 상품의 id
+     * @param title 검색할 제목
+     * @param pageable 요청 페이지 정보
+     * @return 조회된 상품 리스트
+     * @author 김선홍
+     * @since 1.0
+     */
+    PaginatedResponseDto<RelationsResponseDto> findProductByTitle(Long id, String title, Pageable pageable);
 }
