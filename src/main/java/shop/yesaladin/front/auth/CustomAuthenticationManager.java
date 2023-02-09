@@ -130,8 +130,8 @@ public class CustomAuthenticationManager implements AuthenticationManager {
             Map<Object, Object> login = redisTemplate.opsForHash().entries(loginId);
 
             cart.keySet().forEach(key -> {
-                int currentQuantity = (int) cart.get(key);
-                login.put(key, ((int) login.getOrDefault(key, 0) + currentQuantity));
+                int currentQuantity = Integer.parseInt(cart.get(key).toString());
+                login.put(key, (Integer.parseInt(login.getOrDefault(key, 0).toString()) + currentQuantity));
             });
 
             redisTemplate.opsForHash().putAll(loginId, login);

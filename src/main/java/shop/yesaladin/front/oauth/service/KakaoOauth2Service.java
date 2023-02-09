@@ -7,9 +7,11 @@ import static shop.yesaladin.front.oauth.util.Oauth2Utils.HTTPS;
 import static shop.yesaladin.front.oauth.util.Oauth2Utils.KAKAO_ACCOUNT;
 import static shop.yesaladin.front.oauth.util.Oauth2Utils.KAKAO_HOST;
 import static shop.yesaladin.front.oauth.util.Oauth2Utils.REDIRECT_URI;
+import static shop.yesaladin.front.oauth.util.Oauth2Utils.YESALADIN_EMAIL;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Map;
+import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -92,6 +94,10 @@ public class KakaoOauth2Service extends Oauth2Service {
     public Oauth2LoginRequestDto createOauth2Dto(Map<String, Object> userInfo) {
         Map<String, String> kakaoAccount = (Map) userInfo.get(KAKAO_ACCOUNT.getValue());
         String email = kakaoAccount.get("email");
-        return new Oauth2LoginRequestDto(email);
+        if (!Objects.isNull(email)) {
+            return new Oauth2LoginRequestDto(email);
+        }
+        String id = userInfo.get("id").toString();
+        return new Oauth2LoginRequestDto(id + YESALADIN_EMAIL.getValue());
     }
 }

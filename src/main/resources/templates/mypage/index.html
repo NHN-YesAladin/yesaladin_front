@@ -27,6 +27,7 @@
 <script type="text/javascript" th:src="@{/js/tabler.min.js}"></script>
 <script type="text/javascript" th:src="@{/js/demo.min.js}"></script>
 
+
 <div class="wrapper">
   <!-- TODO 1 : Head -->
   <div th:replace="~{common/fragments/header :: fragment-header}"></div>
@@ -54,7 +55,9 @@
                 <div th:replace="~{mypage/fragments/sidebar :: fragment-side-bar}"></div>
               </div>
             </div>
-            <div class="col-xl-9 col-lg-9" id="mypage" th:data-url="${@environment.getProperty('yesaladin.gateway.shop')}">
+            <div class="col-xl-9 col-lg-9" id="mypage"
+                 th:data-url="${@environment.getProperty('yesaladin.front.url')}"
+                 th:data-shop-url="${@environment.getProperty('yesaladin.gateway.shop')}">
               <div class="card-body">
                 <!-- TODO 3: BODY -->
                 <h1 class="text-end" th:text="${#authentication.name +' 님 안녕하세요'}"></h1>
@@ -126,12 +129,13 @@
                 </div>
                 <hr>
                 <h3 class="sub-title">주문 상태</h3>
-                <div class="row row-cards mb-3">
+                <div class="row row-cards mb-2">
                   <div class="col-3">
                     <div class="card card-stacked">
                       <div class="card-body text-center">
                         <h3 class="card-title">입금/결제 대기</h3>
-                        <a class="text-muted">___건</a>
+                        <a class="text-muted w-auto btn"
+                           href="javascript:openWindowPop('/mypage/order-popup?code=1', 'popup');">___건</a>
                       </div>
                     </div>
                   </div>
@@ -139,7 +143,8 @@
                     <div class="card card-stacked">
                       <div class="card-body text-center">
                         <h3 class="card-title">배송 대기</h3>
-                        <a class="text-muted">___건</a>
+                        <a class="text-muted w-auto btn"
+                           href="javascript:openWindowPop('/mypage/order-popup?code=3', 'popup');">___건</a>
                       </div>
                     </div>
                   </div>
@@ -147,7 +152,8 @@
                     <div class="card card-stacked">
                       <div class="card-body text-center">
                         <h3 class="card-title">배송중</h3>
-                        <a class="text-muted">___건</a>
+                        <a class="text-muted w-auto btn"
+                           href="javascript:openWindowPop('/mypage/order-popup?code=4', 'popup');">___건</a>
                       </div>
                     </div>
                   </div>
@@ -155,35 +161,36 @@
                     <div class="card card-stacked">
                       <div class="card-body text-center">
                         <h3 class="card-title">배송 완료</h3>
-                        <a class="text-muted">___건</a>
+                        <a class="text-muted w-auto btn"
+                           href="javascript:openWindowPop('/mypage/order-popup?code=5', 'popup');">___건</a>
                       </div>
                     </div>
                   </div>
-                </div>
-                <hr>
-                <div class="w-full">
-                  <h3 class="sub-title d-inline">위시 리스트</h3>
-                  <a href="#" class="btn btn-primary w-auto float-end btn-sm d-inline">더 보기</a>
-                </div>
-                <div class="border-1 border-muted w-auto">
-                  <div class="row row-cards w-full">
-                    <div class="col-3" th:each="a : ${#numbers.sequence(0,3)}">
-                      <div class="card">
-                        <div class="card-body"></div>
+                  <hr>
+                  <div class="w-full">
+                    <h3 class="sub-title d-inline">위시 리스트</h3>
+                    <a href="#" class="btn btn-primary w-auto float-end btn-sm d-inline">더 보기</a>
+                  </div>
+                  <div class="border-1 border-muted w-auto">
+                    <div class="row row-cards w-full">
+                      <div class="col-3" th:each="a : ${#numbers.sequence(0,3)}">
+                        <div class="card">
+                          <div class="card-body"></div>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                <hr>
-                <div class="w-full">
-                  <h3 class="sub-title d-inline">최근 본 상품</h3>
-                  <a href="#" class="btn btn-primary w-auto float-end btn-sm d-inline">더 보기</a>
-                </div>
-                <div class="border-1 border-muted w-auto">
-                  <div class="row row-cards w-full">
-                    <div class="col-3" th:each="a : ${#numbers.sequence(0,3)}">
-                      <div class="card">
-                        <div class="card-body"></div>
+                  <hr>
+                  <div class="w-full">
+                    <h3 class="sub-title d-inline">최근 본 상품</h3>
+                    <a href="#" class="btn btn-primary w-auto float-end btn-sm d-inline">더 보기</a>
+                  </div>
+                  <div class="border-1 border-muted w-auto">
+                    <div class="row row-cards w-full">
+                      <div class="col-3" th:each="a : ${#numbers.sequence(0,3)}">
+                        <div class="card">
+                          <div class="card-body"></div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -195,11 +202,27 @@
       </div>
     </div>
 
+    <!-- TODO 4 : footer -->
+    <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
   </div>
-  <!-- TODO 4 : footer -->
-  <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
 </div>
+
 <script>
+
+  const mypage = document.getElementById("mypage");
+  const mainUrl = `${mypage.getAttribute("data-url")}`;
+  const shopUrl = `${mypage.getAttribute("data-shop-url")}`;
+
+  let popup;
+  function openWindowPop(url, name) {
+    let options = 'top=100, left=100, width=900, height=500, status=no, menubar=no, location=no, toolbar=no, resizable=no';
+    popup = window.open(url, name, options);
+  }
+
+  function popupCloseEvent(event) {
+    alert("popup.closed")
+    //TODO 주문 상태 개수 변경
+  }
 
 </script>
 </body>

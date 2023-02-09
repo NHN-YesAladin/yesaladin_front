@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.common.dto.PeriodQueryRequestDto;
+import shop.yesaladin.front.order.dto.OrderStatusCode;
+import shop.yesaladin.front.order.dto.OrderStatusResponseDto;
 import shop.yesaladin.front.order.dto.OrderSummaryResponseDto;
 import shop.yesaladin.front.order.service.inter.QueryOrderService;
 
@@ -25,11 +27,10 @@ import shop.yesaladin.front.order.service.inter.QueryOrderService;
 @Slf4j
 @RequiredArgsConstructor
 @Controller
-@RequestMapping("/mypage/orders")
+@RequestMapping("/mypage")
 public class OrderMyPageWebController {
 
     private final QueryOrderService queryOrderService;
-
 
     /**
      * 전체 주문 조회 화면 연결 메서드
@@ -40,7 +41,7 @@ public class OrderMyPageWebController {
      * @param model         view에서 사용
      * @return
      */
-    @GetMapping
+    @GetMapping("/orders")
     public String getOrderList(
             @RequestParam(name = "code", required = false) Integer code,
             @RequestParam(name = "endDate", required = false) String shouldEndDate,
@@ -75,5 +76,34 @@ public class OrderMyPageWebController {
         model.addAttribute("dataList", response.getDataList());
 
         return "mypage/order/order-list-view";
+    }
+
+    /**
+     * 주문 상태에 따른 주문 조회
+     *
+     * @param status 주문 상태 코드의 숫자값
+     * @param pageable 페이징 처리용
+     * @param model 모델
+     * @return 주문 팝업창 위치
+     */
+    @GetMapping(value = "/order-popup", params = "code")
+    public String getMyPageOrderPopup(
+            @RequestParam("code") Long status,
+            Pageable pageable,
+            Model model
+    ) {
+        OrderStatusCode code = OrderStatusCode.getOrderStatusCodeByNumber(status);
+        PaginatedResponseDto<OrderStatusResponseDto> response = queryOrderService.getOrderListByOrderStatus(
+                pageable,
+                status
+        );
+
+        model.addAttribute("code", code.getStatusCode());
+        model.addAttribute("title", code.getKoName());
+        model.addAttribute("currentPage", response.getCurrentPage());
+        model.addAttribute("totalPage", response.getTotalPage());
+        model.addAttribute("totalDataCount", response.getTotalDataCount());
+        model.addAttribute("dataList", response.getDataList());
+        return "mypage/order/my-order-popup";
     }
 }

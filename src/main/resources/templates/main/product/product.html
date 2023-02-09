@@ -385,9 +385,11 @@
         fetch(SHOP_SERVER + "/v1/products/" + PRODUCT_ID + "/relations?size=4&page=" + (page - 1), {
             method: "GET"
         })
-            .then(res => res.json())
+            .then(res => {
+                return res.json();
+            })
             .then(response => {
-                if (page === 1 && response.dataList == null) {
+                if (response.data.totalDataCount === 0) {
                     document.getElementById('relation-div').classList.add('d-none');
                     return;
                 }
@@ -396,15 +398,16 @@
                     relationTable.removeChild(relationTable.firstChild);
                 }
 
-                for (let i = 0; i < response.dataList.length; i++) {
+                console.log("length : " + response.data.dataList.length);
+                for (let i = 0; i < response.data.dataList.length; i++) {
                     const tr = document.createElement('tr');
                     tr.classList.add('col-3', 'p-0');
 
                     const tdThumbnail = document.createElement('td');
                     const aThumbnail = document.createElement('a');
-                    aThumbnail.href = "/products/" + response.dataList[i].id;
+                    aThumbnail.href = "/products/" + response.data.dataList[i].id;
                     const imgThumbnail = document.createElement('img');
-                    imgThumbnail.src = response.dataList[i].thumbnailFileUrl;
+                    imgThumbnail.src = response.data.dataList[i].thumbnailFileUrl;
                     imgThumbnail.style = 'width: 150px';
                     imgThumbnail.classList.add('border', 'rounded-2');
                     aThumbnail.append(imgThumbnail);
@@ -414,17 +417,17 @@
                     const h3Title = document.createElement('h3');
                     h3Title.classList.add('p-0', 'm-0');
                     const aTitle = document.createElement('a');
-                    aTitle.href = "/products/" + response.dataList[i].id;
-                    aTitle.innerText = response.dataList[i].title;
+                    aTitle.href = "/products/" + response.data.dataList[i].id;
+                    aTitle.innerText = response.data.dataList[i].title;
                     aTitle.classList.add('text-dark');
                     h3Title.append(aTitle);
                     tdTitle.append(h3Title);
 
                     const tdMakers = document.createElement('td');
-                    tdMakers.innerText = response.dataList[i].authors + " 저 | " + response.dataList[i].publisher;
+                    tdMakers.innerText = response.data.dataList[i].authors + " 저 | " + response.data.dataList[i].publisher;
 
                     const tdPrice = document.createElement('td');
-                    tdPrice.innerText = response.dataList[i].sellingPrice.toLocaleString() + "원(" + response.dataList[i].rate + "%)";
+                    tdPrice.innerText = response.data.dataList[i].sellingPrice.toLocaleString() + "원(" + response.data.dataList[i].rate + "%)";
                     tdPrice.classList.add('strong');
 
                     tr.append(tdThumbnail, tdTitle, tdMakers, tdPrice);
@@ -438,7 +441,7 @@
                     pre.classList.remove('visually-hidden');
                 }
 
-                if (page >= response.totalPage){
+                if (page >= response.data.totalPage){
                     post.classList.add('visually-hidden');
                 } else {
                     post.classList.remove('visually-hidden');
