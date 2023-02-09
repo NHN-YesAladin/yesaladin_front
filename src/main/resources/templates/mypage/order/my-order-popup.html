@@ -144,6 +144,7 @@
 
   window.addEventListener('DOMContentLoaded', (event) => {
     initConnectionInfo();
+    opener.popupCloseEvent(this); //부모 창의 이벤트  - 닫힐때 적용
   });
 
   const clientKey = "test_ck_YPBal2vxj81jnwPmEXA35RQgOAND"; // 상점을 구분하는 키

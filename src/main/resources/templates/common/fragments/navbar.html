@@ -42,10 +42,26 @@
                     </li>
                 </ul>
             </div>
+
         </div>
+    </div>
+    <div id="alert-box-nav" class="alert alert-warning m-1" role="alert">
+        <span id="alert-text-nav" class="fs-4 fw-bold">22</span>
     </div>
 </div>
 <script>
+    const alertBoxNav = document.getElementById("alert-box-nav");
+    const alertTextNav = document.getElementById("alert-text-nav");
+
+    window.addEventListener('DOMContentLoaded', (event) => {
+        alertBoxNav.classList.add("d-none");
+    });
+
+    function writeContentToAlertNav(message) {
+        alertTextNav.innerHTML = message;
+        alertBoxNav.classList.remove("d-none");
+    }
+
     let dropdownElementList = [].slice.call(document.querySelectorAll('.dropdown-toggle'))
     let dropdownList = dropdownElementList.map(function (dropdownToggleEl) {
         return new bootstrap.Dropdown(dropdownToggleEl)
@@ -120,7 +136,7 @@
             await displayChildCategories(ids);
         } catch (err) {
             console.error(err);
-            alert("카테고리 목록을 불러올 수 없습니다.");
+            writeContentToAlertNav("카테고리 목록을 불러올 수 없습니다.");
         }
 
     }
@@ -142,7 +158,7 @@
                 arrangeCategoryChildrenHeader(shownCategories, menuColumns, menu);
             } catch (err){
                 console.error(err);
-                alert("2차 카테고리 목록을 불러올 수 없습니다.");
+                writeContentToAlertNav("2차 카테고리 목록을 불러올 수 없습니다.");
             }
         }
 

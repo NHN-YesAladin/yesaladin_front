@@ -214,10 +214,15 @@
   const innerMemberPointUrl = `${mypage.getAttribute("data-url")}/point`;
   const shopUrl = `${mypage.getAttribute("data-shop-url")}`;
 
+  let popup;
   function openWindowPop(url, name) {
-    let options = 'top=10, left=10, width=900, height=500, status=no, menubar=no, location=no, toolbar=no, resizable=no';
-    let pop = window.open(url, name, options);
+    let options = 'top=100, left=100, width=900, height=500, status=no, menubar=no, location=no, toolbar=no, resizable=no';
+    popup = window.open(url, name, options);
+  }
 
+  function popupCloseEvent(event) {
+    alert("popup.closed")
+    //TODO 주문 상태 개수 변경
   }
 
   window.onload = function () {
