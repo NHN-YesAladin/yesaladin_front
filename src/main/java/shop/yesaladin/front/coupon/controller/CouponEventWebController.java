@@ -1,6 +1,8 @@
 package shop.yesaladin.front.coupon.controller;
 
+import java.time.LocalDate;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -9,7 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class CouponEventWebController {
 
     @GetMapping
-    public String getCouponMainPage() {
+    public String getCouponMainPage(Model model) {
+        model.addAttribute("today", LocalDate.now());
         return "/main/coupon/coupon-main-page";
     }
 
