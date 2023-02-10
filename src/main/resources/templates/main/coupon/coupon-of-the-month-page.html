@@ -69,7 +69,7 @@
               </div>
               <div sec:authorize="isAuthenticated()">
                 <button type="submit"
-                        onclick="location.href='/coupon/issuance?type=COUPON_OF_THE_MONTH&couponid=693'"
+                        th:onclick="|location.href='/coupon/issuance?type=COUPON_OF_THE_MONTH&couponId=' + ${couponID}|"
                         class="btn btn-lg btn-light fw-bold border-white bg-white">
                   발급
                 </button>
