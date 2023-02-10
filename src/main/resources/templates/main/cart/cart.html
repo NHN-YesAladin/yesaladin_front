@@ -150,9 +150,9 @@
               <tr th:each="product : ${deliveryCart}">
                 <td>
                   <div class="d-flex justify-content-center">
-                    <input th:id="${product.getId()}" th:value="${product.isbn}"
+                    <input th:id="${product.getId()}" th:value="${product.isbn}" th:disabled="${product.getIsOutOfStack() || !product.getIsSale()}"
                            name="isbn" type="checkbox" autocapitalize="off"
-                           th:onclick="|selectProduct('delivery', ${product.getId()})|" checked>
+                           th:onclick="|selectProduct('delivery', ${product.getId()})|" th:checked="${!product.getIsOutOfStack() && product.getIsSale()}">
                   </div>
                 </td>
                 <td>
@@ -163,7 +163,8 @@
                 <td>
                   <div>
                     <a th:href="@{'/products/' + ${product.getId()}}"
-                       th:text="${'[도서 ] ' + product.getTitle()}" target="_blank"></a>
+                       th:text="${'[도서] ' + product.getTitle()}" target="_blank"></a>
+                    <div th:if="${product.getIsOutOfStack()}" class="badge bg-red">품절</div>
                   </div>
                   <div>
                       <span><del
@@ -183,12 +184,12 @@
                           <input class="form-control" th:id="'quantity' + ${product.id}"
                                  type="number"
                                  th:value="${product.getQuantity()}" min="1" maxlength="4"
-                                 style="width: 60px; height: 30px;">
-                          <input type="hidden" th:id="'hidden-quantity-' + ${product.getId()}"
-                                 th:value="${product.getQuantity()}" name="quantity">
+                                 style="width: 60px; height: 30px;" th:disabled="${product.getIsOutOfStack() || !product.getIsSale()}">
+                          <input type="hidden" th:id="'hidden-quantity-' + ${product.getId()}" th:if="${!product.getIsOutOfStack() && product.getIsSale()}"
+                                 th:value="${product.getQuantity()}" name="quantity" th:disabled="${product.getIsOutOfStack() || !product.getIsSale()}">
                         </span>
                   </div>
-                  <div class="d-flex justify-content-center">
+                  <div class="d-flex justify-content-center" th:if="${!product.getIsOutOfStack() && product.getIsSale()}">
                     <a href="#" class="btn btn-outline-primary" style="height: 20px"
                        th:onclick="|modifyQuantity(${product.getId()})|">
                       변경
@@ -202,14 +203,14 @@
                   </div>
                 </td>
                 <td>
-                  <div class="d-flex justify-content-center mb-2">
+                  <div class="d-flex justify-content-center mb-2" th:if="${!product.getIsOutOfStack() && product.getIsSale()}">
                     <a th:if="${product.isSubscribeProduct}"
                        th:href="@{/orders/subscribe-sheets(isbn=${product.isbn}, quantity=${product.quantity})}"
                        class="btn btn-primary btn-pill" style="width: 70px; height: 30px;">
                       구독하기
                     </a>
                   </div>
-                  <div class="d-flex justify-content-center mb-2">
+                  <div class="d-flex justify-content-center mb-2" th:if="${!product.getIsOutOfStack() && product.getIsSale()}">
                     <a th:href="@{/orders/order-sheets(isbn=${product.isbn}, quantity=${product.quantity})}"
                        class="btn btn-primary btn-pill" style="width: 70px; height: 30px;">
                       주문하기
@@ -241,7 +242,7 @@
             </table>
           </div>
         </div>
-
+        <div th:replace="~{common/fragments/alert :: custom-alert}"></div>
         <!-- eBook -->
         <div class="mt-5" th:if="${eBookCart.size() > 0}">
           <!-- eBook Header -->
@@ -295,7 +296,7 @@
             <tr th:each="product : ${eBookCart}">
               <td>
                 <div class="d-flex justify-content-center">
-                  <input th:id="${product.getId()}" th:value="${product.isbn}"
+                  <input th:id="${product.getId()}" th:value="${product.isbn}" th:disabled="${product.getIsOutOfStack() || !product.getIsSale()}"
                          name="isbn" type="checkbox" autocapitalize="off"
                          th:onclick="|selectProduct('ebook', ${product.getId()})|">
                 </div>
@@ -309,6 +310,7 @@
                 <div>
                   <a th:href="@{'/products/' + ${product.id}}"
                      th:text="${'[eBook] ' + product.getTitle()}" target="_blank"></a>
+                  <div th:if="${product.getIsOutOfStack()}" class="badge bg-red">품절</div>
                 </div>
                 <div>
                       <span><del
@@ -325,7 +327,8 @@
               <td>
                 <div class="d-flex justify-content-center mb-2">
                   1
-                  <input type="hidden" value="1" name="quantity" th:id="'hidden-quantity-' + ${product.getId()}">
+                  <input type="hidden" value="1" name="quantity" th:if="${!product.getIsOutOfStack() && product.getIsSale()}"
+                         th:id="'hidden-quantity-' + ${product.getId()}" disabled>
                 </div>
               </td>
               <td>
@@ -335,7 +338,7 @@
                 </div>
               </td>
               <td>
-                <div class="d-flex justify-content-center mb-2">
+                <div class="d-flex justify-content-center mb-2" th:if="${!product.getIsOutOfStack() && product.getIsSale()}">
                   <a th:href="@{/orders/order-sheets(isbn=${product.isbn}, quantity=${product.quantity})}"
                      class="btn btn-primary btn-pill"
                      style="width: 70px; height: 30px;">
@@ -378,7 +381,6 @@
             </div>
           </div>
         </form>
-        <div th:replace="~{common/fragments/alert :: custom-alert}"></div>
       </div>
       <div class="card-footer">
         <!-- 결제 금액 예상 -->
@@ -431,7 +433,10 @@
   <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
 
 </div>
+<div class="d-none" id="shop-server-url" th:text="${@environment.getProperty('yesaladin.gateway.shop')}"></div>
 <script>
+  let SHOP_SERVER = document.getElementById('shop-server-url').textContent;
+
   function deleteInCart(id) {
     fetch('/cart/' + id, {
       method: "DELETE"
@@ -446,17 +451,27 @@
       return;
     }
 
-    fetch('/cart/' + id, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        "quantity": quantity
-      })
-    }).then(() => {
-      window.location.reload();
-    });
+    fetch(SHOP_SERVER + "/v1/products/quantity/" + id, {
+      method: "GET"
+    }).then(res => res.json()).then(response => {
+      if (quantity > response.data) {
+        writeContentToAlert("구매 가능한 수량을 초과하였습니다! => 재고 : " + response.data);
+        document.getElementById('quantity' + id).value = document.getElementById('hidden-quantity-' + id).value;
+      } else {
+        // 수량 변경
+        fetch('/cart/' + id, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            "quantity": quantity
+          })
+        }).then(() => {
+          window.location.reload();
+        });
+      }
+    })
   }
 </script>
 <script th:inline="javascript">
@@ -467,6 +482,7 @@
     deliveryCart.forEach(product => {
       selectProduct('delivery', product.id);
     });
+
   });
 </script>
 <script>
@@ -478,9 +494,14 @@
     const totalAmountProductCart = document.getElementById(
         'total-amount-' + type + '-product-cart');
 
-    const hiddenQuantity = document.getElementById('hidden-quantity-' + id);
-    let productTotalPrice;
 
+    if (!document.getElementById('hidden-quantity-' + id)) {
+      return;
+    }
+
+    const hiddenQuantity = document.getElementById('hidden-quantity-' + id);
+
+    let productTotalPrice;
     if (checkBox.checked) {
       // 상품의 전체 금액 (+)
       productTotalPrice = Number(totalAmountProductCart.innerText.replaceAll(/[,원]/g, ""))
