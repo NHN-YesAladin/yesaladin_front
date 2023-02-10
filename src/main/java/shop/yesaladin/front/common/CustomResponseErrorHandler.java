@@ -15,7 +15,7 @@ import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.client.ResponseErrorHandler;
-import shop.yesaladin.front.common.dto.ExceptionResponseDto;
+import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.common.exception.Custom4xxException;
 import shop.yesaladin.front.common.exception.CustomForbiddenException;
 import shop.yesaladin.front.common.exception.CustomGatewayException;
@@ -47,12 +47,9 @@ public class CustomResponseErrorHandler implements ResponseErrorHandler {
         InputStream is = response.getBody();
         String messageBody = StreamUtils.copyToString(is, StandardCharsets.UTF_8);
         log.info("messageBody={}", messageBody);
-        ExceptionResponseDto exception = objectMapper.readValue(
-                messageBody,
-                ExceptionResponseDto.class
-        );
+        ResponseDto exception = objectMapper.readValue(messageBody, ResponseDto.class);
 
-        int status = exception.getStatus();
+        int status = response.getStatusCode().value();
         List<String> errorMessages = exception.getErrorMessages();
 
         if (status == HttpStatus.UNAUTHORIZED.value()) {
