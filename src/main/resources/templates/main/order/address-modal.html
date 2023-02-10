@@ -2,49 +2,41 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <body th:fragment="adderss-modal">
 <script th:src="@{/js/demo-theme.min.js(1668288743)}"></script>
-<div class="modal modal-blur fade" id="modal-report" tabindex="-1" aria-hidden="true" style="display: none;">
+<div class="modal modal-blur fade" id="modal-report" tabindex="-1" aria-hidden="true"
+     style="display: none;">
   <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
     <div class="modal-content">
+      <!-- 배송지 Header -->
       <div class="modal-header">
         <h5 class="modal-title">배송지 선택</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
+      <!-- 배송지 Body -->
       <div class="modal-body">
-        <label class="form-label">배송지 목록</label>
+        <small class="form-label">새로운 배송지를 선택하고 싶다면 추가 버튼을 클릭하여 새로운 배송지를 등록한 후 사용해주시길 바랍니다.</small>
         <div class="form-selectgroup-boxes row mb-3">
-          <div class="col-lg-6">
-            <label class="form-selectgroup-item">
-              <input type="radio" name="report-type" value="1" class="form-selectgroup-input" checked="">
-              <span class="form-selectgroup-label d-flex align-items-center p-3">
-                    <span class="me-3">
-                      <span class="form-selectgroup-check"></span>
-                    </span>
-                    <span class="form-selectgroup-label-content">
-                      <span class="form-selectgroup-title strong mb-1">Simple</span>
-                      <span class="d-block text-muted">Provide only basic data needed for the report</span>
-                    </span>
-                  </span>
-            </label>
-          </div>
-          <div class="col-lg-6">
+          <div class="col-lg-6" th:each="address:${addresses}">
             <label class="form-selectgroup-item">
               <input type="radio" name="report-type" value="1" class="form-selectgroup-input">
               <span class="form-selectgroup-label d-flex align-items-center p-3">
-                    <span class="me-3">
-                      <span class="form-selectgroup-check"></span>
-                    </span>
-                    <span class="form-selectgroup-label-content">
-                      <span class="form-selectgroup-title strong mb-1">Advanced</span>
-                      <span class="d-block text-muted">Insert charts and additional advanced analyses to be inserted in the report</span>
-                    </span>
-                  </span>
+                <span class="me-3">
+                  <span class="form-selectgroup-check"></span>
+                </span>
+                <span class="form-selectgroup-label-content">
+                  <span class="form-selectgroup-title strong mb-1" th:text="${address.address}"></span>
+                </span>
+              </span>
             </label>
+            <a class="btn btn-outline-danger" onclick="">
+              삭제
+            </a>
           </div>
         </div>
       </div>
+      <!-- 배송지 Footer -->
       <div class="modal-footer">
         <a href="#" class="btn btn-link link-secondary" data-bs-dismiss="modal">
-          취소
+          등록
         </a>
         <a href="#" class="btn btn-primary ms-auto" data-bs-dismiss="modal">
           선택
@@ -54,4 +46,7 @@
   </div>
 </div>
 </body>
+<script>
+  //닫기 버튼
+</script>
 </html>
