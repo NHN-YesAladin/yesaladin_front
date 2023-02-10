@@ -81,9 +81,9 @@ public class OrderMyPageWebController {
     /**
      * 주문 상태에 따른 주문 조회
      *
-     * @param status 주문 상태 코드의 숫자값
+     * @param status   주문 상태 코드의 숫자값
      * @param pageable 페이징 처리용
-     * @param model 모델
+     * @param model    모델
      * @return 주문 팝업창 위치
      */
     @GetMapping(value = "/order-popup", params = "code")
@@ -98,6 +98,12 @@ public class OrderMyPageWebController {
                 status
         );
 
+        log.info(
+                "getTotalPage : {} | getTotalDataCount : {}",
+                response.getTotalPage(),
+                response.getTotalDataCount()
+        );
+
         model.addAttribute("code", code.getStatusCode());
         model.addAttribute("title", code.getKoName());
         model.addAttribute("currentPage", response.getCurrentPage());
@@ -106,4 +112,5 @@ public class OrderMyPageWebController {
         model.addAttribute("dataList", response.getDataList());
         return "mypage/order/my-order-popup";
     }
+
 }

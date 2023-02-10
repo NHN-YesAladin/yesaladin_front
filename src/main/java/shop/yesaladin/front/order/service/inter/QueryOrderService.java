@@ -2,11 +2,13 @@ package shop.yesaladin.front.order.service.inter;
 
 
 import java.util.List;
+import java.util.Map;
 import org.springframework.data.domain.Pageable;
 import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.common.dto.PeriodQueryRequestDto;
 import shop.yesaladin.front.order.dto.OrderSheetResponseDto;
+import shop.yesaladin.front.order.dto.OrderStatusCode;
 import shop.yesaladin.front.order.dto.OrderStatusResponseDto;
 import shop.yesaladin.front.order.dto.OrderSummaryResponseDto;
 
@@ -47,7 +49,7 @@ public interface QueryOrderService {
      * 주문상태에 따른 회원 주문 조회
      *
      * @param pageable 페이징 처리시 사용
-     * @param status 주문 상태 번호
+     * @param status   주문 상태 번호
      * @return 페이징 된 주문 조회 정보
      */
     PaginatedResponseDto<OrderStatusResponseDto> getOrderListByOrderStatus(
@@ -55,5 +57,6 @@ public interface QueryOrderService {
             Long status
     );
 
+    Map<OrderStatusCode, Long> getOrderCountByStatus();
 
 }

@@ -1,7 +1,5 @@
 package shop.yesaladin.front.payment.controller.web;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -10,9 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import shop.yesaladin.common.code.ErrorCode;
 import shop.yesaladin.common.dto.ResponseDto;
-import shop.yesaladin.common.exception.ClientException;
 import shop.yesaladin.front.order.dto.OrderPaymentRequestDto;
 import shop.yesaladin.front.order.dto.OrderStatusResponseDto;
 import shop.yesaladin.front.payment.dto.PaymentCompleteSimpleResponseDto;
@@ -77,7 +73,7 @@ public class PaymentMainWebController {
     public String getEmptyPage(@ModelAttribute OrderPaymentRequestDto requestDto, Model model) {
         System.out.println("requestDto = " + requestDto);
         model.addAttribute("data", requestDto);
-        return "main/payment/empty-pay";
+        return "mypage/payment/empty-pay";
     }
 
     /**
