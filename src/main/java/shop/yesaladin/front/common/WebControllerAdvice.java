@@ -55,7 +55,7 @@ public class WebControllerAdvice {
         return "common/errors/forbidden";
     }
 
-    @ExceptionHandler({CustomUnauthorizedException.class})
+    @ExceptionHandler(CustomUnauthorizedException.class)
     public String handleAuthException(Exception ex, Model model, HttpServletResponse response) {
         log.error("", ex);
 
