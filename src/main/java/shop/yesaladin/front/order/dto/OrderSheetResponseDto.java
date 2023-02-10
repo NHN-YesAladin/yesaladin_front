@@ -55,4 +55,15 @@ public class OrderSheetResponseDto {
                 product.getQuantity()
         )).collect(Collectors.toList());
     }
+
+    /**
+     * 주문 상품의 총 가격을 반환합니다.
+     *
+     * @author 최예린
+     * @since 1.0
+     */
+    public long getTotalProductAmount() {
+        return orderProducts.stream()
+                .mapToLong(product -> product.getActualPrice() * product.getQuantity()).sum();
+    }
 }
