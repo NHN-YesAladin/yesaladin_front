@@ -15,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
+import shop.yesaladin.front.common.utils.CookieUtils;
 import shop.yesaladin.front.member.adapter.MemberAdapter;
 import shop.yesaladin.front.member.exception.InvalidLogoutRequestException;
 import shop.yesaladin.front.member.jwt.AuthInfo;
@@ -31,6 +32,7 @@ public class CustomLogoutHandler implements LogoutHandler {
 
     private final RedisTemplate<String, Object> redisTemplate;
     private final MemberAdapter memberAdapter;
+    private final CookieUtils cookieUtils;
 
     /**
      * logout 시 동작하는 기능입니다.
@@ -55,7 +57,7 @@ public class CustomLogoutHandler implements LogoutHandler {
 
         session.invalidate();
 
-        String uuid = getValueFromCookie(request.getCookies(), UUID_CODE.getValue());
+        String uuid = cookieUtils.getValueFromCookie(request.getCookies(), UUID_CODE.getValue());
         log.info("uuid={}", uuid);
         if (Objects.isNull(uuid)) {
             throw new InvalidLogoutRequestException();
@@ -63,12 +65,10 @@ public class CustomLogoutHandler implements LogoutHandler {
 
         AuthInfo auth = (AuthInfo) redisTemplate.opsForHash().get(uuid, JWT_CODE.getValue());
         redisTemplate.opsForHash().delete(uuid, JWT_CODE.getValue());
-        Cookie cart = new Cookie("CART_NO", "");
-        cart.setMaxAge(0);
+        Cookie cart = cookieUtils.createCookie("CART_NO", "", 0);
         response.addCookie(cart);
 
-        Cookie authCookie = new Cookie(UUID_CODE.getValue(), "");
-        authCookie.setMaxAge(0);
+        Cookie authCookie = cookieUtils.createCookie(UUID_CODE.getValue(), "", 0);
         response.addCookie(authCookie);
 
         memberAdapter.logout(uuid, auth.getAccessToken());
@@ -76,26 +76,5 @@ public class CustomLogoutHandler implements LogoutHandler {
         SecurityContext context = SecurityContextHolder.getContext();
         SecurityContextHolder.clearContext();
         context.setAuthentication(null);
-    }
-
-    /**
-     * Cookie에 들어있는 value를 반환하기 위한 기능입니다.
-     *
-     * @param cookies 브라우저에 존재하는 Cookie의 목록입니다.
-     * @param key 찾고자 하는 Cookie의 key에 해당합니다.
-     * @return 해당 쿠키에 저장된 값을 반환합니다.
-     */
-    private String getValueFromCookie(Cookie[] cookies, String key) {
-        if (Objects.isNull(cookies)) {
-            return null;
-        }
-
-        for (Cookie cookie : cookies) {
-            if (Objects.equals(key, cookie.getName())) {
-                return cookie.getValue();
-            }
-        }
-
-        return null;
     }
 }

@@ -168,6 +168,6 @@ public class SecurityConfig {
      */
     @Bean
     public CustomLogoutHandler customLogoutHandler() {
-        return new CustomLogoutHandler(redisTemplate, memberAdapter);
+        return new CustomLogoutHandler(redisTemplate, memberAdapter, cookieUtils);
     }
 }
