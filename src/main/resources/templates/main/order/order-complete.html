@@ -91,26 +91,43 @@
                         <div class="card-body">
                             <h3 class="card-title fs-2">결제 정보</h3>
                             <div class="m-auto">
-                                <div>
-                                    <span class="fs-3 fw-normal">결제 수단 : </span>
-                                    <span class="fs-3 fw-bolder" th:text="${response.method}">간편결제</span>
-                                    <span class="fs-3" > / </span>
-                                    <span class="fs-3 fw-bolder" th:text="${response.cardOwnerCode}">개인</span>
+                                <div th:if="${#strings.equals(response.method,'카드')}">
+                                    <div>
+                                        <span class="fs-3 fw-normal">결제 수단 : </span>
+                                        <span class="fs-3 fw-bolder" th:text="${response.method}">카드</span>
+                                        <span class="fs-3" > / </span>
+                                        <span class="fs-3 fw-bolder" th:text="${response.cardOwnerCode}">개인</span>
+                                    </div>
+                                    <div>
+                                        <span class="fs-3 fw-normal">결제 정보 : </span>
+                                        <span class="fs-3 fw-bolder" th:text="${response.cardAcquirerCode}">비씨카드</span>
+                                        <span class="fs-3" > / </span>
+                                        <span class="fs-3 fw-bolder" th:text="${response.cardNumber}">비씨카드</span>
+                                    </div>
+                                    <div>
+                                        <span class="fs-3 fw-normal">결제 승인 번호 : </span>
+                                        <span class="fs-3 fw-bolder" th:text="${response.cardApproveNumber}">1231</span>
+                                    </div>
+                                    <div>
+                                        <span class="fs-3 fw-normal">결제 금액 : </span>
+                                        <span class="fs-3 fw-bolder"  th:text="${#numbers.formatInteger(response.totalAmount,3,'COMMA') + '원'}">1231</span>
+                                    </div>
                                 </div>
-                                <div>
-                                    <span class="fs-3 fw-normal">결제 정보 : </span>
-                                    <span class="fs-3 fw-bolder" th:text="${response.cardAcquirerCode}">비씨카드</span>
-                                    <span class="fs-3" > / </span>
-                                    <span class="fs-3 fw-bolder" th:text="${response.cardNumber}">비씨카드</span>
+                                <div th:if="${#strings.equals(response.method,'간편결제')}">
+                                    <div>
+                                        <span class="fs-3 fw-normal">결제 수단 : </span>
+                                        <span class="fs-3 fw-bolder" th:text="${response.method}">간편결제</span>
+                                    </div>
+                                    <div>
+                                        <span class="fs-3 fw-normal">결제 정보 (제공사) : </span>
+                                        <span class="fs-3 fw-bolder" th:text="${response.easyPayProvider}">비씨카드</span>
+                                    </div>
+                                    <div>
+                                        <span class="fs-3 fw-normal">결제 금액 : </span>
+                                        <span class="fs-3 fw-bolder"  th:text="${#numbers.formatInteger(response.easyPayAmount,1,'COMMA') + '원'}">1231</span>
+                                    </div>
                                 </div>
-                                <div>
-                                    <span class="fs-3 fw-normal">결제 승인 번호 : </span>
-                                    <span class="fs-3 fw-bolder" th:text="${response.cardApproveNumber}">1231</span>
-                                </div>
-                                <div>
-                                    <span class="fs-3 fw-normal">결제 금액 : </span>
-                                    <span class="fs-3 fw-bolder"  th:text="${#numbers.formatInteger(response.totalAmount,3,'COMMA') + '원'}">1231</span>
-                                </div>
+
                             </div>
                         </div>
                     </div>

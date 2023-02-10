@@ -42,17 +42,15 @@ public class PaymentCompleteSimpleResponseDto {
     @NotBlank
     private String orderAddress;
 
-    @NotBlank
     private String cardCode;
-    @NotBlank
     private String cardOwnerCode;
-    @NotBlank
     private String cardNumber;
-    @NotNull
     private Integer cardInstallmentPlanMonths;
-    @NotBlank
     private String cardApproveNumber;
-    @NotBlank
     private String cardAcquirerCode;
+
+    private String easyPayProvider;
+    private long easyPayAmount;
+    private long easyPayDiscountAmount;
 
 }
