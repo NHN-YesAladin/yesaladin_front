@@ -5,6 +5,7 @@ import shop.yesaladin.front.common.dto.PageRequestDto;
 import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.product.dto.ProductDetailResponseDto;
 import shop.yesaladin.front.product.dto.ProductModifyInitDto;
+import shop.yesaladin.front.product.dto.ProductRecentResponseDto;
 import shop.yesaladin.front.product.dto.ProductsResponseDto;
 import shop.yesaladin.front.product.dto.RelationsResponseDto;
 
@@ -76,4 +77,14 @@ public interface QueryProductService {
      * @since 1.0
      */
     PaginatedResponseDto<RelationsResponseDto> findProductByTitle(Long id, String title, Pageable pageable);
+
+    /**
+     * 신간 상품 조회 메서드
+     *
+     * @param pageable 페이지 정보
+     * @return 신간 상품 리스트
+     * @author 김선홍
+     * @since 1.0
+     */
+    PaginatedResponseDto<ProductRecentResponseDto> findRecentProduct(Pageable pageable);
 }

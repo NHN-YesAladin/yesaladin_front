@@ -14,6 +14,7 @@ import shop.yesaladin.front.common.dto.PageRequestDto;
 import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.product.dto.ProductDetailResponseDto;
 import shop.yesaladin.front.product.dto.ProductModifyInitDto;
+import shop.yesaladin.front.product.dto.ProductRecentResponseDto;
 import shop.yesaladin.front.product.dto.ProductsResponseDto;
 import shop.yesaladin.front.product.dto.RelationsResponseDto;
 import shop.yesaladin.front.product.service.inter.QueryProductService;
@@ -36,6 +37,8 @@ public class QueryProductServiceImpl implements QueryProductService {
 
     private final RestTemplate restTemplate;
     private static final ParameterizedTypeReference<ResponseDto<PaginatedResponseDto<RelationsResponseDto>>> RELATION_PRODUCTION_CODE = new ParameterizedTypeReference<>() {
+    };
+    private static final ParameterizedTypeReference<ResponseDto<PaginatedResponseDto<ProductRecentResponseDto>>> RECENT_PRODUCTION_CODE = new ParameterizedTypeReference<>() {
     };
 
     @Value("${yesaladin.gateway.shop}")
@@ -164,13 +167,33 @@ public class QueryProductServiceImpl implements QueryProductService {
                 .buildAndExpand(id)
                 .toUriString();
 
-        HttpEntity httpEntity = getHttpEntity();
         ResponseEntity<ResponseDto<PaginatedResponseDto<RelationsResponseDto>>> responseEntity = restTemplate.exchange(
                 uri,
                 HttpMethod.GET,
-                httpEntity,
+                getHttpEntity(),
                 RELATION_PRODUCTION_CODE
         );
+        return Objects.requireNonNull(responseEntity.getBody()).getData();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public PaginatedResponseDto<ProductRecentResponseDto> findRecentProduct(Pageable pageable) {
+        String uri = UriComponentsBuilder
+                .fromUriString(url)
+                .path(PATH + "/recent")
+                .queryParam("size", pageable.getPageSize())
+                .queryParam("page", pageable.getPageNumber())
+                .toUriString();
+
+        ResponseEntity<ResponseDto<PaginatedResponseDto<ProductRecentResponseDto>>> responseEntity = restTemplate.exchange(
+                uri,
+                HttpMethod.GET,
+                getHttpEntity(),
+                RECENT_PRODUCTION_CODE
+                );
         return Objects.requireNonNull(responseEntity.getBody()).getData();
     }
 
