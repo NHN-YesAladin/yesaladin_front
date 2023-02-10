@@ -60,10 +60,10 @@
             <div class="mb-3">
               <label class="form-label">닉네임</label>
               <input type="text" class="form-control" id="nickname" th:name="nickname"
-                     pattern="^.*(?=.*[a-z])(?=.*[a-z\d])(?=.{2,8}).*$"
-                     placeholder="닉네임은 영문으로 2자 이상 15자 이하만 가능합니다." required>
+                     pattern="^[가-힣ㄱ-ㅎa-zA-Z0-9._-]{2,15}$"
+                     placeholder="숫자, 영어, 한국어와 언더스코어, 공백을 허용하며 최소 2자 이상의 15자 이하의 닉네임만 가능합니다." required>
               <div class="invalid-feedback">
-                닉네임은 영문으로 2자 이상 15자 이하만 가능합니다.
+                숫자, 영어, 한국어와 언더스코어, 공백을 허용하며 최소 2자 이상의 15자 이하의 닉네임만 가능합니다.
               </div>
               <div class="button-box">
                 <button class="nicknameCheckBtn" id="nicknameCheckBtn" type="button" onclick="nicknameCheck()">중복 확인</button>
@@ -165,7 +165,7 @@
 
     let emptyRegex = /\s/g;
     let nameRegex = /^.*(?=.*[가-힣a-z])(?=^.{2,200}).*$/;
-    let nicknameRegex = /^.*(?=.*[a-z])(?=.*[a-z\d])(?=.{2,8}).*$/;
+    let nicknameRegex = /^[가-힣ㄱ-ㅎa-zA-Z0-9._-]{2,15}$/;
     let loginIdRegex = /([a-z+\d*]{8,15})/g;
     let passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/g
     let birthdayRegex = /^.*(?=.*\d)(?=^.{6}).*$/;
@@ -186,7 +186,7 @@
 
         let nicknameVal = document.getElementById('nickname').value;
         if (!nicknameRegex.test(nicknameVal) || emptyRegex.test(nicknameVal)) {
-          alert('닉네임은 영문으로 2자 이상 15자 이하만 가능합니다.');
+          alert('숫자, 영어, 한국어와 언더스코어, 공백을 허용하며 최소 2자 이상의 15자 이하의 닉네임만 가능합니다.');
           return false;
         }
 

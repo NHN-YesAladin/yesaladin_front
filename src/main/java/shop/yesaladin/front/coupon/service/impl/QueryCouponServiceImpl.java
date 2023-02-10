@@ -99,7 +99,7 @@ public class QueryCouponServiceImpl implements QueryCouponService {
         } else if (data.getCouponBoundCode().equals(CouponBoundCode.PRODUCT)) {
             return getCategoryNameByCategoryId(data.getCouponBound());
         }
-        return null;
+        return "전체 상품";
     }
 
     private String getProductNameByIsbn(String isbn) {

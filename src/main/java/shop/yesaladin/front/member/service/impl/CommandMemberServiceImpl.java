@@ -44,7 +44,6 @@ public class CommandMemberServiceImpl implements CommandMemberService {
     @Override
     public SignUpResponseDto signUp(SignUpRequestDto request) {
         request.setPassword(passwordEncoder.encode(request.getPassword()));
-        log.info("request={}", request);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -68,7 +67,6 @@ public class CommandMemberServiceImpl implements CommandMemberService {
     @Override
     public SignUpResponseDto signUp(Oauth2SignUpRequestDto request) {
         request.setPassword(passwordEncoder.encode(request.getPassword()));
-        log.info("request={}", request);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
