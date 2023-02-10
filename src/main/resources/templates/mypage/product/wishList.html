@@ -51,12 +51,9 @@
       <a href="#" class="btn btn-primary w-auto float-end btn-sm d-inline">더 보기</a>
     </div>
     <div class="border-1 border-muted w-auto">
-      <div class="row row-cards w-full">
-        <div class="col-3">
-          <div class="card">
-            <div class="card-body"></div>
-          </div>
-        </div>
+      <div id="recent-table" class="row w-full scroll-x">
+
+      </div>
       </div>
     </div>
   </div>
@@ -64,7 +61,37 @@
 <!-- TODO 4 : footer -->
 <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
 <script>
+  window.addEventListener('load', function(){
+      fetch('/products/recent')
+      .then((res) => (res.json()))
+      .then(function (data){
+        const recentTable = document.getElementById('recent-table')
+          data.dataList.forEach(function (e) {
+            createCard(recentTable, e)
+          });
+      })
+    }
+  );
 
+  function createCard(recentTable, data) {
+    const card = document.createElement('div')
+    card.className += 'card'
+    recentTable.appendChild(card)
+
+    const img = document.createElement('div')
+    img.className += 'img-responsive img-responsive-21x9 card-img-top'
+    img.style = 'background-image: url(' + data.thumbnailFileUrl.value + ')'
+    recentTable.appendChild(img)
+
+    const body = document.createElement('div')
+    body.className += 'card-body'
+    recentTable.appendChild(body)
+
+    const title = document.createElement('h3')
+    title.className += "card-title"
+    title.innerText = data.title.value
+    body.appendChild(title)
+  }
 </script>
 </body>
 </html>

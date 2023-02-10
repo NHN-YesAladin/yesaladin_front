@@ -1,4 +1,4 @@
-package shop.yesaladin.front.product.controller.web;
+package shop.yesaladin.front.wishlist.controller;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -30,32 +30,32 @@ public class WishWebController {
     private final ObjectMapper objectMapper;
 
     @GetMapping
-    public ModelAndView memberWishList(HttpServletRequest request, HttpServletResponse response)
+    public String memberWishList(HttpServletRequest request, HttpServletResponse response)
             throws JsonProcessingException {
-        ModelAndView modelAndView = new ModelAndView("mypage/product/wishList");
-        Cookie cookie1 = null;
-        for(Cookie cookie: request.getCookies()) {
-            if(cookie.getName().equals("recent")) {
-                cookie1 = cookie;
-                break;
-            }
-        }
-        ArrayList<Long> set = new ArrayList<>(objectMapper.readValue(
-                URLDecoder.decode(cookie1.getValue(), StandardCharsets.UTF_8),
-                TypeFactory.defaultInstance()
-                        .constructCollectionType(LinkedHashSet.class, Long.class)
-        ));
-        for(Long o: set) {
-            log.info("wishlist: " + o + "");
-        }
-        modelAndView.addObject("recentList",
-                new ArrayList<>(objectMapper.readValue(
-                        URLDecoder.decode(cookie1.getValue(), StandardCharsets.UTF_8),
-                        TypeFactory.defaultInstance()
-                                .constructCollectionType(LinkedHashSet.class, Long.class)
-                )
-        ));
-        return modelAndView;
+//        ModelAndView modelAndView = new ModelAndView("mypage/product/wishList");
+//        Cookie cookie1 = null;
+//        for(Cookie cookie: request.getCookies()) {
+//            if(cookie.getName().equals("recent")) {
+//                cookie1 = cookie;
+//                break;
+//            }
+//        }
+//        ArrayList<Long> set = new ArrayList<>(objectMapper.readValue(
+//                URLDecoder.decode(cookie1.getValue(), StandardCharsets.UTF_8),
+//                TypeFactory.defaultInstance()
+//                        .constructCollectionType(LinkedHashSet.class, Long.class)
+//        ));
+//        for(Long o: set) {
+//            log.info("wishlist: " + o + "");
+//        }
+//        modelAndView.addObject("recentList",
+//                new ArrayList<>(objectMapper.readValue(
+//                        URLDecoder.decode(cookie1.getValue(), StandardCharsets.UTF_8),
+//                        TypeFactory.defaultInstance()
+//                                .constructCollectionType(LinkedHashSet.class, Long.class)
+//                )
+//        ));
+        return "mypage/product/wishList";
     }
 
     private void deleteRecent(List<Long> recentList, Long id) {

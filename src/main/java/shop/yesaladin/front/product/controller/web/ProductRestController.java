@@ -55,6 +55,7 @@ public class ProductRestController {
      */
     @GetMapping("/products/recent")
     public PaginatedResponseDto<ProductRecentResponseDto> findRecentProduct(@PageableDefault Pageable pageable) {
+        System.out.println(pageable.getPageSize());
         return queryProductService.findRecentProduct(pageable);
     }
 }

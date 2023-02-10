@@ -189,7 +189,7 @@ public class QueryProductServiceImpl implements QueryProductService {
                 .toUriString();
 
         ResponseEntity<ResponseDto<PaginatedResponseDto<ProductRecentResponseDto>>> responseEntity = restTemplate.exchange(
-                uri,
+                "http://localhost:8072/v1/products/recent",
                 HttpMethod.GET,
                 getHttpEntity(),
                 RECENT_PRODUCTION_CODE
