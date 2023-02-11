@@ -135,6 +135,9 @@ public class QueryOrderServiceImpl implements QueryOrderService {
         return Objects.requireNonNull(responseEntity.getBody()).getData();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Map<OrderStatusCode, Long> getOrderCountByStatus() {
         URI uri = UriComponentsBuilder.fromHttpUrl(gatewayConfig.getShopUrl())

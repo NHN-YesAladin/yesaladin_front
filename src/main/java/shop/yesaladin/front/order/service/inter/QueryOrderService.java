@@ -57,6 +57,11 @@ public interface QueryOrderService {
             Long status
     );
 
+    /**
+     * 주문 상테에 따른 주문 개수 조회
+     *
+     * @return 주문 상태 & 주문 개수
+     */
     Map<OrderStatusCode, Long> getOrderCountByStatus();
 
 }

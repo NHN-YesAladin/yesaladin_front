@@ -103,6 +103,7 @@ public class PaymentMainWebController {
 
         if (code.equals("PAY_PROCESS_ABORTED")) {
             log.error("PAY_PROCESS_ABORTED : {}", message);
+            model.addAttribute("error", message);
             return "common/errors/4xx";
         }
 
