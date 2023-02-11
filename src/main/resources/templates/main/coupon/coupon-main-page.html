@@ -118,43 +118,29 @@
     <h2 class="mt-3" th:text="|'${memberGrade}'등급 고객님을 위한 쿠폰|"></h2>
     <hr class="mt-2">
     <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
-      <div class="col">
+      <div class="col" th:each="coupon: ${couponList.dataList}">
         <div class="card mb-4 rounded-3 shadow-sm">
           <img class="card-img-top" src="https://via.placeholder.com/200" style="height: 15rem">
           <div class="card-body">
-            <h1 class="card-title pricing-card-title">1,000원 할인쿠폰</h1>
+            <h1 class="card-title pricing-card-title" th:text="${coupon.couponSummaryDto.name}">
+              1,000원 할인쿠폰</h1>
             <ul class="list-unstyled mt-3 mb-4">
-              <li>'너의 하루가 따숩길 바라'</li>
-              <li>~ 2023-02-20</li>
+              <li th:if="${coupon.boundCode != null && coupon.boundCode.name() == 'PRODUCT'}"
+                  th:text="|'${coupon.displayBound}'|">'너의
+                하루가 따숩길 바라'
+              </li>
+              <li th:if="${coupon.boundCode != null && coupon.boundCode.name() == 'CATEGORY'}"
+                  th:text="|'${coupon.displayBound}' 카테고리 전상품|">'e-book' 카테고리 전상품
+              </li>
+              <li th:if="${coupon.boundCode == null && coupon.couponSummaryDto.couponTypeCode.name() == 'POINT'}">
+                '포인트 쿠폰'
+              </li>
+              <li th:if="${coupon.boundCode != null && coupon.boundCode.name() == 'ALL'}">
+                '전체 상품'
+              </li>
             </ul>
             <button class="w-100 btn btn-lg btn-primary issue-btn" type="button">발급받기
             </button>
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="card mb-4 rounded-3 shadow-sm">
-          <img class="card-img-top" src="https://via.placeholder.com/200" style="height: 15rem">
-          <div class="card-body">
-            <h1 class="card-title pricing-card-title">10% 할인쿠폰</h1>
-            <ul class="list-unstyled mt-3 mb-4">
-              <li>국내도서 - 컴퓨터/모바일 한정</li>
-              <li>~ 2023-02-20</li>
-            </ul>
-            <button class="w-100 btn btn-lg btn-primary issue-btn" type="button">발급받기</button>
-          </div>
-        </div>
-      </div>
-      <div class="col">
-        <div class="card mb-4 rounded-3 shadow-sm">
-          <img class="card-img-top" src="https://via.placeholder.com/200" style="height: 15rem">
-          <div class="card-body">
-            <h1 class="card-title pricing-card-title">3,000P</h1>
-            <ul class="list-unstyled mt-3 mb-4">
-              <li>포인트 충전 쿠폰</li>
-              <li>~ 2023-02-20</li>
-            </ul>
-            <button class="w-100 btn btn-lg btn-primary issue-btn" type="button">발급받기</button>
           </div>
         </div>
       </div>
