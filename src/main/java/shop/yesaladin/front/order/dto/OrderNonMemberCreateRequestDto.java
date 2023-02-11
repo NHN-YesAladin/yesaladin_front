@@ -10,6 +10,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 /**
@@ -18,6 +19,8 @@ import org.hibernate.validator.constraints.Length;
  * @author 최예린
  * @since 1.0
  */
+
+@NoArgsConstructor
 @Getter
 public class OrderNonMemberCreateRequestDto {
 

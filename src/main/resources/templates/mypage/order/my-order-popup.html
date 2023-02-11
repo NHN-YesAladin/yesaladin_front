@@ -144,6 +144,9 @@
 
   window.addEventListener('DOMContentLoaded', (event) => {
     initConnectionInfo();
+  });
+
+  window.addEventListener('beforeunload', (event) => {
     opener.popupCloseEvent(this); //부모 창의 이벤트  - 닫힐때 적용
   });
 
@@ -151,19 +154,24 @@
   const tossPayments = TossPayments(clientKey); // SDK 초기화
   function processPayment(event) {
     //더미 데이터
-    let randomON = `0000_${new Date().getDate()}_${new Date().getHours()}_${new Date().getMinutes()}_${new Date().getMilliseconds()}`;
-    let realOrderName = "테스트 주문 외 4권";
-    let orderNumber = randomON;
-    let orderName = encodeURI(realOrderName);
-    let totalAmount = 100000 + 3000 + 2000;
+    // let randomON = `0000_${new Date().getDate()}_${new Date().getHours()}_${new Date().getMinutes()}_${new Date().getMilliseconds()}`;
+    // let realOrderName = "테스트 주문 외 4권";
+    // let orderNumber = randomON;
+    // let orderName = encodeURI(realOrderName);
+    // let totalAmount = 100000 + 3000 + 2000;
 
     //실제 적용 코드
-    const target = event.target;
-    // let orderNumber = target.dataset["orderNumber"];
-    // let orderName = target.dataset["orderName"];
-    // let totalAmount = target.dataset["totalAmount"];
+    const target = event;
+    let orderNumber = target.dataset["orderNumber"];
+    let orderName = target.dataset["orderName"];
+    let totalAmount = target.dataset["totalAmount"];
 
-    opener.window.location.href = `${FRONT_SERVER}/payments/empty-pay?orderNumber=${randomON}&orderName=${orderName}&totalAmount=${totalAmount}`;
+    console.log(orderName);
+    console.log(orderNumber);
+    console.log(totalAmount);
+
+
+    opener.window.location.href = `${FRONT_SERVER}/payments/empty-pay?orderNumber=${orderNumber}&orderName=${orderName}&totalAmount=${totalAmount}`;
     window.close();
 
   }
