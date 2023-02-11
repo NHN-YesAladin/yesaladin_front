@@ -2,20 +2,15 @@ package shop.yesaladin.front.order.controller.web;
 
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import shop.yesaladin.common.dto.ResponseDto;
-import shop.yesaladin.front.order.dto.OrderMemberCreateRequestDto;
-import shop.yesaladin.front.order.dto.OrderNonMemberCreateRequestDto;
+import shop.yesaladin.front.order.dto.OrderDetailsResponseDto;
 import shop.yesaladin.front.order.dto.OrderSheetResponseDto;
 import shop.yesaladin.front.order.service.inter.QueryOrderService;
 
@@ -60,5 +55,14 @@ public class OrderMainWebController {
 
         return (request.getServletPath().contains("subscribe")) ? "main/order/subscribe"
                 : "main/order/order";
+    }
+
+    @GetMapping("/{orderNumber}")
+    public String getOrderDetails(@PathVariable String orderNumber, Model model) {
+        OrderDetailsResponseDto detailsResponseDto = queryOrderService.getOrderDetailsDtoByOrderNumber(
+                orderNumber);
+        System.out.println("detailsResponseDto = " + detailsResponseDto);
+        model.addAttribute("response", detailsResponseDto);
+        return "main/order/order-details";
     }
 }
