@@ -16,11 +16,18 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+/**
+ * 위시리스트 컨트롤러
+ *
+ * @author 김선홍
+ * @since 1.0
+ */
 @Slf4j
 @RequiredArgsConstructor
 @Controller
@@ -58,10 +65,5 @@ public class WishWebController {
         return "mypage/product/wishList";
     }
 
-    private void deleteRecent(List<Long> recentList, Long id) {
-        log.info("id: " + id);
-        log.info(recentList.size() + "");
-        recentList.remove(id);
-        log.info(recentList.size() + "");
-    }
+
 }

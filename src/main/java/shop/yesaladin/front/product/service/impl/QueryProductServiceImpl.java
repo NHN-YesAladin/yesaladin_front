@@ -50,7 +50,7 @@ public class QueryProductServiceImpl implements QueryProductService {
     @Override
     public ProductDetailResponseDto getProductDetail(long productId) {
         URI uri = UriComponentsBuilder
-                .fromUriString(url)
+                .fromUriString("http://localhost:8072")
                 .path(PATH + "/" + productId)
                 .encode()
                 .build()

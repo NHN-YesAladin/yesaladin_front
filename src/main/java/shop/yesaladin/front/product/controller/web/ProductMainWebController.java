@@ -1,5 +1,14 @@
 package shop.yesaladin.front.product.controller.web;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -32,6 +41,8 @@ public class ProductMainWebController {
 
     private final QueryProductService queryProductService;
     private final QueryProductTypeService queryProductTypeService;
+    private static final String RECENT = "recent";
+    private final ObjectMapper objectMapper;
 
     /**
      * [GET /products/{productId}] 상품 상세 조회 View를 반환합니다.
@@ -39,14 +50,20 @@ public class ProductMainWebController {
      * @param model 뷰로 데이터 전달
      * @return 상품 상세 조회 form
      * @author 이수정
+     * @author 김선홍
      * @since 1.0
      */
     @GetMapping("/products/{productId}")
-    public String product(@PathVariable long productId, Model model) {
+    public String product(
+            @PathVariable long productId,
+            Model model,
+            HttpServletRequest request,
+            HttpServletResponse httpServletResponse
+    ) throws JsonProcessingException {
         ProductDetailResponseDto response = queryProductService.getProductDetail(productId);
 
         model.addAttribute(response);
-
+//        checkCookie(request, httpServletResponse, productId);
         return "main/product/product";
     }
 
@@ -103,5 +120,37 @@ public class ProductMainWebController {
                 "totalDataCount", products.getTotalDataCount(),
                 "tags", products.getDataList()
         );
+    }
+
+    private void checkCookie(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            Long productId
+    )
+            throws JsonProcessingException {
+        log.info(productId + "");
+        Cookie[] cookies = request.getCookies();
+
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals(RECENT)) {
+                LinkedHashSet<Long> recent = objectMapper.readValue(
+                        cookie.getValue(),
+                        new TypeReference<LinkedHashSet<Long>>() {
+                        }
+                );
+                recent.add(productId);
+                cookie.setValue(objectMapper.writeValueAsString(recent));
+                response.addCookie(cookie);
+                return;
+            }
+        }
+        Set<Long> set = new LinkedHashSet<>();
+        set = Collections.synchronizedSet(set);
+        set.add(productId);
+        Cookie cookie = new Cookie(RECENT, objectMapper.writeValueAsString(set));
+        cookie.setSecure(true);
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(259200);
+        response.addCookie(cookie);
     }
 }
