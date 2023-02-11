@@ -3,7 +3,7 @@ package shop.yesaladin.front.common.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.GetMapping;import shop.yesaladin.front.member.dto.MemberGrade;
 import shop.yesaladin.front.member.service.inter.QueryMemberService;
 import shop.yesaladin.front.point.service.inter.QueryPointHistoryService;
 
@@ -43,7 +43,7 @@ public class IndexController {
     @GetMapping("/mypage")
     public String mypage(Model model) {
         long point = pointHistoryService.getMemberPoint();
-        String grade = queryMemberService.getMemberGrade();
+        MemberGrade grade = MemberGrade.valueOf(queryMemberService.getMemberGrade());
 
         model.addAttribute("point", point);
         model.addAttribute("grade", grade);
