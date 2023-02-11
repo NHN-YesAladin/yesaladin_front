@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 /**
  * 주문한 상품의 정보를 보내기 위한 dto 클래스입니다.
@@ -17,7 +16,6 @@ import lombok.ToString;
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString
 @AllArgsConstructor
 public class ProductOrderRequestDto {
 
@@ -25,4 +23,9 @@ public class ProductOrderRequestDto {
     private String isbn;
     @Min(1)
     private int quantity;
+
+    @Override
+    public String toString() {
+        return isbn + '/' + quantity;
+    }
 }
