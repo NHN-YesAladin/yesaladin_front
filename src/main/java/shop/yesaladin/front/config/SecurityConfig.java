@@ -48,6 +48,7 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChainDev(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .mvcMatchers("/mypage/**").authenticated()
+                .mvcMatchers("/coupon").authenticated()
                 .anyRequest().permitAll();
         http.formLogin()
                 .loginPage("/members/login")
@@ -168,6 +169,6 @@ public class SecurityConfig {
      */
     @Bean
     public CustomLogoutHandler customLogoutHandler() {
-        return new CustomLogoutHandler(redisTemplate, memberAdapter);
+        return new CustomLogoutHandler(redisTemplate, memberAdapter, cookieUtils);
     }
 }

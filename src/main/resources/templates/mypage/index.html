@@ -134,8 +134,8 @@
                     <div class="card card-stacked">
                       <div class="card-body text-center">
                         <h3 class="card-title">입금/결제 대기</h3>
-                        <a class="text-muted w-auto btn"
-                           href="javascript:openWindowPop('/mypage/order-popup?code=1', 'popup');">___건</a>
+                        <a class="text-muted w-auto btn fw-bold fs-3" id="order-order-btn"
+                           href="javascript:openWindowPop('/mypage/order-popup?code=1&page=0&size=5', 'popup');">-</a>
                       </div>
                     </div>
                   </div>
@@ -143,8 +143,8 @@
                     <div class="card card-stacked">
                       <div class="card-body text-center">
                         <h3 class="card-title">배송 대기</h3>
-                        <a class="text-muted w-auto btn"
-                           href="javascript:openWindowPop('/mypage/order-popup?code=3', 'popup');">___건</a>
+                        <a class="text-muted w-auto btn fw-bold fs-3" id="order-ready-btn"
+                           href="javascript:openWindowPop('/mypage/order-popup?code=3&page=0&size=5', 'popup');">-</a>
                       </div>
                     </div>
                   </div>
@@ -152,8 +152,8 @@
                     <div class="card card-stacked">
                       <div class="card-body text-center">
                         <h3 class="card-title">배송중</h3>
-                        <a class="text-muted w-auto btn"
-                           href="javascript:openWindowPop('/mypage/order-popup?code=4', 'popup');">___건</a>
+                        <a class="text-muted w-auto btn fw-bold fs-3" id="order-delivery-btn"
+                           href="javascript:openWindowPop('/mypage/order-popup?code=4&page=0&size=5', 'popup');">-</a>
                       </div>
                     </div>
                   </div>
@@ -161,8 +161,8 @@
                     <div class="card card-stacked">
                       <div class="card-body text-center">
                         <h3 class="card-title">배송 완료</h3>
-                        <a class="text-muted w-auto btn"
-                           href="javascript:openWindowPop('/mypage/order-popup?code=5', 'popup');">___건</a>
+                        <a class="text-muted w-auto btn fw-bold fs-3" id="order-complete-btn"
+                           href="javascript:openWindowPop('/mypage/order-popup?code=5&page=0&size=5', 'popup');">-</a>
                       </div>
                     </div>
                   </div>
@@ -206,12 +206,17 @@
     <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
   </div>
 </div>
-
 <script>
-
   const mypage = document.getElementById("mypage");
-  const mainUrl = `${mypage.getAttribute("data-url")}`;
+  const frontUrl = `${mypage.getAttribute("data-url")}`;
   const shopUrl = `${mypage.getAttribute("data-shop-url")}`;
+
+  let statusMap = {};
+
+  window.addEventListener('DOMContentLoaded', (event) => {
+    orderCounter();
+  });
+
 
   let popup;
 
@@ -221,8 +226,27 @@
   }
 
   function popupCloseEvent(event) {
-    alert("popup.closed")
     //TODO 주문 상태 개수 변경
+    console.log("popup close");
+  }
+
+  async function orderCounter() {
+    if (Object.keys(statusMap).length === 0) {
+      const response = await fetch(
+          `${frontUrl}/api/orders/status-count`);
+      const body = await response.json();
+      statusMap = body;
+    }
+
+    const orderBtn = document.getElementById("order-order-btn");
+    const readyBtn = document.getElementById("order-ready-btn");
+    const deliveryBtn = document.getElementById("order-delivery-btn");
+    const completeBtn = document.getElementById("order-complete-btn");
+
+    orderBtn.textContent = statusMap["ORDER"] + '건';
+    readyBtn.textContent = statusMap["READY"] + '건';
+    deliveryBtn.textContent = statusMap["DELIVERY"] + '건';
+    completeBtn.textContent = statusMap["COMPLETE"] + '건';
   }
 
 </script>

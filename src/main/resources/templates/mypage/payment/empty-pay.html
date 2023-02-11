@@ -84,6 +84,7 @@
     })
     .catch(function (error) {
       console.error(error);
+      alert(error.message)
       window.location.replace(`${FRONT_SERVER}/mypage`);
     });
   }

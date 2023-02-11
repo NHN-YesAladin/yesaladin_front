@@ -7,6 +7,7 @@ import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import shop.yesaladin.front.common.utils.CookieUtils;
 import shop.yesaladin.front.interceptor.ReissueTokenInterceptor;
 import shop.yesaladin.front.interceptor.RequestLoggingInterceptor;
 import shop.yesaladin.front.member.adapter.MemberAdapter;
@@ -26,6 +27,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     private final MemberAdapter memberAdapter;
     private final RedisTemplate<String, Object> redisTemplate;
+    private final CookieUtils cookieUtils;
 
     /**
      * Custom Interceptor를 추가 하기 위한 기능 입니다.
@@ -40,11 +42,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addInterceptor(new RequestLoggingInterceptor())
                 .excludePathPatterns("/css/**", "/js/**", "/libs/**", "/**/static/**", "/img/**", "/api/**");
 
-        registry.addInterceptor(new ReissueTokenInterceptor(memberAdapter, redisTemplate))
+        registry.addInterceptor(new ReissueTokenInterceptor(memberAdapter, redisTemplate, cookieUtils))
                 .excludePathPatterns("/css/**", "/js/**", "/libs/**", "/**/static/**", "/img/**", "/api/**", "/");
     }
 
-    //TODO addCorsMappings() not working -> 임시로 서버에서 @CrossOrigin 어노테이션 사용해 전송 중
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**");

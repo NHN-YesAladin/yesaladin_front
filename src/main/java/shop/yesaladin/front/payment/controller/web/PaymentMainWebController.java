@@ -40,7 +40,6 @@ public class PaymentMainWebController {
     @GetMapping("/pay")
     public String getPayPage(@ModelAttribute PaymentViewRequestDto request, Model model) {
         model.addAttribute("data", request);
-
         return "main/payment/pay-page";
     }
 
@@ -53,9 +52,8 @@ public class PaymentMainWebController {
      */
     @GetMapping("/empty-pay")
     public String getEmptyPage(@ModelAttribute OrderPaymentRequestDto requestDto, Model model) {
-        System.out.println("requestDto = " + requestDto);
         model.addAttribute("data", requestDto);
-        return "main/payment/empty-pay";
+        return "mypage/payment/empty-pay";
     }
 
     /**
@@ -105,6 +103,7 @@ public class PaymentMainWebController {
 
         if (code.equals("PAY_PROCESS_ABORTED")) {
             log.error("PAY_PROCESS_ABORTED : {}", message);
+            model.addAttribute("error", message);
             return "common/errors/4xx";
         }
 
