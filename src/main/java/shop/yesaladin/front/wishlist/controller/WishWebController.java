@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import shop.yesaladin.front.common.dto.PaginatedResponseDto;
+import shop.yesaladin.front.common.utils.CookieUtils;
 import shop.yesaladin.front.product.dto.ProductRecentResponseDto;
 import shop.yesaladin.front.product.service.inter.QueryProductService;
 import shop.yesaladin.front.wishlist.dto.WishlistResponseDto;
@@ -54,8 +55,7 @@ public class WishWebController {
     private static final String CURRENTPAGE = "currentPage";
     private static final String TOTALPAGE = "totalPage";
     private static final String URL = "url";
-    private static final String SIZE = "size";
-    private static final String PAGE = "page";
+    private final CookieUtils cookieUtils;
 
     /**
      * 마이페이지의 위시리스트 페이지로 이동하면서 필요한 리스트를 받음
@@ -342,13 +342,10 @@ public class WishWebController {
      * @since 1.0
      */
     private Cookie createCookie(Set<Long> value) throws JsonProcessingException {
-        Cookie cookie = new Cookie(
+        return cookieUtils.createCookie(
                 RECENT,
-                URLEncoder.encode(objectMapper.writeValueAsString(value), StandardCharsets.UTF_8)
+                URLEncoder.encode(objectMapper.writeValueAsString(value), StandardCharsets.UTF_8),
+                259200
         );
-        cookie.setHttpOnly(true);
-        cookie.setPath("/");
-        cookie.setMaxAge(259200);
-        return cookie;
     }
 }

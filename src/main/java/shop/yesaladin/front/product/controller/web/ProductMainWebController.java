@@ -15,6 +15,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import shop.yesaladin.front.common.dto.PageRequestDto;
 import shop.yesaladin.front.common.dto.PaginatedResponseDto;
+import shop.yesaladin.front.common.utils.CookieUtils;
 import shop.yesaladin.front.product.dto.ProductDetailResponseDto;
 import shop.yesaladin.front.product.dto.ProductsResponseDto;
 import shop.yesaladin.front.product.service.inter.QueryProductService;
@@ -51,11 +53,11 @@ public class ProductMainWebController {
     private static final String RECENT = "recent";
     private static final String WISHLIST = "isWishlist";
     private final ObjectMapper objectMapper;
+    private final CookieUtils cookieUtils;
 
     /**
-     * [GET /products/{productId}] 상품 상세 조회 View를 반환합니다.
-     * 최근 본 상품 리스트에 productid 를 추가합니다.
-     * 위시리스트에 해당 상품이 등록되어있는지 확인합니다.
+     * [GET /products/{productId}] 상품 상세 조회 View를 반환합니다. 최근 본 상품 리스트에 productid 를 추가합니다. 위시리스트에 해당
+     * 상품이 등록되어있는지 확인합니다.
      *
      * @param model 뷰로 데이터 전달
      * @return 상품 상세 조회 form
@@ -73,7 +75,7 @@ public class ProductMainWebController {
     ) throws JsonProcessingException {
         ProductDetailResponseDto response = queryProductService.getProductDetail(productId);
         model.addAttribute(response);
-        if (Objects.nonNull(authentication)) {
+        if (authentication instanceof AnonymousAuthenticationToken) {
             model.addAttribute(WISHLIST, commandWishlistService.isExist(productId));
         } else {
             model.addAttribute(WISHLIST, false);
@@ -175,13 +177,10 @@ public class ProductMainWebController {
      * @since 1.0
      */
     private Cookie createCookie(Set<Long> value) throws JsonProcessingException {
-        Cookie cookie = new Cookie(
+        return cookieUtils.createCookie(
                 RECENT,
-                URLEncoder.encode(objectMapper.writeValueAsString(value), StandardCharsets.UTF_8)
+                URLEncoder.encode(objectMapper.writeValueAsString(value), StandardCharsets.UTF_8),
+                259200
         );
-        cookie.setHttpOnly(true);
-        cookie.setPath("/");
-        cookie.setMaxAge(259200);
-        return cookie;
     }
 }

@@ -31,7 +31,7 @@ public class SearchProductServiceImpl implements SearchProductService {
     public SearchedProductResponseDto searchProductsByProductField(SearchProductRequestDto requestDto) {
         log.info(host);
         log.info(PATH);
-        UriComponents url = UriComponentsBuilder.fromHttpUrl("http://localhost:8072")
+        UriComponents url = UriComponentsBuilder.fromHttpUrl(host)
                 .path(PATH)
                 .queryParam(requestDto.getSelected(), requestDto.getInput())
                 .queryParam(OFFSET, requestDto.getOffset() - 1)

@@ -6,6 +6,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * 최근 본 상품과 신작 작품의 ResponseDto
+ *
+ * @author 김선홍
+ * @since 1.0
+ */
 @Getter
 @Setter
 @NoArgsConstructor

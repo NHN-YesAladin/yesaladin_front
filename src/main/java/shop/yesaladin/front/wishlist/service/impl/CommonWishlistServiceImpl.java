@@ -32,6 +32,9 @@ public class CommonWishlistServiceImpl implements CommandWishlistService {
     private final String PRODUCT_ID = "productid";
 
 
+    /**
+     *{@inheritDoc}
+     */
     @Override
     public Long save(Long productId) {
         String uri = UriComponentsBuilder.fromUriString(url)
@@ -47,6 +50,9 @@ public class CommonWishlistServiceImpl implements CommandWishlistService {
         return Objects.requireNonNull(responseEntity.getBody()).getData().getProductId();
     }
 
+    /**
+     *{@inheritDoc}
+     */
     @Override
     public void delete(Long productId) {
         String uri = UriComponentsBuilder.fromUriString(url)
@@ -61,6 +67,9 @@ public class CommonWishlistServiceImpl implements CommandWishlistService {
         );
     }
 
+    /**
+     *{@inheritDoc}
+     */
     @Override
     public Boolean isExist(Long productId) {
         String uri = UriComponentsBuilder.fromUriString(url)
