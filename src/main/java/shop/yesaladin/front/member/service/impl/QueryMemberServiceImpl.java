@@ -7,8 +7,8 @@ import java.time.LocalDate;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Pageable;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -185,17 +185,23 @@ public class QueryMemberServiceImpl implements QueryMemberService {
      * {@inheritDoc}
      */
     @Override
-    public MemberQueryResponseDto getMemberInfo() {
+    public ResponseDto<MemberQueryResponseDto> getMemberInfo() {
         URI uri = UriComponentsBuilder
                 .fromUriString(gatewayConfig.getShopUrl())
-                .path("/v1/members/{loginId}")
+                .path("/v1/members")
                 .encode()
                 .build()
                 .expand("")
                 .toUri();
-        return restTemplate.getForObject(
-                uri, MemberQueryResponseDto.class
+
+        ResponseEntity<ResponseDto<MemberQueryResponseDto>> response = restTemplate.exchange(
+                uri,
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<>() {}
         );
+
+        return Objects.requireNonNull(response.getBody());
     }
 
     /**
@@ -226,8 +232,7 @@ public class QueryMemberServiceImpl implements QueryMemberService {
     private static HttpEntity getEntity() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity entity = new HttpEntity<>(headers);
-        return entity;
+        return new HttpEntity<>(headers);
     }
 
     /**

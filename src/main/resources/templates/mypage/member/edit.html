@@ -75,10 +75,14 @@
                         <div class="form-label">비밀번호</div>
                         <div class="row">
                           <div class="col-10">
-                            <input type="password" class="form-control" th:value="${password}" disabled>
+                            <input type="password" class="form-control" th:value="${password}"
+                                   disabled>
                           </div>
                           <div class="col-2">
-                            <a href="#" class="btn btn-primary w-full">비밀번호 변경</a>
+                            <a class="btn btn-primary btn-modal w-full"
+                               data-bs-toggle="modal" data-bs-target="#modal-password">
+                              비밀번호 변경
+                            </a>
                           </div>
                         </div>
                       </div>
@@ -97,7 +101,7 @@
                     </div>
                   </div>
                 </div>
-                <form class="card" method="post" action="/mypage/edit">
+                <div class="card mb-3">
                   <div class="card-header">
                     <h2 class="card-title">기본 정보</h2>
                   </div>
@@ -115,7 +119,8 @@
                     <div class="row mb-2">
                       <div class="col-12">
                         <div class="form-label">닉네임</div>
-                        <input type="text" class="form-control" name="nickname" th:value="${nickname}">
+                        <input type="text" class="form-control" id="nick-name"
+                               name="nickname" th:value="${nickname}">
                       </div>
                     </div>
                     <div class="row mb-2">
@@ -126,11 +131,14 @@
                     </div>
                     <div class="row">
                       <div class="col-12">
-                        <input type="submit" class="btn btn-primary w-full" value="수정하기">
+                        <input class="btn btn-primary w-full" value="수정하기"
+                               onclick="updateNickName();">
                       </div>
                     </div>
+                    <div th:replace="~{common/fragments/alert :: custom-alert}"></div>
+                    <div th:replace="~{common/utils/success :: custom-success}"></div>
                   </div>
-                </form>
+                </div>
               </div>
             </div>
           </div>
@@ -142,5 +150,111 @@
   <!-- TODO 4 : footer -->
   <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
 </div>
+<!--비밀번호 Modal-->
+<div class="modal modal-blur fade" id="modal-password"
+     tabindex="-1" aria-hidden="true" style="display: none;">
+  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <!-- 비밀번호 Header -->
+      <div class="modal-header">
+        <h5 class="modal-title">비밀번호 변경</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                aria-label="Close"></button>
+      </div>
+      <!-- 비밀번호 Body -->
+      <div class="modal-body">
+        <div class="row p-0 w-full" style="height: fit-content">
+          <label class="form-label required" for="cur-password"> 현재 비밀번호</label>
+          <input type="password" class="form-control required" id="cur-password"
+                 name="ordererAddressId">
+          <label class="form-label required" for="new-password"> 새로운 비밀번호</label>
+          <input type="password" class="form-control" id="new-password" name="ordererAddressId">
+          <label class="form-label required" for="new-password-check"> 새로운 비밀번호 확인</label>
+          <input type="password" class="form-control" id="new-password-check"
+                 name="ordererAddressId">
+        </div>
+      </div>
+      <hr class="mt-0 mb-1">
+      <!-- 배송지 Footer -->
+      <div class="modal-footer" id="member-address-footer">
+        <div class="row w-full ms-0 me-0">
+          <div class="col-12 ps-0 pe-0">
+            <button type="button" class="btn btn-info link-secondary w-full"
+                    onclick="openAddressForm()">
+              변경하기
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- 배송지 등록 Form-->
+      <div class="modal-body" id="member-address-form" hidden="hidden">
+        <h5 class="modal-title">새로운 배송지 등록</h5>
+        <div class="card-body p-0">
+          <div class="row w-full ms-0" onclick="getAddress(true)">
+            <div class="col-3 ps-0">
+              <input type="text" class="form-control" id="member-address-form-post"
+                     placeholder="우편번호" readonly>
+            </div>
+            <div class="col-9 ps-0 pe-0">
+              <input type="text" class="form-control" id="member-address-form-road"
+                     placeholder="도로명 주소" readonly>
+            </div>
+          </div>
+          <div class="row w-full ms-0 mt-1 mb-2">
+            <input type="text" class="form-control" id="member-address-form-detail"
+                   placeholder="상세 주소">
+          </div>
+          <div class="row w-full ms-0">
+            <div class="col-3 ps-0">
+              <button type="button" class="btn btn-outline-muted link-secondary w-full"
+                      onclick="closeAddressForm()">
+                취소
+              </button>
+            </div>
+            <div class="col-9 ps-0 pe-0 float-end">
+              <button type="button" class="btn btn-primary link-secondary w-full"
+                      onclick="createAddress()">
+                새로운 배송지 등록
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 </body>
+<script th:inline="javascript">
+  const frontUrl = [[${@environment.getProperty('yesaladin.front.url')}]];
+
+  const nickName = document.getElementById("nick-name");
+
+  function updateNickName() {
+    const nickname = nickName.value;
+    console.log("nickname : " + nickname);
+    if (nickname == "") {
+      writeContentToAlert("변경하고 싶은 닉네임을 입력하세요.");
+      return;
+    }
+    fetch(`${frontUrl}/api/members/edit`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        nickname: nickname
+      })
+    }).then((resp) => {
+      resp.json()
+    }).then((data) => {
+      console.log("data : ", data);
+      if (data) {
+        writeContentToAlert("회원 정보를 수정하는데 실패했습니다.");
+        nickName.value = [[${nickname}]];
+      } else {
+        writeContentToSuccess("회원 정보가 수정되었습니다.");
+      }
+    })
+  }
+</script>
 </html>

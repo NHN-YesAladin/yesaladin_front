@@ -3,6 +3,7 @@ package shop.yesaladin.front.member.service.inter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.time.LocalDate;
 import org.springframework.data.domain.Pageable;
+import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.member.dto.MemberBlockRequestDto;
 import shop.yesaladin.front.member.dto.MemberBlockResponseDto;
@@ -66,7 +67,7 @@ public interface QueryMemberService {
      * @author 최예린
      * @since 1.0
      */
-    MemberQueryResponseDto getMemberInfo();
+    ResponseDto<MemberQueryResponseDto> getMemberInfo();
 
     /**
      * 회원의 등급을 조회합니다.
