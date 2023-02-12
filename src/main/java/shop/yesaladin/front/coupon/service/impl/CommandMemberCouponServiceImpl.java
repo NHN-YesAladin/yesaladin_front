@@ -22,7 +22,7 @@ public class CommandMemberCouponServiceImpl implements CommandMemberCouponServic
     private final RestTemplate restTemplate;
 
     @Override
-    public void sendGiveRequest(CouponGiveRequestDto dto) {
+    public ResponseEntity<ResponseDto<Void>> sendGiveRequest(CouponGiveRequestDto dto) {
         URI requestUrl = UriComponentsBuilder.fromUriString(gatewayConfig.getShopUrl())
                 .pathSegment("v1", "member-coupons")
                 .build().toUri();
@@ -32,7 +32,8 @@ public class CommandMemberCouponServiceImpl implements CommandMemberCouponServic
                 HttpMethod.POST,
                 requestUrl
         );
-        ResponseEntity<ResponseDto<Void>> response = restTemplate.exchange(
+
+        return restTemplate.exchange(
                 requestEntity,
                 new ParameterizedTypeReference<>() {
                 }

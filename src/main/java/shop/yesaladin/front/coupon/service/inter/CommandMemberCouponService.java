@@ -1,5 +1,7 @@
 package shop.yesaladin.front.coupon.service.inter;
 
+import org.springframework.http.ResponseEntity;
+import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.coupon.dto.CouponGiveRequestDto;
 
 /**
@@ -12,8 +14,10 @@ public interface CommandMemberCouponService {
 
     /**
      * 쿠폰 지급 요청 메시지를 보냅니다.
+     *
      * @param dto 쿠폰 지급 요청 정보
+     * @return
      */
-    void sendGiveRequest(CouponGiveRequestDto dto);
+    ResponseEntity<ResponseDto<Void>> sendGiveRequest(CouponGiveRequestDto dto);
 
 }

@@ -1,5 +1,8 @@
 package shop.yesaladin.front.coupon.controller;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,8 +21,20 @@ public class MemberCouponRestController {
     private final CommandMemberCouponService commandMemberCouponService;
 
     @PostMapping
-    public ResponseDto<Void> sendRequestMessage(@RequestBody CouponGiveRequestDto dto) {
-        commandMemberCouponService.sendGiveRequest(dto);
+    public ResponseDto<Void> sendRequestMessage(@RequestBody CouponGiveRequestDto dto, HttpServletResponse httpServletResponse)
+            throws IOException {
+        ResponseDto<Void> responseDto = commandMemberCouponService.sendGiveRequest(dto).getBody();
+
+        if (!responseDto.isSuccess() && responseDto.getErrorMessages()
+                .get(0)
+                .contains("already has")) {
+            // 중복 요청 alert
+            httpServletResponse.setContentType("text/html; charset=euc-kr");
+            PrintWriter out = httpServletResponse.getWriter();
+            out.println("<script>alert('이미 발급된 쿠폰입니다.'); </script>");
+            out.flush();
+        }
+
         return ResponseDto.<Void>builder().success(true).status(HttpStatus.OK).build();
     }
 }
