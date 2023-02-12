@@ -21,6 +21,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.coupon.code.TriggerTypeCode;
 import shop.yesaladin.front.common.dto.PaginatedResponseDto;
+import shop.yesaladin.front.config.FrontServerMetaConfig;
 import shop.yesaladin.front.config.GatewayConfig;
 import shop.yesaladin.front.coupon.dto.CouponIssueResponseDto;
 import shop.yesaladin.front.coupon.dto.CouponSummaryWithBoundDto;
@@ -36,6 +37,8 @@ public class CouponEventWebController {
     private final GatewayConfig gatewayConfig;
     private final RestTemplate restTemplate;
     private final QueryMemberService queryMemberService;
+    private final FrontServerMetaConfig frontServerMetaConfig;
+
     private final QueryCouponService queryCouponService;
     private int couponID = 14;
 
@@ -50,10 +53,12 @@ public class CouponEventWebController {
         );
         model.addAttribute("today", LocalDate.now());
         model.addAttribute("memberGrade", memberGrade);
+        model.addAttribute("gradeCode", gradeCode);
         model.addAttribute("couponList", couponList);
+        model.addAttribute("frontServerUrl", frontServerMetaConfig.getFrontServerUrl());
+        model.addAttribute("shopServerUrl", gatewayConfig.getShopUrl());
         return "/main/coupon/coupon-main-page";
     }
-
     @GetMapping("/coupon-of-the-month")
     public String couponOfTheMonthPageView(Model model) {
         model.addAttribute("type", TriggerTypeCode.COUPON_OF_THE_MONTH);
