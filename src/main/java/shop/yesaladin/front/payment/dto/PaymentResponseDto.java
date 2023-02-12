@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 /**
- * 결제 정보에 대한 간략한 정보만 담을 dto
+ * 결제정보의 대부분을 지니고있는 dto
  *
  * @author 배수한
  * @since 1.0
@@ -21,8 +21,9 @@ import lombok.ToString;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PaymentCompleteSimpleResponseDto {
+public class PaymentResponseDto {
 
+    //결제 기본 정보
     @NotBlank
     private String paymentId;
     @NotBlank
@@ -30,33 +31,22 @@ public class PaymentCompleteSimpleResponseDto {
     @NotBlank
     private String currency;
     @NotNull
-    private Long totalAmount;
-    @NotBlank
+    private long paymentTotalAmount;
+    @NotNull
     private LocalDateTime approvedDateTime;
 
-    @NotBlank
-    private String ordererName;
-    @NotBlank
-    private String orderNumber;
-    @NotBlank
-    private String orderName;
-
-    @NotBlank
-    private String recipientName;
-    @NotBlank
-    private String recipientPhoneNumber;
-    @NotBlank
-    private String orderAddress;
-
+    //카드 정보 - 카드 결제의 경우 : nullable
     private String cardCode;
     private String cardOwnerCode;
     private String cardNumber;
-    private Integer cardInstallmentPlanMonths;
+    private int cardInstallmentPlanMonths;
     private String cardApproveNumber;
     private String cardAcquirerCode;
 
+    //간편 결제 정보 - 간편 결제일 경우 : nullable
     private String easyPayProvider;
     private long easyPayAmount;
     private long easyPayDiscountAmount;
+
 
 }

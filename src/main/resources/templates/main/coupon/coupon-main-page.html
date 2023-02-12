@@ -101,7 +101,6 @@
 <div th:replace="~{common/fragments/navbar :: fragment-nav-bar}"></div>
 
 <div class="container py-3">
-
   <div class="text-center my-3">
     <h1 th:text="|'${#authentication.name}'님의 ${today.monthValue}월 등급은 ${memberGrade}입니다.|"></h1>
     <h4 th:text="|70,000원 더 결제하시면 다음 달에는 등급이 올라가요!|"></h4>
@@ -161,6 +160,8 @@
   <div class="d-none" id="front-server-url" th:text="${frontServerUrl}"></div>
   <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+<script th:src="@{js/coupon/stomp.js}"></script>
 <script th:src="@{js/coupon/grade-coupon.js}"></script>
 </body>
 </html>
