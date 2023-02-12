@@ -32,7 +32,7 @@ public class MemberStatisticsWebController {
     @GetMapping("/statistics/members")
     public String memberStatistics(Model model) {
         MemberStatisticsResponseDto statistics = queryMemberService.getMemberStatistics();
-        statistics.setTotalMembers(actualTotalMembers(statistics));
+        statistics.setTotalMembers(calculateActualTotalMembers(statistics));
         model.addAttribute("statistics", statistics);
 
         return "manager/member/statistics";
@@ -44,7 +44,7 @@ public class MemberStatisticsWebController {
      * @param dto 회원 통계 데이터
      * @return 전체 회원 - (탈퇴 + 차단)
      */
-    private Long actualTotalMembers(MemberStatisticsResponseDto dto) {
+    private Long calculateActualTotalMembers(MemberStatisticsResponseDto dto) {
         return dto.getTotalMembers() - (dto.getTotalBlockedMembers() + dto.getTotalWithdrawMembers());
     }
 }
