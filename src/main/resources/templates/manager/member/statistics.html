@@ -50,20 +50,29 @@
               <div class="card-header row">
                 <h3 class="card-title col-md-2">회원 현황</h3>
                 <div class="col-md-4">
-
+                  <text>회원 수 : </text>
+                  <span th:text="${statistics.totalMembers}"></span><br/>
+                  <text>차단 회원 수 : </text>
+                  <span th:text="${statistics.totalBlockedMembers}"></span><br/>
+                  <text>탈퇴 회원 수 : </text>
+                  <span th:text="${statistics.totalWithdrawMembers}"></span>
                 </div>
               </div>
               <div class="card-header row">
                 <h3 class="card-title col-md-2">등급별 현황</h3>
                 <div class="col-md-4">
-
+                  <text>화이트 등급 회원 수 : </text>
+                  <span th:text="${statistics.totalWhiteGrades}"></span><br/>
+                  <text>브론즈 등급 회원 수 : </text>
+                  <span th:text="${statistics.totalBronzeGrades}"></span><br/>
+                  <text>실버 등급 회원 수 : </text>
+                  <span th:text="${statistics.totalSilverGrades}"></span><br/>
+                  <text>골드 등급 회원 수 : </text>
+                  <span th:text="${statistics.totalGoldGrades}"></span><br/>
+                  <text>플래티넘 등급 회원 수 : </text>
+                  <span th:text="${statistics.totalPlatinumGrades}"></span>
                 </div>
               </div>
-              <!--          //TODO 관리자 페이지 리스트 예시 -->
-              <div class="table-responsive">
-
-              </div>
-
             </div>
           </div>
         </div>
