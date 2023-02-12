@@ -24,15 +24,6 @@
 <script src="https://js.tosspayments.com/v1/payment"></script>
 <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 
-<script type="text/javascript">
-  $(document).ready(function () {
-    $("input:text[numberOnly]").on("keyup", function () {
-      $(this).val($(this).val().replace(/[^0-9]/g, ""));
-    });
-  });
-</script>
-<span sec:authorize="isAuthenticated()" th:with="auth=true"></span>
-<span sec:authorize="!isAuthenticated()" th:with="auth=false"></span>
 <form action="/orders/member" method="post">
   <div class="wrapper">
     <!-- TODO 1 : HEADER -->
@@ -203,7 +194,10 @@
                                 th:text="${#numbers.formatInteger(product.getSalePrice(), 1, 'COMMA')}">
                           </span>
                         </td>
-                        <td th:text="${product.expectedPoint}"></td>
+                        <td th:text="${product.expectedPoint}">
+                          <input type="hidden" th:id="|save-point-id-${product.isbn}|"
+                                 name="savePoint" th:value="${product.expectedPoint}">
+                        </td>
                         <td th:id="${'order-product-quantity-' + productStat.index}"
                             th:text="${product.quantity}">
                         </td>
@@ -218,9 +212,7 @@
                               <button type="button" class="btn btn-outline-danger btn-sm float-end">
                                 쿠폰 취소
                               </button>
-                              <input type="text" id="order-product-coupon-amount"
-                                     name="orderCoupons"
-                                     value="">
+                              <input type="text" id="order-product-coupon-amount">
                                 할인된 금액
                             </span>
                           </div>
@@ -261,10 +253,10 @@
                       <label class="form-label col-3 col-form-label">포인트 적용</label>
                       <div class="col text-end">
                         - <input class="form-control form-control-sm w-auto"
-                                 style="display: inline" name="orderPoint"
-                                 id="point-applied-amount" value="0" type="text" numberOnly
-                                 oninput="pointOverCheck(this)"
-                                 onchange="pointValidCheck(this)"> 원
+                                 style="display: inline" name="usePoint"
+                                 id="point-applied-amount" value="0" type="text"
+                                 oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+                                 onchange="pointOverCheck(this)"> 원
                       </div>
                       <small class="float-end" style="color: #c13333" id="point-alert"
                              hidden="hidden">
@@ -520,6 +512,7 @@
   </div>
 </form>
 <div th:replace="~{common/fragments/alert :: custom-alert}"></div>
+<div th:replace="~{common/utils/success :: custom-success}"></div>
 </body>
 
 <!--배송지 관련 함수-->
@@ -666,17 +659,16 @@
   }
 
   function setProductTotalPrice() {
-    var totalProductPrice = document.getElementById("total-product-amount");
-    var totalProductPriceHidden = document.getElementById("total-product-amount-hidden");
+    const totalProductPrice = document.getElementById("total-product-amount");
+    const totalProductPriceHidden = document.getElementById("total-product-amount-hidden");
 
-    var expectedTotalAmount = document.getElementById("expected-total-amount");
-    var couponAppliedAmount = document.getElementById("coupon-applied-amount");
-    var pointAppliedAmount = document.getElementById("point-applied-amount");
+    const expectedTotalAmount = document.getElementById("expected-total-amount");
+    const couponAppliedAmount = document.getElementById("coupon-applied-amount");
+    const pointAppliedAmount = document.getElementById("point-applied-amount");
 
-    var auth = [[${auth}]]
-    var totalPrice = parseInt(expectedTotalAmount.innerText.replace(/\D/g, ''));
+    let totalPrice = parseInt(expectedTotalAmount.innerText.replace(/\D/g, ''));
 
-    if (auth) {
+    if(pointAppliedAmount != null) {
       totalPrice -= (parseInt(couponAppliedAmount.value) + parseInt(pointAppliedAmount.value));
     }
     totalProductPrice.innerText = totalPrice.toLocaleString();
@@ -754,36 +746,21 @@
 <script th:inline="javascript">
   function pointOverCheck(e) {
     const alert = document.getElementById("point-alert");
-    const expectedTotalAmount = parseInt(
-        document.getElementById("expected-total-amount").innerText);
-    const userPoint = [[${point}]];
+    const expectedTotalAmount = parseInt(document.getElementById("expected-total-amount").innerText.replace(/\D/g, ''));
+    const userPoint = [[${info.point}]];
 
-    var curPoint = parseInt(e.value);
+    let curPoint = parseInt(e.value);
 
-    alert.hidden = true;
-    if (e.value === "") {
-      alert.hidden = false;
-    }
+    alert.hidden = e.value !== "";
     if (curPoint > userPoint) {
       curPoint = userPoint;
     }
     if (curPoint > expectedTotalAmount) {
       curPoint = expectedTotalAmount;
     }
-    e.value = curPoint;
-  }
+    e.value = Math.floor(curPoint / 1000) * 1000;
 
-  function pointValidCheck(e) {
-    let amount = e.value;
-    if (e.value === "" || e.value < 0) {
-      amount = 0;
-      document.getElementById("point-alert").hidden = true;
-    } else if (e.value % 1000 > 0) {
-      amount = parseInt(e.value / 1000) * 1000;
-    }
-    e.value = amount;
     setProductTotalPrice();
-
   }
 
   function orderCheck(e) {

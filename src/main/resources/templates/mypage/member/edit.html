@@ -175,48 +175,14 @@
         </div>
       </div>
       <hr class="mt-0 mb-1">
-      <!-- 배송지 Footer -->
+      <!-- 비밀번호 Footer -->
       <div class="modal-footer" id="member-address-footer">
         <div class="row w-full ms-0 me-0">
           <div class="col-12 ps-0 pe-0">
             <button type="button" class="btn btn-info link-secondary w-full"
-                    onclick="openAddressForm()">
+                    onclick="updatePassword()">
               변경하기
             </button>
-          </div>
-        </div>
-      </div>
-      <!-- 배송지 등록 Form-->
-      <div class="modal-body" id="member-address-form" hidden="hidden">
-        <h5 class="modal-title">새로운 배송지 등록</h5>
-        <div class="card-body p-0">
-          <div class="row w-full ms-0" onclick="getAddress(true)">
-            <div class="col-3 ps-0">
-              <input type="text" class="form-control" id="member-address-form-post"
-                     placeholder="우편번호" readonly>
-            </div>
-            <div class="col-9 ps-0 pe-0">
-              <input type="text" class="form-control" id="member-address-form-road"
-                     placeholder="도로명 주소" readonly>
-            </div>
-          </div>
-          <div class="row w-full ms-0 mt-1 mb-2">
-            <input type="text" class="form-control" id="member-address-form-detail"
-                   placeholder="상세 주소">
-          </div>
-          <div class="row w-full ms-0">
-            <div class="col-3 ps-0">
-              <button type="button" class="btn btn-outline-muted link-secondary w-full"
-                      onclick="closeAddressForm()">
-                취소
-              </button>
-            </div>
-            <div class="col-9 ps-0 pe-0 float-end">
-              <button type="button" class="btn btn-primary link-secondary w-full"
-                      onclick="createAddress()">
-                새로운 배송지 등록
-              </button>
-            </div>
           </div>
         </div>
       </div>
@@ -230,6 +196,38 @@
   const nickName = document.getElementById("nick-name");
 
   function updateNickName() {
+    const nickname = nickName.value;
+    console.log("nickname : " + nickname);
+    if (nickname == "") {
+      writeContentToAlert("변경하고 싶은 닉네임을 입력하세요.");
+      return;
+    }
+    fetch(`${frontUrl}/api/members/edit`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        nickname: nickname
+      })
+    }).then((resp) => {
+      resp.json()
+    }).then((data) => {
+      console.log("data : ", data);
+      if (data) {
+        writeContentToAlert("회원 정보를 수정하는데 실패했습니다.");
+        nickName.value = [[${nickname}]];
+      } else {
+        writeContentToSuccess("회원 정보가 수정되었습니다.");
+      }
+    })
+  }
+
+  const curPassword = document.getElementById("cur-password");
+  const newPassword = document.getElementById("new-password");
+  const newPasswordCheck = document.getElementById("new-password-check");
+
+  function updatePassword() {
     const nickname = nickName.value;
     console.log("nickname : " + nickname);
     if (nickname == "") {
