@@ -19,11 +19,11 @@ import lombok.ToString;
 public class PaymentViewRequestDto {
     private String ordererName;
     private String ordererPhoneNumber;
-    private String receiverName;
-    private String receiverPhoneNumber;
+    private String recipientName;
+    private String recipientPhoneNumber;
 
-    private String receiverAddress;
-    private String receiverExpectedDate; //String 맞음
+    private String recipientAddress;
+    private String recipientExpectedDate; //String 맞음
 
     private String orderNumber;
     private String orderName;

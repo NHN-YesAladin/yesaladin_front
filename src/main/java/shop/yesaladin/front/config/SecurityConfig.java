@@ -48,6 +48,7 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChainDev(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .mvcMatchers("/mypage/**").authenticated()
+                .mvcMatchers("/coupon").authenticated()
                 .anyRequest().permitAll();
         http.formLogin()
                 .loginPage("/members/login")
@@ -129,8 +130,8 @@ public class SecurityConfig {
     }
 
     /**
-     * UsernamePasswordAuthenticationFilter를 대체하기 위해 custom한 filter 입니다.
-     * form login 요청 시 동작하는 filter 입니다.
+     * UsernamePasswordAuthenticationFilter를 대체하기 위해 custom한 filter 입니다. form login 요청 시 동작하는 filter
+     * 입니다.
      *
      * @return UsernamePasswordAuthenticationFilter를 대체하기 위해 custom한 filter 를 반환합니다.
      * @author : 송학현
@@ -168,6 +169,6 @@ public class SecurityConfig {
      */
     @Bean
     public CustomLogoutHandler customLogoutHandler() {
-        return new CustomLogoutHandler(redisTemplate, memberAdapter);
+        return new CustomLogoutHandler(redisTemplate, memberAdapter, cookieUtils);
     }
 }
