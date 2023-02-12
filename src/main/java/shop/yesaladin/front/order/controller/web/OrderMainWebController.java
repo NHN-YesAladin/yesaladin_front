@@ -65,4 +65,9 @@ public class OrderMainWebController {
         model.addAttribute("response", detailsResponseDto);
         return "main/order/order-details";
     }
+
+    @GetMapping("/find-non-member-order")
+    public String getNonMemberOrderFinder() {
+        return "main/order/find-non-member-order";
+    }
 }

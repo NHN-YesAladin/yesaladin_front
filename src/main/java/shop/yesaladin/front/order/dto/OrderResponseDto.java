@@ -50,6 +50,10 @@ public class OrderResponseDto {
     private int wrappingFee;
     private long totalAmount;
 
+    //주문 상태
+    @NotBlank
+    private OrderStatusCode orderStatusCode;
+
     //구독 정보
     private int expectedDay;
     private int intervalMonth;

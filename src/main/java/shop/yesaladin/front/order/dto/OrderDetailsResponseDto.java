@@ -39,7 +39,6 @@ public class OrderDetailsResponseDto {
     private long discountsAmount;
 
     //결제 정보
-    @NotNull
     private PaymentResponseDto payment;
 
 
