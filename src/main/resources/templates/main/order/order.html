@@ -211,8 +211,7 @@
                           <!--회원 : 쿠폰 사용 -->
                           <div sec:authorize="isAuthenticated()">
                             <!--TODO 개별 쿠폰 적용하기-->
-                            <button type="button" class="btn btn-outline-secondary btn-sm float-end"
-                                    th:onclick="|openCouponModal(isbn, ${product.isbn})|">
+                            <button type="button" class="btn btn-outline-secondary btn-sm float-end">
                               쿠폰 적용
                             </button>
                             <span hidden="hidden">
