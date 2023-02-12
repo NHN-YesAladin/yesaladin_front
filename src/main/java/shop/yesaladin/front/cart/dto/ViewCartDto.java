@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * 장바구니에 담은 상품에 대한 정보를 담은 Dto 입니다.
@@ -13,6 +14,7 @@ import lombok.NoArgsConstructor;
  */
 @Getter
 @Builder
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class ViewCartDto {

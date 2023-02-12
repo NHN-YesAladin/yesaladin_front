@@ -1,5 +1,6 @@
 package shop.yesaladin.front.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
@@ -7,8 +8,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
+import shop.yesaladin.front.common.CustomResponseErrorHandler;
 import shop.yesaladin.front.interceptor.JwtInterceptor;
 
 /**
@@ -23,7 +24,6 @@ public class RestTemplateConfig {
 
     private final RedisTemplate<String, Object> redisTemplate;
 
-
     /**
      * client와 server간 요청, 응답을 위한 RestTemplate Bean 설정.
      *
@@ -37,6 +37,7 @@ public class RestTemplateConfig {
         return builder
                 .interceptors(new JwtInterceptor(redisTemplate))
                 .customizers(restTemplate -> restTemplate.setRequestFactory(clientHttpRequestFactory()))
+                .errorHandler(new CustomResponseErrorHandler(new ObjectMapper()))
                 .build();
     }
 
@@ -49,7 +50,7 @@ public class RestTemplateConfig {
      */
     @Bean
     public ClientHttpRequestFactory clientHttpRequestFactory() {
-        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+        HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
 
         factory.setConnectTimeout(30000);
         factory.setReadTimeout(100000);
@@ -57,6 +58,4 @@ public class RestTemplateConfig {
 
         return factory;
     }
-
-
 }

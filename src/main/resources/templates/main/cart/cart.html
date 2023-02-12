@@ -206,7 +206,7 @@
                   <div class="d-flex justify-content-center mb-2" th:if="${!product.getIsOutOfStack() && product.getIsSale()}">
                     <a th:if="${product.isSubscribeProduct}"
                        th:href="@{/orders/subscribe-sheets(isbn=${product.isbn}, quantity=${product.quantity})}"
-                       class="btn btn-primary btn-pill" style="width: 70px; height: 30px;">
+                       class="btn btn-info btn-pill" style="width: 70px; height: 30px;">
                       구독하기
                     </a>
                   </div>

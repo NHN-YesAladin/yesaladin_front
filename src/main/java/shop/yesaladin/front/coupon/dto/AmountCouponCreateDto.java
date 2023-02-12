@@ -2,10 +2,8 @@ package shop.yesaladin.front.coupon.dto;
 
 import java.time.LocalDate;
 import lombok.Getter;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 정액 할인 쿠폰 생성 요청을 위한 DTO 클래스입니다.
@@ -28,10 +26,12 @@ public class AmountCouponCreateDto extends CouponCreateDto {
             String name,
             Boolean isUnlimited,
             Integer quantity,
-            Resource file,
+            Resource imageFile,
             Integer duration,
             LocalDate expirationDate,
             String couponTypeCode,
+            Integer couponOpenDate,
+            String couponOpenTime,
             int minOrderAmount,
             int discountAmount,
             boolean canBeOverlapped,
@@ -44,10 +44,12 @@ public class AmountCouponCreateDto extends CouponCreateDto {
                 name,
                 isUnlimited,
                 quantity,
-                file,
+                imageFile,
                 duration,
                 expirationDate,
-                couponTypeCode
+                couponTypeCode,
+                couponOpenDate,
+                couponOpenTime
         );
         this.minOrderAmount = minOrderAmount;
         this.discountAmount = discountAmount;

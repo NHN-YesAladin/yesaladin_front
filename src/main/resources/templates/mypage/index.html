@@ -63,12 +63,12 @@
                 <h1 class="text-end" th:text="${#authentication.name +' 님 안녕하세요'}"></h1>
                 <div class="row row-cards mb-3">
                   <div class="col-xl-5 col-md-5">
-                    <div class="card">
+                    <div class="card" id="grade-box">
                       <div class="card-header d-block">
                         <h3 class="card-title d-inline">
                           회원 등급
                           <span id="member-grade" class="card-subtitle ms-1 float-end text-muted"
-                                th:text="${grade}"></span>
+                                th:text="${grade.name()}"></span>
                         </h3>
                       </div>
                       <div class="card-body m-auto">
@@ -134,8 +134,8 @@
                     <div class="card card-stacked">
                       <div class="card-body text-center">
                         <h3 class="card-title">입금/결제 대기</h3>
-                        <a class="text-muted w-auto btn"
-                           href="javascript:openWindowPop('/mypage/order-popup?code=1', 'popup');">___건</a>
+                        <a class="text-muted w-auto btn fw-bold fs-3" id="order-order-btn"
+                           href="javascript:openWindowPop('/mypage/order-popup?code=1&page=0&size=5', 'popup');">-</a>
                       </div>
                     </div>
                   </div>
@@ -143,8 +143,8 @@
                     <div class="card card-stacked">
                       <div class="card-body text-center">
                         <h3 class="card-title">배송 대기</h3>
-                        <a class="text-muted w-auto btn"
-                           href="javascript:openWindowPop('/mypage/order-popup?code=3', 'popup');">___건</a>
+                        <a class="text-muted w-auto btn fw-bold fs-3" id="order-ready-btn"
+                           href="javascript:openWindowPop('/mypage/order-popup?code=3&page=0&size=5', 'popup');">-</a>
                       </div>
                     </div>
                   </div>
@@ -152,8 +152,8 @@
                     <div class="card card-stacked">
                       <div class="card-body text-center">
                         <h3 class="card-title">배송중</h3>
-                        <a class="text-muted w-auto btn"
-                           href="javascript:openWindowPop('/mypage/order-popup?code=4', 'popup');">___건</a>
+                        <a class="text-muted w-auto btn fw-bold fs-3" id="order-delivery-btn"
+                           href="javascript:openWindowPop('/mypage/order-popup?code=4&page=0&size=5', 'popup');">-</a>
                       </div>
                     </div>
                   </div>
@@ -161,8 +161,8 @@
                     <div class="card card-stacked">
                       <div class="card-body text-center">
                         <h3 class="card-title">배송 완료</h3>
-                        <a class="text-muted w-auto btn"
-                           href="javascript:openWindowPop('/mypage/order-popup?code=5', 'popup');">___건</a>
+                        <a class="text-muted w-auto btn fw-bold fs-3" id="order-complete-btn"
+                           href="javascript:openWindowPop('/mypage/order-popup?code=5&page=0&size=5', 'popup');">-</a>
                       </div>
                     </div>
                   </div>
@@ -206,22 +206,76 @@
     <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
   </div>
 </div>
-
 <script>
-
   const mypage = document.getElementById("mypage");
-  const mainUrl = `${mypage.getAttribute("data-url")}`;
+  const frontUrl = `${mypage.getAttribute("data-url")}`;
   const shopUrl = `${mypage.getAttribute("data-shop-url")}`;
 
+  let statusMap = {};
+
+  window.addEventListener('DOMContentLoaded', (event) => {
+    orderCounter();
+  });
+
+
   let popup;
+
   function openWindowPop(url, name) {
     let options = 'top=100, left=100, width=900, height=500, status=no, menubar=no, location=no, toolbar=no, resizable=no';
     popup = window.open(url, name, options);
   }
 
   function popupCloseEvent(event) {
-    alert("popup.closed")
     //TODO 주문 상태 개수 변경
+    console.log("popup close");
+  }
+
+  async function orderCounter() {
+    if (Object.keys(statusMap).length === 0) {
+      const response = await fetch(
+          `${frontUrl}/api/orders/status-count`);
+      const body = await response.json();
+      statusMap = body;
+    }
+
+    const orderBtn = document.getElementById("order-order-btn");
+    const readyBtn = document.getElementById("order-ready-btn");
+    const deliveryBtn = document.getElementById("order-delivery-btn");
+    const completeBtn = document.getElementById("order-complete-btn");
+
+    orderBtn.textContent = statusMap["ORDER"] + '건';
+    readyBtn.textContent = statusMap["READY"] + '건';
+    deliveryBtn.textContent = statusMap["DELIVERY"] + '건';
+    completeBtn.textContent = statusMap["COMPLETE"] + '건';
+  }
+
+</script>
+
+<script th:inline="javascript">
+  const gradeBox = document.getElementById("grade-box");
+  const grade = [[${grade}]];
+
+  document.addEventListener("DOMContentLoaded", () => {
+    if (grade.id == 2) {
+      gradeBox.style.backgroundColor = "#d2b48c";
+    } else if (grade.id == 3) {
+      gradeBox.style.backgroundColor = "#d3d3d3";
+    } else if (grade.id == 4) {
+      gradeBox.style.backgroundColor = "#fafad2";
+    } else if (grade.id == 5) {
+      gradeBox.style.backgroundColor = "#b0e0e6";
+    }
+  });
+  function getGradeColor() {
+    if (grade.id == 2) {
+      return "tan";
+    } else if (grade.id == 3) {
+      return "lightgray";
+    } else if (grade.id == 4) {
+      return "lightgoldenrodyellow";
+    } else if (grade.id == 5) {
+      return "lightblue";
+    }
   }
 
 </script>

@@ -31,6 +31,7 @@ public class CommandMemberAddressServiceImpl implements CommandMemberAddressServ
     private final RestTemplate restTemplate;
 
     private static final ParameterizedTypeReference<ResponseDto<MemberAddressResponseDto>> MEMBER_ADDRESS_RESPONSE = new ParameterizedTypeReference<>() {};
+    private static final ParameterizedTypeReference<ResponseDto<Object>> MEMBER_ADDRESS_NULL_RESPONSE = new ParameterizedTypeReference<>() {};
 
     /**
      * {@inheritDoc}
@@ -59,30 +60,44 @@ public class CommandMemberAddressServiceImpl implements CommandMemberAddressServ
 
     /**
      * {@inheritDoc}
+     *
+     * @return
      */
     @Override
-    public void updateDefaultAddress(Long addressId) {
+    public ResponseDto<MemberAddressResponseDto> updateDefaultAddress(Long addressId) {
         URI uri = UriComponentsBuilder.fromHttpUrl(gatewayConfig.getShopUrl())
                 .path("/v1/member-addresses/{addressId}")
                 .build()
                 .expand(addressId)
                 .encode().toUri();
 
-        restTemplate.put(uri, null);
+        return restTemplate.exchange(
+                uri,
+                HttpMethod.PUT,
+                getEntity(),
+                MEMBER_ADDRESS_RESPONSE
+        ).getBody();
     }
 
     /**
      * {@inheritDoc}
+     *
+     * @return
      */
     @Override
-    public void deleteAddress(Long addressId) {
+    public ResponseDto<Object> deleteAddress(Long addressId) {
         URI uri = UriComponentsBuilder.fromHttpUrl(gatewayConfig.getShopUrl())
                 .path("/v1/member-addresses/{addressId}")
                 .build()
                 .expand(addressId)
                 .encode().toUri();
 
-        restTemplate.delete(uri);
+        return restTemplate.exchange(
+                uri,
+                HttpMethod.DELETE,
+                getEntity(),
+                MEMBER_ADDRESS_NULL_RESPONSE
+        ).getBody();
     }
 
     private static HttpEntity<PeriodQueryRequestDto> getEntity() {

@@ -10,6 +10,12 @@ import lombok.Setter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 
+/**
+ * 인증 성공 시 작동하는 SuccessHandler 입니다. 로그인 이전 페이지로 redirect 합니다.
+ *
+ * @author 김홍대
+ * @since 1.0
+ */
 @Setter
 public class RedirectToUrlAuthenticationSuccessHandler extends
         SavedRequestAwareAuthenticationSuccessHandler {

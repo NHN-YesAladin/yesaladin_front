@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import shop.yesaladin.front.member.dto.MemberAddressCreateRequestDto;
 import shop.yesaladin.front.member.dto.MemberAddressRequestDto;
 import shop.yesaladin.front.member.dto.MemberAddressResponseDto;
 import shop.yesaladin.front.member.service.inter.CommandMemberAddressService;
@@ -35,10 +34,10 @@ public class MemberAddressMyPageWebController {
      */
     @GetMapping
     public String address(Model model) {
-        List<MemberAddressResponseDto> data = memberAddressQueryService.getMemberAddresses()
+        List<MemberAddressResponseDto> addresses = memberAddressQueryService.getMemberAddresses()
                 .getData();
 
-        model.addAttribute("data", data);
+        model.addAttribute("addresses", addresses);
 
         return "mypage/member/address";
     }
@@ -55,10 +54,9 @@ public class MemberAddressMyPageWebController {
     public String registerAddress(
             @ModelAttribute MemberAddressRequestDto request
     ) {
-        log.warn("{}", request);
         memberAddressCommandService.createMemberAddress(request.toCreateRequestDto());
 
-        return "mypage/member/address";
+        return "redirect:/mypage/address";
     }
 
     /**
@@ -69,13 +67,11 @@ public class MemberAddressMyPageWebController {
      * @author 최예린
      * @since 1.0
      */
-    @PostMapping("/default")
+    @GetMapping("/default")
     public String addressMarkAsDefault(@RequestParam Long addressId) {
-        log.info("배송지 대표 설정 요청 : {}", addressId);
-
         memberAddressCommandService.updateDefaultAddress(addressId);
 
-        return "redirect:/mypage/member/address";
+        return "redirect:/mypage/address";
     }
 
     /**
@@ -88,10 +84,8 @@ public class MemberAddressMyPageWebController {
      */
     @GetMapping("/delete")
     public String deleteAddress(@RequestParam Long addressId) {
-        log.info("배송지 삭제 요청 : {}", addressId);
-
         memberAddressCommandService.deleteAddress(addressId);
 
-        return "redirect:/mypage/member/address";
+        return "redirect:/mypage/address";
     }
 }
