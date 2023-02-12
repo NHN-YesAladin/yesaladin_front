@@ -3,11 +3,11 @@ package shop.yesaladin.front.order.controller.web;
 import java.time.LocalDate;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import shop.yesaladin.front.common.dto.PaginatedResponseDto;
@@ -15,6 +15,7 @@ import shop.yesaladin.front.common.dto.PeriodQueryRequestDto;
 import shop.yesaladin.front.order.dto.OrderStatusCode;
 import shop.yesaladin.front.order.dto.OrderStatusResponseDto;
 import shop.yesaladin.front.order.dto.OrderSummaryResponseDto;
+import shop.yesaladin.front.order.service.inter.CommandOrderService;
 import shop.yesaladin.front.order.service.inter.QueryOrderService;
 
 /**
@@ -24,13 +25,13 @@ import shop.yesaladin.front.order.service.inter.QueryOrderService;
  * @since 1.0
  */
 
-@Slf4j
 @RequiredArgsConstructor
 @Controller
 @RequestMapping("/mypage")
 public class OrderMyPageWebController {
 
     private final QueryOrderService queryOrderService;
+    private final CommandOrderService commandOrderService;
 
     /**
      * 전체 주문 조회 화면 연결 메서드
@@ -113,4 +114,19 @@ public class OrderMyPageWebController {
         return "mypage/order/my-order-popup";
     }
 
+    /**
+     * 회원의 주문을 숨김처리합니다.
+     *
+     * @param orderId 숨길 주문 pk
+     * @param hidden  숨김 여부
+     * @return 숨김 성공 여부
+     * @author 최예린
+     * @since 1.0
+     */
+    @GetMapping(path = "/orders/{orderId}", params = "hidden")
+    public String hideOrder(@PathVariable Long orderId, @RequestParam Boolean hidden) {
+        commandOrderService.hideOrder(orderId, hidden);
+
+        return "redirect:/mypage/orders";
+    }
 }
