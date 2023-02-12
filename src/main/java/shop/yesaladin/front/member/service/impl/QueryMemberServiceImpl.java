@@ -27,6 +27,7 @@ import shop.yesaladin.front.member.dto.MemberGradeQueryResponseDto;
 import shop.yesaladin.front.member.dto.MemberManagerResponseDto;
 import shop.yesaladin.front.member.dto.MemberProfileExistResponseDto;
 import shop.yesaladin.front.member.dto.MemberQueryResponseDto;
+import shop.yesaladin.front.member.dto.MemberStatisticsResponseDto;
 import shop.yesaladin.front.member.dto.MemberUnblockResponseDto;
 import shop.yesaladin.front.member.dto.MemberWithdrawResponseDto;
 import shop.yesaladin.front.member.service.inter.QueryMemberService;
@@ -405,5 +406,28 @@ public class QueryMemberServiceImpl implements QueryMemberService {
                 MEMBER_MANAGER_WITHDRAW_RESPONSE_DTO
         );
         return Objects.requireNonNull(responseEntity.getBody()).getData();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public MemberStatisticsResponseDto getMemberStatistics() {
+        String uri = UriComponentsBuilder
+                .fromUriString(gatewayConfig.getShopUrl())
+                .path("/v1/members/statistics")
+                .encode()
+                .build()
+                .toUriString();
+
+        ResponseEntity<ResponseDto<MemberStatisticsResponseDto>> response = restTemplate.exchange(
+                uri,
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<>() {
+                }
+        );
+
+        return Objects.requireNonNull(response.getBody()).getData();
     }
 }
