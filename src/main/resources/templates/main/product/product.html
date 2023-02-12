@@ -83,7 +83,7 @@
                                 <p th:text="|포인트 적립금(포인트 적립율) : ${#numbers.formatInteger(productDetailResponseDto.getPointPrice(), 1, 'COMMA')}원(${productDetailResponseDto.getPointRate()}%)|"></p>
                             </div>
                             <div class="col-12 p-2">
-                                 배송비 : <p class="d-inline" th:text="${productDetailResponseDto.getSellingPrice()} >= 20000 ? '0' : '3,000'"></p>원
+                                 배송비 : <p class="d-inline" th:text="${productDetailResponseDto.getSellingPrice()} >= 20000 ? '무료' : '3,000원'"></p>
                             </div>
                             <div class="col-12 p-2" th:if="${productDetailResponseDto.isOnSale()}">
                                 <div class="row p-1 text-lg-end">
@@ -120,7 +120,8 @@
 
                                 <div class="row p-1">
                                     <div class="col-6 px-1">
-                                        <button type="button" class="btn btn-twitter w-100" data-bs-toggle="modal" data-bs-target="#modal-cart-success">
+<!--                                        <button type="button" class="btn btn-twitter w-100" data-bs-toggle="modal" data-bs-target="#modal-cart-success">-->
+                                        <button type="button" class="btn btn-twitter w-100" id="cart-event">
                                             <svg xmlns="http://www.w3.org/2000/svg"
                                                  class="icon icon-tabler icon-tabler-shopping-cart-plus" width="24"
                                                  height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
@@ -167,7 +168,7 @@
                                 <div class="row p-1" th:if="${productDetailResponseDto.getIsSubscriptionAvailable()}">
                                     <div class="col-6 px-1">
                                         <button type="submit" form="product" class="btn btn-facebook w-100"
-                                                onclick="form.action='/orders/order-sheets'" >
+                                                onclick="form.action='/orders/order-sheets'">
                                             <svg xmlns="http://www.w3.org/2000/svg"
                                                  class="icon icon-tabler icon-tabler-brand-cashapp" width="24" height="24"
                                                  viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
@@ -204,6 +205,7 @@
                                     구매 불가능
                                 </a>
                             </div>
+                            <div th:replace="~{common/fragments/alert :: custom-alert}"></div>
                         </div>
                     </div>
                     <div class="row g-2 p-3" id="relation-div">
@@ -279,6 +281,7 @@
 <div class="d-none" id="front-server-url" th:text="${@environment.getProperty('yesaladin.front.url')}"></div>
 <input type="hidden" class="d-none" id="is-ebook" th:value="${productDetailResponseDto.getIsEbook()}">
 <input type="hidden" class="d-none" id="is-subscription-available" th:value="${productDetailResponseDto.getIsSubscriptionAvailable()}">
+<button type="button" id="hidden-cart-event" class="d-none" data-bs-toggle="modal" data-bs-target="#modal-cart-success"></button>
 <div class="modal modal-blur fade" id="modal-cart-success" tabindex="-1" style="display: none;" aria-hidden="true">
     <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -290,7 +293,7 @@
                 <div class="text-muted"><br/>바로 확인하시겠습니까?<p th:if="${productDetailResponseDto.isSubscriptionAvailable || productDetailResponseDto.isEbook}"><br/>단, E-book 또는 구독상품인 경우,<br/>각 1권씩만 담을 수 있습니다.</p></div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-link link-secondary me-auto" data-bs-dismiss="modal">아니요</button>
+                <button type="button" id="dismiss-modal" class="btn btn-link link-secondary me-auto" data-bs-dismiss="modal">아니요</button>
                 <a href="/cart" class="btn btn-success">예, 확인하겠습니다.</a>
             </div>
         </div>
@@ -303,16 +306,30 @@
     let IS_EBOOK = document.getElementById('is-ebook').value;
     let IS_SUBSCRIPTION_AVAILABLE = document.getElementById('is-subscription-available').value;
 
-    const modalCart = document.getElementById('modal-cart-success');
-    modalCart.addEventListener('show.bs.modal', function (event) {
+    document.getElementById('cart-event').addEventListener('click', function (event) {
         let quantityRegex = /^[+]?\d*(\.?\d*)?$/;
-
         const quantity = document.getElementById('quantity').value;
 
         if (!quantityRegex.test(quantity) || quantity == 0) {
-            alert('올바른 수량을 입력해주세요.(1 이상의 숫자)');
+            writeContentToAlert('올바른 수량을 입력해주세요.(1 이상의 숫자)');
             return;
         }
+
+        fetch(SHOP_SERVER + "/v1/products/quantity/" + PRODUCT_ID, {
+            method: "GET"
+        }).then(res => res.json()).then(response => {
+            if (quantity > response.data) {
+                writeContentToAlert("구매 가능한 수량을 초과하였습니다! => 재고 : " + response.data);
+            } else {
+                document.getElementById('hidden-cart-event').click();
+            }
+        })
+
+    })
+
+    const modalCart = document.getElementById('modal-cart-success');
+    modalCart.addEventListener('show.bs.modal', function (event) {
+        const quantity = document.getElementById('quantity').value;
 
         fetch(FRONT_SERVER + '/cart', {
             headers: {
@@ -385,9 +402,11 @@
         fetch(SHOP_SERVER + "/v1/products/" + PRODUCT_ID + "/relations?size=4&page=" + (page - 1), {
             method: "GET"
         })
-            .then(res => res.json())
+            .then(res => {
+                return res.json();
+            })
             .then(response => {
-                if (page === 1 && response.dataList == null) {
+                if (response.data.totalDataCount === 0) {
                     document.getElementById('relation-div').classList.add('d-none');
                     return;
                 }
@@ -396,15 +415,16 @@
                     relationTable.removeChild(relationTable.firstChild);
                 }
 
-                for (let i = 0; i < response.dataList.length; i++) {
+                console.log("length : " + response.data.dataList.length);
+                for (let i = 0; i < response.data.dataList.length; i++) {
                     const tr = document.createElement('tr');
                     tr.classList.add('col-3', 'p-0');
 
                     const tdThumbnail = document.createElement('td');
                     const aThumbnail = document.createElement('a');
-                    aThumbnail.href = "/products/" + response.dataList[i].id;
+                    aThumbnail.href = "/products/" + response.data.dataList[i].id;
                     const imgThumbnail = document.createElement('img');
-                    imgThumbnail.src = response.dataList[i].thumbnailFileUrl;
+                    imgThumbnail.src = response.data.dataList[i].thumbnailFileUrl;
                     imgThumbnail.style = 'width: 150px';
                     imgThumbnail.classList.add('border', 'rounded-2');
                     aThumbnail.append(imgThumbnail);
@@ -414,17 +434,17 @@
                     const h3Title = document.createElement('h3');
                     h3Title.classList.add('p-0', 'm-0');
                     const aTitle = document.createElement('a');
-                    aTitle.href = "/products/" + response.dataList[i].id;
-                    aTitle.innerText = response.dataList[i].title;
+                    aTitle.href = "/products/" + response.data.dataList[i].id;
+                    aTitle.innerText = response.data.dataList[i].title;
                     aTitle.classList.add('text-dark');
                     h3Title.append(aTitle);
                     tdTitle.append(h3Title);
 
                     const tdMakers = document.createElement('td');
-                    tdMakers.innerText = response.dataList[i].authors + " 저 | " + response.dataList[i].publisher;
+                    tdMakers.innerText = response.data.dataList[i].authors + " 저 | " + response.data.dataList[i].publisher;
 
                     const tdPrice = document.createElement('td');
-                    tdPrice.innerText = response.dataList[i].sellingPrice.toLocaleString() + "원(" + response.dataList[i].rate + "%)";
+                    tdPrice.innerText = response.data.dataList[i].sellingPrice.toLocaleString() + "원(" + response.data.dataList[i].rate + "%)";
                     tdPrice.classList.add('strong');
 
                     tr.append(tdThumbnail, tdTitle, tdMakers, tdPrice);
@@ -438,7 +458,7 @@
                     pre.classList.remove('visually-hidden');
                 }
 
-                if (page >= response.totalPage){
+                if (page >= response.data.totalPage){
                     post.classList.add('visually-hidden');
                 } else {
                     post.classList.remove('visually-hidden');

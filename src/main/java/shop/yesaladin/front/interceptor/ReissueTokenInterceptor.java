@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +19,7 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.servlet.HandlerInterceptor;
+import shop.yesaladin.front.common.utils.CookieUtils;
 import shop.yesaladin.front.member.adapter.MemberAdapter;
 import shop.yesaladin.front.member.jwt.AuthInfo;
 
@@ -35,6 +35,7 @@ public class ReissueTokenInterceptor implements HandlerInterceptor {
 
     private final MemberAdapter memberAdapter;
     private final RedisTemplate<String, Object> redisTemplate;
+    private final CookieUtils cookieUtils;
 
     private static final String X_EXPIRE_HEADER = "X-Expire";
 
@@ -54,7 +55,7 @@ public class ReissueTokenInterceptor implements HandlerInterceptor {
             HttpServletRequest request, HttpServletResponse response, Object handler
     ) throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String uuid = getUuidFromCookie(request.getCookies());
+        String uuid = cookieUtils.getValueFromCookie(request.getCookies(), UUID_CODE.getValue());
         log.info("uuid={}", uuid);
         if (!(authentication instanceof AnonymousAuthenticationToken) && Objects.nonNull(uuid)) {
             if (Objects.isNull(uuid)) {
@@ -99,27 +100,5 @@ public class ReissueTokenInterceptor implements HandlerInterceptor {
         LocalDateTime base = LocalDateTime.parse(expiredTime, formatter);
         return Duration.between(LocalDateTime.now(ZoneId.of("Asia/Seoul")), base)
                 .toMinutes() <= 5;
-    }
-
-    /**
-     * cookie에 들어있는 uuid를 반환하기 위한 기능입니다.
-     *
-     * @param cookies 브라우저에 존재하는 Cookie의 목록입니다.
-     * @return login 시 발급 받아 쿠키에 저장한 uuid 값을 반환합니다.
-     * @author : 송학현
-     * @since : 1.0
-     */
-    private String getUuidFromCookie(Cookie[] cookies) {
-        if (Objects.isNull(cookies)) {
-            return null;
-        }
-
-        for (Cookie cookie : cookies) {
-            if (Objects.equals(UUID_CODE.getValue(), cookie.getName())) {
-                return cookie.getValue();
-            }
-        }
-
-        return null;
     }
 }

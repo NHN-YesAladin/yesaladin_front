@@ -68,8 +68,8 @@ public interface QueryProductService {
     /**
      * 연관 상품 등록을 위한 상품을 검색하는 메서드
      *
-     * @param id 메인 상품의 id
-     * @param title 검색할 제목
+     * @param id       메인 상품의 id
+     * @param title    검색할 제목
      * @param pageable 요청 페이지 정보
      * @return 조회된 상품 리스트
      * @author 김선홍

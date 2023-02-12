@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -49,6 +48,7 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChainDev(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .mvcMatchers("/mypage/**").authenticated()
+                .mvcMatchers("/coupon").authenticated()
                 .anyRequest().permitAll();
         http.formLogin()
                 .loginPage("/members/login")
@@ -78,10 +78,11 @@ public class SecurityConfig {
      * @author : 송학현
      * @since : 1.0
      */
-    @Profile("default")
+    @Profile({"default", "prod"})
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeRequests()
+                .mvcMatchers("/monitor/**").permitAll()
                 .antMatchers("/mypage/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
                 .antMatchers("/manager/**").hasAnyAuthority("ROLE_ADMIN")
                 .anyRequest().permitAll();
@@ -168,6 +169,6 @@ public class SecurityConfig {
      */
     @Bean
     public CustomLogoutHandler customLogoutHandler() {
-        return new CustomLogoutHandler(redisTemplate, memberAdapter);
+        return new CustomLogoutHandler(redisTemplate, memberAdapter, cookieUtils);
     }
 }

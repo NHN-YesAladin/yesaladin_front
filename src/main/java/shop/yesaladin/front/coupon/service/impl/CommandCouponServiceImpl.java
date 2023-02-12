@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -26,6 +27,7 @@ import shop.yesaladin.front.coupon.dto.RateCouponCreateDto;
 import shop.yesaladin.front.coupon.exception.InvalidCouponTypeCodeException;
 import shop.yesaladin.front.coupon.service.inter.CommandCouponService;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class CommandCouponServiceImpl implements CommandCouponService {
@@ -37,6 +39,7 @@ public class CommandCouponServiceImpl implements CommandCouponService {
     @Override
     public CouponCreateResponseDto createCouponTemplate(CouponCreateRequestDto createDto) {
         CouponCreateDto requestDto = generateDtoFromRequestDto(createDto);
+        log.info("==== [COUPON CREATE REQUEST] {} ====", requestDto);
         String queryParamName = getQueryParamName(createDto);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.MULTIPART_FORM_DATA);
@@ -104,6 +107,8 @@ public class CommandCouponServiceImpl implements CommandCouponService {
                 createDto.getDuration(),
                 createDto.getExpirationDate(),
                 createDto.getCouponTypeCode(),
+                createDto.getCouponOpenDate(),
+                createDto.getCouponOpenTime(),
                 createDto.getDiscountAmount()
         );
     }
@@ -119,6 +124,8 @@ public class CommandCouponServiceImpl implements CommandCouponService {
                 createDto.getDuration(),
                 createDto.getExpirationDate(),
                 createDto.getCouponTypeCode(),
+                createDto.getCouponOpenDate(),
+                createDto.getCouponOpenTime(),
                 createDto.getMinOrderAmount(),
                 createDto.getMaxDiscountAmount(),
                 createDto.getDiscountAmount(),
@@ -141,6 +148,8 @@ public class CommandCouponServiceImpl implements CommandCouponService {
                 createDto.getDuration(),
                 createDto.getExpirationDate(),
                 createDto.getCouponTypeCode(),
+                createDto.getCouponOpenDate(),
+                createDto.getCouponOpenTime(),
                 createDto.getMinOrderAmount(),
                 createDto.getDiscountAmount(),
                 createDto.isCanBeOverlapped(),

@@ -21,6 +21,7 @@
 <div class="wrapper">
   <div th:replace="~{manager/fragments/navbar-vertical :: fragment-nav-vertical}"></div>
   <div class="page-wrapper">
+    <div th:replace="~{common/fragments/header :: fragment-header}"></div>
     <div class="container-lg">
         <div class="mb-3">
           <div class="row g-3">
@@ -47,7 +48,7 @@
             <table id="searchedMemberTable" class="table">
               <thead>
                 <tr>
-                  <th>ID</th>
+<!--                  <th>ID</th>-->
                   <th>Login ID</th>
                   <th>NickName</th>
                   <th>Phone</th>
@@ -59,7 +60,7 @@
               </thead>
               <tbody>
                 <tr th:each="member : ${memberList}">
-                  <td th:text="${member.id}"></td>
+<!--                  <td th:text="${member.id}"></td>-->
                   <td th:text="${member.loginId}"></td>
                   <td th:text="${member.nickname}"></td>
                   <td th:text="${member.phone}"></td>
@@ -128,7 +129,7 @@
   function block(loginId) {
     const reason = document.getElementById('blockReason'+loginId.value)
     console.log(reason.value)
-    let c = confirm(loginId.value + '를 차단하겠습까?')
+    let c = confirm(loginId.value + '를 차단하겠습니까?')
     if(c) {
       fetch("/block/"+loginId.value, {
         method: 'POST',
