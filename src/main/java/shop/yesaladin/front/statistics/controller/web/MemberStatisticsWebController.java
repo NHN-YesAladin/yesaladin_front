@@ -28,6 +28,8 @@ public class MemberStatisticsWebController {
      *
      * @param model model
      * @return 회원 통계 페이지
+     * @author 송학현
+     * @since 1.0
      */
     @GetMapping("/statistics/members")
     public String memberStatistics(Model model) {
@@ -43,6 +45,8 @@ public class MemberStatisticsWebController {
      *
      * @param dto 회원 통계 데이터
      * @return 전체 회원 - (탈퇴 + 차단)
+     * @author 송학현
+     * @since 1.0
      */
     private Long calculateActualTotalMembers(MemberStatisticsResponseDto dto) {
         return dto.getTotalMembers() - (dto.getTotalBlockedMembers() + dto.getTotalWithdrawMembers());
