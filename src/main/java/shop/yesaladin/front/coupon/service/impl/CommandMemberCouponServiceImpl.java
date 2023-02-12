@@ -34,8 +34,7 @@ public class CommandMemberCouponServiceImpl implements CommandMemberCouponServic
         );
 
         return restTemplate.exchange(
-                requestEntity,
-                new ParameterizedTypeReference<>() {
+                requestEntity, new ParameterizedTypeReference<>() {
                 }
         );
     }
