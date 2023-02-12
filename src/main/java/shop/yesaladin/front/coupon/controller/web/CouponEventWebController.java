@@ -2,10 +2,12 @@ package shop.yesaladin.front.coupon.controller.web;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDate;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -18,8 +20,12 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.coupon.code.TriggerTypeCode;
+import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.config.GatewayConfig;
 import shop.yesaladin.front.coupon.dto.CouponIssueResponseDto;
+import shop.yesaladin.front.coupon.dto.CouponSummaryWithBoundDto;
+import shop.yesaladin.front.coupon.service.inter.QueryCouponService;
+import shop.yesaladin.front.member.service.inter.QueryMemberService;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -29,10 +35,22 @@ public class CouponEventWebController {
 
     private final GatewayConfig gatewayConfig;
     private final RestTemplate restTemplate;
+    private final QueryMemberService queryMemberService;
+    private final QueryCouponService queryCouponService;
     private int couponID = 14;
 
+
     @GetMapping
-    public String couponMainPageView() {
+    public String getCouponMainPage(Model model, Pageable pageable) {
+        String memberGrade = queryMemberService.getMemberGrade();
+        String gradeCode = "MEMBER_GRADE_" + memberGrade.split("\\(")[0];
+        PaginatedResponseDto<CouponSummaryWithBoundDto> couponList = queryCouponService.getCouponByTriggerTypeCode(
+                TriggerTypeCode.valueOf(gradeCode),
+                pageable
+        );
+        model.addAttribute("today", LocalDate.now());
+        model.addAttribute("memberGrade", memberGrade);
+        model.addAttribute("couponList", couponList);
         return "/main/coupon/coupon-main-page";
     }
 
