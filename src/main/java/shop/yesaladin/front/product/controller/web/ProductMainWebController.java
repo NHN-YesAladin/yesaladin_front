@@ -148,7 +148,7 @@ public class ProductMainWebController {
      */
     private void checkCookieValue(Cookie recent, HttpServletResponse response, Long productId)
             throws JsonProcessingException {
-        if (recent.getName().equals(RECENT)) {
+        if (Objects.nonNull(recent) && recent.getName().equals(RECENT)) {
             Set<Long> recentViewProductList = objectMapper.readValue(
                     URLDecoder.decode(recent.getValue(), StandardCharsets.UTF_8),
                     new TypeReference<LinkedHashSet<Long>>() {

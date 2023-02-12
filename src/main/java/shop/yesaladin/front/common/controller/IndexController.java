@@ -94,7 +94,7 @@ public class IndexController {
     }
 
     private Set<Long> getRecentViewProductList(Cookie cookie) throws JsonProcessingException {
-        if (Objects.nonNull(cookie.getValue())) {
+        if (Objects.nonNull(cookie)) {
             return objectMapper.readValue(
                     URLDecoder.decode(cookie.getValue(), StandardCharsets.UTF_8),
                     new TypeReference<LinkedHashSet<Long>>() {

@@ -137,7 +137,7 @@
                                         </button>
                                     </div>
                                     <div class="col-6 px-1" th:if="${isWishlist == false}">
-                                        <a type="button" class="btn btn-dribbble w-100" th:href="|/wishlist/${productDetailResponseDto.id}|">
+                                        <a type="button" class="btn btn-dribbble w-100" th:href="|/interest/${productDetailResponseDto.id}|">
                                             <svg xmlns="http://www.w3.org/2000/svg"
                                                  class="icon icon-tabler icon-tabler-heart" width="24" height="24"
                                                  viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
@@ -149,7 +149,7 @@
                                         </a>
                                     </div>
                                     <div class="col-6 px-1" th:if="${isWishlist == true}">
-                                        <a type="button" class="btn btn-dribbble w-100" th:href="|/wishlist/delete/${productDetailResponseDto.id}|">
+                                        <a type="button" class="btn btn-dribbble w-100" th:href="|/interest/delete?productid=${productDetailResponseDto.id}|">
                                             <svg xmlns="http://www.w3.org/2000/svg"
                                                  class="icon icon-tabler icon-tabler-heart" width="24" height="24"
                                                  viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
