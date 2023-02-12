@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.Objects;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.ToString;
 import org.springframework.core.io.Resource;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -15,6 +16,7 @@ import org.springframework.util.MultiValueMap;
  * @author 김홍대
  * @since 1.0
  */
+@ToString
 @Getter
 @AllArgsConstructor
 public abstract class CouponCreateDto {
@@ -27,6 +29,8 @@ public abstract class CouponCreateDto {
     private Integer duration;
     private LocalDate expirationDate;
     private String couponTypeCode;
+    private Integer couponOpenDate;
+    private String couponOpenTime;
 
     public MultiValueMap<String, Object> toMap() {
         MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
@@ -39,6 +43,9 @@ public abstract class CouponCreateDto {
         map.add("expirationDate", Objects.nonNull(expirationDate) ? expirationDate.toString() : null);
         map.add("expirationDate", expirationDate == null ? null : expirationDate.toString());
         map.add("couponTypeCode", couponTypeCode);
+        map.add("couponOpenDate", couponOpenDate);
+        map.add("couponOpenTime", couponOpenTime);
+
         return map;
     }
 }

@@ -1,4 +1,4 @@
-package shop.yesaladin.front.coupon.controller;
+package shop.yesaladin.front.coupon.controller.web;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
