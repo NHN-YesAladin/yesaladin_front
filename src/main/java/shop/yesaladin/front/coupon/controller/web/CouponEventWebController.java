@@ -49,7 +49,7 @@ public class CouponEventWebController {
     public String couponOfTheMonthPageView(Model model) {
         model.addAttribute("type", TriggerTypeCode.COUPON_OF_THE_MONTH);
         // TODO 이달의 쿠폰 - 쿠폰 id 가져오기
-        int couponId = 14;
+        int couponId = 20;
         model.addAttribute("couponId", couponId);
         model.addAttribute("frontServerUrl", frontServerMetaConfig.getFrontServerUrl());
         model.addAttribute("shopServerUrl", gatewayConfig.getShopUrl());
