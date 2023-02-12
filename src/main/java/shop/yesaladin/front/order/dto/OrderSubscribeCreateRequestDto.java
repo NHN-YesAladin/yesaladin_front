@@ -1,8 +1,5 @@
 package shop.yesaladin.front.order.dto;
 
-import java.time.LocalDate;
-import java.util.List;
-import javax.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Range;

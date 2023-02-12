@@ -24,6 +24,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderResponseDto {
+
     @NotBlank
     private String ordererName;
     @NotBlank
