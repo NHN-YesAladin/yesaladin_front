@@ -29,6 +29,8 @@ public class SearchProductServiceImpl implements SearchProductService {
 
     @Override
     public SearchedProductResponseDto searchProductsByProductField(SearchProductRequestDto requestDto) {
+        log.info(host);
+        log.info(PATH);
         UriComponents url = UriComponentsBuilder.fromHttpUrl(host)
                 .path(PATH)
                 .queryParam(requestDto.getSelected(), requestDto.getInput())
