@@ -12,6 +12,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
+import shop.yesaladin.front.payment.dto.PaymentViewRequestDto;
 
 /**
  * 주문 생성을 요청하는 dto 입니다.
@@ -51,9 +52,9 @@ public class OrderMemberRequestDto {
     @Min(value = 0)
     private long productTotalAmount;
     @Min(value = 0)
-    private int shippingFee;
+    private long shippingFee;
     @Min(value = 0)
-    private int wrappingFee;
+    private long wrappingFee;
     private List<String> orderCoupons;
     @Min(value = 0)
     private long orderPoint;
@@ -66,19 +67,37 @@ public class OrderMemberRequestDto {
                 .expectedShippingDate(expectedShippingDate)
                 .orderProducts(orderProducts)
                 .productTotalAmount(productTotalAmount)
-                .shippingFee(shippingFee)
-                .wrappingFee(wrappingFee)
+                .shippingFee((int) shippingFee)
+                .wrappingFee((int) wrappingFee)
                 .orderCoupons(orderCoupons)
                 .orderPoint(orderPoint)
                 .build();
     }
-//
-//    public PaymentViewRequestDto toPaymentViewRequest(String orderNumber, String orderName) {
-//        return PaymentViewRequestDto.builder()
-//                .ordererName(ordererName)
-//                .ordererPhoneNumber(ordererPhoneNumber)
-//                .re
-//                .build()
-//
-//    }
+
+    public PaymentViewRequestDto toPaymentViewRequest(String orderNumber, String orderName) {
+        return PaymentViewRequestDto.builder()
+                .ordererName(ordererName)
+                .ordererPhoneNumber(ordererPhoneNumber)
+                .recipientName(recipientName)
+                .recipientPhoneNumber(recipientPhoneNumber)
+                .recipientAddress(getAddress())
+                .recipientExpectedDate(
+                        expectedShippingDate == null ? "" : expectedShippingDate.toString())
+                .orderName(orderName)
+                .orderNumber(orderNumber)
+                .productAmount(productActualTotalAmount)
+                .discountAmount(productActualTotalAmount - productTotalAmount)
+                .shippingFee(shippingFee)
+                .wrappingFee(wrappingFee)
+                .totalAmount(productTotalAmount + shippingFee + wrappingFee)
+                .build();
+
+    }
+
+    private String getAddress() {
+        return String.join(
+                ",",
+                List.of(ordererPostAddress, ordererRoadAddress, ordererDetailAddress)
+        );
+    }
 }

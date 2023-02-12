@@ -1,6 +1,7 @@
-package shop.yesaladin.front.order.dto;
+package shop.yesaladin.front.order.converter;
 
 import org.springframework.core.convert.converter.Converter;
+import shop.yesaladin.front.order.dto.ProductOrderRequestDto;
 
 /**
  * 주문서의 주문상품 데이터를 String 에서 dto 클래스로 변환합니다.

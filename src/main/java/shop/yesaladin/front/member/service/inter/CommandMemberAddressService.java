@@ -16,7 +16,7 @@ public interface CommandMemberAddressService {
      * 회원의 배송지를 등록합니다.
      *
      * @param request 회원 배송지 정보
-     * @return
+     * @return 등록된 배송지 정보
      * @author 최예린
      * @since 1.0
      */
@@ -26,17 +26,19 @@ public interface CommandMemberAddressService {
      * 해당 배송지를 대표 배송지로 설정합니다.
      *
      * @param addressId 배송지 pk
+     * @return 대표 배송지 정보
      * @author 최예린
      * @since 1.0
      */
-    void updateDefaultAddress(Long addressId);
+    ResponseDto<MemberAddressResponseDto> updateDefaultAddress(Long addressId);
 
     /**
      * 회원의 배송지를 삭제합니다.
      *
      * @param addressId 삭제할 배송지 pk
+     * @return 배송지 삭제 여부
      * @author 최예린
      * @since 1.0
      */
-    void deleteAddress(Long addressId);
+    ResponseDto<Object> deleteAddress(Long addressId);
 }

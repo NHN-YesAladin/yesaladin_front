@@ -11,7 +11,7 @@ import shop.yesaladin.front.common.utils.CookieUtils;
 import shop.yesaladin.front.interceptor.ReissueTokenInterceptor;
 import shop.yesaladin.front.interceptor.RequestLoggingInterceptor;
 import shop.yesaladin.front.member.adapter.MemberAdapter;
-import shop.yesaladin.front.order.dto.StringToProductOrderRequestDto;
+import shop.yesaladin.front.order.converter.StringToProductOrderRequestDto;
 
 /**
  * Web 관련 설정 클래스

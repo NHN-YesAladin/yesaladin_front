@@ -3,7 +3,6 @@ package shop.yesaladin.front.order.controller.web;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,13 +10,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.order.dto.OrderCreateResponseDto;
 import shop.yesaladin.front.order.dto.OrderMemberRequestDto;
 import shop.yesaladin.front.order.dto.OrderSheetResponseDto;
 import shop.yesaladin.front.order.service.inter.CommandOrderService;
 import shop.yesaladin.front.order.service.inter.QueryOrderService;
+import shop.yesaladin.front.payment.dto.PaymentViewRequestDto;
 
 /**
  * 메인페이지 주문 view 관련 controller 클래스 입니다.
@@ -25,7 +24,6 @@ import shop.yesaladin.front.order.service.inter.QueryOrderService;
  * @author 최예린
  * @since 1.0
  */
-@Slf4j
 @RequiredArgsConstructor
 @Controller
 @RequestMapping("/orders")
@@ -73,12 +71,14 @@ public class OrderMainWebController {
      * @since 1.0
      */
     @PostMapping("/member")
-    public String createMemberOrder(
-            @ModelAttribute OrderMemberRequestDto request, RedirectAttributes redirectAttributes
-    ) {
-        log.error("request : {}", request);
+    public String createMemberOrder(@ModelAttribute OrderMemberRequestDto request, Model model) {
         ResponseDto<OrderCreateResponseDto> response = commandOrderService.createMemberOrder(request.toOrderMemberCreateRequest());
 
-        return "redirect:/payments/pay";
+        String orderName = response.getData().getOrderName();
+        String orderNumber = response.getData().getOrderNumber();
+
+        PaymentViewRequestDto payRequest = request.toPaymentViewRequest(orderNumber, orderName);
+        model.addAttribute("data", payRequest);
+        return "main/payment/pay-page";
     }
 }
