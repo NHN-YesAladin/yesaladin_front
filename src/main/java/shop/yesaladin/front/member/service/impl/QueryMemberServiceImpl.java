@@ -218,7 +218,7 @@ public class QueryMemberServiceImpl implements QueryMemberService {
                 MEMBER_GRADE_DTO
         ).getBody();
         if (response != null && response.isSuccess()) {
-            return response.getData().getGradeEn() + "(" + response.getData().getGradeKo() + ")";
+            return response.getData().getGradeEn();
         }
         return "";
     }

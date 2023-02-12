@@ -33,301 +33,483 @@
 </script>
 <span sec:authorize="isAuthenticated()" th:with="auth=true"></span>
 <span sec:authorize="!isAuthenticated()" th:with="auth=false"></span>
-<div class="wrapper">
-  <!-- TODO 1 : HEADER -->
-  <div th:replace="~{common/fragments/header :: fragment-header}"></div>
+<form action="/orders/member" method="post">
+  <div class="wrapper">
+    <!-- TODO 1 : HEADER -->
+    <div th:replace="~{common/fragments/header :: fragment-header}"></div>
 
-  <!-- TODO 2 : NAV-BAR -->
-  <div th:replace="~{common/fragments/navbar :: fragment-nav-bar}"></div>
-
-  <div class="page-wrapper">
-    <div class="container-xxl py-4 col-12">
-      <!-- 주문서 Header -->
-      <div class="row row-cards">
-        <div class="col-12">
-          <div class="text-center mb-4">
-            <h1 class="h-auto">주문서</h1>
-          </div>
-        </div>
-      </div>
-      <!-- 주문서 Body -->
-      <div class="row row-cards">
-        <!-- 주문서 Detail -->
-        <div class="col-9">
-          <!-- 주문서 Step -->
-          <div class="card card-md">
-            <div class="card-body p-0">
-              <ul class="steps steps-blue steps-counter m-2">
-                <li class="step-item">카트</li>
-                <li class="step-item active">주문</li>
-                <li class="step-item">결제</li>
-                <li class="step-item">완료</li>
-              </ul>
+    <!-- TODO 2 : NAV-BAR -->
+    <div th:replace="~{common/fragments/navbar :: fragment-nav-bar}"></div>
+    <div class="page-wrapper">
+      <div class="container-xxl py-4 col-12">
+        <!-- 주문서 Header -->
+        <div class="row row-cards">
+          <div class="col-12">
+            <div class="text-center mb-4">
+              <h1 class="h-auto">주문서</h1>
             </div>
           </div>
-          <!-- 주문서 Main -->
-          <div class="card card-md">
-            <div class="card-body">
-              <!-- 주문인/수령인 정보 입력 -->
-              <div class="row">
-                <!-- 주문인 정보 입력 -->
-                <div class="col-6">
-                  <h3 class="card-title">주문인 정보 입력</h3>
-                  <div class="card card-md">
-                    <div class="card-body p-2">
-                      <label class="form-label required">주문인 이름</label>
-                      <!--                      TODO 주문인 이름 검증-->
-                      <input class="form-control" id="orderer-name"
-                             type="text" placeholder="홍길동"
-                             th:readonly="${info.name != null}" th:value="${info.name}"
-                             maxlength="20">
-                      <label class="form-label required mt-2">전화번호</label>
-                      <!--                      TODO 주문인 전화번호 검증-->
-                      <input class="form-control" id="orderer-phone-number"
-                             type="tel" maxlength="11" placeholder="띄어쓰기 없이 붙여주세요."
-                             th:readonly="${info.phoneNumber != null}"
-                             th:value="${info.phoneNumber}"
-                             pattern="/^01([0|1])\d{4}\d{4}$/"
-                             in
-                             oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+        </div>
+        <!-- 주문서 Body -->
+        <div class="row row-cards">
+          <!-- 주문서 Detail -->
+          <div class="col-9">
+            <!-- 주문서 Step -->
+            <div class="card card-md">
+              <div class="card-body p-0">
+                <ul class="steps steps-blue steps-counter m-2">
+                  <li class="step-item">카트</li>
+                  <li class="step-item active">주문</li>
+                  <li class="step-item">결제</li>
+                  <li class="step-item">완료</li>
+                </ul>
+              </div>
+            </div>
+            <!-- 주문서 Main -->
+            <div class="card card-md">
+              <div class="card-body">
+                <!-- 주문인/수령인 정보 입력 -->
+                <div class="row">
+                  <!-- 주문인 정보 입력 -->
+                  <div class="col-6">
+                    <h3 class="card-title">주문인 정보 입력</h3>
+                    <div class="card card-md">
+                      <div class="card-body p-2">
+                        <label class="form-label required">주문인 이름</label>
+                        <!--                      TODO 주문인 이름 검증-->
+                        <input class="form-control" id="orderer-name"
+                               type="text" placeholder="홍길동" name="ordererName"
+                               th:readonly="${info.name != null}" th:value="${info.name}"
+                               maxlength="20">
+                        <label class="form-label required mt-2">전화번호</label>
+                        <!--                      TODO 주문인 전화번호 검증-->
+                        <input class="form-control" id="orderer-phone-number"
+                               type="tel" maxlength="11" placeholder="띄어쓰기 없이 붙여주세요."
+                               th:readonly="${info.phoneNumber != null}"
+                               name="ordererPhoneNumber" th:value="${info.phoneNumber}"
+                               pattern="/^01([0|1])\d{4}\d{4}$/"
+                               oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                      </div>
                     </div>
                   </div>
-                </div>
-                <!-- 수령인 정보 입력 -->
-                <div class="col-6">
-                  <h3 class="card-title">
-                    수령인 정보 입력
-                    <!-- 주문인과 동일시 시키는 버튼 -->
-                    <span class="float-end text-muted">
+                  <!-- 수령인 정보 입력 -->
+                  <div class="col-6">
+                    <h3 class="card-title">
+                      수령인 정보 입력
+                      <!-- 주문인과 동일시 시키는 버튼 -->
+                      <span class="float-end text-muted">
                         <small>주문인과 동일</small>
                         <input id="recipient-check-box" class="form-check-input" type="checkbox">
                       </span>
-                  </h3>
-                  <div class="card card-md">
-                    <div class="card-body p-2">
-                      <label class="form-label required">수령인 이름</label>
-                      <input type="text" class="form-control" id="recipient-name"
-                             name="recipientName" value=""
-                             placeholder="홍길동" maxlength="20">
-                      <label class="form-label required mt-2">전화번호</label>
-                      <input type="text" class="form-control" id="recipient-phone-number"
-                             name="recipientPhoneNumber" value=""
-                             maxlength="11" autocomplete="off" placeholder="띄어쓰기 없이 붙여주세요."
-                             data-mask="000 0000 0000" data-mask-visible="true"
-                             pattern="/^01([0|1])\d{4}\d{4}$/"
-                             oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                    </h3>
+                    <div class="card card-md">
+                      <div class="card-body p-2">
+                        <label class="form-label required">수령인 이름</label>
+                        <input type="text" class="form-control" id="recipient-name"
+                               name="recipientName" value=""
+                               placeholder="홍길동" maxlength="20">
+                        <label class="form-label required mt-2">전화번호</label>
+                        <input type="text" class="form-control" id="recipient-phone-number"
+                               name="recipientPhoneNumber" value=""
+                               maxlength="11" autocomplete="off" placeholder="띄어쓰기 없이 붙여주세요."
+                               data-mask="000 0000 0000" data-mask-visible="true"
+                               pattern="/^01([0|1])\d{4}\d{4}$/"
+                               oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <br/>
-              <!-- 배송지 정보 입력 -->
-              <h3 class="card-title">배송 정보 입력</h3>
-              <div class="card card-md">
-                <div class="card-body">
-                  <!-- 배송 정보 Header -->
-                  <div class="row mb-2 h-auto">
-                    <div class="col-9">
-                      <label class="form-label required d-inline">
-                        주소
-                      </label>
-                    </div>
-                    <div class="col-3">
-                      <a sec:authorize="isAuthenticated()"
-                         class="btn btn-outline-primary btn-modal btn-sm w-full"
-                         data-bs-toggle="modal" data-bs-target="#modal-report">
-                        배송지 선택
-                      </a>
-                      <a sec:authorize="!isAuthenticated()" type="button"
-                         class="btn btn-outline-secondary btn-sm float-end d-inline"
-                         onclick="getAddress();">
-                        우편번호 찾기
-                      </a>
-                    </div>
-                  </div>
-                  <!-- 배송 정보 Body -->
-                  <div class="card-body p-0">
-                    <input sec:authorize="isAuthenticated()" id="orderer-address-id"
-                           name="ordererAddressId" type="hidden"
-                           th:value="${info.getDefaultAddress() != null ? info.getDefaultAddress().id : ''}">
-                    <div class="row w-full ms-0">
-                      <div class="col-3 ps-0">
-                        <input type="text" class="form-control" id="orderer-post-address"
-                               name="ordererPostAddress" placeholder="우편번호" readonly
-                               th:value="${info.memberAddress != null && info.getDefaultAddress() != null ? info.getDefaultAddress().getPostAddress() : ''}">
+                <br/>
+                <!-- 배송지 정보 입력 -->
+                <h3 class="card-title">배송 정보 입력</h3>
+                <div class="card card-md">
+                  <div class="card-body">
+                    <!-- 배송 정보 Header -->
+                    <div class="row mb-2 h-auto">
+                      <div class="col-9">
+                        <label class="form-label required d-inline">
+                          주소
+                        </label>
                       </div>
-                      <div class="col-9 ps-0 pe-0">
-                        <input type="text" class="form-control" id="orderer-road-address"
-                               name="ordererRoadAddress" placeholder="도로명 주소" readonly
-                               th:value="${info.memberAddress != null && info.getDefaultAddress() != null ? info.getDefaultAddress().getRoadAddress() : ''}">
+                      <div class="col-3">
+                        <a sec:authorize="isAuthenticated()"
+                           class="btn btn-outline-primary btn-modal btn-sm w-full"
+                           data-bs-toggle="modal" data-bs-target="#modal-report">
+                          배송지 선택
+                        </a>
+                        <a sec:authorize="!isAuthenticated()" type="button"
+                           class="btn btn-outline-secondary btn-sm float-end d-inline"
+                           onclick="getAddress(false);">
+                          우편번호 찾기
+                        </a>
                       </div>
                     </div>
-                    <input type="text" class="form-control mt-1" id="orderer-detail-address"
-                           name="ordererDetailAddress" placeholder="상세 주소"
-                           th:value="${info.memberAddress != null && info.getDefaultAddress() != null ? info.getDefaultAddress().getDetailAddress() : ''}">
+                    <!-- 배송 정보 Body -->
+                    <div class="card-body p-0">
+                      <div class="row w-full ms-0">
+                        <div class="col-3 ps-0">
+                          <input type="text" class="form-control" id="orderer-post-address"
+                                 name="ordererPostAddress" placeholder="우편번호" readonly
+                                 th:value="${info.memberAddress != null && info.getDefaultAddress() != null ? info.getDefaultAddress().getPostAddress() : ''}">
+                        </div>
+                        <div class="col-9 ps-0 pe-0">
+                          <input type="text" class="form-control" id="orderer-road-address"
+                                 name="ordererRoadAddress" placeholder="도로명 주소" readonly
+                                 th:value="${info.memberAddress != null && info.getDefaultAddress() != null ? info.getDefaultAddress().getRoadAddress() : ''}">
+                        </div>
+                      </div>
+                      <input type="text" class="form-control mt-1" id="orderer-detail-address"
+                             name="ordererDetailAddress" placeholder="상세 주소"
+                             th:value="${info.memberAddress != null && info.getDefaultAddress() != null ? info.getDefaultAddress().getDetailAddress() : ''}">
+                    </div>
+                    <label class="form-label d-lg-inline float-start mt-2">희망배송날짜</label>
+                    <input class="form-control mb-2" id="datepicker"
+                           type="date" name="expectedShippingDate"
+                           th:min="${#calendars.format( #calendars.createNow(), 'yyyy-MM-dd')}">
+                    <span class="form-check-description text-end">미선택시 가장 가까운 날로 배송될 예정입니다.</span>
                   </div>
-                  <label class="form-label d-lg-inline float-start mt-2">희망배송날짜</label>
-                  <input class="form-control mb-2" id="datepicker"
-                         type="date" name="expectedShippingDate"
-                         th:min="${#calendars.format( #calendars.createNow(), 'yyyy-MM-dd')}">
-                  <span class="form-check-description text-end">미선택시 가장 가까운 날로 배송될 예정입니다.</span>
                 </div>
               </div>
-            </div>
-            <div class="card-body">
-              <h3 class="card-title">주문 상품 정보</h3>
-              <div class="card card-md">
-                <div class="table-responsive">
-                  <input type="hidden" name="orderProducts"
-                         th:value="${info.getProductOrderRequest()}">
-                  <table class="table table-vcenter text-center scrollable scroll-x">
-                    <thead>
-                    <tr>
-                      <th class="w-1"></th>
-                      <th>상품번호</th>
-                      <th>상품명</th>
-                      <th>가격</th>
-                      <th>적립예정포인트</th>
-                      <th>수량</th>
-                      <th>개별쿠폰 적용</th>
-                    </tr>
-                    </thead>
-                    <tbody th:each="product:${info.orderProducts}">
-                    <tr>
-                      <td th:text="${productStat.index + 1}"></td>
-                      <td th:text="${product.isbn}">
-                        <input type="hidden" name="isbn" th:value="${product.isbn}">
-                      </td>
-                      <td th:text="${product.title}"></td>
-                      <td>
-                        <del class="fs-6"
-                             th:text="${#numbers.formatInteger(product.actualPrice, 1, 'COMMA')}">
-                        </del>
-                        <span class="text-danger"
-                              th:id="${'order-product-price-' + productStat.index}"
-                              th:text="${#numbers.formatInteger(product.getSalePrice(), 1, 'COMMA')}">
+              <div class="card-body">
+                <h3 class="card-title">주문 상품 정보</h3>
+                <div class="card card-md">
+                  <div class="table-responsive">
+                    <input type="hidden" name="orderProducts"
+                           th:value="${info.getProductOrderRequest()}">
+                    <table class="table table-vcenter text-center scrollable scroll-x">
+                      <thead>
+                      <tr>
+                        <th class="w-1"></th>
+                        <th>상품번호</th>
+                        <th>상품명</th>
+                        <th>가격</th>
+                        <th>적립예정포인트</th>
+                        <th>수량</th>
+                        <th>개별쿠폰 적용</th>
+                      </tr>
+                      </thead>
+                      <tbody th:each="product:${info.orderProducts}">
+                      <tr>
+                        <td th:text="${productStat.index + 1}"></td>
+                        <td th:text="${product.isbn}">
+                        </td>
+                        <td th:text="${product.title}"></td>
+                        <td>
+                          <del class="fs-6"
+                               th:text="${#numbers.formatInteger(product.actualPrice, 1, 'COMMA')}">
+                          </del>
+                          <span class="text-danger"
+                                th:id="${'order-product-amount-' + productStat.index}"
+                                th:text="${#numbers.formatInteger(product.getSalePrice(), 1, 'COMMA')}">
                           </span>
-                      </td>
-                      <td th:text="${product.expectedPoint}"></td>
-                      <td th:id="${'order-product-quantity-' + productStat.index}"
-                          th:text="${product.quantity}">
-                        <input type="hidden" name="quantity" th:value="${product.quantity}">
-                      </td>
-                      <td>
-                        <!--회원 : 쿠폰 사용 -->
-                        <div sec:authorize="isAuthenticated()">
-                          <!--TODO 개별 쿠폰 적용하기-->
-                          <button sec:authorize="isAuthenticated()" type="button"
-                                  class="btn btn-outline-secondary btn-sm float-end">
-                            쿠폰 적용
-                          </button>
-                          <span hidden="hidden">
+                        </td>
+                        <td th:text="${product.expectedPoint}"></td>
+                        <td th:id="${'order-product-quantity-' + productStat.index}"
+                            th:text="${product.quantity}">
+                        </td>
+                        <td>
+                          <!--회원 : 쿠폰 사용 -->
+                          <div sec:authorize="isAuthenticated()">
+                            <!--TODO 개별 쿠폰 적용하기-->
+                            <button type="button" class="btn btn-outline-secondary btn-sm float-end">
+                              쿠폰 적용
+                            </button>
+                            <span hidden="hidden">
                               <button type="button" class="btn btn-outline-danger btn-sm float-end">
                                 쿠폰 취소
                               </button>
-                              <span name="order-product-price">할인된 금액</span>
+                              <input type="text" id="order-product-coupon-amount"
+                                     name="orderCoupons"
+                                     value="">
+                                할인된 금액
                             </span>
-                        </div>
-                        <!--비회원-->
-                        <span sec:authorize="!isAuthenticated()">사용불가</span>
-                      </td>
-                    </tr>
-                    </tbody>
-                  </table>
+                          </div>
+                          <!--비회원-->
+                          <span sec:authorize="!isAuthenticated()">사용불가</span>
+                        </td>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <div class="float-end">
+                  결제 예상 금액 :
+                  <span id="expected-total-amount">0</span>
+                  원
                 </div>
               </div>
-              <div class="float-end"> 결제 예상 금액 : <span id="expected-purchase-amount">0</span>원
-              </div>
-            </div>
-            <div sec:authorize="isAuthenticated()" class="card-body">
-              <h3 class="card-title">추가할인</h3>
-              <div class="card card-md">
-                <div class="card-body">
-                  <div class="form-label">
-                    <!--             TODO  전체/카테고리 쿠폰-->
-                    전체/카테고리 쿠폰 적용
-                    <button type="button" class="btn btn-outline-secondary btn-sm">
-                      쿠폰 선택
-                    </button>
-                    <span class="float-end w-auto">
+              <div sec:authorize="isAuthenticated()" class="card-body">
+                <h3 class="card-title">추가할인</h3>
+                <div class="card card-md">
+                  <div class="card-body">
+                    <div class="form-label">
+                      <!--             TODO  전체/카테고리 쿠폰-->
+                      전체/카테고리 쿠폰 적용
+                      <button type="button" class="btn btn-outline-secondary btn-sm">
+                        쿠폰 선택
+                      </button>
+                      <span class="float-end w-auto">
                         - <input class="form-control form-control-sm w-auto" style="display:inline"
                                  id="coupon-applied-amount" value="0" readonly type="text"> 원
                       </span>
-                  </div>
-                  <!--TODO 사용한 쿠폰 목록 보여주기-->
-                  <div id="used-coupons"></div>
-                </div>
-                <div class="card-body">
-                  <div class="form-group mb-3 row">
-                    <label class="form-label col-3 col-form-label">포인트 적용</label>
-                    <div class="col text-end">
-                      - <input class="form-control form-control-sm w-auto"
-                               style="display: inline" name="orderPoint"
-                               id="point-applied-amount" value="0" type="text" numberOnly
-                               oninput="pointOverCheck(this)"
-                               onchange="pointValidCheck(this)"> 원
                     </div>
-                    <small class="float-end" style="color: #c13333" id="point-alert"
-                           hidden="hidden">
-                      값을 입력해주세요.
+                    <!--TODO 사용한 쿠폰 목록 보여주기-->
+                    <div id="used-coupons"></div>
+                  </div>
+                  <div class="card-body">
+                    <div class="form-group mb-3 row">
+                      <label class="form-label col-3 col-form-label">포인트 적용</label>
+                      <div class="col text-end">
+                        - <input class="form-control form-control-sm w-auto"
+                                 style="display: inline" name="orderPoint"
+                                 id="point-applied-amount" value="0" type="text" numberOnly
+                                 oninput="pointOverCheck(this)"
+                                 onchange="pointValidCheck(this)"> 원
+                      </div>
+                      <small class="float-end" style="color: #c13333" id="point-alert"
+                             hidden="hidden">
+                        값을 입력해주세요.
+                      </small>
+                      <small style="float:right;" class="form-hint text-end">
+                        사용가능한 포인트 :
+                        <span id="owned_point" type="text" th:text="${info.point}"></span>
+                        원 (1000원 단위로 사용가능)
+                      </small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- 주문서 Summary-->
+          <div class="col-3">
+            <div class="sticky-top">
+              <div class="card card-md">
+                <div class="card-body">
+                  <h1 class="card-title text-center">
+                    영수증
+                  </h1>
+                  <div class="hr-text">상품 금액</div>
+                  <h3 class="card-title">
+                    <input type="hidden" name="productActualTotalAmount"
+                           th:value="${info.getTotalProductAmount()}">
+                    총 상품 금액
+                    <span style="float: right">원</span>
+                    <input class="d-none" id="total-product-amount-hidden"
+                           name="productTotalAmount" value="0">
+                    <span style="float: right" id="total-product-amount">0</span>
+                  </h3>
+                  <div class="hr-text">결제 금액</div>
+                  <div class="row text-end mb-1">
+                    <input type="hidden" id="shipping-fee-hidden" name="shippingFee">
+                    <small>배달비 : <span id="shipping-fee"></span> 원</small>
+                  </div>
+                  <div class="row text-end">
+                    <small class="float-end d-inline">
+                      <label class="form-check form-switch d-inline">
+                        <input type="hidden" id="wrapping-fee-hidden" name="wrappingFee" value="0">
+                        <input class="form-check-input m-auto" id="wrapping-check" type="checkbox">
+                      </label>
+                      포장비 : 3,000원
                     </small>
-                    <small style="float:right;" class="form-hint text-end">
-                      사용가능한 포인트 :
-                      <span id="owned_point" type="text" th:text="${info.point}"></span>
-                      원 (1000원 단위로 사용가능)
-                    </small>
+                  </div>
+                  <br/>
+                  <h3 class="card-title">
+                    총 결제 금액
+                    <span style="float: right">원</span>
+                    <span style="float: right" id="total-payment-amount">0</span>
+                  </h3>
+                  <div class="mt-2">
+                    <button sec:authorize="isAuthenticated()" class="btn btn-primary w-100"
+                            id="member-order">
+                      주문서 작성 완료
+                    </button>
+                    <button sec:authorize="!isAuthenticated()"
+                            type="button" onclick="nonMemberOrder();"
+                            id="non-member-order" class="btn btn-primary w-100">
+                      비회원 주문서 작성 완료
+                    </button>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <!-- 주문서 Summary-->
-        <div class="col-3">
-          <div class="sticky-top">
-            <div class="card card-md">
-              <div class="card-body">
-                <h1 class="card-title text-center">
-                  영수증
-                </h1>
-                <div class="hr-text">상품 금액</div>
-                <h3 class="card-title">
-                  총 상품 금액
-                  <span style="float: right">원</span>
-                  <input class="d-none" id="total-product-price-hidden"
-                         name="productTotalAmount" value="0">
-                  <span style="float: right" id="total-product-price">0</span>
-                </h3>
-                <div class="hr-text">결제 금액</div>
-                <div class="row text-end mb-1">
-                  <input type="hidden" id="shipping-fee-hidden" name="shippingFee">
-                  <small>배달비 : <span id="shipping-fee"></span> 원</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- TODO 4 : footer -->
+  <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
+
+  <!--배송지 Modal-->
+  <div sec:authorize="isAuthenticated()" class="modal modal-blur fade" id="modal-report"
+       tabindex="-1" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <!-- 배송지 Header -->
+        <div class="modal-header">
+          <h5 class="modal-title">배송지 선택</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"
+                  aria-label="Close"></button>
+        </div>
+        <!-- 배송지 Body -->
+        <div class="modal-body text-center">
+          <small class="form-label">
+            새로운 배송지를 선택하고 싶다면
+            <strong>등록 버튼</strong>
+            을 클릭하여 새로운 배송지를 등록한 후 사용해주시길 바랍니다.
+          </small>
+          <div hidden="hidden" class="col-12 mb-1" id="member-address-template">
+            <div class="row p-0" style="height: fit-content">
+              <div class="col-11 col-sm-10 ps-0">
+                <label class="form-selectgroup-item">
+                  <input type="radio" class="form-selectgroup-input" name="ordererAddressId" checked
+                         id="member-address-template-input" value="">
+                  <span class="form-selectgroup-label d-flex align-items-center p-3">
+                    <span class="me-3">
+                      <span class="form-selectgroup-check"></span>
+                    </span>
+                    <span class="form-selectgroup-label-content">
+                      <span class="form-selectgroup-title strong mb-1"
+                            id="member-address-template-label"></span>
+                    </span>
+                  </span>
+                </label>
+              </div>
+              <div class="col-1 col-sm-2 p-0">
+                <a class="btn btn-outline-danger h-full w-full" id="member-address-template-cancel">
+                  삭제
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="form-selectgroup-boxes row mb-3 overflow-auto"
+               id="member-addresses-group" style="height: 250px;">
+            <div class="col-12 mb-1" th:id="|member-addresses-${address.id}|"
+                 th:each="address:${info.memberAddress}">
+              <div class="row p-0" style="height: fit-content">
+                <div class="col-11 col-sm-10 ps-0">
+                  <label class="form-selectgroup-item">
+                    <input type="radio" class="form-selectgroup-input"
+                           th:id="|orderer-address-id-${address.id}|"
+                           name="ordererAddressId" th:value="${address.id}"
+                           th:checked="${address.id == info.getDefaultAddress().id}">
+                    <span class="form-selectgroup-label d-flex align-items-center p-3">
+                    <span class="me-3">
+                      <span class="form-selectgroup-check"></span>
+                    </span>
+                    <span class="form-selectgroup-label-content">
+                      <span class="form-selectgroup-title strong mb-1"
+                            th:id="|orderer-address-${address.id}|"
+                            th:text="${address.address}"></span>
+                    </span>
+                  </span>
+                  </label>
                 </div>
-                <div class="row text-end">
-                  <small class="float-end d-inline">
-                    <label class="form-check form-switch d-inline">
-                      <input type="hidden" id="wrapping-fee-hidden" name="wrappingFee" value="0">
-                      <input class="form-check-input m-auto" id="wrapping-check" type="checkbox">
-                    </label>
-                    포장비 : 3,000원
-                  </small>
+                <div class="col-1 col-sm-2 p-0">
+                  <a class="btn btn-outline-danger h-full w-full"
+                     th:onclick="|deleteAddress(${address.id})|">
+                    삭제
+                  </a>
                 </div>
-                <br/>
-                <h3 class="card-title">
-                  총 결제 금액
-                  <span style="float: right">원</span>
-                  <span style="float: right" id="total-payment-price">0</span>
-                </h3>
-                <div class="mt-2">
-                  <button th:if="${auth}" sec:authorize="isAuthenticated()" class="btn btn-primary w-100"
-                          id="member-order" type="button" onclick="memberOrder()">
-                    주문서 작성 완료
-                  </button>
-                  <button th:unless="${auth}" type="button" onclick="nonMemberOrder()"
-                          id="non-member-order" class="btn btn-primary w-100">
-                    비회원 주문서 작성 완료
-                  </button>
-                  <div th:replace="~{common/fragments/alert :: custom-alert}"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr class="mt-0 mb-1">
+        <!-- 배송지 Footer -->
+        <div class="modal-footer" id="member-address-footer">
+          <div class="row w-full ms-0 me-0">
+            <div class="col-3 ps-0 pe-0">
+              <button type="button" class="btn btn-info link-secondary w-full" onclick="openAddressForm()">
+                등록
+              </button>
+            </div>
+            <div class="col-6"></div>
+            <div class="col-3 ps-0 pe-0">
+              <button type="button" class="btn btn-primary ms-auto w-full" onclick="setAddress()">
+                선택
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- 배송지 등록 Form-->
+        <div class="modal-body" id="member-address-form" hidden="hidden">
+          <h5 class="modal-title">새로운 배송지 등록</h5>
+          <div class="card-body p-0">
+            <div class="row w-full ms-0" onclick="getAddress(true)">
+              <div class="col-3 ps-0">
+                <input type="text" class="form-control" id="member-address-form-post"
+                       placeholder="우편번호" readonly>
+              </div>
+              <div class="col-9 ps-0 pe-0">
+                <input type="text" class="form-control" id="member-address-form-road"
+                       placeholder="도로명 주소" readonly>
+              </div>
+            </div>
+            <div class="row w-full ms-0 mt-1 mb-2">
+              <input type="text" class="form-control" id="member-address-form-detail"
+                     placeholder="상세 주소">
+            </div>
+            <div class="row w-full ms-0">
+              <div class="col-3 ps-0">
+                <button type="button" class="btn btn-outline-muted link-secondary w-full" onclick="closeAddressForm()">
+                  취소
+                </button>
+              </div>
+              <div class="col-9 ps-0 pe-0 float-end">
+                <button type="button" class="btn btn-primary link-secondary w-full" onclick="createAddress()">
+                  새로운 배송지 등록
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--쿠폰 Modal-->
+  <div sec:authorize="isAuthenticated()" class="modal modal-blur fade" id="coupon-modal"
+       tabindex="-1" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <!-- 쿠폰 Header -->
+        <div class="modal-header">
+          <h5 class="modal-title">쿠폰 선택</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"
+                  aria-label="Close"></button>
+        </div>
+        <!-- 쿠폰 Body -->
+        <div class="modal-body">
+          <div class="form-selectgroup-boxes row mb-3 overflow-auto"
+               id="member-coupon-group" style="height: 250px;">
+            <div class="col-12 mb-1" th:id="|member-coupon-${coupon.couponCode}|"
+                 th:each="coupon:${info.memberCoupons}">
+              <div class="row p-0" style="height: fit-content">
+                <div class="col-11 col-sm-10 ps-0">
+                  <label class="form-selectgroup-item">
+                    <input type="radio" class="form-selectgroup-input"
+                           th:id="|orderer-coupon-id-${coupon.couponCode}|"
+                           name="ordererAddressId" th:value="${coupon.couponCode}">
+                    <span class="form-selectgroup-label d-flex align-items-center p-3">
+                    <span class="me-3">
+                      <span class="form-selectgroup-check"></span>
+                    </span>
+                    <span class="form-selectgroup-label-content">
+                      <span class="form-selectgroup-title strong mb-1"
+                            th:id="|orderer-address-${address.id}|"
+                            th:text="${address.address}"></span>
+                    </span>
+                  </span>
+                  </label>
+                </div>
+                <div class="col-1 col-sm-2 p-0">
+                  <a class="btn btn-outline-danger h-full w-full"
+                     th:onclick="|deleteAddress(${address.id})|">
+                    삭제
+                  </a>
                 </div>
               </div>
             </div>
@@ -336,62 +518,124 @@
       </div>
     </div>
   </div>
-</div>
-
-<!-- TODO 4 : footer -->
-<div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
-
-<!--배송지 Modal-->
-<div class="modal modal-blur fade" id="modal-report" tabindex="-1" aria-hidden="true"
-     style="display: none;">
-  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <!-- 배송지 Header -->
-      <div class="modal-header">
-        <h5 class="modal-title">배송지 선택</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <!-- 배송지 Body -->
-      <div class="modal-body">
-        <small class="form-label">새로운 배송지를 선택하고 싶다면 추가 버튼을 클릭하여 새로운 배송지를 등록한 후 사용해주시길 바랍니다.</small>
-        <div class="form-selectgroup-boxes row mb-3">
-          <div class="col-lg-6" th:each="address:${addresses}">
-            <label class="form-selectgroup-item">
-              <input type="radio" name="report-type" value="1" class="form-selectgroup-input">
-              <span class="form-selectgroup-label d-flex align-items-center p-3">
-                <span class="me-3">
-                  <span class="form-selectgroup-check"></span>
-                </span>
-                <span class="form-selectgroup-label-content">
-                  <span class="form-selectgroup-title strong mb-1"
-                        th:text="${address.address}"></span>
-                </span>
-              </span>
-            </label>
-            <a class="btn btn-outline-danger" onclick="">
-              삭제
-            </a>
-          </div>
-        </div>
-      </div>
-      <!-- 배송지 Footer -->
-      <div class="modal-footer">
-        <a href="#" class="btn btn-link link-secondary" data-bs-dismiss="modal">
-          등록
-        </a>
-        <a href="#" class="btn btn-primary ms-auto" data-bs-dismiss="modal">
-          선택
-        </a>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="d-none" id="shop-server-url"
-     th:data-url="${@environment.getProperty('yesaladin.gateway.shop')}"></div>
-<div class="d-none" id="front-server-url"
-     th:data-url="${@environment.getProperty('yesaladin.front.url')}"></div>
+</form>
+<div th:replace="~{common/fragments/alert :: custom-alert}"></div>
 </body>
+
+<!--배송지 관련 함수-->
+<script th:inline="javascript">
+  const frontUrl = [[${@environment.getProperty('yesaladin.front.url')}]];
+
+  const addressModal = document.getElementById("modal-report");
+  const memberAddressForm = document.getElementById("member-address-form");
+  const memberAddressFooter = document.getElementById("member-address-footer");
+  const memberAddressFormPost = document.getElementById("member-address-form-post");
+  const memberAddressFormRoad = document.getElementById("member-address-form-road");
+  const memberAddressFormDetail = document.getElementById("member-address-form-detail");
+
+  const memberAddressGroup = document.getElementById("member-addresses-group");
+  const memberAddressTemplate = document.getElementById("member-address-template");
+
+  function openAddressForm() {
+    memberAddressFooter.hidden = true;
+    memberAddressForm.hidden = false;
+  }
+
+  function closeAddressForm() {
+    memberAddressFooter.hidden = false;
+    memberAddressForm.hidden = true;
+  }
+
+  function setAddress() {
+    const ordererAddressId = document.getElementsByName("ordererAddressId");
+    for (let i = 0; i < ordererAddressId.length; i++) {
+      if (ordererAddressId[i].checked === true) {
+        let id = ordererAddressId[i].value;
+        let ordererAddress = document.getElementById("orderer-address-" + id);
+        console.log(ordererAddress);
+        const addresses = ordererAddress.innerText.split("/");
+
+        console.log(addresses);
+        ordererPostAddress.value = addresses[0];
+        ordererRoadAddress.value = addresses[1];
+        ordererDetailAddress.value = addresses[2];
+
+        bootstrap.Modal.getInstance(addressModal).hide();
+
+        return;
+      }
+    }
+    alert("주소를 선택해주세요.");
+  }
+
+  async function deleteAddress(id) {
+
+    await fetch(`${frontUrl}/api/address/${id}`, {
+      method: "Delete",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    }).then((resp) => {
+      return resp.json();
+    }).then((data) => {
+      if (!data) {
+        alert("배송지 삭제에 실패하였습니다.");
+        return;
+      }
+      const memberAddress = document.getElementById("member-addresses-" + id);
+      memberAddress.remove();
+    })
+
+  }
+
+  async function createAddress() {
+    const postAddress = memberAddressFormPost.value;
+    const roadAddress = memberAddressFormRoad.value;
+    const detailAddress = memberAddressFormDetail.value;
+    if (postAddress == "" || roadAddress == "" || detailAddress == "") {
+      alert("주소를 입력해주세요.");
+      return;
+    }
+    console.log("start to create address");
+
+    await fetch(`${frontUrl}/api/address`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        postAddress: postAddress,
+        roadAddress: roadAddress,
+        detailAddress: detailAddress,
+        isDefault: false
+      })
+    }).then((resp) => {
+      console.log("end to create address");
+      return resp.json();
+    }).then((data) => {
+      if (data == null) {
+        alert("배송지 등록에 실패하였습니다.");
+        return;
+      }
+      const addressId = data.id;
+      const address = data.address;
+      const newMemberAddress = memberAddressTemplate.cloneNode(true);
+
+      newMemberAddress.hidden = false;
+      newMemberAddress.id = "member-addresses-" + addressId;
+      newMemberAddress.querySelector("#member-address-template-input").id = "orderer-address-id-"
+          + addressId;
+      newMemberAddress.querySelector(".form-selectgroup-title").id = "orderer-address-" + addressId;
+      newMemberAddress.querySelector("#member-address-template-label").innerText = address;
+      newMemberAddress.querySelector("#member-address-template-cancel").addEventListener("click",
+          () => deleteAddress(addressId));
+      memberAddressGroup.append(newMemberAddress);
+      console.log(newMemberAddress);
+
+      closeAddressForm();
+    })
+  }
+</script>
 
 <!--주문 금액 변경 시 반영하는 함수-->
 <script th:inline="javascript">
@@ -401,14 +645,14 @@
 
   function setExpectedTotalPrice() {
     var size = [[${info.orderProducts.size}]];
-    var expectedPurchaseAmount = document.getElementById("expected-purchase-amount");
+    var expectedTotalAmount = document.getElementById("expected-total-amount");
 
     var priceList = [];
     var quantityList = [];
 
     var sum = 0;
     for (let i = 0; i < size; i++) {
-      priceList[i] = document.getElementById("order-product-price-" + i);
+      priceList[i] = document.getElementById("order-product-amount-" + i);
       quantityList[i] = document.getElementById("order-product-quantity-" + i);
 
       var quantity = parseInt(quantityList[i].innerText.replace(/\D/g, ''));
@@ -416,21 +660,21 @@
 
       sum += price * quantity;
     }
-    expectedPurchaseAmount.innerText = sum.toLocaleString();
+    expectedTotalAmount.innerText = sum.toLocaleString();
 
     setProductTotalPrice();
   }
 
   function setProductTotalPrice() {
-    var totalProductPrice = document.getElementById("total-product-price");
-    var totalProductPriceHidden = document.getElementById("total-product-price-hidden");
+    var totalProductPrice = document.getElementById("total-product-amount");
+    var totalProductPriceHidden = document.getElementById("total-product-amount-hidden");
 
-    var expectedPurchaseAmount = document.getElementById("expected-purchase-amount");
+    var expectedTotalAmount = document.getElementById("expected-total-amount");
     var couponAppliedAmount = document.getElementById("coupon-applied-amount");
     var pointAppliedAmount = document.getElementById("point-applied-amount");
 
     var auth = [[${auth}]]
-    var totalPrice = parseInt(expectedPurchaseAmount.innerText.replace(/\D/g, ''));
+    var totalPrice = parseInt(expectedTotalAmount.innerText.replace(/\D/g, ''));
 
     if (auth) {
       totalPrice -= (parseInt(couponAppliedAmount.value) + parseInt(pointAppliedAmount.value));
@@ -442,14 +686,14 @@
   }
 
   function setPaymentTotalPrice() {
-    const totalPaymentPrice = document.getElementById("total-payment-price");
+    const totalPaymentPrice = document.getElementById("total-payment-amount");
 
     const totalProductPrice = parseInt(
-        document.getElementById("total-product-price").innerText.replace(/\D/g, ''));
+        document.getElementById("total-product-amount").innerText.replace(/\D/g, ''));
 
     const shippingFeeHidden = document.getElementById("shipping-fee-hidden");
     const shippingFee = document.getElementById("shipping-fee");
-    const wrappingFee = document.getElementById("wrapping-fee");
+    const wrappingFeeHidden = document.getElementById("wrapping-fee-hidden");
 
     var totalPrice = 0;
 
@@ -461,7 +705,7 @@
       shippingFee.innerText = (3000).toLocaleString();
       totalPrice += 3000;
     }
-    totalPrice += Number(wrappingFee.value) + totalProductPrice;
+    totalPrice += Number(wrappingFeeHidden.value) + totalProductPrice;
 
     totalPaymentPrice.innerText = totalPrice.toLocaleString();
   }
@@ -510,7 +754,8 @@
 <script th:inline="javascript">
   function pointOverCheck(e) {
     const alert = document.getElementById("point-alert");
-    const expectedPrice = parseInt(document.getElementById("expected-purchase-amount").innerText);
+    const expectedTotalAmount = parseInt(
+        document.getElementById("expected-total-amount").innerText);
     const userPoint = [[${point}]];
 
     var curPoint = parseInt(e.value);
@@ -522,14 +767,14 @@
     if (curPoint > userPoint) {
       curPoint = userPoint;
     }
-    if (curPoint > expectedPrice) {
-      curPoint = expectedPrice;
+    if (curPoint > expectedTotalAmount) {
+      curPoint = expectedTotalAmount;
     }
     e.value = curPoint;
   }
 
   function pointValidCheck(e) {
-    var amount = e.value;
+    let amount = e.value;
     if (e.value === "" || e.value < 0) {
       amount = 0;
       document.getElementById("point-alert").hidden = true;
@@ -539,129 +784,6 @@
     e.value = amount;
     setProductTotalPrice();
 
-  }
-</script>
-
-<!-- 주문 -->
-<script th:inline="javascript">
-  const expectedPurchaseAmount = document.getElementById("expected-purchase-amount");
-  const expectedShippingDateDoc = document.getElementById("datepicker");
-  const ordererNameDoc = document.getElementById("orderer-name");
-  const ordererPhoneNumberDoc = document.getElementById("orderer-phone-number");
-  const recipientNameDoc = document.getElementById("recipient-name");
-  const recipientPhoneNumberDoc = document.getElementById("recipient-phone-number");
-  const ordererPostAddress = document.getElementById("orderer-post-address");
-  const ordererRoadAddress = document.getElementById("orderer-road-address");
-  const ordererDetailAddress = document.getElementById("orderer-detail-address");
-  const ordererAddressIdDoc = document.getElementById("orderer-address-id");
-
-  const pointAppliedAmount = document.getElementById("point-applied-amount");
-  const shippingFeeDoc = document.getElementById("shipping-fee-hidden");
-  const wrappingFeeDoc = document.getElementById("wrapping-fee-hidden");
-  const totalProductPrice = document.getElementById("total-product-price");
-
-  var shopUrl = [[${@environment.getProperty('yesaladin.gateway.shop')}]];
-  var frontUrl = [[${@environment.getProperty('yesaladin.front.url')}]];
-  console.log(shopUrl);
-
-  function memberOrder() {
-    const expectedShippingDate = expectedShippingDateDoc.value;
-    const orderProducts = [[${info.getProductOrderRequest()}]];
-    const productTotalAmount = totalProductPrice.innerText.replace(/\D/g, '');
-    const shippingFee = shippingFeeDoc.value;
-    const wrappingFee = wrappingFeeDoc.value;
-    const recipientName = recipientNameDoc.value;
-    const recipientPhoneNumber = recipientPhoneNumberDoc.value;
-
-    const ordererAddressId = ordererAddressIdDoc.value;
-    const orderCoupons = [];
-    const orderPoint = pointAppliedAmount.value;
-
-    // orderCheck(this);
-
-    const responsePromise = fetch(`${frontUrl}/orders/member`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        expectedShippingDate: expectedShippingDate,
-        orderProducts: orderProducts,
-        productTotalAmount: productTotalAmount,
-        shippingFee: shippingFee,
-        wrappingFee: wrappingFee,
-        recipientName: recipientName,
-        recipientPhoneNumber: recipientPhoneNumber,
-        ordererAddressId: ordererAddressId,
-        orderCoupons: orderCoupons,
-        orderPoint: orderPoint
-      })
-    });
-    responsePromise.then((resp) => resp.json()).then((data) => console.log(data.success));
-  }
-
-  function nonMemberOrder() {
-    const expectedShippingDate = expectedShippingDateDoc.value;
-    const orderProducts = [[${info.getProductOrderRequest()}]];
-    const productTotalAmount = parseInt(totalProductPrice.innerText.replace(/\D/g, ''));
-    const shippingFee = parseInt(shippingFeeDoc.value);
-    const wrappingFee = parseInt(wrappingFeeDoc.value);
-    const recipientName = recipientNameDoc.value;
-    const recipientPhoneNumber = recipientPhoneNumberDoc.value;
-
-    const ordererName = ordererNameDoc.value;
-    const ordererPhoneNumber = ordererPhoneNumberDoc.value;
-    const address = [ordererPostAddress.value, ordererRoadAddress.value,
-      ordererDetailAddress.value].join("/");
-
-    // orderCheck(this);
-    console.log("주문 생성 시작")
-    const responsePromise = fetch(`${shopUrl}/v1/orders/non-member`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        expectedShippingDate: expectedShippingDate,
-        orderProducts: orderProducts,
-        productTotalAmount: productTotalAmount,
-        shippingFee: shippingFee,
-        wrappingFee: wrappingFee,
-        recipientName: recipientName,
-        recipientPhoneNumber: recipientPhoneNumber,
-        ordererName: ordererName,
-        ordererPhoneNumber: ordererPhoneNumber,
-        ordererAddress: address
-      })
-    });
-    responsePromise
-    .then((resp) => resp.json())
-    .then((data) => {
-      if (!data.success) {
-        alert(data.message);
-      } else {
-        alert("주문 성공");
-        var productAmount = [[${info.getTotalProductAmount()}]];
-        console.log("product amount " + productAmount);
-        const params = {
-          ordererName: ordererName,
-          ordererPhoneNumber: ordererPhoneNumber,
-          recipientName: recipientName,
-          recipientPhoneNumber: recipientPhoneNumber,
-          recipientAddress: address,
-          recipientExpectedDate: expectedShippingDate,
-          orderNumber: data.data.orderNumber,
-          productAmount: productAmount,
-          discountAmount: productAmount - productTotalAmount,
-          shippingFee: shippingFee,
-          wrappingFee: wrappingFee,
-          orderName: data.data.orderName,
-          totalAmount: productTotalAmount + shippingFee + wrappingFee
-        }
-        let searchParams = new URLSearchParams(params);
-        window.location.href = `${frontUrl}/payments/pay?${searchParams.toString()}`;
-      }
-    });
   }
 
   function orderCheck(e) {
@@ -686,8 +808,90 @@
 
   }
 </script>
+
+<!-- 비회원 주문 -->
+<script th:inline="javascript">
+  const expectedShippingDateDoc = document.getElementById("datepicker");
+  const ordererNameDoc = document.getElementById("orderer-name");
+  const ordererPhoneNumberDoc = document.getElementById("orderer-phone-number");
+  const recipientNameDoc = document.getElementById("recipient-name");
+  const recipientPhoneNumberDoc = document.getElementById("recipient-phone-number");
+  const ordererPostAddress = document.getElementById("orderer-post-address");
+  const ordererRoadAddress = document.getElementById("orderer-road-address");
+  const ordererDetailAddress = document.getElementById("orderer-detail-address");
+
+  const shippingFeeDoc = document.getElementById("shipping-fee-hidden");
+  const wrappingFeeDoc = document.getElementById("wrapping-fee-hidden");
+  const totalProductPrice = document.getElementById("total-product-amount");
+
+  const shopUrl = [[${@environment.getProperty('yesaladin.gateway.shop')}]];
+
+  async function nonMemberOrder() {
+    const expectedShippingDate = expectedShippingDateDoc.value;
+    const orderProducts = [[${info.getProductOrderRequest()}]];
+    const productTotalAmount = parseInt(totalProductPrice.innerText.replace(/\D/g, ''));
+    const shippingFee = parseInt(shippingFeeDoc.value);
+    const wrappingFee = parseInt(wrappingFeeDoc.value);
+    const recipientName = recipientNameDoc.value;
+    const recipientPhoneNumber = recipientPhoneNumberDoc.value;
+
+    const ordererName = ordererNameDoc.value;
+    const ordererPhoneNumber = ordererPhoneNumberDoc.value;
+    const address = [ordererPostAddress.value, ordererRoadAddress.value,
+      ordererDetailAddress.value].join("/");
+
+    // orderCheck(this);
+
+    await fetch(`${shopUrl}/v1/orders/non-member`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        expectedShippingDate: expectedShippingDate,
+        orderProducts: orderProducts,
+        productTotalAmount: productTotalAmount,
+        shippingFee: shippingFee,
+        wrappingFee: wrappingFee,
+        recipientName: recipientName,
+        recipientPhoneNumber: recipientPhoneNumber,
+        ordererName: ordererName,
+        ordererPhoneNumber: ordererPhoneNumber,
+        ordererAddress: address
+      })
+    }).then((resp) => {
+      return resp.json();
+    }).then((data) => {
+      console.log(data);
+      if (!data.success) {
+        alert(data.errorMessages.toString());
+      } else {
+        alert("주문 성공");
+        const productAmount = [[${info.getTotalProductAmount()}]];
+        const params = {
+          ordererName: ordererName,
+          ordererPhoneNumber: ordererPhoneNumber,
+          recipientName: recipientName,
+          recipientPhoneNumber: recipientPhoneNumber,
+          recipientAddress: address,
+          recipientExpectedDate: expectedShippingDate,
+          orderNumber: data.data.orderNumber,
+          productAmount: productAmount,
+          discountAmount: productAmount - productTotalAmount,
+          shippingFee: shippingFee,
+          wrappingFee: wrappingFee,
+          orderName: data.data.orderName,
+          totalAmount: productTotalAmount + shippingFee + wrappingFee
+        }
+        let searchParams = new URLSearchParams(params);
+        window.location.href = `${frontUrl}/payments/pay?${searchParams.toString()}`;
+      }
+    });
+  }
+</script>
+<!--다음 주소지 API-->
 <script>
-  function getAddress() {
+  function getAddress(isForm) {
     new daum.Postcode({
       oncomplete: function (data) {
         var addr = '';
@@ -716,6 +920,13 @@
           addr += ' ' + extraAddr;
         }
 
+        if (isForm) {
+          document.getElementById("member-address-form-post").value = data.zonecode;
+          document.getElementById("member-address-form-road").value = addr;
+
+          document.getElementById("member-address-form-detail").focus();
+          return;
+        }
         // 우편번호와 주소 정보를 해당 필드에 넣는다.
         document.getElementById('orderer-post-address').value = data.zonecode;
         document.getElementById("orderer-road-address").value = addr;
@@ -726,4 +937,5 @@
     }).open();
   }
 </script>
+
 </html>

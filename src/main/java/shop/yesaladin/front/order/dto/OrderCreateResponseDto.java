@@ -3,6 +3,7 @@ package shop.yesaladin.front.order.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 /**
  * 주문 생성시 반환하는 dto 입니다.
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
  * @since 1.0
  */
 @Getter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderCreateResponseDto {
