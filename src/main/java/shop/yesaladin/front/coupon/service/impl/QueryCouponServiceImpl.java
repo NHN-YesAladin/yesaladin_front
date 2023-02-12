@@ -37,8 +37,6 @@ import shop.yesaladin.front.product.dto.ProductOnlyTitleDto;
 @Service
 public class QueryCouponServiceImpl implements QueryCouponService {
 
-    private static final ParameterizedTypeReference<ResponseDto<PaginatedResponseDto<CouponSummaryDto>>> PAGING_COUPON_TYPE = new ParameterizedTypeReference<>() {
-    };
     private final RestTemplate restTemplate;
     private final GatewayConfig gatewayConfig;
 
@@ -54,7 +52,8 @@ public class QueryCouponServiceImpl implements QueryCouponService {
                 uriComponents.toUri(),
                 HttpMethod.GET,
                 null,
-                PAGING_COUPON_TYPE
+                new ParameterizedTypeReference<>() {
+                }
         );
 
         return Objects.requireNonNull(responseEntity.getBody()).getData();

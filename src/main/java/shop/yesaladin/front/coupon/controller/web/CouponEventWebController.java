@@ -16,6 +16,13 @@ import shop.yesaladin.front.coupon.dto.CouponSummaryWithBoundDto;
 import shop.yesaladin.front.coupon.service.inter.QueryCouponService;
 import shop.yesaladin.front.member.service.inter.QueryMemberService;
 
+/**
+ * 쿠폰 다운로드 페이지 관련 요청을 처리하는 controller 입니다.
+ *
+ * @author 김홍대
+ * @author 서민지
+ * @since 1.0
+ */
 @Slf4j
 @RequiredArgsConstructor
 @Controller
@@ -53,6 +60,6 @@ public class CouponEventWebController {
         model.addAttribute("couponId", couponId);
         model.addAttribute("frontServerUrl", frontServerMetaConfig.getFrontServerUrl());
         model.addAttribute("shopServerUrl", gatewayConfig.getShopUrl());
-        return "/main/coupon/coupon-of-the-month-page";
+        return "/main/coupon/monthly-coupon-page";
     }
 }

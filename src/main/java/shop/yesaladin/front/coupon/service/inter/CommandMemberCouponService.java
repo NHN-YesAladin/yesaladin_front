@@ -19,5 +19,4 @@ public interface CommandMemberCouponService {
      * @return
      */
     ResponseEntity<ResponseDto<Void>> sendGiveRequest(CouponGiveRequestDto dto);
-
 }
