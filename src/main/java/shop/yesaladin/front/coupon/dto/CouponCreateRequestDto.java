@@ -1,7 +1,6 @@
 package shop.yesaladin.front.coupon.dto;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
@@ -34,8 +33,8 @@ public class CouponCreateRequestDto {
     private Integer quantity;
     @Range(min = 1, max = 31)
     private Integer couponOpenDate;
-    @DateTimeFormat(pattern = "HH:mm")
-    private LocalTime couponOpenTime;
+//    @DateTimeFormat(pattern = "HH:mm")
+    private String couponOpenTime;
     private MultipartFile couponImage;
     @Positive
     private Integer duration;

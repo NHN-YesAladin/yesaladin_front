@@ -86,6 +86,4 @@ public class CouponManagerWebController {
 
         return "manager/coupon/manager-coupon-list-view";
     }
-
-
 }

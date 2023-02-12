@@ -29,6 +29,7 @@ public class CouponEventWebController {
 
     private final GatewayConfig gatewayConfig;
     private final RestTemplate restTemplate;
+    private int couponID = 14;
 
     @GetMapping
     public String couponMainPageView() {
@@ -39,14 +40,14 @@ public class CouponEventWebController {
     public String couponOfTheMonthPageView(Model model) {
         model.addAttribute("type", TriggerTypeCode.COUPON_OF_THE_MONTH);
         // TODO 이달의 쿠폰 - 쿠폰 id 가져오기
-        model.addAttribute("couponID", 693);
+        model.addAttribute("couponID", this.couponID);
         return "/main/coupon/coupon-of-the-month-page";
     }
 
-    @GetMapping(value = "/issuance", params = {"type", "couponId"})
+    @GetMapping(value = "/issuance", params = {"type", "coupon-id"})
     public String requestCouponIssue(
             @RequestParam("type") String triggerType,
-            @RequestParam("couponId") Long couponId,
+            @RequestParam("coupon-id") Long couponId,
             HttpServletResponse httpServletResponse
     ) throws IOException {
         log.info("********* request coupon issue to shop server ********");
@@ -54,7 +55,7 @@ public class CouponEventWebController {
         UriComponents uriComponents = UriComponentsBuilder.fromHttpUrl(gatewayConfig.getShopUrl())
                 .pathSegment("v1", "member-coupons", "issuance")
                 .queryParam("type", triggerType)
-                .queryParam("couponId", couponId)
+                .queryParam("coupon-id", couponId)
                 .build();
 
         log.info("=== coupon issue request url {} ===", uriComponents);
@@ -72,7 +73,7 @@ public class CouponEventWebController {
         if (!responseBody.isSuccess() && responseBody.getErrorMessages()
                 .get(0)
                 .contains("already has")) {
-            // 중복 요청 또는 잘못된 요청
+            // 중복 요청 alert
             httpServletResponse.setContentType("text/html; charset=euc-kr");
             PrintWriter out = httpServletResponse.getWriter();
             out.println("<script>alert('이미 발급된 쿠폰입니다.'); </script>");
