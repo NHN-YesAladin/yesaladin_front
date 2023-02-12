@@ -63,12 +63,12 @@
                 <h1 class="text-end" th:text="${#authentication.name +' 님 안녕하세요'}"></h1>
                 <div class="row row-cards mb-3">
                   <div class="col-xl-5 col-md-5">
-                    <div class="card">
+                    <div class="card" id="grade-box">
                       <div class="card-header d-block">
                         <h3 class="card-title d-inline">
                           회원 등급
                           <span id="member-grade" class="card-subtitle ms-1 float-end text-muted"
-                                th:text="${grade}"></span>
+                                th:text="${grade.name()}"></span>
                         </h3>
                       </div>
                       <div class="card-body m-auto">
@@ -219,6 +219,7 @@
 
 
   let popup;
+
   function openWindowPop(url, name) {
     let options = 'top=100, left=100, width=900, height=500, status=no, menubar=no, location=no, toolbar=no, resizable=no';
     popup = window.open(url, name, options);
@@ -246,6 +247,35 @@
     readyBtn.textContent = statusMap["READY"] + '건';
     deliveryBtn.textContent = statusMap["DELIVERY"] + '건';
     completeBtn.textContent = statusMap["COMPLETE"] + '건';
+  }
+
+</script>
+
+<script th:inline="javascript">
+  const gradeBox = document.getElementById("grade-box");
+  const grade = [[${grade}]];
+
+  document.addEventListener("DOMContentLoaded", () => {
+    if (grade.id == 2) {
+      gradeBox.style.backgroundColor = "#d2b48c";
+    } else if (grade.id == 3) {
+      gradeBox.style.backgroundColor = "#d3d3d3";
+    } else if (grade.id == 4) {
+      gradeBox.style.backgroundColor = "#fafad2";
+    } else if (grade.id == 5) {
+      gradeBox.style.backgroundColor = "#b0e0e6";
+    }
+  });
+  function getGradeColor() {
+    if (grade.id == 2) {
+      return "tan";
+    } else if (grade.id == 3) {
+      return "lightgray";
+    } else if (grade.id == 4) {
+      return "lightgoldenrodyellow";
+    } else if (grade.id == 5) {
+      return "lightblue";
+    }
   }
 
 </script>

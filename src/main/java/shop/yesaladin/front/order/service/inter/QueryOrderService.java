@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.common.dto.PeriodQueryRequestDto;
+import shop.yesaladin.front.order.dto.OrderDetailsResponseDto;
 import shop.yesaladin.front.order.dto.OrderSheetResponseDto;
 import shop.yesaladin.front.order.dto.OrderStatusCode;
 import shop.yesaladin.front.order.dto.OrderStatusResponseDto;
@@ -27,6 +28,8 @@ public interface QueryOrderService {
      * @param pageable   페이징 처리시 사용
      * @param requestDto 조회 시작, 마지막 일자 지정된 dto
      * @return 페이지네이션 되는 주문 조회 정보
+     * @author 배수한
+     * @since 1.0
      */
     PaginatedResponseDto<OrderSummaryResponseDto> getOrderListInPeriodByMemberId(
             Pageable pageable,
@@ -61,7 +64,19 @@ public interface QueryOrderService {
      * 주문 상테에 따른 주문 개수 조회
      *
      * @return 주문 상태 & 주문 개수
+     * @author 배수한
+     * @since 1.0
      */
     Map<OrderStatusCode, Long> getOrderCountByStatus();
+
+    /**
+     * 주문 상세 조회
+     *
+     * @param orderNumber 주문 번호
+     * @return 주문 상세 조회 결과
+     * @author 배수한
+     * @since 1.0
+     */
+    OrderDetailsResponseDto getOrderDetailsDtoByOrderNumber(String orderNumber);
 
 }

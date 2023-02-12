@@ -5,13 +5,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.RequestEntity;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.config.GatewayConfig;
 import shop.yesaladin.front.coupon.dto.CouponGiveRequestDto;
+import shop.yesaladin.front.coupon.dto.RequestIdOnlyDto;
 import shop.yesaladin.front.coupon.service.inter.CommandMemberCouponService;
 
 @RequiredArgsConstructor
@@ -22,7 +22,7 @@ public class CommandMemberCouponServiceImpl implements CommandMemberCouponServic
     private final RestTemplate restTemplate;
 
     @Override
-    public ResponseEntity<ResponseDto<Void>> sendGiveRequest(CouponGiveRequestDto dto) {
+    public RequestIdOnlyDto sendGiveRequest(CouponGiveRequestDto dto) {
         URI requestUrl = UriComponentsBuilder.fromUriString(gatewayConfig.getShopUrl())
                 .pathSegment("v1", "member-coupons")
                 .build().toUri();
@@ -32,10 +32,12 @@ public class CommandMemberCouponServiceImpl implements CommandMemberCouponServic
                 HttpMethod.POST,
                 requestUrl
         );
-
-        return restTemplate.exchange(
-                requestEntity, new ParameterizedTypeReference<>() {
+        ResponseDto<RequestIdOnlyDto> response = restTemplate.exchange(
+                requestEntity,
+                new ParameterizedTypeReference<ResponseDto<RequestIdOnlyDto>>() {
                 }
-        );
+        ).getBody();
+
+        return response.getData();
     }
 }

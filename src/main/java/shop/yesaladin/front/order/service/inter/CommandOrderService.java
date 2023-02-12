@@ -21,4 +21,15 @@ public interface CommandOrderService {
      * @since 1.0
      */
     ResponseDto<OrderCreateResponseDto> createMemberOrder(OrderMemberCreateRequestDto request);
+
+    /**
+     * 회원의 주문을 숨김처리합니다.
+     *
+     * @param orderId 숨길 주문 pk
+     * @param hidden  숨김 여부
+     * @return 숨김 성공 여부
+     * @author 최예린
+     * @since 1.0
+     */
+    boolean hideOrder(Long orderId, boolean hidden);
 }

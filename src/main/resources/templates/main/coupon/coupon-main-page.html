@@ -160,6 +160,8 @@
   <div class="d-none" id="front-server-url" th:text="${frontServerUrl}"></div>
   <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+<script th:src="@{js/coupon/stomp.js}"></script>
 <script th:src="@{js/coupon/grade-coupon.js}"></script>
 </body>
 </html>

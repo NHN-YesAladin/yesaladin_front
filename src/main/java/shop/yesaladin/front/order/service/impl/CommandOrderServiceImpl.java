@@ -15,6 +15,7 @@ import shop.yesaladin.common.exception.ClientException;
 import shop.yesaladin.front.config.GatewayConfig;
 import shop.yesaladin.front.order.dto.OrderCreateResponseDto;
 import shop.yesaladin.front.order.dto.OrderMemberCreateRequestDto;
+import shop.yesaladin.front.order.dto.OrderUpdateResponseDto;
 import shop.yesaladin.front.order.service.inter.CommandOrderService;
 
 /**
@@ -27,10 +28,12 @@ import shop.yesaladin.front.order.service.inter.CommandOrderService;
 @Service
 public class CommandOrderServiceImpl implements CommandOrderService {
 
+    private static final ParameterizedTypeReference<ResponseDto<OrderCreateResponseDto>> ORDER_CREATE = new ParameterizedTypeReference<>() {
+    };
+    private static final ParameterizedTypeReference<ResponseDto<OrderUpdateResponseDto>> ORDER_UPDATE = new ParameterizedTypeReference<>() {
+    };
     private final RestTemplate restTemplate;
     private final GatewayConfig gatewayConfig;
-
-    private static final ParameterizedTypeReference<ResponseDto<OrderCreateResponseDto>> ORDER_CREATE = new ParameterizedTypeReference<>() {};
 
     /**
      * {@inheritDoc}
@@ -58,5 +61,27 @@ public class CommandOrderServiceImpl implements CommandOrderService {
             return response;
         }
         return response;
+    }
+
+    @Override
+    public boolean hideOrder(Long orderId, boolean hidden) {
+        URI uri = UriComponentsBuilder.fromHttpUrl(gatewayConfig.getShopUrl())
+                .path("/v1/orders/{orderId}")
+                .queryParam("hide", hidden)
+                .build()
+                .expand(orderId)
+                .encode()
+                .toUri();
+        try {
+            restTemplate.exchange(
+                    uri,
+                    HttpMethod.PUT,
+                    null,
+                    ORDER_UPDATE
+            ).getBody();
+        } catch (ClientException ce) {
+            return false;
+        }
+        return true;
     }
 }

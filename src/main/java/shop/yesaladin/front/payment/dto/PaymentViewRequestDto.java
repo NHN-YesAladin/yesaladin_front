@@ -3,6 +3,8 @@ package shop.yesaladin.front.payment.dto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 /**
@@ -13,10 +15,13 @@ import lombok.ToString;
  */
 
 @Builder
-@ToString
 @Getter
+@Setter
+@ToString
+@NoArgsConstructor
 @AllArgsConstructor
 public class PaymentViewRequestDto {
+
     private String ordererName;
     private String ordererPhoneNumber;
     private String recipientName;
