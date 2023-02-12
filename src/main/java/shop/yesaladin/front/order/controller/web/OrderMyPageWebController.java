@@ -3,6 +3,7 @@ package shop.yesaladin.front.order.controller.web;
 import java.time.LocalDate;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,6 +26,7 @@ import shop.yesaladin.front.order.service.inter.QueryOrderService;
  * @since 1.0
  */
 
+@Slf4j
 @RequiredArgsConstructor
 @Controller
 @RequestMapping("/mypage")
@@ -40,7 +42,7 @@ public class OrderMyPageWebController {
      * @param shouldEndDate 달력 사용시, 원하는 마지막날을 지정
      * @param pageable      페이징 처리용
      * @param model         view에서 사용
-     * @return
+     * @return 페이징된 주문 리스트
      */
     @GetMapping("/orders")
     public String getOrderList(
