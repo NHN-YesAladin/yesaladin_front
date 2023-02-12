@@ -1,5 +1,7 @@
-package shop.yesaladin.front.order.dto;
+package shop.yesaladin.front.product.dto;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,31 +9,35 @@ import lombok.NoArgsConstructor;
 /**
  * 주문한 상품의 정보를 반환하기 위한 dto 클래스입니다.
  *
- * @author 최예린
+ *  ProductOrderResponseDto 와 동일한 클래스지만 이름이 달라 deserializing 불가
+ * @author 배수한
  * @since 1.0
  */
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductOrderResponseDto {
-
+public class ProductOrderSheetResponseDto {
     private final float PERCENT_DENOMINATOR_VALUE = 100;
     private final long ROUND_OFF_VALUE = 10;
 
+    @NotNull
     private Long productId;
+    @NotBlank
     private String isbn;
+    @NotBlank
     private String title;
-    private Long actualPrice;
+    private long actualPrice;
     private int discountRate;
+    @NotNull
     private Boolean isGivenPoint;
     private int givenPointRate;
-    private int quantity;
+    private long quantity;
 
     /**
      * 상품의 할인 가격을 반환합니다.
      *
      * @return 할인 가격
-     * @author 최예린
+     * @author 배수한
      * @since 1.0
      */
     public Long getSalePrice() {
@@ -46,7 +52,7 @@ public class ProductOrderResponseDto {
      * 상품의 적립예상 포인트를 반환합니다.
      *
      * @return 적립 예상 포인트
-     * @author 최예린
+     * @author 배수한
      * @since 1.0
      */
     public Long getExpectedPoint() {
@@ -54,4 +60,5 @@ public class ProductOrderResponseDto {
                 (actualPrice * givenPointRate / PERCENT_DENOMINATOR_VALUE) / ROUND_OFF_VALUE)
                 * ROUND_OFF_VALUE : 0;
     }
+
 }

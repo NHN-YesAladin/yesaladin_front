@@ -1,7 +1,5 @@
 package shop.yesaladin.front.payment.service.impl;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import java.util.Base64;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
@@ -15,10 +13,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 import shop.yesaladin.common.dto.ResponseDto;
-import shop.yesaladin.front.category.dto.CategoryResponseDto;
 import shop.yesaladin.front.config.GatewayConfig;
-import shop.yesaladin.front.member.dto.SignUpRequestDto;
-import shop.yesaladin.front.member.dto.SignUpResponseDto;
 import shop.yesaladin.front.payment.dto.PaymentCompleteSimpleResponseDto;
 import shop.yesaladin.front.payment.dto.PaymentRequestDto;
 import shop.yesaladin.front.payment.service.inter.PaymentService;
@@ -34,12 +29,12 @@ import shop.yesaladin.front.payment.service.inter.PaymentService;
 @RequiredArgsConstructor
 @Service
 public class PaymentServiceImpl implements PaymentService {
+
     private final RestTemplate restTemplate;
     private final GatewayConfig gatewayConfig;
 
     /**
      * {@inheritDoc}
-     *
      */
     @Override
     public ResponseDto<PaymentCompleteSimpleResponseDto> confirm(PaymentRequestDto requestDto) {

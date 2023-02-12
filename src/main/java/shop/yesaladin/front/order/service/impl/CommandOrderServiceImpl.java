@@ -28,11 +28,12 @@ import shop.yesaladin.front.order.service.inter.CommandOrderService;
 @Service
 public class CommandOrderServiceImpl implements CommandOrderService {
 
+    private static final ParameterizedTypeReference<ResponseDto<OrderCreateResponseDto>> ORDER_CREATE = new ParameterizedTypeReference<>() {
+    };
+    private static final ParameterizedTypeReference<ResponseDto<OrderUpdateResponseDto>> ORDER_UPDATE = new ParameterizedTypeReference<>() {
+    };
     private final RestTemplate restTemplate;
     private final GatewayConfig gatewayConfig;
-
-    private static final ParameterizedTypeReference<ResponseDto<OrderCreateResponseDto>> ORDER_CREATE = new ParameterizedTypeReference<>() {};
-    private static final ParameterizedTypeReference<ResponseDto<OrderUpdateResponseDto>> ORDER_UPDATE = new ParameterizedTypeReference<>() {};
 
     /**
      * {@inheritDoc}
