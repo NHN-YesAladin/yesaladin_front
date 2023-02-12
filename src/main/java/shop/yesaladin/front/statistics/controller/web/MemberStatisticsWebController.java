@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import shop.yesaladin.front.member.dto.MemberStatisticsResponseDto;
 import shop.yesaladin.front.member.service.inter.QueryMemberService;
+import shop.yesaladin.front.statistics.dto.PercentageResponseDto;
 
 /**
  * 관리자 페이지의 회원 통계 페이지에 관한 WebController 입니다.
@@ -34,8 +35,11 @@ public class MemberStatisticsWebController {
     @GetMapping("/statistics/members")
     public String memberStatistics(Model model) {
         MemberStatisticsResponseDto statistics = queryMemberService.getMemberStatistics();
+        PercentageResponseDto percentage = PercentageResponseDto.calculatePercentages(statistics);
         statistics.setTotalMembers(calculateActualTotalMembers(statistics));
+
         model.addAttribute("statistics", statistics);
+        model.addAttribute("percentages", percentage);
 
         return "manager/member/statistics";
     }
@@ -49,6 +53,7 @@ public class MemberStatisticsWebController {
      * @since 1.0
      */
     private Long calculateActualTotalMembers(MemberStatisticsResponseDto dto) {
-        return dto.getTotalMembers() - (dto.getTotalBlockedMembers() + dto.getTotalWithdrawMembers());
+        return dto.getTotalMembers() - (dto.getTotalBlockedMembers()
+                + dto.getTotalWithdrawMembers());
     }
 }
