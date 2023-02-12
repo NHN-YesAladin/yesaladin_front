@@ -33,7 +33,6 @@ public class CouponCreateRequestDto {
     private Integer quantity;
     @Range(min = 1, max = 31)
     private Integer couponOpenDate;
-//    @DateTimeFormat(pattern = "HH:mm")
     private String couponOpenTime;
     private MultipartFile couponImage;
     @Positive
