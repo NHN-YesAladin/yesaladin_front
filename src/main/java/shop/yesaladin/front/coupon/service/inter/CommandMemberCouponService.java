@@ -1,5 +1,7 @@
 package shop.yesaladin.front.coupon.service.inter;
 
+import org.springframework.http.ResponseEntity;
+import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.coupon.dto.CouponGiveRequestDto;
 import shop.yesaladin.front.coupon.dto.RequestIdOnlyDto;
 
@@ -18,5 +20,4 @@ public interface CommandMemberCouponService {
      * @return
      */
     RequestIdOnlyDto sendGiveRequest(CouponGiveRequestDto dto);
-
 }
