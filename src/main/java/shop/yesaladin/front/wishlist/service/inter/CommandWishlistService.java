@@ -6,7 +6,7 @@ package shop.yesaladin.front.wishlist.service.inter;
  * @since 1.0
  * @author 김선홍
  */
-public interface WishlistService {
+public interface CommandWishlistService {
 
     /**
      * 위시리스트 등록 메서드

@@ -1,10 +1,16 @@
 package shop.yesaladin.front.product.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -36,6 +42,7 @@ public class QueryProductServiceImpl implements QueryProductService {
     private final String PATH = "/v1/products";
 
     private final RestTemplate restTemplate;
+    private final ObjectMapper objectMapper;
     private static final ParameterizedTypeReference<ResponseDto<PaginatedResponseDto<RelationsResponseDto>>> RELATION_PRODUCTION_CODE = new ParameterizedTypeReference<>() {
     };
     private static final ParameterizedTypeReference<ResponseDto<PaginatedResponseDto<ProductRecentResponseDto>>> RECENT_PRODUCTION_CODE = new ParameterizedTypeReference<>() {
@@ -50,7 +57,7 @@ public class QueryProductServiceImpl implements QueryProductService {
     @Override
     public ProductDetailResponseDto getProductDetail(long productId) {
         URI uri = UriComponentsBuilder
-                .fromUriString("http://localhost:8072")
+                .fromUriString(url)
                 .path(PATH + "/" + productId)
                 .encode()
                 .build()
@@ -189,11 +196,37 @@ public class QueryProductServiceImpl implements QueryProductService {
                 .toUriString();
 
         ResponseEntity<ResponseDto<PaginatedResponseDto<ProductRecentResponseDto>>> responseEntity = restTemplate.exchange(
-                "http://localhost:8072/v1/products/recent",
+                uri,
                 HttpMethod.GET,
                 getHttpEntity(),
                 RECENT_PRODUCTION_CODE
                 );
+        return Objects.requireNonNull(responseEntity.getBody()).getData();
+    }
+
+    @Override
+    public PaginatedResponseDto<ProductRecentResponseDto> findRecentViewProduct(
+            Set<Long> recentViewList,
+            @PageableDefault Pageable pageable
+    ) throws JsonProcessingException {
+        String uri = UriComponentsBuilder
+                .fromUriString(url)
+                .path(PATH + "/recentview")
+                .queryParam("size", pageable.getPageSize())
+                .queryParam("page", pageable.getPageNumber())
+                .toUriString();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        String requestJson = objectMapper.writeValueAsString(new ArrayList<>(recentViewList));
+        HttpEntity<String> httpEntity = new HttpEntity<>(requestJson, headers);
+
+        ResponseEntity<ResponseDto<PaginatedResponseDto<ProductRecentResponseDto>>> responseEntity = restTemplate.exchange(
+                uri,
+                HttpMethod.POST,
+                httpEntity,
+                RECENT_PRODUCTION_CODE
+        );
         return Objects.requireNonNull(responseEntity.getBody()).getData();
     }
 

@@ -204,20 +204,21 @@
                     <h2 class="align-content-center text-center mb-0 mt-3">신간</h2>
                     <div id="new-product-list" class="multiple-items col-12">
                         <div class="card m-3" th:each="recentProduct: ${recentProductList}">
-                            <div class="img-responsive img-responsive-3x4 card-img-top" th:style="'background-image: url(' + ${recentProduct.thumbnailFileUrl} + ');'"></div>
-                            <div class="card-body">
+                            <a th:href="|/products/${recentProduct.id}|">
+                                <div class="img-responsive img-responsive-3x4 card-img-top" th:style="'background-image: url(' + ${recentProduct.thumbnailFileUrl} + ');'"></div>
+                            </a>
+                                <div class="card-body">
                                 <h3 class="card-title mb-1" style="text-overflow:ellipsis; white-space: nowrap; overflow: hidden" th:text="${recentProduct.title}"></h3>
-                                <p class="text-muted mb-1" th:text="${recentProduct.author[0]} + '저 | ' + ${recentProduct.publisher}">수정 저 | 수정하우스</p>
+                                <p class="text-muted mb-1" th:text="${recentProduct.author[0]} + '저 | ' + ${recentProduct.publisher}"></p>
                                 <strong th:text="${recentProduct.sellingPrice}"></strong>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-3">
-                <div class="sticky-top" style="height: 300px; top: 30px;">
-                    <div class="card">
-                        <div class="card-body">
+            <div class="col-2">
+                    <div class="card" style="width: 13rem; height: 52rem">
+                        <div class="card-body overflow-scroll">
                             <h3 class="card-title">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hourglass" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                     <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
@@ -226,22 +227,14 @@
                                     <path d="M6 20v-2a6 6 0 1 1 12 0v2a1 1 0 0 1 -1 1h-10a1 1 0 0 1 -1 -1z"></path>
                                     <path d="M6 4v2a6 6 0 1 0 12 0v-2a1 1 0 0 0 -1 -1h-10a1 1 0 0 0 -1 1z"></path>
                                 </svg> 최근 본 상품</h3>
-                            <div id="recent-view-product-list" class="row">
-                                <div class="col-4">
-                                    <div class="img-responsive img-responsive-3x4 card-img-top"
-                                         style="background-image: url('https://api-storage.cloud.toast.com/v1/AUTH_fcb81f74e379456b8ca0e091d351a7af/yesaladinTest/product/dummy/%E1%84%8C%E1%85%A1%E1%86%B8%E1%84%8C%E1%85%B5.jpeg')"></div>
-                                </div>
-                                <div class="col-4">
-                                    <div class="img-responsive img-responsive-3x4 card-img-top"
-                                         style="background-image: url('https://api-storage.cloud.toast.com/v1/AUTH_fcb81f74e379456b8ca0e091d351a7af/yesaladinTest/product/dummy/%E1%84%89%E1%85%B3%E1%86%AF%E1%84%91%E1%85%B3%E1%86%B7%E1%84%8B%E1%85%B4%E1%84%87%E1%85%A1%E1%86%BC%E1%84%86%E1%85%AE%E1%86%AB.jpeg')"></div>
-                                </div>
-                                <div class="col-4">
-                                    <div class="img-responsive img-responsive-3x4 card-img-top"
-                                         style="background-image: url('https://api-storage.cloud.toast.com/v1/AUTH_fcb81f74e379456b8ca0e091d351a7af/yesaladinTest/product/dummy/4.jpeg')"></div>
-                                </div>
-                            </div>
+                                    <div th:each="product: ${recentViewProductList}" class="row m-auto">
+                                        <a th:href="|/products/${product.id}|">
+                                        <div class="col-6 mb-3">
+                                            <div class="img-responsive img-responsive-3x4 card-img-top" th:style="'background-image: url(' + ${product.thumbnailFileUrl} + ');'"></div>
+                                        </div>
+                                        </a>
+                                    </div>
                         </div>
-                    </div>
                     <div class="card mt-3">
                         <div class="card-body">
                             <h3 class="card-title">

@@ -1,5 +1,8 @@
 package shop.yesaladin.front.product.service.inter;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import java.util.Set;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import shop.yesaladin.front.common.dto.PageRequestDto;
 import shop.yesaladin.front.common.dto.PaginatedResponseDto;
@@ -76,7 +79,11 @@ public interface QueryProductService {
      * @author 김선홍
      * @since 1.0
      */
-    PaginatedResponseDto<RelationsResponseDto> findProductByTitle(Long id, String title, Pageable pageable);
+    PaginatedResponseDto<RelationsResponseDto> findProductByTitle(
+            Long id,
+            String title,
+            Pageable pageable
+    );
 
     /**
      * 신간 상품 조회 메서드
@@ -87,4 +94,18 @@ public interface QueryProductService {
      * @since 1.0
      */
     PaginatedResponseDto<ProductRecentResponseDto> findRecentProduct(Pageable pageable);
+
+    /**
+     * 최근 본 상품 조회 메서드
+     *
+     * @param recentViewList 최근 본 상품들의 id 리스트
+     * @param pageable 페이지 정보
+     * @return 최근 본 상품의 정보 리스트
+     * @author 김선홍
+     * @since 1.0
+     */
+    PaginatedResponseDto<ProductRecentResponseDto> findRecentViewProduct(
+            Set<Long> recentViewList,
+            Pageable pageable
+    ) throws JsonProcessingException;
 }

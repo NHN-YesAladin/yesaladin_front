@@ -136,8 +136,8 @@
                                             장바구니
                                         </button>
                                     </div>
-                                    <div class="col-6 px-1">
-                                        <button type="button" class="btn btn-dribbble w-100">
+                                    <div class="col-6 px-1" th:if="${isWishlist == false}">
+                                        <a type="button" class="btn btn-dribbble w-100" th:href="|/wishlist/${productDetailResponseDto.id}|">
                                             <svg xmlns="http://www.w3.org/2000/svg"
                                                  class="icon icon-tabler icon-tabler-heart" width="24" height="24"
                                                  viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
@@ -146,7 +146,19 @@
                                                 <path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"></path>
                                             </svg>
                                             위시리스트 추가
-                                        </button>
+                                        </a>
+                                    </div>
+                                    <div class="col-6 px-1" th:if="${isWishlist == true}">
+                                        <a type="button" class="btn btn-dribbble w-100" th:href="|/wishlist/delete/${productDetailResponseDto.id}|">
+                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                 class="icon icon-tabler icon-tabler-heart" width="24" height="24"
+                                                 viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                                                 stroke-linecap="round" stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                                <path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"></path>
+                                            </svg>
+                                            위시리스트 삭제
+                                        </a>
                                     </div>
                                 </div>
                                 <!-- 정기구독 불가능 -->
@@ -255,7 +267,7 @@
                         </div>
                         <div class="col-12" th:if="${productDetailResponseDto.getTags().size() != 0}">
                             <h2>태그</h2>
-                            <span class="badge bg-azure-lt" th:each="tag : ${productDetailResponseDto.getTags()}" th:text="|#${tag.name}|" style="margin: 2px"></span>
+                            <span class="badge bg-azure-lt" th:each="tag : ${productDetailResponseDto.getTags()}" th:text="|${tag.name}|" style="margin: 2px"></span>
                         </div>
                         <div class="col-12">
                             <h2>목차</h2>
