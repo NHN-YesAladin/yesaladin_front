@@ -28,10 +28,12 @@ public class RateCouponCreateDto extends CouponCreateDto {
             String name,
             Boolean isUnlimited,
             Integer quantity,
-            Resource file,
+            Resource imageFile,
             Integer duration,
             LocalDate expirationDate,
             String couponTypeCode,
+            Integer couponOpenDate,
+            String couponOpenTime,
             int minOrderAmount,
             int maxDiscountAmount,
             int discountRate,
@@ -45,10 +47,12 @@ public class RateCouponCreateDto extends CouponCreateDto {
                 name,
                 isUnlimited,
                 quantity,
-                file,
+                imageFile,
                 duration,
                 expirationDate,
-                couponTypeCode
+                couponTypeCode,
+                couponOpenDate,
+                couponOpenTime
         );
         this.minOrderAmount = minOrderAmount;
         this.maxDiscountAmount = maxDiscountAmount;
