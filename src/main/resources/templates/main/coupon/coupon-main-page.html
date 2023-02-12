@@ -139,7 +139,9 @@
                 '전체 상품'
               </li>
             </ul>
-            <button class="w-100 btn btn-lg btn-primary issue-btn" type="button">발급받기
+            <button class="w-100 btn btn-lg btn-primary issue-btn"
+                    th:attr="data-triggerTypeCode=${gradeCode}, data-couponId=${coupon.couponSummaryDto.id}"
+                    type="button">발급받기
             </button>
           </div>
         </div>
@@ -155,6 +157,8 @@
     </div>
   </main>
 
+  <div class="d-none" id="shop-server-url" th:text="${shopServerUrl}"></div>
+  <div class="d-none" id="front-server-url" th:text="${frontServerUrl}"></div>
   <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
 </div>
 <script th:src="@{js/coupon/grade-coupon.js}"></script>
