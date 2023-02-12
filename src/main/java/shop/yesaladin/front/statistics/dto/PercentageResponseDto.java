@@ -39,16 +39,15 @@ public class PercentageResponseDto {
      * @since 1.0
      */
     public static PercentageResponseDto calculatePercentages(MemberStatisticsResponseDto dto) {
-        double members = (double) (dto.getTotalMembers() - (dto.getTotalBlockedMembers()
-                + dto.getTotalWithdrawMembers())) / (double) dto.getTotalMembers() * 100;
-        double blocked = ((double) dto.getTotalBlockedMembers() / (double) dto.getTotalMembers()) * 100;
-        double withdraws = ((double) dto.getTotalWithdrawMembers() / (double) dto.getTotalMembers()) * 100;
-
-        double white = ((double) dto.getTotalWhiteGrades() / (double) dto.getTotalMembers()) * 100;
-        double bronze = ((double) dto.getTotalBronzeGrades() / (double) dto.getTotalMembers()) * 100;
-        double silver = ((double) dto.getTotalSilverGrades() / (double) dto.getTotalMembers()) * 100;
-        double gold = ((double) dto.getTotalGoldGrades() / (double) dto.getTotalMembers()) * 100;
-        double platinum = ((double) dto.getTotalPlatinumGrades() / (double) dto.getTotalMembers()) * 100;
+        double members = getPercentage(dto.getTotalMembers() - (dto.getTotalBlockedMembers()
+                + dto.getTotalWithdrawMembers()), dto.getTotalMembers());
+        double blocked = getPercentage(dto.getTotalBlockedMembers(), dto.getTotalMembers());
+        double withdraws = getPercentage(dto.getTotalWithdrawMembers(), dto.getTotalMembers());
+        double white = getPercentage(dto.getTotalWhiteGrades(), dto.getTotalMembers());
+        double bronze = getPercentage(dto.getTotalBronzeGrades(), dto.getTotalMembers());
+        double silver = getPercentage(dto.getTotalSilverGrades(), dto.getTotalMembers());
+        double gold = getPercentage(dto.getTotalGoldGrades(), dto.getTotalMembers());
+        double platinum = getPercentage(dto.getTotalPlatinumGrades(), dto.getTotalMembers());
 
         return PercentageResponseDto.builder()
                 .members(String.format("%.2f", members))
@@ -60,5 +59,10 @@ public class PercentageResponseDto {
                 .gold(String.format("%.2f", gold))
                 .platinum(String.format("%.2f", platinum))
                 .build();
+    }
+
+    private static double getPercentage(Long target, Long base) {
+        int totalPercentage = 100;
+        return ((double) target / (double) base) * totalPercentage;
     }
 }
