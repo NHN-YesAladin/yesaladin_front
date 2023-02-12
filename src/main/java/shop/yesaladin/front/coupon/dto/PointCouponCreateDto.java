@@ -22,10 +22,12 @@ public class PointCouponCreateDto extends CouponCreateDto {
             String name,
             Boolean isUnlimited,
             Integer quantity,
-            Resource file,
+            Resource imageFile,
             Integer duration,
             LocalDate expirationDate,
             String couponTypeCode,
+            Integer couponOpenDate,
+            String couponOpenTime,
             Integer chargePointAmount
     ) {
         super(
@@ -33,10 +35,12 @@ public class PointCouponCreateDto extends CouponCreateDto {
                 name,
                 isUnlimited,
                 quantity,
-                file,
+                imageFile,
                 duration,
                 expirationDate,
-                couponTypeCode
+                couponTypeCode,
+                couponOpenDate,
+                couponOpenTime
         );
         this.chargePointAmount = chargePointAmount;
     }
