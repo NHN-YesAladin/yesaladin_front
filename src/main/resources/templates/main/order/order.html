@@ -33,13 +33,13 @@
 </script>
 <span sec:authorize="isAuthenticated()" th:with="auth=true"></span>
 <span sec:authorize="!isAuthenticated()" th:with="auth=false"></span>
-<div class="wrapper">
-  <!-- TODO 1 : HEADER -->
-  <div th:replace="~{common/fragments/header :: fragment-header}"></div>
+<form action="/orders/member" method="post">
+  <div class="wrapper">
+    <!-- TODO 1 : HEADER -->
+    <div th:replace="~{common/fragments/header :: fragment-header}"></div>
 
-  <!-- TODO 2 : NAV-BAR -->
-  <div th:replace="~{common/fragments/navbar :: fragment-nav-bar}"></div>
-  <form action="/orders/member" method="post">
+    <!-- TODO 2 : NAV-BAR -->
+    <div th:replace="~{common/fragments/navbar :: fragment-nav-bar}"></div>
     <div class="page-wrapper">
       <div class="container-xxl py-4 col-12">
         <!-- 주문서 Header -->
@@ -211,8 +211,8 @@
                           <!--회원 : 쿠폰 사용 -->
                           <div sec:authorize="isAuthenticated()">
                             <!--TODO 개별 쿠폰 적용하기-->
-                            <button sec:authorize="isAuthenticated()" type="button"
-                                    class="btn btn-outline-secondary btn-sm float-end">
+                            <button type="button" class="btn btn-outline-secondary btn-sm float-end"
+                                    th:onclick="|openCouponModal(isbn, ${product.isbn})|">
                               쿠폰 적용
                             </button>
                             <span hidden="hidden">
@@ -338,33 +338,36 @@
         </div>
       </div>
     </div>
-  </form>
-</div>
+  </div>
 
-<!-- TODO 4 : footer -->
-<div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
+  <!-- TODO 4 : footer -->
+  <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
 
-<!--배송지 Modal-->
-<div sec:authorize="isAuthenticated()" class="modal modal-blur fade" id="modal-report" tabindex="-1"
-     aria-hidden="true"
-     style="display: none;">
-  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <!-- 배송지 Header -->
-      <div class="modal-header">
-        <h5 class="modal-title">배송지 선택</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <!-- 배송지 Body -->
-      <div class="modal-body">
-        <small class="form-label">새로운 배송지를 선택하고 싶다면 추가 버튼을 클릭하여 새로운 배송지를 등록한 후 사용해주시길 바랍니다.</small>
-        <div hidden="hidden" class="col-12 mb-1" id="member-address-template">
-          <div class="row p-0" style="height: fit-content">
-            <div class="col-11 col-sm-10 ps-0">
-              <label class="form-selectgroup-item">
-                <input type="radio" class="form-selectgroup-input" name="ordererAddressId" checked
-                       id="member-address-template-input" value="">
-                <span class="form-selectgroup-label d-flex align-items-center p-3">
+  <!--배송지 Modal-->
+  <div sec:authorize="isAuthenticated()" class="modal modal-blur fade" id="modal-report"
+       tabindex="-1" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <!-- 배송지 Header -->
+        <div class="modal-header">
+          <h5 class="modal-title">배송지 선택</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"
+                  aria-label="Close"></button>
+        </div>
+        <!-- 배송지 Body -->
+        <div class="modal-body text-center">
+          <small class="form-label">
+            새로운 배송지를 선택하고 싶다면
+            <strong>등록 버튼</strong>
+            을 클릭하여 새로운 배송지를 등록한 후 사용해주시길 바랍니다.
+          </small>
+          <div hidden="hidden" class="col-12 mb-1" id="member-address-template">
+            <div class="row p-0" style="height: fit-content">
+              <div class="col-11 col-sm-10 ps-0">
+                <label class="form-selectgroup-item">
+                  <input type="radio" class="form-selectgroup-input" name="ordererAddressId" checked
+                         id="member-address-template-input" value="">
+                  <span class="form-selectgroup-label d-flex align-items-center p-3">
                     <span class="me-3">
                       <span class="form-selectgroup-check"></span>
                     </span>
@@ -373,27 +376,27 @@
                             id="member-address-template-label"></span>
                     </span>
                   </span>
-              </label>
-            </div>
-            <div class="col-1 col-sm-2 p-0">
-              <a class="btn btn-outline-danger h-full w-full" id="member-address-template-cancel">
-                삭제
-              </a>
+                </label>
+              </div>
+              <div class="col-1 col-sm-2 p-0">
+                <a class="btn btn-outline-danger h-full w-full" id="member-address-template-cancel">
+                  삭제
+                </a>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="form-selectgroup-boxes row mb-3 overflow-auto"
-             id="member-addresses-group" style="height: 250px;">
-          <div class="col-12 mb-1" th:id="|member-addresses-${address.id}|"
-               th:each="address:${info.memberAddress}">
-            <div class="row p-0" style="height: fit-content">
-              <div class="col-11 col-sm-10 ps-0">
-                <label class="form-selectgroup-item">
-                  <input type="radio" class="form-selectgroup-input"
-                         th:id="|orderer-address-id-${address.id}|"
-                         name="ordererAddressId" th:value="${address.id}"
-                         th:checked="${address.id == info.getDefaultAddress().id}">
-                  <span class="form-selectgroup-label d-flex align-items-center p-3">
+          <div class="form-selectgroup-boxes row mb-3 overflow-auto"
+               id="member-addresses-group" style="height: 250px;">
+            <div class="col-12 mb-1" th:id="|member-addresses-${address.id}|"
+                 th:each="address:${info.memberAddress}">
+              <div class="row p-0" style="height: fit-content">
+                <div class="col-11 col-sm-10 ps-0">
+                  <label class="form-selectgroup-item">
+                    <input type="radio" class="form-selectgroup-input"
+                           th:id="|orderer-address-id-${address.id}|"
+                           name="ordererAddressId" th:value="${address.id}"
+                           th:checked="${address.id == info.getDefaultAddress().id}">
+                    <span class="form-selectgroup-label d-flex align-items-center p-3">
                     <span class="me-3">
                       <span class="form-selectgroup-check"></span>
                     </span>
@@ -403,88 +406,126 @@
                             th:text="${address.address}"></span>
                     </span>
                   </span>
-                </label>
+                  </label>
+                </div>
+                <div class="col-1 col-sm-2 p-0">
+                  <a class="btn btn-outline-danger h-full w-full"
+                     th:onclick="|deleteAddress(${address.id})|">
+                    삭제
+                  </a>
+                </div>
               </div>
-              <div class="col-1 col-sm-2 p-0">
-                <a class="btn btn-outline-danger h-full w-full"
-                   th:onclick="|deleteAddress(${address.id})|">
-                  삭제
-                </a>
+            </div>
+          </div>
+        </div>
+        <hr class="mt-0 mb-1">
+        <!-- 배송지 Footer -->
+        <div class="modal-footer" id="member-address-footer">
+          <div class="row w-full ms-0 me-0">
+            <div class="col-3 ps-0 pe-0">
+              <button type="button" class="btn btn-info link-secondary w-full" onclick="openAddressForm()">
+                등록
+              </button>
+            </div>
+            <div class="col-6"></div>
+            <div class="col-3 ps-0 pe-0">
+              <button type="button" class="btn btn-primary ms-auto w-full" onclick="setAddress()">
+                선택
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- 배송지 등록 Form-->
+        <div class="modal-body" id="member-address-form" hidden="hidden">
+          <h5 class="modal-title">새로운 배송지 등록</h5>
+          <div class="card-body p-0">
+            <div class="row w-full ms-0" onclick="getAddress(true)">
+              <div class="col-3 ps-0">
+                <input type="text" class="form-control" id="member-address-form-post"
+                       placeholder="우편번호" readonly>
+              </div>
+              <div class="col-9 ps-0 pe-0">
+                <input type="text" class="form-control" id="member-address-form-road"
+                       placeholder="도로명 주소" readonly>
+              </div>
+            </div>
+            <div class="row w-full ms-0 mt-1 mb-2">
+              <input type="text" class="form-control" id="member-address-form-detail"
+                     placeholder="상세 주소">
+            </div>
+            <div class="row w-full ms-0">
+              <div class="col-3 ps-0">
+                <button type="button" class="btn btn-outline-muted link-secondary w-full" onclick="closeAddressForm()">
+                  취소
+                </button>
+              </div>
+              <div class="col-9 ps-0 pe-0 float-end">
+                <button type="button" class="btn btn-primary link-secondary w-full" onclick="createAddress()">
+                  새로운 배송지 등록
+                </button>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <!-- 배송지 Footer -->
-      <div class="modal-footer" id="member-address-footer">
-        <button type="button" class="btn btn-link link-secondary" onclick="openAddressForm()">
-          등록
-        </button>
-        <button type="button" class="btn btn-primary ms-auto" onclick="setAddress()">
-          선택
-        </button>
-      </div>
-      <!-- 배송지 등록 Form-->
-      <div class="modal-body" id="member-address-form" hidden="hidden">
-        <h1 class="hr-text">새로운 배송지 등록</h1>
-        <div class="card-body p-0">
-          <div class="row w-full ms-0" onclick="getAddress(true)">
-            <div class="col-3 ps-0">
-              <input type="text" class="form-control" id="member-address-form-post"
-                     placeholder="우편번호" readonly>
-            </div>
-            <div class="col-9 ps-0 pe-0">
-              <input type="text" class="form-control" id="member-address-form-road"
-                     placeholder="도로명 주소" readonly>
-            </div>
-          </div>
-          <input type="text" class="form-control mt-1" id="member-address-form-detail"
-                 placeholder="상세 주소">
-          <button type="button" class="btn btn-link link-secondary" onclick="closeAddressForm()">
-            취소
-          </button>
-          <button type="button" class="btn btn-link link-secondary" onclick="createAddress()">
-            새로운 배송지 등록
-          </button>
-        </div>
-      </div>
-
     </div>
-
   </div>
-</div>
 
+  <!--쿠폰 Modal-->
+  <div sec:authorize="isAuthenticated()" class="modal modal-blur fade" id="coupon-modal"
+       tabindex="-1" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <!-- 쿠폰 Header -->
+        <div class="modal-header">
+          <h5 class="modal-title">쿠폰 선택</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"
+                  aria-label="Close"></button>
+        </div>
+        <!-- 쿠폰 Body -->
+        <div class="modal-body">
+          <div class="form-selectgroup-boxes row mb-3 overflow-auto"
+               id="member-coupon-group" style="height: 250px;">
+            <div class="col-12 mb-1" th:id="|member-coupon-${coupon.couponCode}|"
+                 th:each="coupon:${info.memberCoupons}">
+              <div class="row p-0" style="height: fit-content">
+                <div class="col-11 col-sm-10 ps-0">
+                  <label class="form-selectgroup-item">
+                    <input type="radio" class="form-selectgroup-input"
+                           th:id="|orderer-coupon-id-${coupon.couponCode}|"
+                           name="ordererAddressId" th:value="${coupon.couponCode}">
+                    <span class="form-selectgroup-label d-flex align-items-center p-3">
+                    <span class="me-3">
+                      <span class="form-selectgroup-check"></span>
+                    </span>
+                    <span class="form-selectgroup-label-content">
+                      <span class="form-selectgroup-title strong mb-1"
+                            th:id="|orderer-address-${address.id}|"
+                            th:text="${address.address}"></span>
+                    </span>
+                  </span>
+                  </label>
+                </div>
+                <div class="col-1 col-sm-2 p-0">
+                  <a class="btn btn-outline-danger h-full w-full"
+                     th:onclick="|deleteAddress(${address.id})|">
+                    삭제
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
 <div th:replace="~{common/fragments/alert :: custom-alert}"></div>
-
-<div class="d-none" id="shop-server-url"
-     th:data-url="${@environment.getProperty('yesaladin.gateway.shop')}"></div>
-<div class="d-none" id="front-server-url"
-     th:data-url="${@environment.getProperty('yesaladin.front.url')}"></div>
 </body>
 
 <!--배송지 관련 함수-->
 <script th:inline="javascript">
   const frontUrl = [[${@environment.getProperty('yesaladin.front.url')}]];
-
-  async function deleteAddress(id) {
-
-    await fetch(`${frontUrl}/api/address/${id}`, {
-      method: "Delete",
-      headers: {
-        "Content-Type": "application/json"
-      }
-    }).then((resp) => {
-      return resp.json();
-    }).then((data) => {
-      if (!data) {
-        alert("배송지 삭제에 실패하였습니다.");
-        return;
-      }
-      const memberAddress = document.getElementById("member-addresses-" + id);
-      memberAddress.remove();
-    })
-
-  }
 
   const addressModal = document.getElementById("modal-report");
   const memberAddressForm = document.getElementById("member-address-form");
@@ -492,6 +533,9 @@
   const memberAddressFormPost = document.getElementById("member-address-form-post");
   const memberAddressFormRoad = document.getElementById("member-address-form-road");
   const memberAddressFormDetail = document.getElementById("member-address-form-detail");
+
+  const memberAddressGroup = document.getElementById("member-addresses-group");
+  const memberAddressTemplate = document.getElementById("member-address-template");
 
   function openAddressForm() {
     memberAddressFooter.hidden = true;
@@ -525,8 +569,25 @@
     alert("주소를 선택해주세요.");
   }
 
-  const memberAddressGroup = document.getElementById("member-addresses-group");
-  const memberAddressTemplate = document.getElementById("member-address-template");
+  async function deleteAddress(id) {
+
+    await fetch(`${frontUrl}/api/address/${id}`, {
+      method: "Delete",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    }).then((resp) => {
+      return resp.json();
+    }).then((data) => {
+      if (!data) {
+        alert("배송지 삭제에 실패하였습니다.");
+        return;
+      }
+      const memberAddress = document.getElementById("member-addresses-" + id);
+      memberAddress.remove();
+    })
+
+  }
 
   async function createAddress() {
     const postAddress = memberAddressFormPost.value;
@@ -576,6 +637,7 @@
     })
   }
 </script>
+
 <!--주문 금액 변경 시 반영하는 함수-->
 <script th:inline="javascript">
   document.addEventListener("DOMContentLoaded", () => {
@@ -748,7 +810,6 @@
   }
 </script>
 
-
 <!-- 비회원 주문 -->
 <script th:inline="javascript">
   const expectedShippingDateDoc = document.getElementById("datepicker");
@@ -781,7 +842,7 @@
       ordererDetailAddress.value].join("/");
 
     // orderCheck(this);
-    console.log("주문 생성 시작")
+
     await fetch(`${shopUrl}/v1/orders/non-member`, {
       method: "POST",
       headers: {
@@ -829,6 +890,7 @@
     });
   }
 </script>
+<!--다음 주소지 API-->
 <script>
   function getAddress(isForm) {
     new daum.Postcode({
@@ -876,4 +938,5 @@
     }).open();
   }
 </script>
+
 </html>
