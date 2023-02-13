@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<!--
+* Tabler - Premium and Open Source dashboard template with responsive and high quality UI.
+* @version 1.0.0-beta5
+* @link https://tabler.io
+* Copyright 2018-2022 The Tabler Authors
+* Copyright 2018-2022 codecalm.net Paweł Kuna
+* Licensed under MIT (https://github.com/tabler/tabler/blob/master/LICENSE)
+-->
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+  <title>Yes Aladin!</title>
+  <!-- CSS files -->
+  <link th:href="@{/css/tabler.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-flags.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-payments.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-vendors.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/demo.min.css}" rel="stylesheet"/>
+
+  <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+</head>
+<body>
+<!-- Libs JS -->
+<script type="text/javascript" th:src="@{/libs/apexcharts/dist/apexcharts.min.js}"></script>
+<!-- Tabler Core -->
+<script type="text/javascript" th:src="@{/js/tabler.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/demo.min.js}"></script>
+<div class="wrapper">
+  <!-- TODO 1 : Head -->
+  <div th:replace="~{common/fragments/header :: fragment-header}"></div>
+  <!-- TODO 2 : NAV-BAR -->
+  <div th:replace="~{common/fragments/navbar :: fragment-nav-bar}"></div>
+
+  <div class="page-header d-print-none">
+    <div class="container-xl">
+      <div class="row g-2 align-items-center">
+        <div class="col">
+          <h2 class="page-title">
+            위시리스트
+          </h2>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="page-body">
+    <div class="container-xl">
+      <div class="card">
+        <div class="row g-0">
+          <div class="col-xl-2 col-lg-2 bg-secondary-lt">
+            <div class="card-body">
+              <div th:replace="~{mypage/fragments/sidebar :: fragment-side-bar}"></div>
+            </div>
+          </div>
+          <div class="col-xl-10 col-lg-10">
+            <div class="card-body">
+              <!-- TODO 3: BODY -->
+              <div class="w-full mb-3">
+                <h2 class="sub-title d-inline">위시리스트</h2>
+              </div>
+              <div class="border-1 border-muted w-auto m-3">
+                <div class="row row-cards w-full">
+                  <div class="col-4" th:each="product:${wishlist}">
+                    <div class="card card-sm">
+                      <div class="card-header">
+                        <h3 class="card-title col-10 m-1" th:text="|${product.title}|"
+                            style="text-overflow:ellipsis; white-space: nowrap; overflow: hidden"></h3>
+                      </div>
+                      <div class="card-body row g-7 g-md-3">
+                        <div class="col-7">
+                          <div class="img-responsive img-responsive-3x4 rounded-3 border"
+                               th:style="|background-image: url(${product.thumbnailFileUrl})|"
+                               width="300"
+                               height="400"></div>
+                        </div>
+                        <div class="col-4">
+                          <p th:text="${product.getAuthor().get(0)} + ' 저 | '+  ${product.publisher}"></p>
+                          <h3 th:text="|${product.sellingPrice}원|" style="display: inline"
+                              th:t></h3>
+                          <p class="page-pretitle" th:text="|(${product.rate}% 할인)|"
+                             style="display: inline"></p><br/>
+                        </div>
+                      </div>
+                      <div class="card-footer">
+                        <div class="d-flex">
+                          <a th:href="|/products/${product.id}|"
+                             class="btn btn-dark btn-pill col-7"
+                             th:if="${product.isForcedOutOfStock || product.quantity <= 0}">
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 class="icon icon-tabler icon-tabler-vocabulary-off" width="24"
+                                 height="24"
+                                 viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                 fill="none"
+                                 stroke-linecap="round" stroke-linejoin="round">
+                              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                              <path
+                                  d="M7 3h3a2 2 0 0 1 2 2a2 2 0 0 1 2 -2h6a1 1 0 0 1 1 1v13m-2 2h-5a2 2 0 0 0 -2 2a2 2 0 0 0 -2 -2h-6a1 1 0 0 1 -1 -1v-14c0 -.279 .114 -.53 .298 -.712m8.702 1.712v3m0 4v9m-5 -10h1m8 -4h1m-1 4h1m-14 -8l18 18"></path>
+                            </svg>
+                            품절
+                          </a>
+                          <a th:href="|/products/${product.id}|"
+                             class="btn btn-primary btn-pill col-7"
+                             th:if="${!product.isForcedOutOfStock && product.quantity > 0}">
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 class="icon icon-tabler icon-tabler-hand-click" width="24"
+                                 height="24"
+                                 viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                 fill="none"
+                                 stroke-linecap="round" stroke-linejoin="round">
+                              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                              <path
+                                  d="M8 13v-8.5a1.5 1.5 0 0 1 3 0v7.5m0 -.5v-2a1.5 1.5 0 0 1 3 0v2.5m0 -1.5a1.5 1.5 0 0 1 3 0v1.5m0 -.5a1.5 1.5 0 0 1 3 0v4.5a6 6 0 0 1 -6 6h-2h.208a6 6 0 0 1 -5.012 -2.7l-.196 -.3c-.312 -.479 -1.407 -2.388 -3.286 -5.728a1.5 1.5 0 0 1 .536 -2.022a1.867 1.867 0 0 1 2.28 .28l1.47 1.47m-3 -10l-1 -1m0 5h-1m11 -4l1 -1m0 4h1"></path>
+                            </svg>
+                            상세보기
+                          </a>
+                          <a th:data-id="${product.id}"
+                             th:onclick="wishlistDelete(this.getAttribute('data-id'))"
+                             class="btn btn-danger btn-pill ms-auto">
+                            삭제
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card-footer d-flex align-items-center" th:if="${totalPage != 0}">
+    <ul class="pagination m-0 ms-auto"
+        th:with="start=${(currentPage / 20) * 20 + 1},
+                    last=(${start + 19 < totalPage ? start + 19 : totalPage})">
+      <li class="page-item" th:classappend="${currentPage < 20 ? 'disabled' : ''}">
+        <a class="page-link"
+           th:href="@{${url} + '?page=' + ${(currentPage / 20) * 20 - 1} + '&size=20'}"
+           tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
+               viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+               stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+            <polyline points="15 6 9 12 15 18"></polyline>
+          </svg>
+          prev
+        </a>
+      </li>
+      <li class="page-item" th:each="num: ${#numbers.sequence(start, last)}"
+          th:classappend="${(currentPage + 1) == num ? 'disabled': ''}">
+        <a class="page-link" th:href="@{${url} + '?page=' + ${num - 1} + '&size=20'}"
+           th:text="${num}"></a>
+      </li>
+      <li class="page-item"
+          th:classappend="${currentPage / 20 == (totalPage - 1) / 20 ? 'disabled' : ''}">
+        <a class="page-link"
+           th:href="@{${url} + '?page=' + ${(currentPage / 20 + 1) * 20} + '&size=20'}">
+          next
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
+               viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+               stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+            <polyline points="9 6 15 12 9 18"></polyline>
+          </svg>
+        </a>
+      </li>
+    </ul>
+  </div>
+  <!-- TODO 4 : footer -->
+  <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
+</div>
+</body>
+<script>
+  function wishlistDelete(id, page) {
+    const check = window.confirm('위시리스트를 제거하시겠습니까?')
+    if (check === true) {
+      location.replace('/interest/wishlist/delete?productid=' + id)
+    }
+  }
+</script>
+</html>
