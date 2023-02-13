@@ -71,8 +71,9 @@
                 </div>
                 <div class="card-body row g-2 g-md-3">
                   <div class="col-4">
-                    <div class="img-responsive img-responsive-3x4 rounded-3 border"
-                         th:style="|background-image: url(${product.thumbnailFileUrl})|" width="300" height="400"></div>
+                    <a th:href="|/products/${product.id}|" target="_new">
+                      <img th:src="${product.thumbnailFileUrl}" class="border rounded-3">
+                    </a>
                   </div>
                   <div class="col-8">
                     <div th:each="author, j : ${product.authors}" style="display: inline">
