@@ -205,7 +205,8 @@
                           <!--회원 : 쿠폰 사용 -->
                           <div sec:authorize="isAuthenticated()">
                             <!--TODO 개별 쿠폰 적용하기-->
-                            <button type="button" class="btn btn-outline-secondary btn-sm float-end">
+                            <button type="button" class="btn btn-outline-secondary btn-sm float-end btn-modal"
+                                    data-bs-toggle="modal" data-bs-target="#coupon-modal">
                               쿠폰 적용
                             </button>
                             <span hidden="hidden">
@@ -477,13 +478,14 @@
         <div class="modal-body">
           <div class="form-selectgroup-boxes row mb-3 overflow-auto"
                id="member-coupon-group" style="height: 250px;">
-            <div class="col-12 mb-1" th:id="|member-coupon-${coupon.couponCode}|"
-                 th:each="coupon:${info.memberCoupons}">
+            <div class="col-12 mb-1"
+                 th:each="coupon:${info.memberCoupons}"
+                 th:id="|member-coupon-${coupon.couponCode}|">
               <div class="row p-0" style="height: fit-content">
                 <div class="col-11 col-sm-10 ps-0">
                   <label class="form-selectgroup-item">
                     <input type="radio" class="form-selectgroup-input"
-                           th:id="|orderer-coupon-id-${coupon.couponCode}|"
+                           th:id="|member-coupon-code-${coupon.couponCode}|"
                            name="ordererAddressId" th:value="${coupon.couponCode}">
                     <span class="form-selectgroup-label d-flex align-items-center p-3">
                     <span class="me-3">
@@ -491,17 +493,21 @@
                     </span>
                     <span class="form-selectgroup-label-content">
                       <span class="form-selectgroup-title strong mb-1"
-                            th:id="|orderer-address-${address.id}|"
-                            th:text="${address.address}"></span>
+                            th:id="|member-coupon-applied-amount-${coupon.couponCode}|"
+                            th:text="${coupon.name}">
+
+                      </span>
                     </span>
                   </span>
                   </label>
                 </div>
                 <div class="col-1 col-sm-2 p-0">
-                  <a class="btn btn-outline-danger h-full w-full"
-                     th:onclick="|deleteAddress(${address.id})|">
-                    삭제
-                  </a>
+                  <button th:id="|use-button-${coupon.couponCode}|" type="button"
+                          th:data-coupon-code="${coupon.couponCode}"
+                          onclick="useCoupon(this)"
+                          class="btn btn-outline-primary h-full w-full">
+                    사용
+                  </button>
                 </div>
               </div>
             </div>
@@ -514,7 +520,12 @@
 <div th:replace="~{common/fragments/alert :: custom-alert}"></div>
 <div th:replace="~{common/utils/success :: custom-success}"></div>
 </body>
+<!--쿠폰 관련 함수-->
+<script th:inline="javascript">
+  function useCoupon(code) {
 
+  }
+</script>
 <!--배송지 관련 함수-->
 <script th:inline="javascript">
   const frontUrl = [[${@environment.getProperty('yesaladin.front.url')}]];
