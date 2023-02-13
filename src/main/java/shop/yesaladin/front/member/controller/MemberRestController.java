@@ -3,18 +3,21 @@ package shop.yesaladin.front.member.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import shop.yesaladin.common.dto.ResponseDto;
+import shop.yesaladin.front.member.dto.MemberAddressRequestDto;
+import shop.yesaladin.front.member.dto.MemberAddressResponseDto;
 import shop.yesaladin.front.member.dto.MemberBlockRequestDto;
 import shop.yesaladin.front.member.dto.MemberBlockResponseDto;
-import shop.yesaladin.front.member.dto.MemberGradeQueryResponseDto;
 import shop.yesaladin.front.member.dto.MemberProfileExistResponseDto;
 import shop.yesaladin.front.member.dto.MemberUnblockResponseDto;
 import shop.yesaladin.front.member.dto.MemberWithdrawResponseDto;
+import shop.yesaladin.front.member.service.inter.CommandMemberAddressService;
 import shop.yesaladin.front.member.service.inter.QueryMemberService;
 
 /**
@@ -29,6 +32,7 @@ import shop.yesaladin.front.member.service.inter.QueryMemberService;
 public class MemberRestController {
 
     private final QueryMemberService queryMemberService;
+    private final CommandMemberAddressService commandMemberAddressService;
 
     /**
      * 회원 가입 시 사용하고자 하는 닉네임이 존재하는지 체크합니다.
@@ -100,7 +104,7 @@ public class MemberRestController {
      * 관리자가 회원을 차단하는 메서드
      *
      * @param requestDto 차단 사유
-     * @param loginId     차단할 회원의 이유
+     * @param loginId    차단할 회원의 이유
      * @return 차단 결과
      * @author 김선홍
      * @since 1.0
@@ -122,7 +126,7 @@ public class MemberRestController {
      * @since 1.0
      */
     @GetMapping("/unblock/{loginid}")
-    public MemberUnblockResponseDto manageMemberUnblockByLoginId(@PathVariable(name = "loginid")String loginId) {
+    public MemberUnblockResponseDto manageMemberUnblockByLoginId(@PathVariable(name = "loginid") String loginId) {
         return queryMemberService.manageMemberUnBlockByLoginId(loginId);
     }
 
@@ -135,7 +139,37 @@ public class MemberRestController {
      * @since 1.0
      */
     @GetMapping("/withdraw/{loginid}")
-    public MemberWithdrawResponseDto manageMemberWithdrawByLoginId(@PathVariable(name = "loginid")String loginId) {
+    public MemberWithdrawResponseDto manageMemberWithdrawByLoginId(@PathVariable(name = "loginid") String loginId) {
         return queryMemberService.manageMemberWithdrawByLoginId(loginId);
+    }
+
+    /**
+     * 회원의 배송지를 등록합니다.
+     *
+     * @param request 배송지 정보
+     * @return 배송지 등록 성공 여부
+     * @author 최예린
+     * @since 1.0
+     */
+    @PostMapping("/api/address")
+    public MemberAddressResponseDto createMemberAddress(@RequestBody MemberAddressRequestDto request) {
+        ResponseDto<MemberAddressResponseDto> response = commandMemberAddressService.createMemberAddress(
+                request.toCreateRequestDto());
+        return (response.isSuccess()) ? response.getData() : null;
+    }
+
+    /**
+     * 회원의 배송지를 삭제합니다.
+     *
+     * @param addressId 삭제할 배송지 pk
+     * @return 배송지 삭제 성공 여부
+     * @author 최예린
+     * @since 1.0
+     */
+    @DeleteMapping("/api/address/{addressId}")
+    public boolean deleteMemberAddress(@PathVariable Long addressId) {
+        ResponseDto<Object> response = commandMemberAddressService.deleteAddress(addressId);
+
+        return response.isSuccess();
     }
 }

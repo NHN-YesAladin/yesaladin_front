@@ -98,7 +98,7 @@ function addChildCategoryItemsToDiv(parentCategoryId) {
       "#children-category-group");
   childrenCategoryGroup.innerHTML = "";
 
-  categories[parentCategoryId].forEach(c => {
+  categories[parentCategoryId].data.forEach(c => {
     const item = document.createElement("li");
     item.classList.add("list-group-item", "child-category-item");
     item.textContent = c.name;
@@ -148,7 +148,7 @@ async function initParentCategories() {
   try {
     const response = await fetch(`${SHOP_SERVER}/v1/categories?cate=parents`);
     const parsedBody = await response.json();
-    parsedBody.forEach(c => parentCategories.push(c));
+    parsedBody.data.forEach(c => parentCategories.push(c));
     addParentCategoryItemsToDiv()
   } catch (e) {
     console.error(e);

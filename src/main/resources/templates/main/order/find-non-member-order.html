@@ -1,0 +1,87 @@
+<!doctype html>
+<!--
+* Tabler - Premium and Open Source dashboard template with responsive and high quality UI.
+* @version 1.0.0-beta5
+* @link https://tabler.io
+* Copyright 2018-2022 The Tabler Authors
+* Copyright 2018-2022 codecalm.net Paweł Kuna
+* Licensed under MIT (https://github.com/tabler/tabler/blob/master/LICENSE)
+-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+  <title>Yes Aladin! - Login</title>
+  <!-- CSS files -->
+  <link th:href="@{/css/tabler.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-flags.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-payments.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-vendors.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/demo.min.css}" rel="stylesheet"/>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+<body>
+<!-- Libs JS -->
+<script type="text/javascript" th:src="@{/libs/apexcharts/dist/apexcharts.min.js}"></script>
+<!-- Tabler Core -->
+<script type="text/javascript" th:src="@{/js/tabler.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/demo.min.js}"></script>
+
+<div class="wrapper">
+  <!-- TODO 1 : HEADER -->
+  <div th:replace="~{common/fragments/header :: fragment-header}"></div>
+
+  <!-- TODO 2 : NAV-BAR -->
+  <div th:replace="~{common/fragments/navbar :: fragment-nav-bar}"></div>
+
+  <!-- TODO 3: BODY -->
+  <div class="page page-center">
+    <div class="container container-tight py-4">
+      <div class="card card-md">
+        <div class="card-body">
+          <h2 class="h2 text-center mb-4">비회원 주문 조회</h2>
+          <form id="find-form" method="get" novalidate="">
+            <div class="mb-3">
+              <label class="form-label fs-3 fw-bold required">주문 번호</label>
+              <input type="text" name="orderNumber" id="orderNumber" class="form-control"
+                     placeholder="주문 번호를 입력해주세요" required>
+            </div>
+            <span  class="text-muted">테스트 용으로 "20230210-0ad4df3d" 쓰세요</span>
+<!--        TODO 비회원 확인용으로 넣을지 고민    -->
+<!--            <div class="mb-2">-->
+<!--              <label class="form-label fs-3 fw-bold required">주문자 이름</label>-->
+<!--              <input type="text" name="ordererName" id="ordererName" class="form-control"-->
+<!--                     placeholder="주문자 성함을 입력해주세요" required>-->
+<!--            </div>-->
+<!--            <div class="mb-2">-->
+<!--              <label class="form-label fs-3 fw-bold required">주문자 전화번호</label>-->
+<!--              <input type="text" name="ordererPhoneNumber" id="ordererPhoneNumber" class="form-control"-->
+<!--                     placeholder="주문자의 전화번호를 입력해주세요" required>-->
+<!--            </div>-->
+            <div class="form-footer">
+              <button type="submit" class="btn btn-dark w-100">조회</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TODO 4 : footer -->
+  <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
+</div>
+<script>
+  const form = document.getElementById("find-form");
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    let orderNumber = e.target["orderNumber"].value;
+    // let ordererName = e.target["ordererName"].value;
+    // let ordererPhoneNumber = e.target["ordererPhoneNumber"].value;
+    window.location.href = `/orders/${orderNumber}`;
+    // form.action = ;
+    // form.submit();
+  });
+</script>
+</body>
+</html>

@@ -1,5 +1,4 @@
 let githubLoginBtn = document.getElementById('github')
-let naverLoginBtn = document.getElementById('naver')
 let kakaoLoginBtn = document.getElementById('kakao')
 
 githubLoginBtn.addEventListener("click", () => {
@@ -12,20 +11,6 @@ githubLoginBtn.addEventListener("click", () => {
       location.href = result;
     }
   })
-})
-
-naverLoginBtn.addEventListener("click", () => {
-  // $.ajax({
-  //   type: "get",
-  //   async: true,
-  //   url: "/oauth/redirect-url",
-  //   data: {"oauthProvider": "naver"},
-  //   success: function (result) {
-  //     console.log("naver redirect test")
-  //     location.href = result;
-  //   }
-  // })
-  console.log("naver redirect test")
 })
 
 kakaoLoginBtn.addEventListener("click", () => {

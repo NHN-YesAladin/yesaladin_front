@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+  <title>Yes Aladin! - 회원 통계</title>
+  <!-- CSS files -->
+  <link th:href="@{/css/tabler.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-flags.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-payments.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-vendors.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/demo.min.css}" rel="stylesheet"/>
+</head>
+<body>
+<!-- Libs JS -->
+<script type="text/javascript" th:src="@{/libs/apexcharts/dist/apexcharts.min.js}"></script>
+<!-- Tabler Core -->
+<script type="text/javascript" th:src="@{/js/tabler.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/demo.min.js}"></script>
+<div class="wrapper">
+  <!-- NAV-BAR -->
+  <div th:replace="~{manager/fragments/navbar-vertical :: fragment-nav-vertical}"></div>
+
+  <!-- HEADER -->
+  <div class="page-wrapper">
+    <div th:replace="~{common/fragments/header :: fragment-header}"></div>
+    <div class="page-header d-print-none">
+      <div class="container-xl">
+        <div class="row g-2 align-items-center">
+          <div class="col">
+            <!-- Page pre-title -->
+            <div class="page-pretitle">
+              통계
+            </div>
+            <h2 class="page-title">
+              회원 통계
+            </h2>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TODO 3: BODY -->
+    <div class="page-body">
+      <div class="container-xl">
+        <div class="row row-deck row-cards">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header row">
+                <h3 class="card-title col-md-2">회원 현황</h3>
+              </div>
+              <div class="table-responsive">
+                <table class="table card-table table-vcenter text-nowrap datatable">
+                  <thead>
+                  <tr>
+                    <th>회원수</th>
+                    <th>비율(%)</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <td th:text="${statistics.totalMembers}"></td>
+                  <td th:text="${percentages.members}"></td>
+                  </tbody>
+                  <thead>
+                  <tr>
+                    <th>차단회원수</th>
+                    <th>비율(%)</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <td th:text="${statistics.totalBlockedMembers}"></td>
+                  <td th:text="${percentages.blocked}"></td>
+                  </tbody>
+                  <thead>
+                  <tr>
+                    <th>탈퇴회원수</th>
+                    <th>비율(%)</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <td th:text="${statistics.totalWithdrawMembers}"></td>
+                  <td th:text="${percentages.withdraws}"></td>
+                  </tbody>
+                </table>
+              </div>
+              <div class="card">
+                <div class="card-header row">
+                  <h3 class="card-title col-md-2">등급별 현황</h3>
+                </div>
+                <div class="table-responsive">
+                  <table class="table card-table table-vcenter text-nowrap datatable">
+                    <thead>
+                    <tr>
+                      <th>화이트등급</th>
+                      <th>비율(%)</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <td th:text="${statistics.totalMembers}"></td>
+                    <td th:text="${percentages.white}"></td>
+                    </tbody>
+                    <thead>
+                    <tr>
+                      <th>브론즈등급</th>
+                      <th>비율(%)</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <td th:text="${statistics.totalBronzeGrades}"></td>
+                    <td th:text="${percentages.bronze}"></td>
+                    </tbody>
+                    <thead>
+                    <tr>
+                      <th>실버등급</th>
+                      <th>비율(%)</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <td th:text="${statistics.totalSilverGrades}"></td>
+                    <td th:text="${percentages.silver}"></td>
+                    </tbody>
+                    <thead>
+                    <tr>
+                      <th>골드등급</th>
+                      <th>비율(%)</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <td th:text="${statistics.totalGoldGrades}"></td>
+                    <td th:text="${percentages.gold}"></td>
+                    </tbody>
+                    <thead>
+                    <tr>
+                      <th>플래티넘등급</th>
+                      <th>비율(%)</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <td th:text="${statistics.totalPlatinumGrades}"></td>
+                    <td th:text="${percentages.platinum}"></td>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TODO 4 : footer -->
+          <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
+        </div>
+      </div>
+</body>
+</html>

@@ -9,6 +9,7 @@ import shop.yesaladin.front.member.dto.MemberBlockResponseDto;
 import shop.yesaladin.front.member.dto.MemberManagerResponseDto;
 import shop.yesaladin.front.member.dto.MemberProfileExistResponseDto;
 import shop.yesaladin.front.member.dto.MemberQueryResponseDto;
+import shop.yesaladin.front.member.dto.MemberStatisticsResponseDto;
 import shop.yesaladin.front.member.dto.MemberUnblockResponseDto;
 import shop.yesaladin.front.member.dto.MemberWithdrawResponseDto;
 
@@ -162,4 +163,13 @@ public interface QueryMemberService {
      * @since 1.0
      */
     MemberWithdrawResponseDto manageMemberWithdrawByLoginId(String loginId);
+
+    /**
+     * 관리자가 회원 현황 통계 정보를 요청 합니다.
+     *
+     * @return 회원 현황 통계 정보
+     * @author 송학현
+     * @since 1.0
+     */
+    MemberStatisticsResponseDto getMemberStatistics();
 }

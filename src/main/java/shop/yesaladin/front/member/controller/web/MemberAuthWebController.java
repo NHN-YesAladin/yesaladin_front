@@ -59,8 +59,6 @@ public class MemberAuthWebController {
             BindingResult bindingResult,
             Model model
     ) {
-        log.info("dto={}", request);
-
         if (bindingResult.hasErrors()) {
             throw new ValidationFailedException(bindingResult);
         }
@@ -78,8 +76,6 @@ public class MemberAuthWebController {
             BindingResult bindingResult,
             Model model
     ) {
-        log.info("dto={}", request);
-
         if (bindingResult.hasErrors()) {
             throw new ValidationFailedException(bindingResult);
         }
