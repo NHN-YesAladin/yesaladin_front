@@ -24,15 +24,6 @@
 <script src="https://js.tosspayments.com/v1/payment"></script>
 <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 
-<script type="text/javascript">
-  $(document).ready(function () {
-    $("input:text[numberOnly]").on("keyup", function () {
-      $(this).val($(this).val().replace(/[^0-9]/g, ""));
-    });
-  });
-</script>
-<span sec:authorize="isAuthenticated()" th:with="auth=true"></span>
-<span sec:authorize="!isAuthenticated()" th:with="auth=false"></span>
 <form action="/orders/member" method="post">
   <div class="wrapper">
     <!-- TODO 1 : HEADER -->
@@ -203,7 +194,10 @@
                                 th:text="${#numbers.formatInteger(product.getSalePrice(), 1, 'COMMA')}">
                           </span>
                         </td>
-                        <td th:text="${product.expectedPoint}"></td>
+                        <td th:text="${product.expectedPoint}">
+                          <input type="hidden" th:id="|save-point-id-${product.isbn}|"
+                                 name="savePoint" th:value="${product.expectedPoint}">
+                        </td>
                         <td th:id="${'order-product-quantity-' + productStat.index}"
                             th:text="${product.quantity}">
                         </td>
@@ -211,16 +205,15 @@
                           <!--회원 : 쿠폰 사용 -->
                           <div sec:authorize="isAuthenticated()">
                             <!--TODO 개별 쿠폰 적용하기-->
-                            <button type="button" class="btn btn-outline-secondary btn-sm float-end">
+                            <button type="button" class="btn btn-outline-secondary btn-sm float-end btn-modal"
+                                    data-bs-toggle="modal" data-bs-target="#coupon-modal">
                               쿠폰 적용
                             </button>
                             <span hidden="hidden">
                               <button type="button" class="btn btn-outline-danger btn-sm float-end">
                                 쿠폰 취소
                               </button>
-                              <input type="text" id="order-product-coupon-amount"
-                                     name="orderCoupons"
-                                     value="">
+                              <input type="text" id="order-product-coupon-amount">
                                 할인된 금액
                             </span>
                           </div>
@@ -261,10 +254,10 @@
                       <label class="form-label col-3 col-form-label">포인트 적용</label>
                       <div class="col text-end">
                         - <input class="form-control form-control-sm w-auto"
-                                 style="display: inline" name="orderPoint"
-                                 id="point-applied-amount" value="0" type="text" numberOnly
-                                 oninput="pointOverCheck(this)"
-                                 onchange="pointValidCheck(this)"> 원
+                                 style="display: inline" name="usePoint"
+                                 id="point-applied-amount" value="0" type="text"
+                                 oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+                                 onchange="pointOverCheck(this)"> 원
                       </div>
                       <small class="float-end" style="color: #c13333" id="point-alert"
                              hidden="hidden">
@@ -485,31 +478,36 @@
         <div class="modal-body">
           <div class="form-selectgroup-boxes row mb-3 overflow-auto"
                id="member-coupon-group" style="height: 250px;">
-            <div class="col-12 mb-1" th:id="|member-coupon-${coupon.couponCode}|"
-                 th:each="coupon:${info.memberCoupons}">
+            <div class="col-12 mb-1"
+                 th:each="coupon:${info.memberCoupons}"
+                 th:id="|member-coupon-${coupon.couponCode}|">
               <div class="row p-0" style="height: fit-content">
                 <div class="col-11 col-sm-10 ps-0">
                   <label class="form-selectgroup-item">
                     <input type="radio" class="form-selectgroup-input"
-                           th:id="|orderer-coupon-id-${coupon.couponCode}|"
-                           name="ordererAddressId" th:value="${coupon.couponCode}">
+                           th:id="|member-coupon-code-${coupon.couponCode}|"
+                           th:value="${coupon.couponCode}">
                     <span class="form-selectgroup-label d-flex align-items-center p-3">
                     <span class="me-3">
                       <span class="form-selectgroup-check"></span>
                     </span>
                     <span class="form-selectgroup-label-content">
                       <span class="form-selectgroup-title strong mb-1"
-                            th:id="|orderer-address-${address.id}|"
-                            th:text="${address.address}"></span>
+                            th:id="|member-coupon-applied-amount-${coupon.couponCode}|"
+                            th:text="${coupon.name}">
+
+                      </span>
                     </span>
                   </span>
                   </label>
                 </div>
                 <div class="col-1 col-sm-2 p-0">
-                  <a class="btn btn-outline-danger h-full w-full"
-                     th:onclick="|deleteAddress(${address.id})|">
-                    삭제
-                  </a>
+                  <button th:id="|use-button-${coupon.couponCode}|" type="button"
+                          th:data-coupon-code="${coupon.couponCode}"
+                          onclick="useCoupon(this)"
+                          class="btn btn-outline-primary h-full w-full">
+                    사용
+                  </button>
                 </div>
               </div>
             </div>
@@ -520,8 +518,14 @@
   </div>
 </form>
 <div th:replace="~{common/fragments/alert :: custom-alert}"></div>
+<div th:replace="~{common/utils/success :: custom-success}"></div>
 </body>
+<!--쿠폰 관련 함수-->
+<script th:inline="javascript">
+  function useCoupon(code) {
 
+  }
+</script>
 <!--배송지 관련 함수-->
 <script th:inline="javascript">
   const frontUrl = [[${@environment.getProperty('yesaladin.front.url')}]];
@@ -666,17 +670,16 @@
   }
 
   function setProductTotalPrice() {
-    var totalProductPrice = document.getElementById("total-product-amount");
-    var totalProductPriceHidden = document.getElementById("total-product-amount-hidden");
+    const totalProductPrice = document.getElementById("total-product-amount");
+    const totalProductPriceHidden = document.getElementById("total-product-amount-hidden");
 
-    var expectedTotalAmount = document.getElementById("expected-total-amount");
-    var couponAppliedAmount = document.getElementById("coupon-applied-amount");
-    var pointAppliedAmount = document.getElementById("point-applied-amount");
+    const expectedTotalAmount = document.getElementById("expected-total-amount");
+    const couponAppliedAmount = document.getElementById("coupon-applied-amount");
+    const pointAppliedAmount = document.getElementById("point-applied-amount");
 
-    var auth = [[${auth}]]
-    var totalPrice = parseInt(expectedTotalAmount.innerText.replace(/\D/g, ''));
+    let totalPrice = parseInt(expectedTotalAmount.innerText.replace(/\D/g, ''));
 
-    if (auth) {
+    if(pointAppliedAmount != null) {
       totalPrice -= (parseInt(couponAppliedAmount.value) + parseInt(pointAppliedAmount.value));
     }
     totalProductPrice.innerText = totalPrice.toLocaleString();
@@ -754,36 +757,21 @@
 <script th:inline="javascript">
   function pointOverCheck(e) {
     const alert = document.getElementById("point-alert");
-    const expectedTotalAmount = parseInt(
-        document.getElementById("expected-total-amount").innerText);
-    const userPoint = [[${point}]];
+    const expectedTotalAmount = parseInt(document.getElementById("expected-total-amount").innerText.replace(/\D/g, ''));
+    const userPoint = [[${info.point}]];
 
-    var curPoint = parseInt(e.value);
+    let curPoint = parseInt(e.value);
 
-    alert.hidden = true;
-    if (e.value === "") {
-      alert.hidden = false;
-    }
+    alert.hidden = e.value !== "";
     if (curPoint > userPoint) {
       curPoint = userPoint;
     }
     if (curPoint > expectedTotalAmount) {
       curPoint = expectedTotalAmount;
     }
-    e.value = curPoint;
-  }
+    e.value = Math.floor(curPoint / 1000) * 1000;
 
-  function pointValidCheck(e) {
-    let amount = e.value;
-    if (e.value === "" || e.value < 0) {
-      amount = 0;
-      document.getElementById("point-alert").hidden = true;
-    } else if (e.value % 1000 > 0) {
-      amount = parseInt(e.value / 1000) * 1000;
-    }
-    e.value = amount;
     setProductTotalPrice();
-
   }
 
   function orderCheck(e) {

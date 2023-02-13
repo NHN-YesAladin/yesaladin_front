@@ -1,6 +1,8 @@
 package shop.yesaladin.front.member.service.inter;
 
+import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.member.dto.MemberUpdateRequestDto;
+import shop.yesaladin.front.member.dto.MemberUpdateResponseDto;
 import shop.yesaladin.front.member.dto.SignUpRequestDto;
 import shop.yesaladin.front.member.dto.SignUpResponseDto;
 import shop.yesaladin.front.oauth.dto.Oauth2SignUpRequestDto;
@@ -47,8 +49,9 @@ public interface CommandMemberService {
      * 회원 정보를 수정합니다.
      *
      * @param request 회원 수정 정보
+     * @return 수정된 회원 정보
      * @author 최예린
      * @since 1.0
      */
-    void edit(MemberUpdateRequestDto request);
+    ResponseDto<MemberUpdateResponseDto> edit(MemberUpdateRequestDto request);
 }

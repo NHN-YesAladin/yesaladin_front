@@ -1,9 +1,11 @@
 package shop.yesaladin.front.product.service.impl;
 
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,12 @@ import shop.yesaladin.front.product.dto.SearchProductRequestDto;
 import shop.yesaladin.front.product.dto.SearchedProductResponseDto;
 import shop.yesaladin.front.product.service.inter.SearchProductService;
 
+/**
+ * 상품 검색 서비스 구현체
+ *
+ * @author 김선홍
+ * @since 1.0
+ */
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -27,10 +35,11 @@ public class SearchProductServiceImpl implements SearchProductService {
     private static final String OFFSET = "offset";
     private static final String SIZE = "size";
 
+    /**
+     *{@inheritDoc}
+     */
     @Override
     public SearchedProductResponseDto searchProductsByProductField(SearchProductRequestDto requestDto) {
-        log.info(host);
-        log.info(PATH);
         UriComponents url = UriComponentsBuilder.fromHttpUrl(host)
                 .path(PATH)
                 .queryParam(requestDto.getSelected(), requestDto.getInput())
@@ -44,6 +53,31 @@ public class SearchProductServiceImpl implements SearchProductService {
                 new ParameterizedTypeReference<ResponseDto<SearchedProductResponseDto>>() {
                 }
         );
-        return result.getBody().getData();
+        return Objects.requireNonNull(result.getBody()).getData();
+    }
+
+    /**
+     *{@inheritDoc}
+     */
+    @Override
+    public SearchedProductResponseDto searchProductByCategoryId(
+            Long categoryId,
+            Pageable pageable
+    ) {
+        UriComponents url = UriComponentsBuilder.fromHttpUrl(host)
+                .path(PATH)
+                .queryParam("categoryid", categoryId)
+                .queryParam(OFFSET, pageable.getPageNumber())
+                .queryParam(SIZE, pageable.getPageSize())
+                .build();
+        ResponseEntity<ResponseDto<SearchedProductResponseDto>> result = restTemplate.exchange(
+                url.toUriString(),
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<ResponseDto<SearchedProductResponseDto>>() {
+                }
+        );
+        log.info(result.getBody().getData().getProducts().size() + "");
+        return Objects.requireNonNull(result.getBody()).getData();
     }
 }
