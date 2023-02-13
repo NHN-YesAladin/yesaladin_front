@@ -3,6 +3,7 @@ package shop.yesaladin.front.order.controller.web;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +27,7 @@ import shop.yesaladin.front.payment.dto.PaymentViewRequestDto;
  * @author 최예린
  * @since 1.0
  */
+@Slf4j
 @RequiredArgsConstructor
 @Controller
 @RequestMapping("/orders")
@@ -60,6 +62,7 @@ public class OrderMainWebController {
         }
         model.addAttribute("info", response.getData());
 
+        log.error("response : {}", response.getData());
         return (request.getServletPath().contains("subscribe")) ? "main/order/subscribe"
                 : "main/order/order";
     }
