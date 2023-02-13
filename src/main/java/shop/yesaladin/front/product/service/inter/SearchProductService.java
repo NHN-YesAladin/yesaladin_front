@@ -1,5 +1,6 @@
 package shop.yesaladin.front.product.service.inter;
 
+import org.springframework.data.domain.Pageable;
 import shop.yesaladin.front.product.dto.SearchProductRequestDto;
 import shop.yesaladin.front.product.dto.SearchedProductResponseDto;
 
@@ -21,4 +22,6 @@ public interface SearchProductService {
      * @since : 1.0
      */
     SearchedProductResponseDto searchProductsByProductField(SearchProductRequestDto requestDto);
+
+    SearchedProductResponseDto searchProductByCategoryId(Long categoryId, Pageable pageable);
 }
