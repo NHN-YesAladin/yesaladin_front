@@ -34,7 +34,6 @@ public class CouponEventWebController {
     private final FrontServerMetaConfig frontServerMetaConfig;
     private final QueryCouponService queryCouponService;
 
-
     @GetMapping
     public String getCouponMainPage(Model model, Pageable pageable) {
         String memberGrade = queryMemberService.getMemberGrade();
@@ -52,12 +51,16 @@ public class CouponEventWebController {
         return "/main/coupon/coupon-main-page";
     }
 
+    /**
+     * 이달의 쿠폰 페이지 화면을 출력합니다. 전달되는 이달의 쿠폰은 가장 최근에 등록된 쿠폰입니다.
+     *
+     * @param model
+     * @return 이달의 쿠폰 뷰 페이지
+     */
     @GetMapping("/coupon-of-the-month")
     public String couponOfTheMonthPageView(Model model) {
         model.addAttribute("type", TriggerTypeCode.COUPON_OF_THE_MONTH);
-        // TODO 이달의 쿠폰 - 쿠폰 id 가져오기
-        int couponId = 20;
-        model.addAttribute("couponId", couponId);
+        model.addAttribute("couponId", queryCouponService.getMonthlyCouponId());
         model.addAttribute("frontServerUrl", frontServerMetaConfig.getFrontServerUrl());
         model.addAttribute("shopServerUrl", gatewayConfig.getShopUrl());
         return "/main/coupon/monthly-coupon-page";
