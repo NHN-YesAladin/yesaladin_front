@@ -19,9 +19,6 @@
 <script type="text/javascript" th:src="@{/js/tabler.min.js}"></script>
 <script type="text/javascript" th:src="@{/js/demo.min.js}"></script>
 
-
-<span sec:authorize="isAuthenticated()" th:with="auth=true"></span>
-<span sec:authorize="!isAuthenticated()" th:with="auth=false"></span>
 <div class="wrapper">
   <!-- TODO 1 : HEADER -->
   <div th:replace="~{common/fragments/header :: fragment-header}"></div>
@@ -280,8 +277,18 @@
           </div>
         </div>
         <div class="mt-2 m-auto">
-          <a href="/mypage" class="btn btn-outline-primary w-100">
-            마이페이지로 가기
+          <div th:if="${response.payment == null}">
+            <a href="#" class="btn btn-primary w-100">
+              결제
+            </a>
+          </div>
+          <div th:if="${response.order.orderCode != '비회원 주문'}">
+            <a sec:authorize="!isAuthenticated()" href="/mypage" class="btn btn-outline-primary w-100">
+              마이페이지로 가기
+            </a>
+          </div>
+          <a href="/" class="btn btn-outline-primary w-100">
+            홈으로 가기
           </a>
         </div>
       </div>

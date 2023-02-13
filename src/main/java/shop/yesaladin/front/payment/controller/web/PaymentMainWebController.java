@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.order.dto.OrderPaymentRequestDto;
 import shop.yesaladin.front.order.dto.OrderStatusResponseDto;
@@ -60,27 +61,30 @@ public class PaymentMainWebController {
      * 토스 페이먼츠의 결제 중 결제 승인 시퀀스를 처리하기 위해 successUrl로 지정된 컨트롤러 메서드
      *
      * @param requestDto 결제에 필요한 필수 정보들
-     * @param model      모델
      * @return 성공시 주문 완성 페이지, 실패시 주문 실패 페이지
      */
     @GetMapping("/order-pay")
     public String pay(
-            @ModelAttribute PaymentRequestDto requestDto,
-            Model model
+            @ModelAttribute PaymentRequestDto requestDto
     ) {
+
         ResponseDto<PaymentCompleteSimpleResponseDto> confirmResponse = paymentService.confirm(
                 requestDto);
         PaymentCompleteSimpleResponseDto responseDto = confirmResponse.getData();
         log.info("confirm : {}", responseDto);
 
-        model.addAttribute("response", responseDto);
-
+        String orderNum = requestDto.getOrderId();
         if (!confirmResponse.isSuccess()) {
-            model.addAttribute("isAfterOrder", true);
-            return "main/order/order-fail";
+            StringBuilder builder = new StringBuilder("redirect:/orders/order-fail?");
+            builder.append("orderNumber=")
+                    .append(orderNum)
+                    .append("&orderName=")
+                    .append(responseDto.getOrdererName())
+                    .append("&totalAmount=")
+                    .append(responseDto.getTotalAmount());
+            return builder.toString();
         }
-
-        return "main/order/order-complete";
+        return "redirect:/orders/order-complete?orderNumber="+ orderNum;
     }
 
 
@@ -108,12 +112,10 @@ public class PaymentMainWebController {
         }
 
         OrderStatusResponseDto responseDto = OrderStatusResponseDto.builder()
-                .orderName("Retry Pay")
+                .orderName("결제 실패로 재결제")
                 .orderNumber(requestDto.getOrderId())
                 .totalAmount(requestDto.getAmount())
                 .build();
-        model.addAttribute("isAfterOrder", false);
-        model.addAttribute("response", responseDto);
 
         log.info("{} / {}", code, message);
         log.info(
@@ -122,7 +124,14 @@ public class PaymentMainWebController {
                 responseDto.getOrderName(),
                 responseDto.getTotalAmount()
         );
-        return "main/order/order-fail";
+        StringBuilder builder = new StringBuilder("redirect:/orders/order-fail?");
+        builder.append("orderNumber=")
+                .append(responseDto.getOrderId())
+                .append("&orderName=")
+                .append(responseDto.getOrderName())
+                .append("&totalAmount=")
+                .append(responseDto.getTotalAmount());
+        return builder.toString();
     }
 }
 
