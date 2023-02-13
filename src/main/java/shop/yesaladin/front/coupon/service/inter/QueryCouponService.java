@@ -47,4 +47,6 @@ public interface QueryCouponService {
             TriggerTypeCode triggerTypeCode,
             Pageable pageable
     );
+
+    String getMonthlyCouponId();
 }

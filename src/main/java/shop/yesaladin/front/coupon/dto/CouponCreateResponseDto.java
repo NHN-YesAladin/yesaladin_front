@@ -17,6 +17,5 @@ public class CouponCreateResponseDto {
 
     private String name;
     private String couponTypeCode;
-
     private List<String> errorMessageList;
 }
