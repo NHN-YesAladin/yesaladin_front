@@ -7,13 +7,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
+import shop.yesaladin.common.code.ErrorCode;
 import shop.yesaladin.common.dto.ResponseDto;
+import shop.yesaladin.common.exception.ClientException;
 import shop.yesaladin.coupon.code.CouponBoundCode;
 import shop.yesaladin.coupon.code.TriggerTypeCode;
 import shop.yesaladin.front.category.dto.CategoryResponseDto;
@@ -38,8 +41,12 @@ import shop.yesaladin.front.product.dto.ProductOnlyTitleDto;
 public class QueryCouponServiceImpl implements QueryCouponService {
 
     private final RestTemplate restTemplate;
+    private final RedisTemplate<String, String> redisTemplate;
     private final GatewayConfig gatewayConfig;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public PaginatedResponseDto<CouponSummaryDto> getTriggeredCouponList(Pageable pageable) {
         UriComponents uriComponents = UriComponentsBuilder.fromHttpUrl(
@@ -59,6 +66,9 @@ public class QueryCouponServiceImpl implements QueryCouponService {
         return Objects.requireNonNull(responseEntity.getBody()).getData();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public PaginatedResponseDto<MemberCouponSummaryDto> getMemberCouponList(
             String loginId,
@@ -146,6 +156,21 @@ public class QueryCouponServiceImpl implements QueryCouponService {
                 .totalDataCount(response.getData().getTotalDataCount())
                 .dataList(couponSummaryWithBoundDtoList)
                 .build();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getMonthlyCouponId() {
+        if (Boolean.TRUE.equals(redisTemplate.hasKey("monthlyCouponId"))) {
+            return redisTemplate.opsForValue().get("monthlyCouponId");
+        } else {
+            throw new ClientException(
+                    ErrorCode.COUPON_NOT_FOUND,
+                    "Not found any monthly coupon id on redis."
+            );
+        }
     }
 
     private String getDisplayBound(CouponBoundCode boundCode, String bound) {
