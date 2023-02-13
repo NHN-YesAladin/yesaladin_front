@@ -48,5 +48,10 @@ public interface QueryCouponService {
             Pageable pageable
     );
 
+    /**
+     * redis 에 저장되어 있는 이달의 쿠폰 아이디를 조회합니다.
+     *
+     * @return 이달의 쿠폰 아이디
+     */
     String getMonthlyCouponId();
 }

@@ -44,6 +44,9 @@ public class QueryCouponServiceImpl implements QueryCouponService {
     private final RedisTemplate<String, String> redisTemplate;
     private final GatewayConfig gatewayConfig;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public PaginatedResponseDto<CouponSummaryDto> getTriggeredCouponList(Pageable pageable) {
         UriComponents uriComponents = UriComponentsBuilder.fromHttpUrl(
@@ -63,6 +66,9 @@ public class QueryCouponServiceImpl implements QueryCouponService {
         return Objects.requireNonNull(responseEntity.getBody()).getData();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public PaginatedResponseDto<MemberCouponSummaryDto> getMemberCouponList(
             String loginId,
@@ -152,6 +158,9 @@ public class QueryCouponServiceImpl implements QueryCouponService {
                 .build();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getMonthlyCouponId() {
         if (Boolean.TRUE.equals(redisTemplate.hasKey("monthlyCouponId"))) {
