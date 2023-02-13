@@ -24,7 +24,7 @@ public class OrderSummaryResponseDto {
     private LocalDateTime orderDateTime;
     private String orderName;
     private Long orderAmount;
-    private String orderStatusCode;
+    private OrderStatusCode orderStatusCode;
     private Long memberId;
     private String memberName;
     private Long orderProductCount;

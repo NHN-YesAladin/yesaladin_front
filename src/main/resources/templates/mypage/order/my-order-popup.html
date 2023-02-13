@@ -68,7 +68,7 @@
                       <tbody class="table-group-divider">
                       <tr th:each="data: ${dataList}">
                         <td>
-                          <a th:text="${data.orderNumber}" href="#" class="text-muted fw-bolder">
+                          <a th:text="${data.orderNumber}" th:href="'/orders/'+ ${data.orderNumber}" class="text-muted fw-bolder">
                             주문상세조회
                           </a>
                         </td>
