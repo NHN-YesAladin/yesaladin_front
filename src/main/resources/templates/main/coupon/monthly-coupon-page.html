@@ -78,7 +78,7 @@
                          height="200" alt="10000원 할인 쿠폰">
                   </div>
                   <div sec:authorize="isAuthenticated()">
-                    <img th:src="@{/img/coupon/monthlyCoupon2.png}" style="cursor: pointer;" class="issue-btn"
+                    <img th:src="@{/img/coupon/monthlyCoupon2.png}" style="cursor: pointer;" id="issue-btn"
                          th:attr="data-triggerTypeCode='COUPON_OF_THE_MONTH', data-couponId=${couponId}"
                          height="200" alt="10000원 할인 쿠폰">
                   </div>
@@ -117,5 +117,7 @@
 <script th:src="@{/js/coupon/main.js}"></script>
 <script th:src="@{/js/coupon/monthly-coupon.js}"></script>
 
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+<script th:src="@{js/coupon/stomp.js}"></script>
 </body>
 </html>
