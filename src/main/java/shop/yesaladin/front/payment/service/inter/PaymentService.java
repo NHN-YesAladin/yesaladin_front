@@ -1,6 +1,5 @@
 package shop.yesaladin.front.payment.service.inter;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.payment.dto.PaymentCompleteSimpleResponseDto;
 import shop.yesaladin.front.payment.dto.PaymentRequestDto;

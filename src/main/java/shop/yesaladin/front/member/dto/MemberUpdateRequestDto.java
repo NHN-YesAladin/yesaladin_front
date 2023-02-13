@@ -4,6 +4,8 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * 회원 정보 수정을 위해 MemberController 에서 받는 요청 DTO 입니다.
@@ -12,7 +14,9 @@ import lombok.NoArgsConstructor;
  * @since 1.0
  */
 @Getter
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@ToString
+@Setter
+@NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class MemberUpdateRequestDto {
 

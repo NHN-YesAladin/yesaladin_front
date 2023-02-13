@@ -61,6 +61,21 @@
                                     <span class="fs-3 fw-normal">주문명 : </span>
                                     <span class="fs-3 fw-bolder" th:text="${response.orderName}">주문 성공!</span>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card card-md">
+                        <div class="card-body">
+                            <h3 class="card-title fs-2">배송 정보</h3>
+                            <div class="m-auto">
+                                <div>
+                                    <span class="fs-3 fw-normal">수령인 : </span>
+                                    <span class="fs-3 fw-bolder" th:text="${response.recipientName}">김최이</span>
+                                </div>
+                                <div>
+                                    <span class="fs-3 fw-normal">수령인 전화번호 : </span>
+                                    <span class="fs-3 fw-bolder" th:text="${response.recipientPhoneNumber}">12</span>
+                                </div>
                                 <div>
                                     <span class="fs-3 fw-normal">배송지 : </span>
                                     <span class="fs-3 fw-bolder" th:text="${response.orderAddress}">광주</span>
@@ -76,7 +91,6 @@
                                     <div class="card-body">
                                         <ul class="steps steps-blue steps-counter">
                                             <li class="step-item">주문완료</li>
-                                            <li class="step-item">결제대기</li>
                                             <li class="step-item active">결제완료</li>
                                             <li class="step-item">배송 준비중</li>
                                             <li class="step-item ">배송중</li>
@@ -134,13 +148,13 @@
                 </div>
                 <div class="card-footer">
                     <div class="mt-2 m-auto">
-                        <a href="#" class="btn btn-outline-primary w-100">
+                        <a th:href="'/orders/'+ ${response.orderNumber}" class="btn btn-outline-primary w-100">
                             주문 상세 보기
                         </a>
                     </div>
                     <div class="mt-2 m-auto">
-                        <a href="#" class="btn btn-outline-primary w-100">
-                            홈으로 가기
+                        <a href="/mypage" class="btn btn-outline-primary w-100">
+                            마이페이지로 가기
                         </a>
                     </div>
                 </div>

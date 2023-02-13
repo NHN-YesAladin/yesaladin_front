@@ -201,7 +201,25 @@
                         <td th:id="${'order-product-quantity-' + productStat.index}"
                             th:text="${product.quantity}">
                         </td>
-                        <td th:text="${#numbers.formatInteger(product.quantity * product.getSalePrice(), 1, 'COMMA')}"></td>
+                        <td>
+                          <!--회원 : 쿠폰 사용 -->
+                          <div sec:authorize="isAuthenticated()">
+                            <!--TODO 개별 쿠폰 적용하기-->
+                            <button type="button" class="btn btn-outline-secondary btn-sm float-end btn-modal"
+                                    data-bs-toggle="modal" data-bs-target="#coupon-modal">
+                              쿠폰 적용
+                            </button>
+                            <span hidden="hidden">
+                              <button type="button" class="btn btn-outline-danger btn-sm float-end">
+                                쿠폰 취소
+                              </button>
+                              <input type="text" id="order-product-coupon-amount">
+                                할인된 금액
+                            </span>
+                          </div>
+                          <!--비회원-->
+                          <span sec:authorize="!isAuthenticated()">사용불가</span>
+                        </td>
                       </tr>
                       </tbody>
                     </table>

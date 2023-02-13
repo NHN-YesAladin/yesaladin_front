@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import shop.yesaladin.front.coupon.dto.MemberCouponSummaryDto;
 import shop.yesaladin.front.member.dto.MemberAddressResponseDto;
 
@@ -15,6 +16,7 @@ import shop.yesaladin.front.member.dto.MemberAddressResponseDto;
  * @author 최예린
  * @since 1.0
  */
+@ToString
 @Getter
 @Setter
 @NoArgsConstructor

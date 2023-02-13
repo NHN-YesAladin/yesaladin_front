@@ -1,10 +1,16 @@
 package shop.yesaladin.front.product.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -14,6 +20,7 @@ import shop.yesaladin.front.common.dto.PageRequestDto;
 import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.product.dto.ProductDetailResponseDto;
 import shop.yesaladin.front.product.dto.ProductModifyInitDto;
+import shop.yesaladin.front.product.dto.ProductRecentResponseDto;
 import shop.yesaladin.front.product.dto.ProductsResponseDto;
 import shop.yesaladin.front.product.dto.RelationsResponseDto;
 import shop.yesaladin.front.product.service.inter.QueryProductService;
@@ -35,7 +42,10 @@ public class QueryProductServiceImpl implements QueryProductService {
     private final String PATH = "/v1/products";
 
     private final RestTemplate restTemplate;
+    private final ObjectMapper objectMapper;
     private static final ParameterizedTypeReference<ResponseDto<PaginatedResponseDto<RelationsResponseDto>>> RELATION_PRODUCTION_CODE = new ParameterizedTypeReference<>() {
+    };
+    private static final ParameterizedTypeReference<ResponseDto<PaginatedResponseDto<ProductRecentResponseDto>>> RECENT_PRODUCTION_CODE = new ParameterizedTypeReference<>() {
     };
 
     @Value("${yesaladin.gateway.shop}")
@@ -164,12 +174,58 @@ public class QueryProductServiceImpl implements QueryProductService {
                 .buildAndExpand(id)
                 .toUriString();
 
-        HttpEntity httpEntity = getHttpEntity();
         ResponseEntity<ResponseDto<PaginatedResponseDto<RelationsResponseDto>>> responseEntity = restTemplate.exchange(
                 uri,
                 HttpMethod.GET,
-                httpEntity,
+                getHttpEntity(),
                 RELATION_PRODUCTION_CODE
+        );
+        return Objects.requireNonNull(responseEntity.getBody()).getData();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public PaginatedResponseDto<ProductRecentResponseDto> findRecentProduct(Pageable pageable) {
+        String uri = UriComponentsBuilder
+                .fromUriString(url)
+                .path(PATH + "/recent/product")
+                .queryParam("size", pageable.getPageSize())
+                .queryParam("page", pageable.getPageNumber())
+                .toUriString();
+
+        ResponseEntity<ResponseDto<PaginatedResponseDto<ProductRecentResponseDto>>> responseEntity = restTemplate.exchange(
+                uri,
+                HttpMethod.GET,
+                getHttpEntity(),
+                RECENT_PRODUCTION_CODE
+                );
+        return Objects.requireNonNull(responseEntity.getBody()).getData();
+    }
+
+    @Override
+    public PaginatedResponseDto<ProductRecentResponseDto> findRecentViewProduct(
+            Set<Long> recentViewList,
+            @PageableDefault Pageable pageable
+    ) throws JsonProcessingException {
+        String uri = UriComponentsBuilder
+                .fromUriString(url)
+                .path(PATH + "/recentview/product")
+                .queryParam("size", pageable.getPageSize())
+                .queryParam("page", pageable.getPageNumber())
+                .toUriString();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        String requestJson = objectMapper.writeValueAsString(new ArrayList<>(recentViewList));
+        HttpEntity<String> httpEntity = new HttpEntity<>(requestJson, headers);
+
+        ResponseEntity<ResponseDto<PaginatedResponseDto<ProductRecentResponseDto>>> responseEntity = restTemplate.exchange(
+                uri,
+                HttpMethod.POST,
+                httpEntity,
+                RECENT_PRODUCTION_CODE
         );
         return Objects.requireNonNull(responseEntity.getBody()).getData();
     }

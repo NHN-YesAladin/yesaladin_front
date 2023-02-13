@@ -22,6 +22,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PaymentCompleteSimpleResponseDto {
+
     @NotBlank
     private String paymentId;
     @NotBlank
@@ -39,6 +40,11 @@ public class PaymentCompleteSimpleResponseDto {
     private String orderNumber;
     @NotBlank
     private String orderName;
+
+    @NotBlank
+    private String recipientName;
+    @NotBlank
+    private String recipientPhoneNumber;
     @NotBlank
     private String orderAddress;
 

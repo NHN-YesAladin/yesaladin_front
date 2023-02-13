@@ -43,5 +43,7 @@ public class OrderMemberCreateRequestDto {
     private int wrappingFee;
     private List<String> orderCoupons;
     @Min(value = 0)
-    private long orderPoint;
+    private long usePoint;
+    @Min(value = 0)
+    private long savePoint;
 }

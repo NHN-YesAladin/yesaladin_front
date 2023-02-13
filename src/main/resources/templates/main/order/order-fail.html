@@ -84,8 +84,7 @@
                   <div class="card card-md">
                     <div class="card-body">
                       <ul class="steps steps-red steps-counter">
-                        <li class="step-item">주문완료</li>
-                        <li class="step-item active">결제대기</li>
+                        <li class="step-item active">주문완료</li>
                         <li class="step-item">결제완료</li>
                         <li class="step-item">배송 준비중</li>
                         <li class="step-item ">배송중</li>
@@ -114,13 +113,13 @@
           </div>
           <div class="card-footer">
             <div class="mt-2 m-auto">
-              <a href="#" class="btn btn-outline-primary w-100">
+              <a th:href="'/orders/'+ ${response.orderNumber}" class="btn btn-outline-primary w-100">
                 주문 상세 보기
               </a>
             </div>
             <div class="mt-2 m-auto">
-              <a href="#" class="btn btn-outline-primary w-100">
-                홈으로 가기
+              <a href="/mypage" class="btn btn-outline-primary w-100">
+                마이페이지로 가기
               </a>
             </div>
           </div>

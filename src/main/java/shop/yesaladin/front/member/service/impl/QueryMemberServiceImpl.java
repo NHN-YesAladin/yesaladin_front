@@ -7,8 +7,8 @@ import java.time.LocalDate;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Pageable;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -27,6 +27,7 @@ import shop.yesaladin.front.member.dto.MemberGradeQueryResponseDto;
 import shop.yesaladin.front.member.dto.MemberManagerResponseDto;
 import shop.yesaladin.front.member.dto.MemberProfileExistResponseDto;
 import shop.yesaladin.front.member.dto.MemberQueryResponseDto;
+import shop.yesaladin.front.member.dto.MemberStatisticsResponseDto;
 import shop.yesaladin.front.member.dto.MemberUnblockResponseDto;
 import shop.yesaladin.front.member.dto.MemberWithdrawResponseDto;
 import shop.yesaladin.front.member.service.inter.QueryMemberService;
@@ -185,17 +186,23 @@ public class QueryMemberServiceImpl implements QueryMemberService {
      * {@inheritDoc}
      */
     @Override
-    public MemberQueryResponseDto getMemberInfo() {
+    public ResponseDto<MemberQueryResponseDto> getMemberInfo() {
         URI uri = UriComponentsBuilder
                 .fromUriString(gatewayConfig.getShopUrl())
-                .path("/v1/members/{loginId}")
+                .path("/v1/members")
                 .encode()
                 .build()
                 .expand("")
                 .toUri();
-        return restTemplate.getForObject(
-                uri, MemberQueryResponseDto.class
+
+        ResponseEntity<ResponseDto<MemberQueryResponseDto>> response = restTemplate.exchange(
+                uri,
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<>() {}
         );
+
+        return Objects.requireNonNull(response.getBody());
     }
 
     /**
@@ -226,8 +233,7 @@ public class QueryMemberServiceImpl implements QueryMemberService {
     private static HttpEntity getEntity() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity entity = new HttpEntity<>(headers);
-        return entity;
+        return new HttpEntity<>(headers);
     }
 
     /**
@@ -405,5 +411,28 @@ public class QueryMemberServiceImpl implements QueryMemberService {
                 MEMBER_MANAGER_WITHDRAW_RESPONSE_DTO
         );
         return Objects.requireNonNull(responseEntity.getBody()).getData();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public MemberStatisticsResponseDto getMemberStatistics() {
+        String uri = UriComponentsBuilder
+                .fromUriString(gatewayConfig.getShopUrl())
+                .path("/v1/members/statistics")
+                .encode()
+                .build()
+                .toUriString();
+
+        ResponseEntity<ResponseDto<MemberStatisticsResponseDto>> response = restTemplate.exchange(
+                uri,
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<>() {
+                }
+        );
+
+        return Objects.requireNonNull(response.getBody()).getData();
     }
 }

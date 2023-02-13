@@ -3,12 +3,14 @@ package shop.yesaladin.front.member.service.inter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.time.LocalDate;
 import org.springframework.data.domain.Pageable;
+import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.member.dto.MemberBlockRequestDto;
 import shop.yesaladin.front.member.dto.MemberBlockResponseDto;
 import shop.yesaladin.front.member.dto.MemberManagerResponseDto;
 import shop.yesaladin.front.member.dto.MemberProfileExistResponseDto;
 import shop.yesaladin.front.member.dto.MemberQueryResponseDto;
+import shop.yesaladin.front.member.dto.MemberStatisticsResponseDto;
 import shop.yesaladin.front.member.dto.MemberUnblockResponseDto;
 import shop.yesaladin.front.member.dto.MemberWithdrawResponseDto;
 
@@ -66,7 +68,7 @@ public interface QueryMemberService {
      * @author 최예린
      * @since 1.0
      */
-    MemberQueryResponseDto getMemberInfo();
+    ResponseDto<MemberQueryResponseDto> getMemberInfo();
 
     /**
      * 회원의 등급을 조회합니다.
@@ -162,4 +164,13 @@ public interface QueryMemberService {
      * @since 1.0
      */
     MemberWithdrawResponseDto manageMemberWithdrawByLoginId(String loginId);
+
+    /**
+     * 관리자가 회원 현황 통계 정보를 요청 합니다.
+     *
+     * @return 회원 현황 통계 정보
+     * @author 송학현
+     * @since 1.0
+     */
+    MemberStatisticsResponseDto getMemberStatistics();
 }

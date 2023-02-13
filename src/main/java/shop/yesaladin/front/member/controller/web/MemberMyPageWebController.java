@@ -13,13 +13,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.member.dto.MemberGradeHistoryResponseDto;
 import shop.yesaladin.front.member.dto.MemberQueryResponseDto;
-import shop.yesaladin.front.member.dto.MemberUpdateRequestDto;
 import shop.yesaladin.front.member.service.inter.CommandMemberService;
 import shop.yesaladin.front.member.service.inter.QueryMemberGradeHistoryService;
 import shop.yesaladin.front.member.service.inter.QueryMemberService;
@@ -87,7 +85,7 @@ public class MemberMyPageWebController {
      */
     @GetMapping("/edit")
     public String showEditPage(Model model) {
-        MemberQueryResponseDto member = queryMemberService.getMemberInfo();
+        MemberQueryResponseDto member = queryMemberService.getMemberInfo().getData();
 
         model.addAttribute("nickname", member.getNickname());
         model.addAttribute("name", member.getName());
@@ -103,21 +101,6 @@ public class MemberMyPageWebController {
         model.addAttribute("gender", member.getGender());
 
         return "mypage/member/edit";
-    }
-
-    /**
-     * 회원의 정보를 수정합니다.
-     *
-     * @param request 수정할 회원 정보
-     * @return 마이페이지 메일 화면
-     * @author 최예린
-     * @since 1.0
-     */
-    @PostMapping("/edit")
-    public String editMemberInfo(@RequestBody MemberUpdateRequestDto request) {
-        commandMemberService.edit(request);
-
-        return "redirect:/mypage";
     }
 
     /**

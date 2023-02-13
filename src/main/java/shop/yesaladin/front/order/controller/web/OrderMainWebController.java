@@ -3,15 +3,18 @@ package shop.yesaladin.front.order.controller.web;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.order.dto.OrderCreateResponseDto;
+import shop.yesaladin.front.order.dto.OrderDetailsResponseDto;
 import shop.yesaladin.front.order.dto.OrderMemberRequestDto;
 import shop.yesaladin.front.order.dto.OrderSheetResponseDto;
 import shop.yesaladin.front.order.service.inter.CommandOrderService;
@@ -24,6 +27,7 @@ import shop.yesaladin.front.payment.dto.PaymentViewRequestDto;
  * @author 최예린
  * @since 1.0
  */
+@Slf4j
 @RequiredArgsConstructor
 @Controller
 @RequestMapping("/orders")
@@ -58,8 +62,24 @@ public class OrderMainWebController {
         }
         model.addAttribute("info", response.getData());
 
+        log.error("response : {}", response.getData());
         return (request.getServletPath().contains("subscribe")) ? "main/order/subscribe"
                 : "main/order/order";
+    }
+
+
+    @GetMapping("/{orderNumber}")
+    public String getOrderDetails(@PathVariable String orderNumber, Model model) {
+        OrderDetailsResponseDto detailsResponseDto = queryOrderService.getOrderDetailsDtoByOrderNumber(
+                orderNumber);
+        System.out.println("detailsResponseDto = " + detailsResponseDto);
+        model.addAttribute("response", detailsResponseDto);
+        return "main/order/order-details";
+    }
+
+    @GetMapping("/find-non-member-order")
+    public String getNonMemberOrderFinder() {
+        return "main/order/find-non-member-order";
     }
 
     /**
@@ -80,5 +100,6 @@ public class OrderMainWebController {
         PaymentViewRequestDto payRequest = request.toPaymentViewRequest(orderNumber, orderName);
         model.addAttribute("data", payRequest);
         return "main/payment/pay-page";
+
     }
 }
