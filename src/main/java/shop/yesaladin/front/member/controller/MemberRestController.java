@@ -3,21 +3,21 @@ package shop.yesaladin.front.member.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import shop.yesaladin.common.dto.ResponseDto;
-import shop.yesaladin.front.member.dto.MemberAddressRequestDto;
-import shop.yesaladin.front.member.dto.MemberAddressResponseDto;
 import shop.yesaladin.front.member.dto.MemberBlockRequestDto;
 import shop.yesaladin.front.member.dto.MemberBlockResponseDto;
 import shop.yesaladin.front.member.dto.MemberProfileExistResponseDto;
 import shop.yesaladin.front.member.dto.MemberUnblockResponseDto;
+import shop.yesaladin.front.member.dto.MemberUpdateRequestDto;
+import shop.yesaladin.front.member.dto.MemberUpdateResponseDto;
 import shop.yesaladin.front.member.dto.MemberWithdrawResponseDto;
-import shop.yesaladin.front.member.service.inter.CommandMemberAddressService;
+import shop.yesaladin.front.member.service.inter.CommandMemberService;
 import shop.yesaladin.front.member.service.inter.QueryMemberService;
 
 /**
@@ -32,7 +32,7 @@ import shop.yesaladin.front.member.service.inter.QueryMemberService;
 public class MemberRestController {
 
     private final QueryMemberService queryMemberService;
-    private final CommandMemberAddressService commandMemberAddressService;
+    private final CommandMemberService commandMemberService;
 
     /**
      * 회원 가입 시 사용하고자 하는 닉네임이 존재하는지 체크합니다.
@@ -144,31 +144,16 @@ public class MemberRestController {
     }
 
     /**
-     * 회원의 배송지를 등록합니다.
+     * 회원의 정보를 수정합니다.
      *
-     * @param request 배송지 정보
-     * @return 배송지 등록 성공 여부
+     * @param request 수정할 회원 정보
+     * @return 마이페이지 메일 화면
      * @author 최예린
      * @since 1.0
      */
-    @PostMapping("/api/address")
-    public MemberAddressResponseDto createMemberAddress(@RequestBody MemberAddressRequestDto request) {
-        ResponseDto<MemberAddressResponseDto> response = commandMemberAddressService.createMemberAddress(
-                request.toCreateRequestDto());
-        return (response.isSuccess()) ? response.getData() : null;
-    }
-
-    /**
-     * 회원의 배송지를 삭제합니다.
-     *
-     * @param addressId 삭제할 배송지 pk
-     * @return 배송지 삭제 성공 여부
-     * @author 최예린
-     * @since 1.0
-     */
-    @DeleteMapping("/api/address/{addressId}")
-    public boolean deleteMemberAddress(@PathVariable Long addressId) {
-        ResponseDto<Object> response = commandMemberAddressService.deleteAddress(addressId);
+    @PutMapping("/api/members/edit")
+    public boolean editMemberInfo(@RequestBody MemberUpdateRequestDto request) {
+        ResponseDto<MemberUpdateResponseDto> response = commandMemberService.edit(request);
 
         return response.isSuccess();
     }

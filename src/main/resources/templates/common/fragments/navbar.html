@@ -227,7 +227,7 @@
                 const innerButton = document.createElement("a");
                 innerButton.classList.add("dropdown-item");
                 //TODO 카테고리 별 조회 리스트 페이지로 넘겨야함
-                innerButton.href = "#"; //"상품페이지url/{categoryId}"
+                innerButton.href = "/search/products/categories?categoryid=" + childrenData[j].id +"&page=0&size=20";
                 innerButton.text = childrenData[j].name;
 
                 menuColumn.style.fontSize = "14px"

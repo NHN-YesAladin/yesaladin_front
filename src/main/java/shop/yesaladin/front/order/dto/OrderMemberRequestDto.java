@@ -57,7 +57,9 @@ public class OrderMemberRequestDto {
     private long wrappingFee;
     private List<String> orderCoupons;
     @Min(value = 0)
-    private long orderPoint;
+    private long usePoint;
+    @Min(value = 0)
+    private long savePoint;
 
     public OrderMemberCreateRequestDto toOrderMemberCreateRequest() {
         return OrderMemberCreateRequestDto.builder()
@@ -70,7 +72,8 @@ public class OrderMemberRequestDto {
                 .shippingFee((int) shippingFee)
                 .wrappingFee((int) wrappingFee)
                 .orderCoupons(orderCoupons)
-                .orderPoint(orderPoint)
+                .usePoint(usePoint)
+                .savePoint(savePoint)
                 .build();
     }
 

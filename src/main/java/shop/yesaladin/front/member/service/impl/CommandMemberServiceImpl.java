@@ -1,6 +1,7 @@
 package shop.yesaladin.front.member.service.impl;
 
 import java.net.URI;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
@@ -16,6 +17,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.config.GatewayConfig;
 import shop.yesaladin.front.member.dto.MemberUpdateRequestDto;
+import shop.yesaladin.front.member.dto.MemberUpdateResponseDto;
 import shop.yesaladin.front.member.dto.MemberWithdrawResponseDto;
 import shop.yesaladin.front.member.dto.SignUpRequestDto;
 import shop.yesaladin.front.member.dto.SignUpResponseDto;
@@ -112,26 +114,27 @@ public class CommandMemberServiceImpl implements CommandMemberService {
 
     /**
      * {@inheritDoc}
+     *
      */
     @Override
-    public void edit(MemberUpdateRequestDto request) {
+    public ResponseDto<MemberUpdateResponseDto> edit(MemberUpdateRequestDto request) {
         URI uri = UriComponentsBuilder
-                .fromUriString(gatewayConfig.getUrl())
-                .path("/v1/members/{loginId}")
+                .fromUriString(gatewayConfig.getShopUrl())
+                .path("/v1/members")
                 .encode()
                 .build()
-                .expand("")
                 .toUri();
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<MemberUpdateRequestDto> entity = new HttpEntity<>(request, headers);
 
-        ResponseEntity<MemberWithdrawResponseDto> response = restTemplate.exchange(
+        ResponseEntity<ResponseDto<MemberUpdateResponseDto>> response = restTemplate.exchange(
                 uri,
                 HttpMethod.PUT,
                 entity,
-                MemberWithdrawResponseDto.class
+                new ParameterizedTypeReference<>() {}
         );
+        return Objects.requireNonNull(response.getBody());
     }
 }

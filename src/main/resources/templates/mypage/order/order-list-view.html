@@ -103,7 +103,7 @@
                                             </thead>
                                             <tbody class="table-group-divider">
                                             <tr th:each="data: ${dataList}">
-                                                <td th:text="${data.orderName}"></td>
+                                                <td th:text="${data.orderNumber}"></td>
                                                 <td th:text="${#temporals.format(data.orderDateTime, 'yyyy-MM-dd')}"></td>
                                                 <td class="text-start">
                                                     <div class="row-cols-2">
@@ -127,12 +127,12 @@
                                                         222,500
                                                     </span>
                                                 </td>
-                                                <td class="text-orange" th:text="${data.orderStatusCode}"></td>
+                                                <td class="text-orange" th:text="${data.orderStatusCode.koName}"></td>
                                                 <td class="fw-bolder" th:text="${data.memberName}"></td>
                                                 <td class="" th:text="${data.orderCode == 'MEMBER_SUBSCRIBE'} ? '구독 주문':''"></td>
                                                 <td>
                                                     <div>
-                                                        <a href="#" th:value="${data.orderId}" class="btn btn-outline-dark w-full fs-5 fw-bolder m-1">
+                                                        <a th:href="'/orders/'+ ${data.orderNumber}" th:value="${data.orderId}" class="btn btn-outline-dark w-full fs-5 fw-bolder m-1">
                                                             주문상세조회
                                                         </a>
                                                         <a href="#" th:value="${data.orderId}" class="btn btn-outline-dark w-full fs-5 fw-bolder m-1">
