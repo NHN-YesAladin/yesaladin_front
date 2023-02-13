@@ -470,54 +470,6 @@
     </div>
   </div>
 
-  <!--쿠폰 Modal-->
-  <div sec:authorize="isAuthenticated()" class="modal modal-blur fade" id="coupon-modal"
-       tabindex="-1" aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-      <div class="modal-content">
-        <!-- 쿠폰 Header -->
-        <div class="modal-header">
-          <h5 class="modal-title">쿠폰 선택</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"
-                  aria-label="Close"></button>
-        </div>
-        <!-- 쿠폰 Body -->
-        <div class="modal-body">
-          <div class="form-selectgroup-boxes row mb-3 overflow-auto"
-               id="member-coupon-group" style="height: 250px;">
-            <div class="col-12 mb-1" th:id="|member-coupon-${coupon.couponCode}|"
-                 th:each="coupon:${info.memberCoupons}">
-              <div class="row p-0" style="height: fit-content">
-                <div class="col-11 col-sm-10 ps-0">
-                  <label class="form-selectgroup-item">
-                    <input type="radio" class="form-selectgroup-input"
-                           th:id="|orderer-coupon-id-${coupon.couponCode}|"
-                           name="ordererAddressId" th:value="${coupon.couponCode}">
-                    <span class="form-selectgroup-label d-flex align-items-center p-3">
-                    <span class="me-3">
-                      <span class="form-selectgroup-check"></span>
-                    </span>
-                    <span class="form-selectgroup-label-content">
-                      <span class="form-selectgroup-title strong mb-1"
-                            th:id="|orderer-address-${address.id}|"
-                            th:text="${address.address}"></span>
-                    </span>
-                  </span>
-                  </label>
-                </div>
-                <div class="col-1 col-sm-2 p-0">
-                  <a class="btn btn-outline-danger h-full w-full"
-                     th:onclick="|deleteAddress(${address.id})|">
-                    삭제
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 </form>
 <div th:replace="~{common/fragments/alert :: custom-alert}"></div>
 </body>
