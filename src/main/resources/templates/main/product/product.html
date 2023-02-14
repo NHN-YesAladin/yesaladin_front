@@ -333,31 +333,35 @@
             if (quantity > response.data) {
                 writeContentToAlert("구매 가능한 수량을 초과하였습니다! => 재고 : " + response.data);
             } else {
-                document.getElementById('hidden-cart-event').click();
+                const quantity = document.getElementById('quantity').value;
+
+                fetch(FRONT_SERVER + '/cart', {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    method: "POST",
+                    body: JSON.stringify({
+                        id : PRODUCT_ID,
+                        quantity : quantity,
+                        isEbook : IS_EBOOK,
+                        isSubscriptionAvailable: IS_SUBSCRIPTION_AVAILABLE
+                    })
+                }).then(res => res.json()).then(response => {
+                    console.log(response);
+                    if (response.success === false && response.status === 401) {
+                        writeContentToAlert('E-book 또는 구독상품은 회원만 담을 수 있습니다.');
+                        return;
+                    } else if (response.success === false && response.status === 400) {
+                        writeContentToAlert('E-book 또는 구독상품은 1개만 담을 수 있습니다.');
+                        return;
+                    } else {
+                        document.getElementById('hidden-cart-event').click();
+                    }
+                });
             }
         })
 
     })
-
-    const modalCart = document.getElementById('modal-cart-success');
-    modalCart.addEventListener('show.bs.modal', function (event) {
-        const quantity = document.getElementById('quantity').value;
-
-        fetch(FRONT_SERVER + '/cart', {
-            headers: {
-                "Content-Type": "application/json",
-            },
-            method: "POST",
-            body: JSON.stringify({
-                id : PRODUCT_ID,
-                quantity : quantity,
-                isEbook : IS_EBOOK,
-                isSubscriptionAvailable: IS_SUBSCRIPTION_AVAILABLE
-            })
-        }).then(res => {
-            console.log(res);
-        });
-    });
 </script>
 <script>
     const viewer = toastui.Editor.factory({

@@ -37,17 +37,14 @@ public class CategoryRestController {
     }
 
     /**
-     * 해당하는 1차 카테고리 id를 통해 2차 카테고리를 모두 조회하는 기능 페이징 size를 크게하여 조회함
+     * 해당하는 1차 카테고리 id를 통해 2차 카테고리를 모두 조회하는 기능
      *
-     * @param parentId
+     * @param parentId 찾고자하는 부모 카테고리의 id
      * @return
      */
     @GetMapping(value = "/{parentId}", params = "cate=children")
     public List<CategoryResponseDto> getChildCategoriesByParentId(@PathVariable Long parentId) {
-        return queryCategoryService.getChildCategoriesByParentId(
-                new PageRequestDto(0, 200),
-                parentId
-        ).getDataList();
+        return queryCategoryService.getChildCategoriesByParentId(parentId);
     }
 
     /**

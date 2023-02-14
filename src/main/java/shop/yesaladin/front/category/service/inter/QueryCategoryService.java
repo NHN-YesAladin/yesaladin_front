@@ -21,6 +21,13 @@ public interface QueryCategoryService {
     List<CategoryResponseDto> getParentCategories();
 
     /**
+     * 1차 카테고리 id를 부모로 가지는 모든 2차 카테고리를 조회하는 기능
+     *
+     * @return 카테고리의 일부 정보를 담고있는 dto 리스트
+     */
+    List<CategoryResponseDto> getChildCategoriesByParentId(Long parentId);
+
+    /**
      * 1차 카테고리 id를 통해서 자식 카테고리(=2차 카테고리)를 페이징하여 조회하는 기능
      *
      * @param pageRequestDto page와 size를 담고있는 dto
