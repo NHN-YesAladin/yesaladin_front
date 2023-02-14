@@ -15,7 +15,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.config.GatewayConfig;
 import shop.yesaladin.front.member.dto.MemberProfileExistResponseDto;
-import shop.yesaladin.front.member.dto.MemberResponseDto;
 
 /**
  * OAuth2 Login 기능을 수행하기 위한 adapter 클래스 입니다.
@@ -104,35 +103,5 @@ public class Oauth2Adapter {
         );
 
         return response.getBody().getData().isResult();
-    }
-
-    /**
-     * OAuth2 로그인 시 loginId 기준으로 자사 회원에 등록되어 있는 경우 해당 회원 정보를 불러오기 위한 기능입니다.
-     *
-     * @param loginId 조회 대상 회원의 loginId
-     * @return YesAladin 회원 정보
-     * @author 송학현
-     * @since 1.0
-     */
-    public ResponseEntity<ResponseDto<MemberResponseDto>> getYesaladinMember(
-            String loginId
-    ) {
-        HttpHeaders httpHeaders = new HttpHeaders();
-
-        URI uri = UriComponentsBuilder
-                .fromUriString(gatewayConfig.getShopUrl())
-                .path("/v1/members/oauth2/login/{loginId}")
-                .encode()
-                .build()
-                .expand(loginId)
-                .toUri();
-
-        return restTemplate.exchange(
-                uri,
-                HttpMethod.GET,
-                new HttpEntity<>(httpHeaders),
-                new ParameterizedTypeReference<>() {
-                }
-        );
     }
 }
