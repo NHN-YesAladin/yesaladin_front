@@ -68,7 +68,8 @@
                       <tbody class="table-group-divider">
                       <tr th:each="data: ${dataList}">
                         <td>
-                          <a th:text="${data.orderNumber}" th:href="'/orders/'+ ${data.orderNumber}" class="text-muted fw-bolder">
+                          <a th:text="${data.orderNumber}" th:href="'/orders/'+ ${data.orderNumber}"
+                             class="text-muted fw-bolder">
                             주문상세조회
                           </a>
                         </td>
@@ -98,15 +99,41 @@
                             </div>
                             <div th:if="${code != 4}">
                               <div th:if="${code != 5}">
-                                <a th:text="${code != 1} ? '결제취소':'주문취소'"
-                                   href="#" class="btn btn-outline-red w-full m-1">
-                                  주문취소
-                                </a>
+                                <form
+                                    th:action="|/mypage/orders/${data.orderId}?status=CANCEL&code=${code}|"
+                                    method="post" th:text="${code != 1} ? '결제취소':'주문취소'">
+                                  <button class="btn btn-outline-red w-full m-1" type="submit">결제취소
+                                  </button>
+                                </form>
+<!--                                <a th:text="${code != 1} ? '결제취소':'주문취소'"-->
+<!--                                   href="#" class="btn btn-outline-red w-full m-1">-->
+<!--                                  주문취소-->
+<!--                                </a>-->
                               </div>
                               <div th:if="${code == 5}">
-                                <a href="#" class="btn btn-outline-red w-full m-1">
-                                  환불
-                                </a>
+                                <div>
+                                  <form
+                                      th:action="|/mypage/orders/${data.orderId}?status=CONFIRM&code=${code}|"
+                                      method="post">
+                                    <button class="btn btn-primary w-full m-1" type="submit">주문
+                                      확정
+                                    </button>
+                                  </form>
+                                  <!--                                  <a href="#" class="btn btn-outline-red w-full m-1">-->
+                                  <!--                                    주문 확정-->
+                                  <!--                                  </a>-->
+                                </div>
+                                <div>
+                                  <form
+                                      th:action="|/mypage/orders/${data.orderId}?status=REFUND&code=${code}|"
+                                      method="post">
+                                    <button class="btn btn-outline-red w-full m-1" type="submit">환불
+                                    </button>
+                                  </form>
+<!--                                  <a href="#" class="btn btn-outline-red w-full m-1">-->
+<!--                                    환불-->
+<!--                                  </a>-->
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -169,7 +196,6 @@
     console.log(orderName);
     console.log(orderNumber);
     console.log(totalAmount);
-
 
     opener.window.location.href = `${FRONT_SERVER}/payments/empty-pay?orderNumber=${orderNumber}&orderName=${orderName}&totalAmount=${totalAmount}`;
     window.close();

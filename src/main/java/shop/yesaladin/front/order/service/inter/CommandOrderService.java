@@ -3,6 +3,8 @@ package shop.yesaladin.front.order.service.inter;
 import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.order.dto.OrderCreateResponseDto;
 import shop.yesaladin.front.order.dto.OrderMemberCreateRequestDto;
+import shop.yesaladin.front.order.dto.OrderStatusChangeLogResponseDto;
+import shop.yesaladin.front.order.dto.OrderStatusCode;
 
 /**
  * 주문 생성과 관련한 service interface 입니다.
@@ -32,4 +34,15 @@ public interface CommandOrderService {
      * @since 1.0
      */
     boolean hideOrder(Long orderId, boolean hidden);
+
+    /**
+     * 주문 상태 로그를 추가합니다.
+     *
+     * @param orderId 주문 아이디
+     * @param code 주문 상태
+     * @return 상태로그dto
+     * @author 배수한
+     * @since 1.0
+     */
+    ResponseDto<OrderStatusChangeLogResponseDto> appendOrderStatusCode(Long orderId, OrderStatusCode code);
 }
