@@ -92,7 +92,7 @@ public class ProductMainWebController {
     public String products(
             @RequestParam(required = false) Integer typeId,
             @RequestParam(required = false, defaultValue = "0") Integer page,
-            @RequestParam(required = false, defaultValue = "30") Integer size,
+            @RequestParam(required = false, defaultValue = "15") Integer size,
             Model model
     ) {
         PaginatedResponseDto<ProductsResponseDto> products = queryProductService.findAll(

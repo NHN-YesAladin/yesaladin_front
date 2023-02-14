@@ -1,13 +1,39 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>Unauthorized</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+  <title>Yes Aladin! 401 Unauthorized</title>
+  <!-- CSS files -->
+  <link th:href="@{/css/tabler.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-flags.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-payments.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-vendors.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/demo.min.css}" rel="stylesheet"/>
 </head>
 <body>
-<h1>Unauthorized</h1>
-<span th:text="${error}"></span><br />
-<a href="/">홈으로 돌아가기</a>
+<body class="border-top-wide border-primary d-flex flex-column theme-light">
+<div class="page page-center">
+  <div class="container-tight py-4">
+    <div class="empty">
+      <div class="empty-header">401</div>
+      <p class="empty-title">오..이런... 오류가 발생했습니다...</p>
+      <p class="empty-subtitle text-muted">
+        죄송합니다. 유효한 인증 자격 증명이 존재하지 않아 오류가 발생했습니다.
+      </p>
+      <p class="empty-subtitle text-muted" th:text="${error}"></p>
+      <div class="empty-action">
+        <a href="/" class="btn btn-primary">
+          <!-- Download SVG icon from http://tabler-icons.io/i/arrow-left -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M5 12l14 0"></path><path d="M5 12l6 6"></path><path d="M5 12l6 -6"></path></svg>
+          홈으로 돌아가기
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
 </body>
 </html>
 
