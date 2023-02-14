@@ -124,13 +124,15 @@ public abstract class Oauth2Service {
     public boolean isAlreadyMember(Map<String, Object> userInfo, String provider) {
         String loginId;
         if (provider.equals(GITHUB.getValue())) {
-            loginId = Objects.nonNull(userInfo.get(EMAIL.getValue())) ? userInfo.get(EMAIL.getValue())
+            Object email = userInfo.get(EMAIL.getValue());
+            loginId = Objects.nonNull(email) ? email
                     .toString().split("@")[0] : userInfo.get("login").toString();
             return oauth2Adapter.isAlreadyMember(loginId);
         } else { // KAKAO 인 경우
             Map<String, String> kakaoAccount = (Map) userInfo.get(KAKAO_ACCOUNT.getValue());
-            loginId = Objects.nonNull(kakaoAccount.get(EMAIL.getValue()))
-                    ? kakaoAccount.get(EMAIL.getValue()).split("@")[0]
+            String email = kakaoAccount.get(EMAIL.getValue());
+            loginId = Objects.nonNull(email)
+                    ? email.split("@")[0]
                     : userInfo.get("id").toString();
             return oauth2Adapter.isAlreadyMember(loginId);
         }

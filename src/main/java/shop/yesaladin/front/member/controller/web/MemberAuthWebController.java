@@ -84,7 +84,6 @@ public class MemberAuthWebController {
             BindingResult bindingResult,
             Model model
     ) {
-        log.info("request={}", request);
         if (bindingResult.hasErrors()) {
             throw new ValidationFailedException(bindingResult);
         }
