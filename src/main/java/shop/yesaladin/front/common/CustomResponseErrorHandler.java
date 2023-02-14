@@ -16,16 +16,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.client.ResponseErrorHandler;
 import shop.yesaladin.common.dto.ResponseDto;
-import shop.yesaladin.front.common.exception.Custom4xxException;
-import shop.yesaladin.front.common.exception.CustomForbiddenException;
-import shop.yesaladin.front.common.exception.CustomGatewayException;
-import shop.yesaladin.front.common.exception.CustomServerException;
-import shop.yesaladin.front.common.exception.CustomUnauthorizedException;
+import shop.yesaladin.front.common.exception.*;
 
 /**
  * RestTemplate으로 서버에 보낸 요청의 예외 발생 시 HttpStatus 코드에 따라 예외를 발생 시키기 위한 Handler 입니다.
  *
  * @author 송학현
+ * @author 이수정
  * @since 1.0
  */
 @Slf4j
@@ -54,11 +51,14 @@ public class CustomResponseErrorHandler implements ResponseErrorHandler {
 
         if (status == HttpStatus.UNAUTHORIZED.value()) {
             throw new CustomUnauthorizedException(errorMessages.toString());
-        } else if (status == HttpStatus.NOT_FOUND.value()
-                || status == HttpStatus.BAD_REQUEST.value()
-                || status == HttpStatus.METHOD_NOT_ALLOWED.value()
-                || status == HttpStatus.CONFLICT.value()) {
-            throw new Custom4xxException(errorMessages.toString());
+        } else if (status == HttpStatus.NOT_FOUND.value()) {
+            throw new CustomNotFoundException(errorMessages.toString());
+        } else if (status == HttpStatus.BAD_REQUEST.value()) {
+            throw new CustomBadRequestException(errorMessages.toString());
+        } else if (status == HttpStatus.METHOD_NOT_ALLOWED.value()) {
+            throw new CustomMethodNotAllowedException(errorMessages.toString());
+        } else if (status == HttpStatus.CONFLICT.value()) {
+            throw new CustomConflictException(errorMessages.toString());
         } else if (status == HttpStatus.FORBIDDEN.value()) {
             throw new CustomForbiddenException(errorMessages.toString());
         } else if (status == HttpStatus.BAD_GATEWAY.value()) {

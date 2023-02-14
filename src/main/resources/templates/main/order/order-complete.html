@@ -7,18 +7,18 @@
 * Copyright 2018-2022 codecalm.net Paweł Kuna
 * Licensed under MIT (https://github.com/tabler/tabler/blob/master/LICENSE)
 -->
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
-    <title>Yes Aladin!</title>
-    <!-- CSS files -->
-    <link th:href="@{/css/tabler.min.css}" rel="stylesheet"/>
-    <link th:href="@{/css/tabler-flags.min.css}" rel="stylesheet"/>
-    <link th:href="@{/css/tabler-payments.min.css}" rel="stylesheet"/>
-    <link th:href="@{/css/tabler-vendors.min.css}" rel="stylesheet"/>
-    <link th:href="@{/css/demo.min.css}" rel="stylesheet"/>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+  <title>Yes Aladin!</title>
+  <!-- CSS files -->
+  <link th:href="@{/css/tabler.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-flags.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-payments.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/tabler-vendors.min.css}" rel="stylesheet"/>
+  <link th:href="@{/css/demo.min.css}" rel="stylesheet"/>
 </head>
 <body>
 <!-- Libs JS -->
@@ -28,144 +28,55 @@
 <script type="text/javascript" th:src="@{/js/demo.min.js}"></script>
 
 <div class="wrapper">
-    <!-- TODO 1 : HEADER -->
-    <div th:replace="~{common/fragments/header :: fragment-header}"></div>
+  <!-- TODO 1 : HEADER -->
+  <div th:replace="~{common/fragments/header :: fragment-header}"></div>
 
-    <!-- TODO 2 : NAV-BAR -->
-    <div th:replace="~{common/fragments/navbar :: fragment-nav-bar}"></div>
+  <!-- TODO 2 : NAV-BAR -->
+  <div th:replace="~{common/fragments/navbar :: fragment-nav-bar}"></div>
 
-    <!-- TODO 3: BODY -->
-    <div class="page-wrapper">
-        <div class="container-narrow py-4">
-            <div class="card card-md">
-                <div class="ribbon bg-blue">NEW</div>
-                <div class="card-body">
-                    <div class="card card-md">
-                        <div class="m-auto">
-                            <span class="fs-1 fw-bolder">주문 성공!</span>
-                        </div>
-                    </div>
-                    <div class="card card-md">
-                        <div class="card-body">
-                            <h3 class="card-title fs-2">주문 정보</h3>
-                            <div class="m-auto">
-                                <div>
-                                    <span class="fs-3 fw-normal">주문자 : </span>
-                                    <span class="fs-3 fw-bolder" th:text="${response.ordererName}">김최이</span>
-                                </div>
-                                <div>
-                                    <span class="fs-3 fw-normal">주문번호 : </span>
-                                    <span class="fs-3 fw-bolder" th:text="${response.orderNumber}">12</span>
-                                </div>
-                                <div>
-                                    <span class="fs-3 fw-normal">주문명 : </span>
-                                    <span class="fs-3 fw-bolder" th:text="${response.orderName}">주문 성공!</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card card-md">
-                        <div class="card-body">
-                            <h3 class="card-title fs-2">배송 정보</h3>
-                            <div class="m-auto">
-                                <div>
-                                    <span class="fs-3 fw-normal">수령인 : </span>
-                                    <span class="fs-3 fw-bolder" th:text="${response.recipientName}">김최이</span>
-                                </div>
-                                <div>
-                                    <span class="fs-3 fw-normal">수령인 전화번호 : </span>
-                                    <span class="fs-3 fw-bolder" th:text="${response.recipientPhoneNumber}">12</span>
-                                </div>
-                                <div>
-                                    <span class="fs-3 fw-normal">배송지 : </span>
-                                    <span class="fs-3 fw-bolder" th:text="${response.orderAddress}">광주</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card card-md">
-                        <div class="card-body">
-                            <h3 class="card-title fs-2">주문 상태</h3>
-                            <div class="m-auto">
-                                <div class="card card-md">
-                                    <div class="card-body">
-                                        <ul class="steps steps-blue steps-counter">
-                                            <li class="step-item">주문완료</li>
-                                            <li class="step-item active">결제완료</li>
-                                            <li class="step-item">배송 준비중</li>
-                                            <li class="step-item ">배송중</li>
-                                            <li class="step-item">배송 완료</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card card-md">
-                        <div class="card-body">
-                            <h3 class="card-title fs-2">결제 정보</h3>
-                            <div class="m-auto">
-                                <div th:if="${#strings.equals(response.method,'카드')}">
-                                    <div>
-                                        <span class="fs-3 fw-normal">결제 수단 : </span>
-                                        <span class="fs-3 fw-bolder" th:text="${response.method}">카드</span>
-                                        <span class="fs-3" > / </span>
-                                        <span class="fs-3 fw-bolder" th:text="${response.cardOwnerCode}">개인</span>
-                                    </div>
-                                    <div>
-                                        <span class="fs-3 fw-normal">결제 정보 : </span>
-                                        <span class="fs-3 fw-bolder" th:text="${response.cardAcquirerCode}">비씨카드</span>
-                                        <span class="fs-3" > / </span>
-                                        <span class="fs-3 fw-bolder" th:text="${response.cardNumber}">비씨카드</span>
-                                    </div>
-                                    <div>
-                                        <span class="fs-3 fw-normal">결제 승인 번호 : </span>
-                                        <span class="fs-3 fw-bolder" th:text="${response.cardApproveNumber}">1231</span>
-                                    </div>
-                                    <div>
-                                        <span class="fs-3 fw-normal">결제 금액 : </span>
-                                        <span class="fs-3 fw-bolder"  th:text="${#numbers.formatInteger(response.totalAmount,3,'COMMA') + '원'}">1231</span>
-                                    </div>
-                                </div>
-                                <div th:if="${#strings.equals(response.method,'간편결제')}">
-                                    <div>
-                                        <span class="fs-3 fw-normal">결제 수단 : </span>
-                                        <span class="fs-3 fw-bolder" th:text="${response.method}">간편결제</span>
-                                    </div>
-                                    <div>
-                                        <span class="fs-3 fw-normal">결제 정보 (제공사) : </span>
-                                        <span class="fs-3 fw-bolder" th:text="${response.easyPayProvider}">비씨카드</span>
-                                    </div>
-                                    <div>
-                                        <span class="fs-3 fw-normal">결제 금액 : </span>
-                                        <span class="fs-3 fw-bolder"  th:text="${#numbers.formatInteger(response.easyPayAmount,1,'COMMA') + '원'}">1231</span>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <div class="mt-2 m-auto">
-                        <a href="#" class="btn btn-outline-primary w-100">
-                            주문 상세 보기
-                        </a>
-                    </div>
-                    <div class="mt-2 m-auto">
-                        <a href="#" class="btn btn-outline-primary w-100">
-                            홈으로 가기
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-
+  <!-- TODO 3: BODY -->
+  <div class="page-wrapper page-center">
+    <div class="container container-tight py-4">
+      <div class="card card-md">
+        <div class="ribbon bg-blue">NEW</div>
+        <div class="text-center mt-3 mb-3 pt-3">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-green icon-lg" width="24"
+               height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+               stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+            <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"></path>
+            <path d="M9 12l2 2l4 -4"></path>
+          </svg>
+          <h1>주문 성공</h1>
         </div>
-
+        <div class="card-body text-center">
+          <p class="fw-bold">주문 번호 : <span th:text="${orderNumber}"></span></p>
+          <div class="w-full mt-5 mb-5"> </div>
+          <p>오늘도 YesAladin을 이용해주신 고객님 감사합니다.</p>
+          <small class="text-danger">비회원의 경우 조회를 위해 주문 번호를 기억해주시길 바랍니다.</small>
+        </div>
+        <div class="card-footer">
+          <div class="mt-2 m-auto">
+            <a th:href="'/orders/'+ ${orderNumber}" class="btn btn-outline-info w-100">
+              주문 상세 보기
+            </a>
+          </div>
+          <div sec:authorize="isAuthenticated()" class="mt-2 m-auto">
+            <a href="/mypage" class="btn btn-outline-info w-100">
+              마이페이지로 가기
+            </a>
+          </div>
+          <div class="mt-2 m-auto">
+            <a href="/" class="btn btn-outline-info w-100">
+              홈으로 가기
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
-    <!-- TODO 4 : footer -->
-    <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
+  </div>
+  <!-- TODO 4 : footer -->
+  <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
 </div>
 
 </body>

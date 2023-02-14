@@ -48,7 +48,7 @@ public class CouponEventWebController {
         model.addAttribute("couponList", couponList);
         model.addAttribute("frontServerUrl", frontServerMetaConfig.getFrontServerUrl());
         model.addAttribute("shopServerUrl", gatewayConfig.getShopUrl());
-        return "/main/coupon/coupon-main-page";
+        return "main/coupon/coupon-main-page";
     }
 
     /**
@@ -62,7 +62,6 @@ public class CouponEventWebController {
         model.addAttribute("type", TriggerTypeCode.COUPON_OF_THE_MONTH);
         model.addAttribute("frontServerUrl", frontServerMetaConfig.getFrontServerUrl());
         model.addAttribute("shopServerUrl", gatewayConfig.getShopUrl());
-        model.addAttribute("couponPolicy", queryCouponService.getMonthlyCouponPolicy());
-        return "/main/coupon/monthly-coupon-page";
+        return "main/coupon/monthly-coupon-page";
     }
 }

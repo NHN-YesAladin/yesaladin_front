@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
@@ -19,9 +20,6 @@
 <script type="text/javascript" th:src="@{/js/tabler.min.js}"></script>
 <script type="text/javascript" th:src="@{/js/demo.min.js}"></script>
 
-
-<span sec:authorize="isAuthenticated()" th:with="auth=true"></span>
-<span sec:authorize="!isAuthenticated()" th:with="auth=false"></span>
 <div class="wrapper">
   <!-- TODO 1 : HEADER -->
   <div th:replace="~{common/fragments/header :: fragment-header}"></div>
@@ -218,51 +216,71 @@
               </div>
             </div>
             <hr>
-            <div th:if="${response.order.orderStatusCode.statusCode >= 2}">
+            <div class="card-body">
+              <h3 class="card-title fs-2">결제 정보</h3>
+              <div class="card card-md">
+                <div th:if="${response.payment == null}">
+                  <a href="#" class="btn btn-primary w-100">
+                    결제
+                  </a>
+                </div>
+              </div>
+            </div>
+            <!--      TODO 취소,환불시에는 결제 정보 있으면 보여주게 만들어야함 & 결제 안했으면 결제 버튼 추가 필요     -->
+            <div
+                th:if="${response.order.orderStatusCode.statusCode >= 2} and ${response.order.orderStatusCode.statusCode <= 5}">
               <div class="card-body">
                 <h3 class="card-title fs-2">결제 정보</h3>
                 <div class="card card-md">
                   <div class="card-body p-2">
                     <div class="m-auto my-3">
                       <div th:if="${#strings.equals(response.payment.method,'카드')}">
-                        <div >
+                        <div>
                           <span class="fs-3 fw-normal">결제 수단 : </span>
-                          <span class="fs-3 fw-bolder" th:text="${response.payment.method}">카드</span>
+                          <span class="fs-3 fw-bolder"
+                                th:text="${response.payment.method}">카드</span>
                           <span class="fs-3"> / </span>
                           <span class="fs-3 fw-bolder" th:text="${response.payment.cardOwnerCode}">개인</span>
                         </div>
                         <div>
                           <span class="fs-3 fw-normal">결제 정보 : </span>
-                          <span class="fs-3 fw-bolder" th:text="${response.payment.cardAcquirerCode}">비씨카드</span>
+                          <span class="fs-3 fw-bolder"
+                                th:text="${response.payment.cardAcquirerCode}">비씨카드</span>
                           <span class="fs-3"> / </span>
-                          <span class="fs-3 fw-bolder" th:text="${response.payment.cardNumber}">비씨카드</span>
+                          <span class="fs-3 fw-bolder"
+                                th:text="${response.payment.cardNumber}">비씨카드</span>
                         </div>
                         <div>
                           <span class="fs-3 fw-normal">결제 승인 번호 : </span>
-                          <span class="fs-3 fw-bolder" th:text="${response.payment.cardApproveNumber}">1231</span>
+                          <span class="fs-3 fw-bolder"
+                                th:text="${response.payment.cardApproveNumber}">1231</span>
                         </div>
                         <div>
                           <span class="fs-3 fw-normal">결제 승인 일시 : </span>
-                          <span class="fs-3 fw-bolder" th:text="${#temporals.format(response.payment.approvedDateTime, 'yyyy-MM-dd  HH:mm:ss')}">1231</span>
+                          <span class="fs-3 fw-bolder"
+                                th:text="${#temporals.format(response.payment.approvedDateTime, 'yyyy-MM-dd  HH:mm:ss')}">1231</span>
                         </div>
                         <div>
                           <span class="fs-3 fw-normal">결제 금액 : </span>
                           <span class="fs-3 fw-bolder"
-                                th:text="${#numbers.formatInteger(response.payment.totalAmount,3,'COMMA') + '원'}">1231</span>
+                                th:text="${#numbers.formatInteger(response.payment.paymentTotalAmount,3,'COMMA') + '원'}">1231</span>
                         </div>
                       </div>
                       <div th:if="${#strings.equals(response.payment.method,'간편결제')}">
                         <div>
                           <span class="fs-3 fw-normal">결제 수단 : </span>
-                          <span class="fs-3 fw-bolder" th:text="${response.payment.method}">간편결제</span>
+                          <span class="fs-3 fw-bolder"
+                                th:text="${response.payment.method}">간편결제</span>
                         </div>
                         <div>
                           <span class="fs-3 fw-normal">결제 정보 (제공사) : </span>
-                          <span class="fs-3 fw-bolder" th:text="${response.payment.easyPayProvider}">비씨카드</span>
+                          <span class="fs-3 fw-bolder"
+                                th:text="${response.payment.easyPayProvider}">비씨카드</span>
                         </div>
                         <div>
                           <span class="fs-3 fw-normal">결제 승인 일시 : </span>
-                          <span class="fs-3 fw-bolder" th:text="${#temporals.format(response.payment.approvedDateTime, 'yyyy-MM-dd  HH:mm:ss')}">1231</span>
+                          <span class="fs-3 fw-bolder"
+                                th:text="${#temporals.format(response.payment.approvedDateTime, 'yyyy-MM-dd  HH:mm:ss')}">1231</span>
                         </div>
                         <div>
                           <span class="fs-3 fw-normal">결제 금액 : </span>
@@ -277,6 +295,17 @@
               </div>
             </div>
           </div>
+        </div>
+        <div class="mt-2 m-auto">
+          <a sec:authorize="isAuthenticated()" href="/mypage"
+             class="btn btn-outline-info w-100">
+            마이페이지로 가기
+          </a>
+        </div>
+        <div class="mt-2 m-auto">
+          <a href="/" class="btn btn-outline-info w-100">
+            홈으로 가기
+          </a>
         </div>
       </div>
     </div>
@@ -307,12 +336,12 @@
       }
     });
   }
+
   function removeActive() {
     stepItems.forEach(item => {
       item.classList.remove("active");
     });
   }
-
 
 
 </script>

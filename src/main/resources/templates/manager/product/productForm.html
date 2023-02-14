@@ -55,9 +55,13 @@
         <div class="card-body">
           <div class="mb-3">
             <label class="form-label">상품 ISBN</label>
-            <input type="text" class="form-control" id="isbn" name="isbn" placeholder="ISBN..."
-                   maxlength="13" pattern="([0-9]{13})" required>
-            <div class="invalid-feedback">'-'을 제외한 13자리 ISBN을 입력해주세요.</div>
+            <div class="row p-2">
+              <input type="text" class="form-control col" id="isbn" name="isbn" placeholder="ISBN..."
+                     maxlength="13" pattern="([0-9]{13})" required>
+              <div class="invalid-feedback">'-'을 제외한 13자리 ISBN을 입력해주세요.</div>
+              <button type="button" class="btn col-auto ms-1" id="isbn-check" onclick="isbnCheck()">ISBN 중복체크</button>
+            </div>
+            <div th:replace="~{common/fragments/alert :: custom-alert}"></div>
           </div>
 
           <div class="mb-3">
@@ -451,8 +455,37 @@
   <!-- TODO 4 : footer -->
 </div>
 <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
-<div class="d-none" id="front-server-url"
-     th:text="${@environment.getProperty('yesaladin.front.url')}"></div>
+<div class="d-none" id="front-server-url" th:text="${@environment.getProperty('yesaladin.front.url')}"></div>
+<div class="d-none" id="shop-server-url" th:text="${@environment.getProperty('yesaladin.gateway.shop')}"></div>
+<script>
+  let SHOP_SERVER = document.getElementById('shop-server-url').textContent;
+  function isbnCheck() {
+    const isbn = document.getElementById('isbn').value;
+    console.log("isbn = " + isbn);
+
+    if (isbn === '') {
+      writeContentToAlert('ISBN을 입력해주세요.');
+      return;
+    }
+
+    let isbnRegex = /^.*(?=.*\d)(?=^.{13}).*$/;
+    if (!isbnRegex.test(isbn)) {
+      writeContentToAlert('ISBN을 - 없이 13자 입력해주세요.');
+      return;
+    }
+
+    fetch(SHOP_SERVER + "/v1/products/check/" + isbn, {
+      method: "GET"
+    }).then(res => res.json()).then(response => {
+      if (response.data === false) {
+        document.getElementById('isbn').disabled = true;
+        document.getElementById('isbn-check').disabled = true;
+
+        writeContentToAlert('등록 가능한 ISBN 입니다.');
+      }
+    });
+  }
+</script>
 <script>
   document.getElementById('ebook-file').addEventListener('change', () => {
     document.getElementById('subscribe-form').classList.add('d-none');
@@ -533,6 +566,12 @@
         let isbnVal = document.getElementById('isbn').value;
         if (!isbnRegex.test(isbnVal) || emptyRegex.test(isbnVal)) {
           alert('ISBN을 - 없이 13자 입력해주세요.');
+          event.preventDefault();
+          return false;
+        }
+
+        if (document.getElementById('isbn').disabled !== true) {
+          alert('ISBN 중복체크를 해주세요.');
           event.preventDefault();
           return false;
         }
@@ -702,7 +741,6 @@
     })
   }
 </script>
-
 <script>
   document.getElementById('author-search').addEventListener('click', (e) => {
     e.preventDefault()
@@ -815,7 +853,6 @@
   }
 
 </script>
-
 <script>
   document.getElementById('category-search').addEventListener('click', function (e){
     e.preventDefault()
@@ -923,7 +960,6 @@
 
   }
 </script>
-
 <script>
   document.getElementById('publisher-search').addEventListener('click', (e) => {
     e.preventDefault()
@@ -1020,7 +1056,6 @@
     mainCategoriesView.appendChild(mainLabel)
   }
 </script>
-
 <script>
   //검색 테이블 초기화
   function initSearchTable(table) {

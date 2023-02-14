@@ -434,13 +434,25 @@
 
 </div>
 <div class="d-none" id="shop-server-url" th:text="${@environment.getProperty('yesaladin.gateway.shop')}"></div>
+<div class="d-none" id="front-server-url" th:text="${@environment.getProperty('yesaladin.front.url')}"></div>
 <script>
   let SHOP_SERVER = document.getElementById('shop-server-url').textContent;
+  let FRONT_SERVER = document.getElementById('front-server-url').textContent;
 
   function deleteInCart(id) {
-    fetch('/cart/' + id, {
-      method: "DELETE"
-    }).finally(() => window.location.reload());
+    fetch(FRONT_SERVER + '/cart/delete/' + id, {
+      method: "POST",
+      body: null
+    }).then(response => {
+      if (response.ok) {
+        console.log("delete url = " + FRONT_SERVER + '/cart/' + id);
+        window.location.reload();
+      } else {
+        console.log(response);
+      }
+    }).catch(e => {
+      console.log(e);
+    });
   }
 
   function modifyQuantity(id) {
@@ -459,8 +471,8 @@
         document.getElementById('quantity' + id).value = document.getElementById('hidden-quantity-' + id).value;
       } else {
         // 수량 변경
-        fetch('/cart/' + id, {
-          method: "PUT",
+        fetch(FRONT_SERVER + '/cart/change-quantity/' + id, {
+          method: "POST",
           headers: {
             "Content-Type": "application/json"
           },
@@ -468,6 +480,7 @@
             "quantity": quantity
           })
         }).then(() => {
+          console.log("quantity modify url = " + FRONT_SERVER + '/cart/' + id);
           window.location.reload();
         });
       }

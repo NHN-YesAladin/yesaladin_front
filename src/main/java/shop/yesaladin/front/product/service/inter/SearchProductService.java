@@ -1,5 +1,6 @@
 package shop.yesaladin.front.product.service.inter;
 
+import org.springframework.data.domain.Pageable;
 import shop.yesaladin.front.product.dto.SearchProductRequestDto;
 import shop.yesaladin.front.product.dto.SearchedProductResponseDto;
 
@@ -21,4 +22,15 @@ public interface SearchProductService {
      * @since : 1.0
      */
     SearchedProductResponseDto searchProductsByProductField(SearchProductRequestDto requestDto);
+
+    /**
+     * 카테고리 id를 통해 상품 검색
+     *
+     * @param categoryId 카테고리 id
+     * @param pageable   페이지 정보
+     * @return 검색된 리스트
+     * @author : 김선홍
+     * @since : 1.0
+     */
+    SearchedProductResponseDto searchProductByCategoryId(Long categoryId, Pageable pageable);
 }
