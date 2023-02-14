@@ -42,14 +42,38 @@
       <div class="col-12">
         <!-- 주문 상세 Step -->
         <div class="card card-md">
-          <div id="stepper" th:data-code="${response.order.orderStatusCode}" class="card-body p-0">
-            <ul class="steps steps-blue steps-counter m-2">
-              <li id="step-order" data-code="ORDER" class="step-item">주문완료</li>
-              <li id="step-deposit" data-code="DEPOSIT" class="step-item active">결제완료</li>
-              <li id="step-ready" data-code="READY" class="step-item">배송 준비중</li>
-              <li id="step-delivery" data-code="DELIVERY" class="step-item ">배송중</li>
-              <li id="step-complete" data-code="COMPLETE" class="step-item">배송 완료</li>
-            </ul>
+          <div th:if="${response.order.orderStatusCode.statusCode >= 7}">
+            <div class="ribbon ribbon-top bg-red">
+              <!-- Download SVG icon from http://tabler-icons.io/i/star -->
+              <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-alert-circle"
+                   width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                   fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                <path d="M12 12m-9 0a9 9 0 1 0 18 0 9 9 0 1 0-18 0"></path>
+                <path d="M12 8l0 4"></path>
+                <path d="M12 16l.01 0"></path>
+              </svg>
+            </div>
+            <div class="card-body">
+              <div class="m-auto">
+                <h2 class="text-center">
+                  <span>주문 상태 : </span>
+                  <span class="text-danger fw-bolder"  th:text="${response.order.orderStatusCode.statusCode == 7} ? '환불 상태' : '취소 상태'"></span>
+                </h2>
+              </div>
+            </div>
+          </div>
+          <div th:if="${response.order.orderStatusCode.statusCode < 7}">
+            <div id="stepper" th:data-code="${response.order.orderStatusCode}" class="card-body p-0">
+              <ul class="steps steps-blue steps-counter m-2">
+                <li id="step-order" data-code="ORDER" class="step-item">주문완료</li>
+                <li id="step-deposit" data-code="DEPOSIT" class="step-item active">결제완료</li>
+                <li id="step-ready" data-code="READY" class="step-item">배송 준비중</li>
+                <li id="step-delivery" data-code="DELIVERY" class="step-item ">배송중</li>
+                <li id="step-complete" data-code="COMPLETE" class="step-item">배송 완료</li>
+                <li id="step-confirm" data-code="CONFIRM" class="step-item">주문 확정</li>
+              </ul>
+            </div>
           </div>
         </div>
         <!-- 주문 상세 Main -->
@@ -219,7 +243,7 @@
             <div class="card-body">
               <h3 class="card-title fs-2">결제 정보</h3>
               <div class="card card-md">
-                <div th:if="${response.payment == null}">
+                <div th:if="${response.payment == null} and ${response.order.orderStatusCode.statusCode <= 2}">
                   <a href="#" class="btn btn-primary w-100">
                     결제
                   </a>
@@ -228,7 +252,7 @@
             </div>
             <!--      TODO 취소,환불시에는 결제 정보 있으면 보여주게 만들어야함 & 결제 안했으면 결제 버튼 추가 필요     -->
             <div
-                th:if="${response.order.orderStatusCode.statusCode >= 2} and ${response.order.orderStatusCode.statusCode <= 5}">
+                th:if="${response.order.orderStatusCode.statusCode >= 2} and ${response.order.orderStatusCode.statusCode <= 6}">
               <div class="card-body">
                 <h3 class="card-title fs-2">결제 정보</h3>
                 <div class="card card-md">
@@ -290,7 +314,6 @@
                       </div>
                     </div>
                   </div>
-
                 </div>
               </div>
             </div>
@@ -330,8 +353,10 @@
 
   function setActive() {
     let statusCode = document.getElementById("stepper").dataset["code"];
+    let statusCodeNegative = document.getElementById("stepper-negative").dataset["code"];
+
     stepItems.forEach(item => {
-      if (item.dataset["code"] === statusCode) {
+      if (item.dataset["code"] === statusCode || item.dataset["code"] === statusCode) {
         item.classList.add("active");
       }
     });
