@@ -99,40 +99,36 @@
                             </div>
                             <div th:if="${code != 4}">
                               <div th:if="${code != 5}">
-                                <form
+                                <form id="form-cancel"
                                     th:action="|/mypage/orders/${data.orderId}?status=CANCEL&code=${code}|"
-                                    method="post" th:text="${code != 1} ? '결제취소':'주문취소'">
-                                  <button class="btn btn-outline-red w-full m-1" type="submit">결제취소
-                                  </button>
+                                    method="post">
+                                  <a id="cancel" th:text="${code != 1} ? '결제취소':'주문취소'"
+                                     href="#" class="btn btn-outline-red w-full m-1 status-btn">
+                                    주문취소
+                                  </a>
                                 </form>
-<!--                                <a th:text="${code != 1} ? '결제취소':'주문취소'"-->
-<!--                                   href="#" class="btn btn-outline-red w-full m-1">-->
-<!--                                  주문취소-->
-<!--                                </a>-->
+
                               </div>
                               <div th:if="${code == 5}">
                                 <div>
-                                  <form
+                                  <form id="form-confirm"
                                       th:action="|/mypage/orders/${data.orderId}?status=CONFIRM&code=${code}|"
                                       method="post">
-                                    <button class="btn btn-primary w-full m-1" type="submit">주문
-                                      확정
-                                    </button>
+                                    <a id="confirm" href="#" class="btn btn-outline-red w-full m-1 status-btn">
+                                      주문 확정
+                                    </a>
                                   </form>
-                                  <!--                                  <a href="#" class="btn btn-outline-red w-full m-1">-->
-                                  <!--                                    주문 확정-->
-                                  <!--                                  </a>-->
+
                                 </div>
                                 <div>
-                                  <form
+                                  <form id="form-refund"
                                       th:action="|/mypage/orders/${data.orderId}?status=REFUND&code=${code}|"
                                       method="post">
-                                    <button class="btn btn-outline-red w-full m-1" type="submit">환불
-                                    </button>
+                                    <a id="refund" href="#" class="btn btn-outline-red w-full m-1 status-btn">
+                                      환불
+                                    </a>
                                   </form>
-<!--                                  <a href="#" class="btn btn-outline-red w-full m-1">-->
-<!--                                    환불-->
-<!--                                  </a>-->
+
                                 </div>
                               </div>
                             </div>
@@ -171,7 +167,18 @@
 
   window.addEventListener('DOMContentLoaded', (event) => {
     initConnectionInfo();
+    let buttons = document.querySelectorAll(".status-btn");
+    buttons.forEach(b => {
+      b.addEventListener('click', (event) => {
+        let target = event.target;
+        console.log(target.id);
+        document.getElementById(`form-${target.id}`).submit();
+      });
+    });
   });
+
+
+
 
   window.addEventListener('beforeunload', (event) => {
     opener.popupCloseEvent(this); //부모 창의 이벤트  - 닫힐때 적용
