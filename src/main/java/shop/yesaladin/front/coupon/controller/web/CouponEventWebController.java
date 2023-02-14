@@ -62,6 +62,7 @@ public class CouponEventWebController {
         model.addAttribute("type", TriggerTypeCode.COUPON_OF_THE_MONTH);
         model.addAttribute("frontServerUrl", frontServerMetaConfig.getFrontServerUrl());
         model.addAttribute("shopServerUrl", gatewayConfig.getShopUrl());
+        model.addAttribute("couponPolicy", queryCouponService.getMonthlyCouponPolicy());
         return "main/coupon/monthly-coupon-page";
     }
 }
