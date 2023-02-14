@@ -190,7 +190,7 @@ public class QueryProductServiceImpl implements QueryProductService {
     public PaginatedResponseDto<ProductRecentResponseDto> findRecentProduct(Pageable pageable) {
         String uri = UriComponentsBuilder
                 .fromUriString(url)
-                .path(PATH + "/recent")
+                .path(PATH + "/recent/product")
                 .queryParam("size", pageable.getPageSize())
                 .queryParam("page", pageable.getPageNumber())
                 .toUriString();
@@ -211,7 +211,7 @@ public class QueryProductServiceImpl implements QueryProductService {
     ) throws JsonProcessingException {
         String uri = UriComponentsBuilder
                 .fromUriString(url)
-                .path(PATH + "/recentview")
+                .path(PATH + "/recentview/product")
                 .queryParam("size", pageable.getPageSize())
                 .queryParam("page", pageable.getPageNumber())
                 .toUriString();
