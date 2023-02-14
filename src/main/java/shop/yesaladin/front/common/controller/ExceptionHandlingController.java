@@ -36,9 +36,9 @@ public class ExceptionHandlingController implements ErrorController {
             if (Objects.equals(statusCode, HttpStatus.FORBIDDEN.value())) {
                 return new ModelAndView("common/errors/forbidden");
             } else if (Objects.equals(statusCode, HttpStatus.NOT_FOUND.value())) {
-                return new ModelAndView("common/errors/4xx");
+                return new ModelAndView("common/errors/notfound");
             } else if (Objects.equals(statusCode, HttpStatus.INTERNAL_SERVER_ERROR.value())) {
-                return new ModelAndView("common/errors/5xx");
+                return new ModelAndView("common/errors/internal-server");
             }
         }
 
