@@ -1,15 +1,17 @@
 package shop.yesaladin.front.product.dto;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 /**
  * 주문한 상품의 정보를 반환하기 위한 dto 클래스입니다.
+ * <p>
+ * ProductOrderResponseDto 와 동일한 클래스지만 이름이 달라 deserializing 불가
  *
- *  ProductOrderResponseDto 와 동일한 클래스지만 이름이 달라 deserializing 불가
  * @author 배수한
  * @since 1.0
  */

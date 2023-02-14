@@ -27,7 +27,7 @@ public interface SearchProductService {
      * 카테고리 id를 통해 상품 검색
      *
      * @param categoryId 카테고리 id
-     * @param pageable 페이지 정보
+     * @param pageable   페이지 정보
      * @return 검색된 리스트
      * @author : 김선홍
      * @since : 1.0
