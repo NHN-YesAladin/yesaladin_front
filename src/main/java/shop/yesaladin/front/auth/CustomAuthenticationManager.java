@@ -96,13 +96,12 @@ public class CustomAuthenticationManager implements AuthenticationManager {
         HttpServletResponse servletResponse = Objects.requireNonNull(((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()))
                 .getResponse();
 
-        Cookie authCookie = cookieUtils.createCookie(UUID_CODE.getValue(), uuid, 60 * 30);
+        Cookie authCookie = cookieUtils.createCookieWithoutMaxAge(UUID_CODE.getValue(), uuid);
 
         moveIntoMemberCart(loginRequestDto.getLoginId(), servletRequest);
-        Cookie cartCookie = cookieUtils.createCookie(
+        Cookie cartCookie = cookieUtils.createCookieWithoutMaxAge(
                 "CART_NO",
-                loginRequestDto.getLoginId(),
-                60 * 60 * 24 * 30
+                loginRequestDto.getLoginId()
         );
 
         servletResponse.addCookie(authCookie);
@@ -137,7 +136,7 @@ public class CustomAuthenticationManager implements AuthenticationManager {
      */
     private void moveIntoMemberCart(String loginId, HttpServletRequest servletRequest) {
         String cartNo = cookieUtils.getValueFromCookie(servletRequest.getCookies(), "CART_NO");
-        if (Objects.nonNull(cartNo)) {
+        if (Objects.nonNull(cartNo) && !cartNo.equals(loginId)) {
             Map<Object, Object> cart = redisTemplate.opsForHash().entries(cartNo);
             Map<Object, Object> login = redisTemplate.opsForHash().entries(loginId);
 
