@@ -11,7 +11,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import shop.yesaladin.front.member.dto.MemberResponseDto;
 import shop.yesaladin.front.oauth.Oauth2Factory;
 import shop.yesaladin.front.oauth.dto.Oauth2LoginRequestDto;
 import shop.yesaladin.front.oauth.service.Oauth2Service;
@@ -73,8 +72,7 @@ public class Oauth2Controller {
             return "auth/oauth-signup";
         }
 
-        MemberResponseDto member = oauth2Service.getMember(oauth2LoginRequestDto.getEmail());
-        model.addAttribute("oauthMember", member);
+        model.addAttribute("oauthMember", oauth2LoginRequestDto);
         return "auth/oauth-login";
     }
 

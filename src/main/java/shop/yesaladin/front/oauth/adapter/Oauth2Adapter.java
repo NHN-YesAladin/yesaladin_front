@@ -77,22 +77,22 @@ public class Oauth2Adapter {
     /**
      * YesAladin 자사 회원 인지 판별하기 위한 기능 입니다.
      *
-     * @param email OAuth2에서 회원 정보 조회 시 가져온 email 입니다.
+     * @param loginId OAuth2에서 제공 받은 회원 정보로 생성된 loginId 입니다.
      * @return 해당 유저가 YesAladin 자사 회원 인지에 대한 결과
      * @author 송학현
      * @since 1.0
      */
-    public boolean isAlreadyMember(String email) {
+    public boolean isAlreadyMember(String loginId) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity entity = new HttpEntity<>(headers);
 
         URI uri = UriComponentsBuilder
                 .fromUriString(gatewayConfig.getShopUrl())
-                .path("/v1/members/checkEmail/{email}")
+                .path("/v1/members/checkId/{loginId}")
                 .encode()
                 .build()
-                .expand(email)
+                .expand(loginId)
                 .toUri();
 
         ResponseEntity<ResponseDto<MemberProfileExistResponseDto>> response = restTemplate.exchange(
@@ -107,24 +107,24 @@ public class Oauth2Adapter {
     }
 
     /**
-     * OAuth2 로그인 시 email 기준으로 자사 회원에 등록되어 있는 경우 해당 회원 정보를 불러오기 위한 기능입니다.
+     * OAuth2 로그인 시 loginId 기준으로 자사 회원에 등록되어 있는 경우 해당 회원 정보를 불러오기 위한 기능입니다.
      *
-     * @param email 조회 대상 회원의 email
+     * @param loginId 조회 대상 회원의 loginId
      * @return YesAladin 회원 정보
      * @author 송학현
      * @since 1.0
      */
     public ResponseEntity<ResponseDto<MemberResponseDto>> getYesaladinMember(
-            String email
+            String loginId
     ) {
         HttpHeaders httpHeaders = new HttpHeaders();
 
         URI uri = UriComponentsBuilder
                 .fromUriString(gatewayConfig.getShopUrl())
-                .path("/v1/members/oauth2/login/{email}")
+                .path("/v1/members/oauth2/login/{loginId}")
                 .encode()
                 .build()
-                .expand(email)
+                .expand(loginId)
                 .toUri();
 
         return restTemplate.exchange(
