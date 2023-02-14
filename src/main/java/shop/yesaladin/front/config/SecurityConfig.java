@@ -50,7 +50,7 @@ public class SecurityConfig {
 //                .mvcMatchers("/manager/**").hasAuthority("ROLE_ADMIN")
                 .mvcMatchers("/coupon").authenticated()
                 .anyRequest().permitAll();
-        http.formLogin().disable();
+        http.formLogin().loginPage("/members/login");
         http.logout()
                 .logoutUrl("/logout")
                 .addLogoutHandler(customLogoutHandler())
@@ -85,7 +85,7 @@ public class SecurityConfig {
                 .mvcMatchers("/manager/**").hasAuthority("ROLE_ADMIN")
                 .mvcMatchers("/coupon").authenticated()
                 .anyRequest().permitAll();
-        http.formLogin().disable();
+        http.formLogin().loginPage("/members/login");
         http.logout()
                 .logoutUrl("/logout")
                 .addLogoutHandler(customLogoutHandler())
