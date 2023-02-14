@@ -442,9 +442,15 @@
   function deleteInCart(id) {
     fetch(FRONT_SERVER + '/cart/' + id, {
       method: "DELETE"
-    }).finally(() => {
-      console.log("delete url = " + FRONT_SERVER + '/cart/' + id);
-      window.location.reload()
+    }).then(response => {
+      if (response.ok) {
+        console.log("delete url = " + FRONT_SERVER + '/cart/' + id);
+        window.location.reload();
+      } else {
+        console.log(response);
+      }
+    }).catch(e => {
+      console.log(e);
     });
   }
 
