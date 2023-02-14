@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import shop.yesaladin.common.dto.ResponseDto;
-import shop.yesaladin.front.common.exception.Custom4xxException;
+import shop.yesaladin.front.common.exception.CustomBadRequestException;
 import shop.yesaladin.front.coupon.dto.CouponGiveRequestDto;
 import shop.yesaladin.front.coupon.dto.RequestIdOnlyDto;
 import shop.yesaladin.front.coupon.service.inter.CommandMemberCouponService;
@@ -48,8 +48,8 @@ public class MemberCouponRestController {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(Custom4xxException.class)
-    public ResponseDto<RequestIdOnlyDto> handleException(Custom4xxException e) {
+    @ExceptionHandler(CustomBadRequestException.class)
+    public ResponseDto<RequestIdOnlyDto> handleException(CustomBadRequestException e) {
         return ResponseDto.<RequestIdOnlyDto>builder()
                 .success(false)
                 .status(HttpStatus.BAD_REQUEST)

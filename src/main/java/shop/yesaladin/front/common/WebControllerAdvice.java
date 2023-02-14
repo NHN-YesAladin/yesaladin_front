@@ -14,12 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import shop.yesaladin.front.common.exception.Custom4xxException;
-import shop.yesaladin.front.common.exception.CustomForbiddenException;
-import shop.yesaladin.front.common.exception.CustomServerException;
-import shop.yesaladin.front.common.exception.CustomUnauthorizedException;
-import shop.yesaladin.front.common.exception.InvalidHttpHeaderException;
-import shop.yesaladin.front.common.exception.ValidationFailedException;
+import shop.yesaladin.front.common.exception.*;
 import shop.yesaladin.front.common.utils.CookieUtils;
 import shop.yesaladin.front.member.exception.InvalidLogoutRequestException;
 
@@ -27,6 +22,7 @@ import shop.yesaladin.front.member.exception.InvalidLogoutRequestException;
  * 예외 처리를 위한 Controller Advice 입니다.
  *
  * @author 송학현
+ * @author 이수정
  * @since 1.0
  */
 @Slf4j
@@ -44,12 +40,36 @@ public class WebControllerAdvice {
         return "common/errors/error";
     }
 
-    @ExceptionHandler(Custom4xxException.class)
-    public String handle4xxException(Exception ex, Model model) {
+    @ExceptionHandler(CustomNotFoundException.class)
+    public String handleNotFoundException(Exception ex, Model model) {
         log.error("", ex);
 
         model.addAttribute("error", ex.getMessage());
-        return "common/errors/4xx";
+        return "common/errors/notfound";
+    }
+
+    @ExceptionHandler(CustomBadRequestException.class)
+    public String handleBadRequestException(Exception ex, Model model) {
+        log.error("", ex);
+
+        model.addAttribute("error", ex.getMessage());
+        return "common/errors/bad-request";
+    }
+
+    @ExceptionHandler(CustomMethodNotAllowedException.class)
+    public String handleMethodNotAllowedException(Exception ex, Model model) {
+        log.error("", ex);
+
+        model.addAttribute("error", ex.getMessage());
+        return "common/errors/method-not-allowed";
+    }
+
+    @ExceptionHandler(CustomConflictException.class)
+    public String handleConflictException(Exception ex, Model model) {
+        log.error("", ex);
+
+        model.addAttribute("error", ex.getMessage());
+        return "common/errors/conflict";
     }
 
     @ExceptionHandler({BadCredentialsException.class, CustomForbiddenException.class})
