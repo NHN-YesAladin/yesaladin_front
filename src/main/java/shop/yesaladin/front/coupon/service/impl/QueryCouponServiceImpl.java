@@ -1,5 +1,6 @@
 package shop.yesaladin.front.coupon.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -26,6 +27,7 @@ import shop.yesaladin.front.coupon.dto.CouponBoundResponseDto;
 import shop.yesaladin.front.coupon.dto.CouponSummaryDto;
 import shop.yesaladin.front.coupon.dto.CouponSummaryWithBoundDto;
 import shop.yesaladin.front.coupon.dto.MemberCouponSummaryDto;
+import shop.yesaladin.front.coupon.dto.MonthlyCouponPolicyDto;
 import shop.yesaladin.front.coupon.service.inter.QueryCouponService;
 import shop.yesaladin.front.product.dto.ProductOnlyTitleDto;
 
@@ -40,6 +42,8 @@ import shop.yesaladin.front.product.dto.ProductOnlyTitleDto;
 @Service
 public class QueryCouponServiceImpl implements QueryCouponService {
 
+    private static final String MONTHLY_COUPON_OPEN_DATE_TIME_KEY = "monthlyCouponOpenDateTime";
+    private static final String MONTHLY_COUPON_ID_KEY = "monthlyCouponId";
     private final RestTemplate restTemplate;
     private final RedisTemplate<String, String> redisTemplate;
     private final GatewayConfig gatewayConfig;
@@ -162,9 +166,14 @@ public class QueryCouponServiceImpl implements QueryCouponService {
      * {@inheritDoc}
      */
     @Override
-    public String getMonthlyCouponId() {
-        if (Boolean.TRUE.equals(redisTemplate.hasKey("monthlyCouponId"))) {
-            return redisTemplate.opsForValue().get("monthlyCouponId");
+    public MonthlyCouponPolicyDto getMonthlyCouponPolicy() {
+        if (Boolean.TRUE.equals(redisTemplate.opsForHash()
+                .hasKey("monthlyCouponPolicy", MONTHLY_COUPON_ID_KEY))) {
+            Long couponId = (Long) redisTemplate.opsForHash()
+                    .get("monthlyCouponPolicy", MONTHLY_COUPON_ID_KEY);
+            LocalDateTime openDateTime = (LocalDateTime) redisTemplate.opsForHash()
+                    .get("monthlyCouponPolicy", MONTHLY_COUPON_OPEN_DATE_TIME_KEY);
+            return new MonthlyCouponPolicyDto(couponId, openDateTime);
         } else {
             throw new ClientException(
                     ErrorCode.COUPON_NOT_FOUND,

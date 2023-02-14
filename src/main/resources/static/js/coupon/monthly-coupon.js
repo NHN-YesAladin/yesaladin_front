@@ -20,8 +20,11 @@ function hideLoadingScreen() {
 async function requestCouponGive(target) {
   const triggerTypeCode = target.dataset.triggertypecode;
   const couponId = target.dataset.couponid;
-  const now = new Date();
-  const requestBody = {triggerTypeCode, couponId, now};
+  const timeElapsed = Date.now();
+  const requestDateTime = (new Date(timeElapsed)).toISOString();
+  console.log(requestDateTime);
+
+  const requestBody = {triggerTypeCode, couponId, requestDateTime};
 
   const response = await fetch(`${FRONT_SERVER}/member-coupons`,
       {
