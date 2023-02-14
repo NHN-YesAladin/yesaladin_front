@@ -51,7 +51,7 @@ async function requestCouponGive(target) {
 }
 
 function openSocketAndAddEventListener(requestId) {
-  const socket = new SockJs(`${SHOP_SERVER}${SOCKET_PATH}`);
+  const socket = new SockJS(`${SHOP_SERVER}${SOCKET_PATH}`);
   const stompClient = Stomp.over(socket);
 
   stompClient.connect({}, function (frame) {
@@ -62,7 +62,7 @@ function openSocketAndAddEventListener(requestId) {
           hideLoadingScreen();
           stompClient.disconnect();
         });
-  })
+  });
 }
 
 function addEventListenerToIssueBtn() {
