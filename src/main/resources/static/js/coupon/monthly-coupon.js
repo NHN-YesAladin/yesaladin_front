@@ -20,18 +20,26 @@ function hideLoadingScreen() {
 async function requestCouponGive(target) {
   const triggerTypeCode = target.dataset.triggertypecode;
   const couponId = target.dataset.couponid;
-  const timeElapsed = Date.now();
-  const requestDateTime = (new Date(timeElapsed)).toISOString();
-  console.log(requestDateTime);
+  const openDateTime = target.dataset.opendatetime;
+
+  const requestDateTime = new Date();
+  const openTime = new Date(openDateTime);
+  console.log("openTime:" + openTime);
+  console.log("requestDateTime: " + requestDateTime);
+
+  if (openTime > requestDateTime) {
+    alert("오픈 시간을 기다려주세요.");
+    hideLoadingScreen();
+    return;
+  }
 
   const requestBody = {triggerTypeCode, couponId, requestDateTime};
 
-  const response = await fetch(`${FRONT_SERVER}/member-coupons`,
-      {
-        method: 'POST',
-        body: JSON.stringify(requestBody),
-        headers: {'Content-Type': 'application/json'}
-      });
+  const response = await fetch(`${FRONT_SERVER}/member-coupons`, {
+    method: 'POST',
+    body: JSON.stringify(requestBody),
+    headers: {'Content-Type': 'application/json'}
+  });
 
   const parsedResponse = await response.json();
   if (response.status !== 200) {

@@ -1,6 +1,5 @@
 package shop.yesaladin.front.coupon.dto;
 
-import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -8,6 +7,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public class MonthlyCouponPolicyDto {
 
-    Long couponId;
-    LocalDateTime openDateTime;
+    private String couponId;
+    private String openDateTime;
 }
