@@ -59,6 +59,29 @@ public class QueryCategoryServiceImpl implements QueryCategoryService {
      * {@inheritDoc}
      */
     @Override
+    public List<CategoryResponseDto> getChildCategoriesByParentId(Long parentId) {
+        UriComponents uriComponents = UriComponentsBuilder.fromHttpUrl(
+                        gatewayConfig.getShopUrl() + "/v1/categories")
+                .path("/{parentId}")
+                .queryParam("cate", "children")
+                .build()
+                .expand(parentId);
+
+        ResponseEntity<ResponseDto<List<CategoryResponseDto>>> responseEntity = restTemplate.exchange(
+                uriComponents.toUri(),
+                HttpMethod.GET,
+                getHttpEntity(),
+                new ParameterizedTypeReference<>() {
+                }
+        );
+
+        return Objects.requireNonNull(responseEntity.getBody()).getData();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public PaginatedResponseDto<CategoryResponseDto> getChildCategoriesByParentId(
             PageRequestDto pageRequestDto,
             Long parentId
