@@ -91,11 +91,17 @@ public class GithubOauth2Service extends Oauth2Service {
      */
     @Override
     public Oauth2LoginRequestDto createOauth2Dto(Map<String, Object> userInfo) {
-        Object email = userInfo.get(EMAIL.getValue());
-        if (!Objects.isNull(email)) {
-            return new Oauth2LoginRequestDto(email.toString());
+        log.info("userInfo, github={}", userInfo);
+        String email = (String) userInfo.get(EMAIL.getValue());
+        Object password = userInfo.get("id");
+        if (Objects.nonNull(email)) {
+            String loginId = email.split("@")[0];
+            return new Oauth2LoginRequestDto(loginId, String.valueOf(password));
         }
         String loginId = userInfo.get("login").toString();
-        return new Oauth2LoginRequestDto(loginId + YESALADIN_EMAIL.getValue());
+        return new Oauth2LoginRequestDto(
+                loginId + YESALADIN_EMAIL.getValue(),
+                String.valueOf(password)
+        );
     }
 }

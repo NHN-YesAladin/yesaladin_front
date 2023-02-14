@@ -26,7 +26,7 @@
 <!-- Tabler Core -->
 <script type="text/javascript" th:src="@{/js/tabler.min.js}"></script>
 <script type="text/javascript" th:src="@{/js/demo.min.js}"></script>
-<script type="text/javascript" th:src="@{/js/member/signup.js}"></script>
+<script type="text/javascript" th:src="@{/js/member/oauthSignup.js}"></script>
 
 <div class="wrapper">
   <!-- TODO 1 : HEADER -->
@@ -69,19 +69,20 @@
                 <button class="nicknameCheckBtn" id="nicknameCheckBtn" type="button" onclick="nicknameCheck()">중복 확인</button>
               </div>
             </div>
+            <input th:value="${oauthMember.loginId}" id="loginId" name="loginId" hidden="hidden">
+            <input th:value="${oauthMember.password}" id="password" name="password" hidden="hidden">
             <div class="mb-3">
-              <label class="form-label">Login Id</label>
-              <input type="text" class="form-control" id="loginId" th:name="loginId"
-                     pattern="/([a-z+\d*]{8,15})/g"
-                     placeholder="아이디는 영문 또는 숫자로(조합 가능) 8자 이상 15자 이하만 가능 합니다." required>
+              <label class="form-label">이메일 주소</label>
+              <input type="email" class="form-control" id="email" th:name="email" placeholder="이메일"
+                     pattern="^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$"
+                     required>
               <div class="invalid-feedback">
-                아이디는 영문 또는 숫자로(조합 가능) 8자 이상 15자 이하만 가능 합니다.
+                이메일 주소를 입력해주세요.
               </div>
               <div class="button-box">
-                <button class="loginIdCheckBtn" id="loginIdCheckBtn" type="button" onclick="loginIdCheck()">중복 확인</button>
+                <button class="emailCheckBtn" id="emailCheckBtn" type="button" onclick="emailCheck()">중복 확인</button>
               </div>
             </div>
-            <input th:value="${oauthMember.email}" id="email" name="email" hidden="hidden">
             <div class="mb-3">
               <label class="form-label">휴대폰 번호</label>
               <input type="text" class="form-control" id="phone" th:name="phone"
@@ -91,36 +92,7 @@
                 휴대폰 번호를 - 없이 11자 입력해주세요.
               </div>
               <div class="button-box">
-                <button class="checkBtn" type="button" onclick="phoneCheck()">중복 확인</button>
-              </div>
-            </div>
-            <div>
-              <div class="mb-3">
-                <label class="form-label">Password</label>
-                <div class="input-group input-group-flat">
-                  <input type="password" class="form-control" id="password" th:name="password"
-                         pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$"
-                         placeholder="Password"
-                         autocomplete="off" required>
-                  <div class="invalid-feedback">
-                    password는 최소 8자, 하나 이상의 문자와 하나의 숫자 및 하나의 특수 문자로 입력해주세요.
-                  </div>
-                </div>
-              </div>
-              <div class="mb-3">
-                <label class="form-label">Password 확인</label>
-                <div class="input-group input-group-flat">
-                  <input type="password" class="form-control" id="passwordCheck"
-                         th:name="passwordCheck" placeholder="Password 확인"
-                         pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$"
-                         autocomplete="off" required>
-                  <div class="invalid-feedback">
-                    password는 최소 8자, 하나 이상의 문자와 하나의 숫자 및 하나의 특수 문자로 입력해주세요.
-                  </div>
-                </div>
-                <div class="button-box">
-                  <button class="passwordCheckBtn" id="passwordCheckBtn" type="button" onclick="passwordCheckEvent()">비밀번호 확인</button>
-                </div>
+                <button class="phoneCheckBtn" id="phoneCheckBtn" type="button" onclick="phoneCheck()">중복 확인</button>
               </div>
             </div>
             <div class="mb-3">
@@ -166,8 +138,6 @@
     let emptyRegex = /\s/g;
     let nameRegex = /^.*(?=.*[가-힣a-z])(?=^.{2,200}).*$/;
     let nicknameRegex = /^[가-힣ㄱ-ㅎa-zA-Z0-9._-]{2,15}$/;
-    let loginIdRegex = /([a-z+\d*]{8,15})/g;
-    let passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/g
     let birthdayRegex = /^.*(?=.*\d)(?=^.{6}).*$/;
     let phoneRegex = /^\d{11}$/;
 
@@ -187,12 +157,6 @@
         let nicknameVal = document.getElementById('nickname').value;
         if (!nicknameRegex.test(nicknameVal) || emptyRegex.test(nicknameVal)) {
           alert('숫자, 영어, 한국어와 언더스코어, 공백을 허용하며 최소 2자 이상의 15자 이하의 닉네임만 가능합니다.');
-          return false;
-        }
-
-        let loginIdVal = document.getElementById('loginId').value;
-        if (!loginIdRegex.test(loginIdVal) || emptyRegex.test(loginIdVal)) {
-          alert('아이디는 영문 또는 숫자로(조합 가능) 8자 이상 15자 이하만 가능 합니다.');
           return false;
         }
 

@@ -4,7 +4,6 @@ import static shop.yesaladin.front.oauth.util.Oauth2Utils.ACCESS_TOKEN;
 import static shop.yesaladin.front.oauth.util.Oauth2Utils.EMAIL;
 import static shop.yesaladin.front.oauth.util.Oauth2Utils.GITHUB;
 import static shop.yesaladin.front.oauth.util.Oauth2Utils.KAKAO_ACCOUNT;
-import static shop.yesaladin.front.oauth.util.Oauth2Utils.YESALADIN_EMAIL;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,7 +12,6 @@ import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import shop.yesaladin.front.member.dto.MemberResponseDto;
 import shop.yesaladin.front.oauth.adapter.Oauth2Adapter;
 import shop.yesaladin.front.oauth.dto.Oauth2LoginRequestDto;
 import shop.yesaladin.front.oauth.exception.Oauth2ParseProcessingException;
@@ -116,8 +114,6 @@ public abstract class Oauth2Service {
 
     /**
      * OAuth2 로그인시 YesAladin 자사 회원인지 판별하기 위한 기능입니다.
-     * OAuth2 Provider에서 제공하는 사용자 정보들 중 email은 nullable하기 때문에 이 값이 없다면 제공 받은 정보 중 고유한 값을 기준 으로
-     * 자사 email을 붙여 자사 회원으로 등록되어 있는지 판단 후 해당 email을 기준으로 인증 처리를 하고자 합니다.
      *
      * @param userInfo OAuth2에서 제공 받은 사용자 정보
      * @param provider OAuth2 provider의 종류 입니다.
@@ -126,28 +122,19 @@ public abstract class Oauth2Service {
      * @since 1.0
      */
     public boolean isAlreadyMember(Map<String, Object> userInfo, String provider) {
-        String email;
+        String loginId;
         if (provider.equals(GITHUB.getValue())) {
-            email = Objects.nonNull(userInfo.get(EMAIL.getValue())) ? userInfo.get(EMAIL.getValue())
-                    .toString() : userInfo.get("login") + YESALADIN_EMAIL.getValue();
-            return oauth2Adapter.isAlreadyMember(email);
+            Object email = userInfo.get(EMAIL.getValue());
+            loginId = Objects.nonNull(email) ? email
+                    .toString().split("@")[0] : userInfo.get("login").toString();
+            return oauth2Adapter.isAlreadyMember(loginId);
         } else { // KAKAO 인 경우
             Map<String, String> kakaoAccount = (Map) userInfo.get(KAKAO_ACCOUNT.getValue());
-            email = Objects.nonNull(kakaoAccount.get(EMAIL.getValue())) ? kakaoAccount.get(EMAIL.getValue())
-                    : userInfo.get("id") + YESALADIN_EMAIL.getValue();
-            return oauth2Adapter.isAlreadyMember(email);
+            String email = kakaoAccount.get(EMAIL.getValue());
+            loginId = Objects.nonNull(email)
+                    ? email.split("@")[0]
+                    : userInfo.get("id").toString();
+            return oauth2Adapter.isAlreadyMember(loginId);
         }
-    }
-
-    /**
-     * OAuth2 로그인 시 YesAladin 자사 회원을 email 기준으로 불러오기 위한 기능입니다.
-     *
-     * @param email OAuth2에서 제공 받은 회원의 email 입니다.
-     * @return email을 기준으로 Shop API 서버에서 제공 받은 YesAladin 회원 정보
-     * @author 송학현
-     * @since 1.0
-     */
-    public MemberResponseDto getMember(String email) {
-        return oauth2Adapter.getYesaladinMember(email).getBody().getData();
     }
 }

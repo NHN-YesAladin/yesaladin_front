@@ -75,7 +75,7 @@ public class CommandMemberServiceImpl implements CommandMemberService {
         HttpEntity<Oauth2SignUpRequestDto> entity = new HttpEntity<>(request, headers);
 
         ResponseEntity<ResponseDto<SignUpResponseDto>> response = restTemplate.exchange(
-                gatewayConfig.getShopUrl() + "/v1/members/",
+                gatewayConfig.getShopUrl() + "/v1/members/oauth2",
                 HttpMethod.POST,
                 entity,
                 new ParameterizedTypeReference<>() {
