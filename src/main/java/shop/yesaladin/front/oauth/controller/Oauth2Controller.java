@@ -2,7 +2,6 @@ package shop.yesaladin.front.oauth.controller;
 
 import java.util.Map;
 import java.util.Objects;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import shop.yesaladin.front.common.utils.CookieUtils;
 import shop.yesaladin.front.oauth.Oauth2Factory;
 import shop.yesaladin.front.oauth.dto.Oauth2LoginRequestDto;
 import shop.yesaladin.front.oauth.service.Oauth2Service;
@@ -28,6 +28,7 @@ import shop.yesaladin.front.oauth.service.Oauth2Service;
 public class Oauth2Controller {
 
     private final Oauth2Factory oauth2Factory;
+    private final CookieUtils cookieUtils;
 
     /**
      * OAuth2 Provider의 종류에 따라 redirect url 지정 후 사용자 정보를 가져옵니다.
@@ -46,7 +47,7 @@ public class Oauth2Controller {
             Model model
     ) {
         log.info("code={}", code);
-        String provider = getProviderFromCookie(request.getCookies());
+        String provider = cookieUtils.getValueFromCookie(request.getCookies(), "provider");
         if (Objects.isNull(provider)) {
             return "redirect:/";
         }
@@ -74,27 +75,5 @@ public class Oauth2Controller {
 
         model.addAttribute("oauthMember", oauth2LoginRequestDto);
         return "auth/oauth-login";
-    }
-
-    /**
-     * cookie에 들어있는 OAuth2 provider 이름을 반환하기 위한 기능입니다.
-     *
-     * @param cookies 브라우저에 존재하는 Cookie의 목록입니다.
-     * @return OAuth2 provider의 종류
-     * @author : 송학현
-     * @since : 1.0
-     */
-    private String getProviderFromCookie(Cookie[] cookies) {
-        if (Objects.isNull(cookies)) {
-            return null;
-        }
-
-        for (Cookie cookie : cookies) {
-            if (Objects.equals("provider", cookie.getName())) {
-                return cookie.getValue();
-            }
-        }
-
-        return null;
     }
 }
