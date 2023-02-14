@@ -50,6 +50,8 @@ function openSocketAndAddEventListener(requestId) {
           hideLoadingScreen();
           stompClient.disconnect();
         });
+    stompClient.send(`/shop/coupon/give/result/connect/${requestId}`, {},
+        'CONNECT');
   });
 
 }

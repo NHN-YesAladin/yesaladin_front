@@ -14,9 +14,16 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import shop.yesaladin.front.common.exception.*;
+import shop.yesaladin.front.common.exception.CustomBadRequestException;
+import shop.yesaladin.front.common.exception.CustomConflictException;
+import shop.yesaladin.front.common.exception.CustomForbiddenException;
+import shop.yesaladin.front.common.exception.CustomMethodNotAllowedException;
+import shop.yesaladin.front.common.exception.CustomNotFoundException;
+import shop.yesaladin.front.common.exception.CustomServerException;
+import shop.yesaladin.front.common.exception.CustomUnauthorizedException;
+import shop.yesaladin.front.common.exception.InvalidHttpHeaderException;
+import shop.yesaladin.front.common.exception.ValidationFailedException;
 import shop.yesaladin.front.common.utils.CookieUtils;
-import shop.yesaladin.front.member.exception.InvalidLogoutRequestException;
 
 /**
  * 예외 처리를 위한 Controller Advice 입니다.
@@ -80,7 +87,7 @@ public class WebControllerAdvice {
         return "common/errors/forbidden";
     }
 
-    @ExceptionHandler({CustomUnauthorizedException.class, InvalidLogoutRequestException.class})
+    @ExceptionHandler(CustomUnauthorizedException.class)
     public String handleAuthException(Exception ex, Model model, HttpServletRequest request, HttpServletResponse response) {
         log.error("", ex);
 
