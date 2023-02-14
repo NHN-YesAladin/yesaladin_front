@@ -1,6 +1,5 @@
 package shop.yesaladin.front.member.controller.web;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +9,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import shop.yesaladin.front.common.exception.ValidationFailedException;
 import shop.yesaladin.front.member.dto.SignUpRequestDto;
 import shop.yesaladin.front.member.dto.SignUpResponseDto;
@@ -95,12 +93,7 @@ public class MemberAuthWebController {
      * @since : 1.0
      */
     @GetMapping("/login")
-    public String loginForm(
-            HttpSession session,
-            @RequestParam(defaultValue = "/", name = "redirect-to") String redirectUrl
-    ) {
-        session.setAttribute("redirect-url", redirectUrl);
-
+    public String loginForm() {
         return "auth/login-form";
     }
 }

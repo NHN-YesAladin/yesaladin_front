@@ -15,7 +15,6 @@ import shop.yesaladin.front.auth.CustomAuthenticationManager;
 import shop.yesaladin.front.auth.CustomFailureHandler;
 import shop.yesaladin.front.auth.CustomLoginProcessingFilter;
 import shop.yesaladin.front.auth.CustomLogoutHandler;
-import shop.yesaladin.front.auth.RedirectToUrlAuthenticationSuccessHandler;
 import shop.yesaladin.front.common.utils.CookieUtils;
 import shop.yesaladin.front.member.adapter.MemberAdapter;
 
@@ -51,9 +50,7 @@ public class SecurityConfig {
 //                .mvcMatchers("/manager/**").hasAuthority("ROLE_ADMIN")
                 .mvcMatchers("/coupon").authenticated()
                 .anyRequest().permitAll();
-        http.formLogin()
-                .loginPage("/members/login")
-                .loginProcessingUrl("/auth-login");
+        http.formLogin().disable();
         http.logout()
                 .logoutUrl("/logout")
                 .addLogoutHandler(customLogoutHandler())
@@ -88,9 +85,7 @@ public class SecurityConfig {
                 .mvcMatchers("/manager/**").hasAuthority("ROLE_ADMIN")
                 .mvcMatchers("/coupon").authenticated()
                 .anyRequest().permitAll();
-        http.formLogin()
-                .loginPage("/members/login")
-                .loginProcessingUrl("/auth-login");
+        http.formLogin().disable();
         http.logout()
                 .logoutUrl("/logout")
                 .addLogoutHandler(customLogoutHandler())
@@ -145,7 +140,6 @@ public class SecurityConfig {
                 "/auth-login");
         customLoginProcessingFilter.setAuthenticationManager(customAuthenticationManager());
         customLoginProcessingFilter.setAuthenticationFailureHandler(authenticationFailureHandler());
-        customLoginProcessingFilter.setAuthenticationSuccessHandler(new RedirectToUrlAuthenticationSuccessHandler());
 
         return customLoginProcessingFilter;
     }
