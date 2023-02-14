@@ -17,5 +17,6 @@ import lombok.ToString;
 @AllArgsConstructor
 public class Oauth2LoginRequestDto {
 
-    private String email;
+    private String loginId;
+    private String password;
 }

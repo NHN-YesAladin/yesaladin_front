@@ -34,8 +34,7 @@ public class Oauth2SignUpRequestDto {
     private String nickname;
 
     @NotBlank
-    @Size(min = 8, max = 15)
-    @Pattern(regexp = "^[a-zA-Z]+[0-9]*$", message = "영문(필수)과 숫자(옵션) 순서 로만 가능 합니다")
+    @Size(min = 1, max = 15)
     private String loginId;
 
     @Email
@@ -48,9 +47,6 @@ public class Oauth2SignUpRequestDto {
     private String phone;
 
     @NotBlank
-    @Size(min = 8)
-    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$",
-            message = "최소 8자, 하나 이상의 문자와 하나의 숫자 및 하나의 특수 문자")
     private String password;
 
     @NotBlank

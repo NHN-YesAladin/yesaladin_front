@@ -1,6 +1,5 @@
 package shop.yesaladin.front.product.service.impl;
 
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,6 +15,8 @@ import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.product.dto.SearchProductRequestDto;
 import shop.yesaladin.front.product.dto.SearchedProductResponseDto;
 import shop.yesaladin.front.product.service.inter.SearchProductService;
+
+import java.util.Objects;
 
 /**
  * 상품 검색 서비스 구현체
@@ -36,7 +37,7 @@ public class SearchProductServiceImpl implements SearchProductService {
     private static final String SIZE = "size";
 
     /**
-     *{@inheritDoc}
+     * {@inheritDoc}
      */
     @Override
     public SearchedProductResponseDto searchProductsByProductField(SearchProductRequestDto requestDto) {
@@ -57,7 +58,7 @@ public class SearchProductServiceImpl implements SearchProductService {
     }
 
     /**
-     *{@inheritDoc}
+     * {@inheritDoc}
      */
     @Override
     public SearchedProductResponseDto searchProductByCategoryId(

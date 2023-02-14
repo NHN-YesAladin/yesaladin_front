@@ -72,10 +72,10 @@
             <div class="mb-3">
               <label class="form-label">Login Id</label>
               <input type="text" class="form-control" id="loginId" th:name="loginId"
-                     pattern="/([a-z+\d*]{8,15})/g"
-                     placeholder="아이디는 영문 또는 숫자로(조합 가능) 8자 이상 15자 이하만 가능 합니다." required>
+                     pattern="/([a-zA-Z0-9]{8,15})/g"
+                     placeholder="아이디는 영문 또는 숫자로 8자 이상 15자 이하만 가능 합니다." required>
               <div class="invalid-feedback">
-                아이디는 영문 또는 숫자로(조합 가능) 8자 이상 15자 이하만 가능 합니다.
+                아이디는 영문 또는 숫자로 8자 이상 15자 이하만 가능 합니다.
               </div>
               <div class="button-box">
                 <button class="loginIdCheckBtn" id="loginIdCheckBtn" type="button" onclick="loginIdCheck()">중복 확인</button>
@@ -180,8 +180,7 @@
     let emptyRegex = /\s/g;
     let nameRegex = /^.*(?=.*[가-힣a-z])(?=^.{2,200}).*$/;
     let nicknameRegex = /^[가-힣ㄱ-ㅎa-zA-Z0-9._-]{2,15}$/;
-    let loginIdRegex = /([a-z+\d*]{8,15})/g;
-    let passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/g
+    let loginIdRegex = /([a-zA-Z0-9]{8,15})/g;
     let birthdayRegex = /^.*(?=.*\d)(?=^.{6}).*$/;
     let phoneRegex = /^\d{11}$/;
 

@@ -1,6 +1,5 @@
 package shop.yesaladin.front.product.controller;
 
-import lombok.Builder.Default;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
