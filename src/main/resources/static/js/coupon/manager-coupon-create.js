@@ -156,20 +156,30 @@ async function initParentCategories() {
   }
 }
 
+function addEventListenerToSearchedItems() {
+  const searchedItems = document.querySelectorAll('.searched-list-item');
+  searchedItems.forEach(item => item.addEventListener('click', (event) => {
+    searchedItems.forEach(
+        searchedItem => searchedItem.classList.remove('active'));
+    event.target.classList.add('active');
+  }))
+}
+
 function addEventListenerToCouponBound() {
   const couponBoundSelect = document.querySelector("#coupon-bound-select");
   const categorySelectDiv = document.querySelector("#category-select-div");
+  const searchContainer = document.querySelector('#search-container')
   couponBoundSelect.addEventListener("change", async () => {
-    console.log(
-        couponBoundSelect.options[couponBoundSelect.selectedIndex].value)
-    if (couponBoundSelect.options[couponBoundSelect.selectedIndex].value
-        === 'CATEGORY') {
-      console.log('category')
+    categorySelectDiv.style.display = 'none';
+    searchContainer.style.display = 'none'
+    const value = couponBoundSelect.options[couponBoundSelect.selectedIndex].value;
+    if (value === 'CATEGORY') {
       activeCategoryId = null;
       await initParentCategories();
       categorySelectDiv.style.display = '';
-    } else {
-      categorySelectDiv.style.display = 'none';
+    } else if (value === 'PRODUCT') {
+      searchContainer.style.display = '';
+      addEventListenerToSearchedItems();
     }
   })
 }
