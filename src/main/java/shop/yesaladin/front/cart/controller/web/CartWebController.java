@@ -181,14 +181,14 @@ public class CartWebController {
     }
 
     /**
-     * [DELETE /cart/{productId}] 장바구니에서 특정 상품을 삭제합니다.
+     * [POST /cart/delete/{productId}] 장바구니에서 특정 상품을 삭제합니다.
      *
      * @param productId 장바구니에서 삭제할 상품의 Id
      * @param cookie    Redis의 key값을 가진 CART_NO 쿠키
      * @author 이수정
      * @since 1.0
      */
-    @DeleteMapping("/{productId}")
+    @PostMapping("/delete/{productId}")
     @ResponseBody
     public void deleteInCart(
             @PathVariable String productId,
@@ -202,7 +202,7 @@ public class CartWebController {
     }
 
     /**
-     * [PUT /cart/{productId}] 장바구니 내의 상품의 담은 개수를 변경합니다.
+     * [POST /cart/change-quantity/{productId}] 장바구니 내의 상품의 담은 개수를 변경합니다.
      *
      * @param productId 장바구니에서 개수를 변경할 상품의 Id
      * @param quantity  장바구니 상품의 개수
@@ -210,7 +210,7 @@ public class CartWebController {
      * @author 이수정
      * @since 1.0
      */
-    @PutMapping("/{productId}")
+    @PostMapping("/change-quantity/{productId}")
     @ResponseBody
     public void modifyQuantity(
             @PathVariable String productId,
