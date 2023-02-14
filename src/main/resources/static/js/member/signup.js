@@ -31,7 +31,7 @@ function loginIdCheck() {
   let loginIdCheckBtn = document.getElementById('loginIdCheckBtn');
   let loginIdInput = document.getElementById('loginId');
   let loginIdVal = loginIdInput.value;
-  let loginIdRegex = /([a-z+\d*]{8,15})/g;
+  let loginIdRegex = /([a-zA-Z0-9]{8,15})/g;
   let emptyRegex = /\s/g;
 
   if (loginIdRegex.test(loginIdVal) && !emptyRegex.test(loginIdVal)) {
@@ -52,7 +52,7 @@ function loginIdCheck() {
       })
     });
   } else {
-    alert('아이디는 영문 또는 숫자로(조합 가능) 8자 이상 15자 이하만 가능 합니다.');
+    alert('아이디는 영문 또는 숫자로 8자 이상 15자 이하만 가능 합니다.');
   }
 }
 
