@@ -434,13 +434,18 @@
 
 </div>
 <div class="d-none" id="shop-server-url" th:text="${@environment.getProperty('yesaladin.gateway.shop')}"></div>
+<div class="d-none" id="front-server-url" th:text="${@environment.getProperty('yesaladin.front.url')}"></div>
 <script>
   let SHOP_SERVER = document.getElementById('shop-server-url').textContent;
+  let FRONT_SERVER = document.getElementById('front-server-url').textContent;
 
   function deleteInCart(id) {
-    fetch('/cart/' + id, {
+    fetch(FRONT_SERVER + '/cart/' + id, {
       method: "DELETE"
-    }).finally(() => window.location.reload());
+    }).finally(() => {
+      console.log("delete url = " + FRONT_SERVER + '/cart/' + id);
+      window.location.reload()
+    });
   }
 
   function modifyQuantity(id) {
@@ -459,7 +464,7 @@
         document.getElementById('quantity' + id).value = document.getElementById('hidden-quantity-' + id).value;
       } else {
         // 수량 변경
-        fetch('/cart/' + id, {
+        fetch(FRONT_SERVER + '/cart/' + id, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json"
@@ -468,6 +473,7 @@
             "quantity": quantity
           })
         }).then(() => {
+          console.log("quantity modify url = " + FRONT_SERVER + '/cart/' + id);
           window.location.reload();
         });
       }

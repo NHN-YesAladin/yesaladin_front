@@ -16,6 +16,7 @@ import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.order.dto.OrderCreateResponseDto;
 import shop.yesaladin.front.order.dto.OrderDetailsResponseDto;
 import shop.yesaladin.front.order.dto.OrderMemberRequestDto;
+import shop.yesaladin.front.order.dto.OrderPaymentRequestDto;
 import shop.yesaladin.front.order.dto.OrderSheetResponseDto;
 import shop.yesaladin.front.order.service.inter.CommandOrderService;
 import shop.yesaladin.front.order.service.inter.QueryOrderService;
@@ -101,5 +102,34 @@ public class OrderMainWebController {
         model.addAttribute("data", payRequest);
         return "main/payment/pay-page";
 
+    }
+
+    /**
+     * 주문 & 결제 성공시 보여주는 완료 페이지
+     *
+     * @param orderNumber 주문 번호
+     * @param model 모델
+     * @return 결제 완료 페이지
+     */
+    @GetMapping(value = "/order-complete", params = "orderNumber")
+    public String getOrderComplete(@RequestParam(name = "orderNumber") String orderNumber, Model model) {
+        model.addAttribute("orderNumber", orderNumber);
+        return "main/order/order-complete";
+    }
+
+
+    /**
+     * 주문 & 결제 실패시 보여주는 실패 페이지
+     *
+     * @param requestDto 주문번호, 주문이름, 총 결제액
+     * @param model 모델
+     * @return 결제 실패 페이지
+     */
+    @GetMapping(value = "/order-fail", params = "orderNumber")
+    public String getOrderFail(@ModelAttribute OrderPaymentRequestDto requestDto, Model model) {
+        model.addAttribute("orderNumber", requestDto.getOrderNumber());
+        model.addAttribute("orderName", requestDto.getOrderName());
+        model.addAttribute("amount", requestDto.getTotalAmount());
+        return "main/order/order-fail";
     }
 }

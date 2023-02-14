@@ -2,9 +2,6 @@ package shop.yesaladin.front.product.service.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,15 +15,13 @@ import org.springframework.web.util.UriComponentsBuilder;
 import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.common.dto.PageRequestDto;
 import shop.yesaladin.front.common.dto.PaginatedResponseDto;
-import shop.yesaladin.front.product.dto.ProductDetailResponseDto;
-import shop.yesaladin.front.product.dto.ProductModifyInitDto;
-import shop.yesaladin.front.product.dto.ProductRecentResponseDto;
-import shop.yesaladin.front.product.dto.ProductsResponseDto;
-import shop.yesaladin.front.product.dto.RelationsResponseDto;
+import shop.yesaladin.front.product.dto.*;
 import shop.yesaladin.front.product.service.inter.QueryProductService;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * 상품 조회 요청을 위한 service 구현체 입니다.
@@ -190,7 +185,7 @@ public class QueryProductServiceImpl implements QueryProductService {
     public PaginatedResponseDto<ProductRecentResponseDto> findRecentProduct(Pageable pageable) {
         String uri = UriComponentsBuilder
                 .fromUriString(url)
-                .path(PATH + "/recent")
+                .path(PATH + "/recent/product")
                 .queryParam("size", pageable.getPageSize())
                 .queryParam("page", pageable.getPageNumber())
                 .toUriString();
@@ -200,7 +195,7 @@ public class QueryProductServiceImpl implements QueryProductService {
                 HttpMethod.GET,
                 getHttpEntity(),
                 RECENT_PRODUCTION_CODE
-                );
+        );
         return Objects.requireNonNull(responseEntity.getBody()).getData();
     }
 
@@ -211,7 +206,7 @@ public class QueryProductServiceImpl implements QueryProductService {
     ) throws JsonProcessingException {
         String uri = UriComponentsBuilder
                 .fromUriString(url)
-                .path(PATH + "/recentview")
+                .path(PATH + "/recentview/product")
                 .queryParam("size", pageable.getPageSize())
                 .queryParam("page", pageable.getPageNumber())
                 .toUriString();
