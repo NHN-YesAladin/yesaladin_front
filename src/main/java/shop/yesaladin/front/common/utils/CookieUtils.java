@@ -33,6 +33,23 @@ public class CookieUtils {
     }
 
     /**
+     * maxage를 지정하지 않고 Cookie를 생성하기 위한 기능입니다.
+     *
+     * @param name 생성할 Cookie의 이름
+     * @param value 생성할 Cookie에 들어갈 값
+     * @return 생성된 Cookie
+     * @author 송학현
+     * @since 1.0
+     */
+    public Cookie createCookieWithoutMaxAge(String name, String value) {
+        Cookie cookie = new Cookie(name, value);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+
+        return cookie;
+    }
+
+    /**
      * Cookie의 value를 불러오기 위한 기능입니다.
      *
      * @param cookies Cookie의 목록
