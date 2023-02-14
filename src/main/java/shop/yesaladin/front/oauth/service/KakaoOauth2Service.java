@@ -96,7 +96,7 @@ public class KakaoOauth2Service extends Oauth2Service {
         String email = kakaoAccount.get("email");
         String password = userInfo.get("id").toString();
         if (Objects.nonNull(email)) {
-            String loginId = email.split("@")[0];
+            String loginId = email.split("@")[0] + "@kakao.com";
             return new Oauth2LoginRequestDto(loginId, password);
         }
         String loginId = userInfo.get("id").toString();
