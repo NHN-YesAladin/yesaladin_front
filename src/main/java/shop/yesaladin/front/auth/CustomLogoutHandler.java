@@ -17,7 +17,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import shop.yesaladin.front.common.utils.CookieUtils;
 import shop.yesaladin.front.member.adapter.MemberAdapter;
-import shop.yesaladin.front.member.exception.InvalidLogoutRequestException;
 import shop.yesaladin.front.member.jwt.AuthInfo;
 
 /**
@@ -52,7 +51,7 @@ public class CustomLogoutHandler implements LogoutHandler {
 
         if (Objects.isNull(session)) {
             log.info("Already Logged out");
-            throw new InvalidLogoutRequestException();
+            return;
         }
 
         session.invalidate();
@@ -60,7 +59,7 @@ public class CustomLogoutHandler implements LogoutHandler {
         String uuid = cookieUtils.getValueFromCookie(request.getCookies(), UUID_CODE.getValue());
         log.info("uuid={}", uuid);
         if (Objects.isNull(uuid)) {
-            throw new InvalidLogoutRequestException();
+            return;
         }
 
         AuthInfo auth = (AuthInfo) redisTemplate.opsForHash().get(uuid, JWT_CODE.getValue());

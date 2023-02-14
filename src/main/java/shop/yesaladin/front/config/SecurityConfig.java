@@ -15,7 +15,6 @@ import shop.yesaladin.front.auth.CustomAuthenticationManager;
 import shop.yesaladin.front.auth.CustomFailureHandler;
 import shop.yesaladin.front.auth.CustomLoginProcessingFilter;
 import shop.yesaladin.front.auth.CustomLogoutHandler;
-import shop.yesaladin.front.auth.RedirectToUrlAuthenticationSuccessHandler;
 import shop.yesaladin.front.common.utils.CookieUtils;
 import shop.yesaladin.front.member.adapter.MemberAdapter;
 
@@ -48,11 +47,10 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChainDev(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .mvcMatchers("/mypage/**").authenticated()
+//                .mvcMatchers("/manager/**").hasAuthority("ROLE_ADMIN")
                 .mvcMatchers("/coupon").authenticated()
                 .anyRequest().permitAll();
-        http.formLogin()
-                .loginPage("/members/login")
-                .loginProcessingUrl("/auth-login");
+        http.formLogin().loginPage("/members/login");
         http.logout()
                 .logoutUrl("/logout")
                 .addLogoutHandler(customLogoutHandler())
@@ -83,12 +81,11 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .mvcMatchers("/monitor/**").permitAll()
-                .antMatchers("/mypage/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
-                .antMatchers("/manager/**").hasAnyAuthority("ROLE_ADMIN")
+                .mvcMatchers("/mypage/**").authenticated()
+                .mvcMatchers("/manager/**").hasAuthority("ROLE_ADMIN")
+                .mvcMatchers("/coupon").authenticated()
                 .anyRequest().permitAll();
-        http.formLogin()
-                .loginPage("/members/login")
-                .loginProcessingUrl("/auth-login");
+        http.formLogin().loginPage("/members/login");
         http.logout()
                 .logoutUrl("/logout")
                 .addLogoutHandler(customLogoutHandler())
@@ -143,7 +140,6 @@ public class SecurityConfig {
                 "/auth-login");
         customLoginProcessingFilter.setAuthenticationManager(customAuthenticationManager());
         customLoginProcessingFilter.setAuthenticationFailureHandler(authenticationFailureHandler());
-        customLoginProcessingFilter.setAuthenticationSuccessHandler(new RedirectToUrlAuthenticationSuccessHandler());
 
         return customLoginProcessingFilter;
     }
