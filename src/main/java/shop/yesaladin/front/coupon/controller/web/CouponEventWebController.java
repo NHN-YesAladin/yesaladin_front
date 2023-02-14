@@ -60,7 +60,6 @@ public class CouponEventWebController {
     @GetMapping("/coupon-of-the-month")
     public String couponOfTheMonthPageView(Model model) {
         model.addAttribute("type", TriggerTypeCode.COUPON_OF_THE_MONTH);
-        model.addAttribute("couponId", queryCouponService.getMonthlyCouponId());
         model.addAttribute("frontServerUrl", frontServerMetaConfig.getFrontServerUrl());
         model.addAttribute("shopServerUrl", gatewayConfig.getShopUrl());
         return "main/coupon/monthly-coupon-page";
