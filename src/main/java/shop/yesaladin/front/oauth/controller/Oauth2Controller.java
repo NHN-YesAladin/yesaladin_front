@@ -63,10 +63,10 @@ public class Oauth2Controller {
         );
 
         log.info("userInfo={}", userInfo);
-        boolean isAlreadyMember = oauth2Service.isAlreadyMember(userInfo, provider);
 
         Oauth2LoginRequestDto oauth2LoginRequestDto = oauth2Service.createOauth2Dto(userInfo);
         log.info("dto={}", oauth2LoginRequestDto);
+        boolean isAlreadyMember = oauth2Service.isAlreadyMember(oauth2LoginRequestDto);
 
         if (!isAlreadyMember) {
             model.addAttribute("oauthMember", oauth2LoginRequestDto);
