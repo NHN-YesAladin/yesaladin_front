@@ -7,7 +7,7 @@
 * Copyright 2018-2022 codecalm.net Paweł Kuna
 * Licensed under MIT (https://github.com/tabler/tabler/blob/master/LICENSE)
 -->
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
@@ -61,7 +61,7 @@
               주문 상세 보기
             </a>
           </div>
-          <div class="mt-2 m-auto">
+          <div sec:authorize="isAuthenticated()" class="mt-2 m-auto">
             <a href="/mypage" class="btn btn-outline-primary w-100">
               마이페이지로 가기
             </a>
