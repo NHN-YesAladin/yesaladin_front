@@ -48,6 +48,7 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChainDev(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .mvcMatchers("/mypage/**").authenticated()
+//                .mvcMatchers("/manager/**").hasAuthority("ROLE_ADMIN")
                 .mvcMatchers("/coupon").authenticated()
                 .anyRequest().permitAll();
         http.formLogin()
@@ -83,8 +84,9 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .mvcMatchers("/monitor/**").permitAll()
-                .antMatchers("/mypage/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
-                .antMatchers("/manager/**").hasAnyAuthority("ROLE_ADMIN")
+                .mvcMatchers("/mypage/**").authenticated()
+                .mvcMatchers("/manager/**").hasAuthority("ROLE_ADMIN")
+                .mvcMatchers("/coupon").authenticated()
                 .anyRequest().permitAll();
         http.formLogin()
                 .loginPage("/members/login")
