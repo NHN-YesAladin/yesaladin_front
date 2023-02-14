@@ -52,15 +52,15 @@ public class IndexController {
             @CookieValue(required = false, name = COOKIE) Cookie recentViewProductList
     )
             throws JsonProcessingException {
-//        model.addAttribute(
-//                "recentProductList",
-//                queryProductService.findRecentProduct(PageRequest.of(0, 12)).getDataList()
-//        );
-//        model.addAttribute(
-//                "recentViewProductList",
-//                queryProductService.findRecentViewProduct(getRecentViewProductList(
-//                        recentViewProductList), PageRequest.of(0, 10)).getDataList()
-//        );
+        model.addAttribute(
+                "recentProductList",
+                queryProductService.findRecentProduct(PageRequest.of(0, 12)).getDataList()
+        );
+        model.addAttribute(
+                "recentViewProductList",
+                queryProductService.findRecentViewProduct(getRecentViewProductList(
+                        recentViewProductList), PageRequest.of(0, 10)).getDataList()
+        );
         return "main/index";
     }
 
