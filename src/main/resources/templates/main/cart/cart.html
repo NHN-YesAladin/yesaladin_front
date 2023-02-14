@@ -440,8 +440,9 @@
   let FRONT_SERVER = document.getElementById('front-server-url').textContent;
 
   function deleteInCart(id) {
-    fetch(FRONT_SERVER + '/cart/' + id, {
-      method: "DELETE"
+    fetch(FRONT_SERVER + '/cart/delete/' + id, {
+      method: "POST",
+      body: null
     }).then(response => {
       if (response.ok) {
         console.log("delete url = " + FRONT_SERVER + '/cart/' + id);
@@ -470,8 +471,8 @@
         document.getElementById('quantity' + id).value = document.getElementById('hidden-quantity-' + id).value;
       } else {
         // 수량 변경
-        fetch(FRONT_SERVER + '/cart/' + id, {
-          method: "PUT",
+        fetch(FRONT_SERVER + '/cart/change-quantity/' + id, {
+          method: "POST",
           headers: {
             "Content-Type": "application/json"
           },
