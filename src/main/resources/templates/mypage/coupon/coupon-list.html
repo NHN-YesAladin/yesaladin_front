@@ -177,7 +177,7 @@
                           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                             취소
                           </button>
-                          <button type="button" class="btn btn-primary">사용</button>
+                          <button type="button" class="btn btn-primary use-point-coupon-btn">사용</button>
                         </div>
                       </div>
                     </div>
@@ -189,10 +189,11 @@
         </div>
       </div>
     </div>
-
+    <div class="d-none" id="front-server-url" th:text="${frontServerUrl}"></div>
   </div>
   <!-- TODO 4 : footer -->
   <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
 </div>
+<script th:src="@{/js/coupon/point-coupon.js}"></script>
 </body>
 </html>
