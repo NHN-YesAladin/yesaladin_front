@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.common.exception.CustomBadRequestException;
 import shop.yesaladin.front.coupon.dto.CouponGiveRequestDto;
+import shop.yesaladin.front.coupon.dto.CouponUseRequestDto;
 import shop.yesaladin.front.coupon.dto.RequestIdOnlyDto;
 import shop.yesaladin.front.coupon.service.inter.CommandMemberCouponService;
 
@@ -40,6 +41,22 @@ public class MemberCouponRestController {
     @PostMapping
     public ResponseDto<RequestIdOnlyDto> sendRequestMessage(@RequestBody CouponGiveRequestDto dto) {
         RequestIdOnlyDto response = commandMemberCouponService.sendGiveRequest(dto);
+        return ResponseDto.<RequestIdOnlyDto>builder()
+                .success(true)
+                .status(HttpStatus.OK)
+                .data(response)
+                .build();
+    }
+
+    /**
+     * 회원의 쿠폰 코드로 쿠폰 사용을 요청합니다.
+     *
+     * @param dto 사용할 쿠폰 코드 리스트를 가진 dto
+     * @return    회원의 쿠폰 사용 요청에 대한 응답
+     */
+    @PostMapping
+    public ResponseDto<RequestIdOnlyDto> sendUseMessage(@RequestBody CouponUseRequestDto dto) {
+        RequestIdOnlyDto response = commandMemberCouponService.sendUseRequest(dto);
         return ResponseDto.<RequestIdOnlyDto>builder()
                 .success(true)
                 .status(HttpStatus.OK)
