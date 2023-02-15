@@ -1,5 +1,6 @@
 package shop.yesaladin.front.product.controller.web;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -54,8 +55,7 @@ public class ProductRestController {
      * @since 1.0
      */
     @GetMapping("/products/recent")
-    public PaginatedResponseDto<ProductRecentResponseDto> findRecentProduct(@PageableDefault Pageable pageable) {
-        System.out.println(pageable.getPageSize());
+    public List<ProductRecentResponseDto> findRecentProduct(@PageableDefault Pageable pageable) {
         return queryProductService.findRecentProduct(pageable);
     }
 }
