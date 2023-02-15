@@ -7,6 +7,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -15,6 +16,8 @@ import shop.yesaladin.common.exception.ClientException;
 import shop.yesaladin.front.config.GatewayConfig;
 import shop.yesaladin.front.order.dto.OrderCreateResponseDto;
 import shop.yesaladin.front.order.dto.OrderMemberCreateRequestDto;
+import shop.yesaladin.front.order.dto.OrderStatusChangeLogResponseDto;
+import shop.yesaladin.front.order.dto.OrderStatusCode;
 import shop.yesaladin.front.order.dto.OrderUpdateResponseDto;
 import shop.yesaladin.front.order.service.inter.CommandOrderService;
 
@@ -63,6 +66,9 @@ public class CommandOrderServiceImpl implements CommandOrderService {
         return response;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean hideOrder(Long orderId, boolean hidden) {
         URI uri = UriComponentsBuilder.fromHttpUrl(gatewayConfig.getShopUrl())
@@ -83,5 +89,32 @@ public class CommandOrderServiceImpl implements CommandOrderService {
             return false;
         }
         return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ResponseDto<OrderStatusChangeLogResponseDto> appendOrderStatusCode(Long orderId, OrderStatusCode code) {
+        URI uri = UriComponentsBuilder.fromHttpUrl(gatewayConfig.getShopUrl())
+                .path("/v1/orders/{orderId}")
+                .queryParam("status", code.toString())
+                .build()
+                .expand(orderId)
+                .toUri();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> httpEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<ResponseDto<OrderStatusChangeLogResponseDto>> exchange = restTemplate.exchange(
+                uri,
+                HttpMethod.POST,
+                httpEntity,
+                new ParameterizedTypeReference<>() {
+                }
+        );
+
+        return exchange.getBody();
     }
 }

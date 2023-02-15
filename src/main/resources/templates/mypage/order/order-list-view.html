@@ -135,10 +135,9 @@
                                                         <a th:href="'/orders/'+ ${data.orderNumber}" th:value="${data.orderId}" class="btn btn-outline-dark w-full fs-5 fw-bolder m-1">
                                                             주문상세조회
                                                         </a>
-                                                        <a href="#" th:value="${data.orderId}" class="btn btn-outline-dark w-full fs-5 fw-bolder m-1">
-                                                            배송조회
-                                                        </a>
-<!--                                               // TODO 숨김처리 링크 처리         -->
+<!--                                                        <a href="#" th:value="${data.orderId}" class="btn btn-outline-dark w-full fs-5 fw-bolder m-1">-->
+<!--                                                            배송조회-->
+<!--                                                        </a>-->
                                                         <a class="btn btn-outline-secondary w-full fs-5 m-1"
                                                                 th:href="@{/mypage/orders/{orderId}(orderId=${data.orderId}, hidden=true)}">
                                                             숨김처리
