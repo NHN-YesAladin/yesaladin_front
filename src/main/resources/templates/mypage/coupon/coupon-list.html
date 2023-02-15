@@ -7,7 +7,8 @@
 * Copyright 2018-2022 codecalm.net Paweł Kuna
 * Licensed under MIT (https://github.com/tabler/tabler/blob/master/LICENSE)
 -->
-<html lang="en" xmlns:th="http://www.thymeleaf.org" th:with="usable=${#request.getParameter('usable') == null ? true : #request.getParameter('usabele')}">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:with="usable=${#request.getParameter('usable') == null ? true : #request.getParameter('usabele')}">
 <head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
@@ -127,11 +128,18 @@
                     </div>
                     <div class="card-body d-grid coupon-container">
                       <div class="coupon-card my-2"
-                           th:each="memberCoupon: ${memberCouponList.dataList}">
+                           th:each="memberCoupon: ${memberCouponList.dataList}"
+                           th:classappend="${memberCoupon.couponTypeCode.name() == 'POINT' ? 'cursor-pointer' : ''}"
+                           th:attrappend="data-bs-toggle=${memberCoupon.couponTypeCode.name() == 'POINT' ? 'modal' : ''}, data-bs-target=${memberCoupon.couponTypeCode.name() == 'POINT' ? '#exampleModal' : ''}"
+                      >
                         <div class="coupon-deco"
                              th:classappend="${(#request.getParameter('usable') == null || #request.getParameter('usable') == 'true') ? 'usable' : 'unusable'}">
                         </div>
                         <div style="text-align: center; margin: auto">
+                          <div th:if="${memberCoupon.couponTypeCode.name() == 'POINT'}"
+                               class="coupon-description">
+                            <span>클릭해서 사용</span>
+                          </div>
                           <div class="coupon-amount"
                                th:text="|${memberCoupon.amount}${memberCoupon.couponTypeCode.name().equals('FIXED_RATE') ? '%' : '₩'}|">
                             10%
@@ -152,6 +160,27 @@
                   <div class="container-xl d-flex flex-wrap justify-content-start">
                     <th:block
                         th:replace="~{common/utils/paging::paging(@{/mypage/coupon}, |canUse=${usable}|)}"></th:block>
+                  </div>
+                  <div class="modal fade" id="exampleModal" tabindex="-1"
+                       aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h1 class="modal-title fs-5" id="exampleModalLabel">사용 확인</h1>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                  aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                          쿠폰을 정말 사용하시겠습니까?
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            취소
+                          </button>
+                          <button type="button" class="btn btn-primary">사용</button>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
