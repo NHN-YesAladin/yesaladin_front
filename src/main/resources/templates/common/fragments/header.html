@@ -18,9 +18,9 @@
         <span class="text-primary d-inline">Yes! Aladin</span>
       </a>
     </h1>
-    <div class="navbar-nav flex-row order-md-last">
+    <div class="navbar-nav float-end">
       <!-- 장바구니 -->
-      <div class="d-none d-md-flex">
+      <div class="d-md-flex d-inline">
         <a href="/cart" class="nav-link px-0" data-bs-toggle="tooltip" data-bs-placement="bottom">
           <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-shopping-cart" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
             <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
@@ -31,19 +31,15 @@
           </svg>
         </a>
       </div>
-
-      <!-- TODO 2 사용자 아이콘
-            * 로그인/로그아웃
-            * 로그인한 사용자의 이름 또는 아이디 -->
-      <div sec:authorize="!isAuthenticated()" class="float-end my-auto">
+      <div sec:authorize="!isAuthenticated()" class="float-end my-auto d-inline">
         <a href="/members/login" class="d-inline btn btn-primary">Login</a>
         <a href="/members/signup" class="d-inline btn btn-outline-primary">SignUp</a>
       </div>
-      <div class="nav-item dropdown">
+      <div sec:authorize="isAuthenticated()" class="nav-item dropdown d-inline my-auto float-end">
         <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown"
            aria-label="Open user menu">
-          <div class="d-none d-xl-block ps-2">
-            <div sec:authorize="isAuthenticated()">
+          <div class="d-xl-block ps-2">
+            <div>
               <span th:text="${#authentication.name}"></span> 님 안녕하세요!
             </div>
           </div>

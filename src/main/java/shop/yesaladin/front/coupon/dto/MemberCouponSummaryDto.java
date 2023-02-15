@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import shop.yesaladin.coupon.code.CouponBoundCode;
 import shop.yesaladin.coupon.code.CouponTypeCode;
 
@@ -17,6 +18,7 @@ import shop.yesaladin.coupon.code.CouponTypeCode;
  * @author 김홍대
  * @since 1.0
  */
+@ToString
 @Getter
 @Setter
 @Builder
@@ -27,6 +29,9 @@ public class MemberCouponSummaryDto {
     private String name;
     private String couponCode;
     private int amount;
+    private Integer minOrderAmount;
+    private Integer maxDiscountAmount;
+    private Boolean canBeOverlapped;
     private CouponTypeCode couponTypeCode;
     @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate expireDate;

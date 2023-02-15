@@ -7,6 +7,8 @@ import org.springframework.data.domain.Pageable;
 import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.common.dto.PeriodQueryRequestDto;
+import shop.yesaladin.front.coupon.dto.CouponOrderSheetRequestDto;
+import shop.yesaladin.front.coupon.dto.CouponOrderSheetResponseDto;
 import shop.yesaladin.front.order.dto.OrderDetailsResponseDto;
 import shop.yesaladin.front.order.dto.OrderSheetResponseDto;
 import shop.yesaladin.front.order.dto.OrderStatusCode;
@@ -39,8 +41,8 @@ public interface QueryOrderService {
     /**
      * 주문을 하기 위해 주문서에 필요한 데이터를 조회합니다.
      *
-     * @param isbnList     상품 isbn 리스트
-     * @param quantityList 상품 수량 리스트
+     * @param isbn     상품 isbn 리스트
+     * @param quantity 상품 수량 리스트
      * @return 주문서에 필요한 데이터
      * @author 최예린
      * @since 1.0
@@ -79,4 +81,13 @@ public interface QueryOrderService {
      */
     OrderDetailsResponseDto getOrderDetailsDtoByOrderNumber(String orderNumber);
 
+    /**
+     * 상품에 쿠폰을 적용합니다.
+     *
+     * @param request 상품과 쿠폰 정보
+     * @return 할인된 상품 정보
+     * @author 최예린
+     * @since 1.0
+     */
+    CouponOrderSheetResponseDto getDiscountPrice(CouponOrderSheetRequestDto request);
 }

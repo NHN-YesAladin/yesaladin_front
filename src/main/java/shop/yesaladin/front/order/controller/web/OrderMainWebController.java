@@ -63,7 +63,6 @@ public class OrderMainWebController {
         }
         model.addAttribute("info", response.getData());
 
-        log.error("response : {}", response.getData());
         return (request.getServletPath().contains("subscribe")) ? "main/order/subscribe"
                 : "main/order/order";
     }

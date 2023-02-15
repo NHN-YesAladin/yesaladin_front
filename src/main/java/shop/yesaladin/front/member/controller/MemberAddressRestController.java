@@ -33,7 +33,7 @@ public class MemberAddressRestController {
      * @author 최예린
      * @since 1.0
      */
-    @PostMapping("/api/address")
+    @PostMapping
     public MemberAddressResponseDto createMemberAddress(@RequestBody MemberAddressRequestDto request) {
         ResponseDto<MemberAddressResponseDto> response = commandMemberAddressService.createMemberAddress(
                 request.toCreateRequestDto());
@@ -48,7 +48,7 @@ public class MemberAddressRestController {
      * @author 최예린
      * @since 1.0
      */
-    @DeleteMapping("/api/address/{addressId}")
+    @PostMapping("/{addressId}")
     public boolean deleteMemberAddress(@PathVariable Long addressId) {
         ResponseDto<Object> response = commandMemberAddressService.deleteAddress(addressId);
 
