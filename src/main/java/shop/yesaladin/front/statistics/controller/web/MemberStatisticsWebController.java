@@ -25,15 +25,14 @@ public class MemberStatisticsWebController {
     private final QueryMemberService queryMemberService;
 
     /**
-     * 관리자 페이지의 회원 통계 페이지를 데이터와 함께 반환 합니다.
+     * 관리자 페이지를 회원 통계 데이터와 함께 반환 합니다.
      *
-     * @param model model
-     * @return 회원 통계 페이지
+     * @return 관리자페이지
      * @author 송학현
      * @since 1.0
      */
-    @GetMapping("/statistics/members")
-    public String memberStatistics(Model model) {
+    @GetMapping
+    public String manager(Model model) {
         MemberStatisticsResponseDto statistics = queryMemberService.getMemberStatistics();
         PercentageResponseDto percentage = PercentageResponseDto.calculatePercentages(statistics);
         statistics.setTotalMembers(calculateActualTotalMembers(statistics));
@@ -41,7 +40,7 @@ public class MemberStatisticsWebController {
         model.addAttribute("statistics", statistics);
         model.addAttribute("percentages", percentage);
 
-        return "manager/member/statistics";
+        return "manager/index";
     }
 
     /**
