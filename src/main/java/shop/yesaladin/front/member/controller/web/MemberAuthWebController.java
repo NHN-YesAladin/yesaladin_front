@@ -68,6 +68,16 @@ public class MemberAuthWebController {
         return "auth/signup-success";
     }
 
+    /**
+     * OAuth2 회원 등록을 위한 Post handler 입니다.
+     *
+     * @param request 사용자가 입력한 OAuth2 회원 정보 등록 폼 데이터의 모음입니다.
+     * @param bindingResult @Valid 검증을 위한 파라미터입니다.
+     * @param model 등록 처리 이후 회원가입 성공 페이지로 넘어갈 때 필요한 데이터를 view에 넘겨주기 위한 객체 입니다.
+     * @return 회원 등록 성공 페이지
+     * @author 송학현
+     * @since 1.0
+     */
     @PostMapping("/oauth2/signup")
     public String oauth2Signup(
             @Valid Oauth2SignUpRequestDto request,

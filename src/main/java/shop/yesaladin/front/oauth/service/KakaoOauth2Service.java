@@ -7,7 +7,6 @@ import static shop.yesaladin.front.oauth.util.Oauth2Utils.HTTPS;
 import static shop.yesaladin.front.oauth.util.Oauth2Utils.KAKAO_ACCOUNT;
 import static shop.yesaladin.front.oauth.util.Oauth2Utils.KAKAO_HOST;
 import static shop.yesaladin.front.oauth.util.Oauth2Utils.REDIRECT_URI;
-import static shop.yesaladin.front.oauth.util.Oauth2Utils.YESALADIN_EMAIL;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Map;
@@ -93,11 +92,14 @@ public class KakaoOauth2Service extends Oauth2Service {
     @Override
     public Oauth2LoginRequestDto createOauth2Dto(Map<String, Object> userInfo) {
         Map<String, String> kakaoAccount = (Map) userInfo.get(KAKAO_ACCOUNT.getValue());
+        log.info("userInfo, kakao={}", userInfo);
         String email = kakaoAccount.get("email");
-        if (!Objects.isNull(email)) {
-            return new Oauth2LoginRequestDto(email);
+        String password = userInfo.get("id").toString();
+        if (Objects.nonNull(email)) {
+            String loginId = email.split("@")[0] + "@kakao.com";
+            return new Oauth2LoginRequestDto(loginId, password);
         }
-        String id = userInfo.get("id").toString();
-        return new Oauth2LoginRequestDto(id + YESALADIN_EMAIL.getValue());
+        String loginId = userInfo.get("id").toString();
+        return new Oauth2LoginRequestDto(loginId, password);
     }
 }

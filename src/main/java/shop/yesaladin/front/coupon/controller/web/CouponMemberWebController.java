@@ -32,6 +32,8 @@ public class CouponMemberWebController {
                 pageable
         );
         model.addAttribute("memberCouponList", memberCouponList);
+        model.addAttribute("currentPage", memberCouponList.getCurrentPage());
+        model.addAttribute("totalPage", memberCouponList.getTotalPage());
         return "mypage/coupon/coupon-list";
     }
 }

@@ -18,8 +18,9 @@ public enum OrderStatusCode {
     READY(3, "배송 대기"),
     DELIVERY(4, "배송중"),
     COMPLETE(5, "배송 완료"),
-    REFUND(6, "환불"),
-    CANCEL(7, "취소");
+    CONFIRM(6, "주문 확정"),
+    REFUND(7, "환불"),
+    CANCEL(8, "취소");
 
     private final int statusCode;
     private final String koName;

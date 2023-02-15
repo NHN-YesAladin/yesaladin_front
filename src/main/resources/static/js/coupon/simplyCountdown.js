@@ -119,8 +119,8 @@
   simplyCountdown = function (elt, args) {
     var parameters = extend({
           year: 2023,
-          month: 3,
-          day: 1,
+          month: 2,
+          day: 16,
           hours: 0,
           minutes: 0,
           seconds: 0,
@@ -133,7 +133,7 @@
           },
           plural: true,
           inline: false,
-          enableUtc: true,
+          enableUtc: false,
           onEnd: function () {
             return;
           },
@@ -156,20 +156,8 @@
         seconds,
         cd = document.querySelectorAll(elt);
 
-    targetTmpDate = new Date(
-        // parameters.year,
-        // parameters.month - 1,
-        // parameters.day,
-        // parameters.hours,
-        // parameters.minutes,
-        // parameters.seconds
-        2023,
-        2,
-        1,
-        0,
-        0,
-        0
-    );
+    const openDateTime = document.getElementById("simple-countdown").getAttribute("openDateTime");
+    targetTmpDate = new Date(Date.parse(openDateTime));
 
     if (parameters.enableUtc) {
       targetDate = new Date(
@@ -280,7 +268,7 @@
   };
 
   exports.simplyCountdown = simplyCountdown;
-}(window));
+})(window);
 
 /*global $, jQuery, simplyCountdown*/
 if (window.jQuery) {

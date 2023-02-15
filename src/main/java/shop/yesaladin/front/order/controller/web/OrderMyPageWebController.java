@@ -9,10 +9,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.common.dto.PeriodQueryRequestDto;
+import shop.yesaladin.front.order.dto.OrderStatusChangeLogResponseDto;
 import shop.yesaladin.front.order.dto.OrderStatusCode;
 import shop.yesaladin.front.order.dto.OrderStatusResponseDto;
 import shop.yesaladin.front.order.dto.OrderSummaryResponseDto;
@@ -131,4 +134,29 @@ public class OrderMyPageWebController {
 
         return "redirect:/mypage/orders";
     }
+
+    /**
+     * 주문 상태 로그를 추가합니다.
+     *
+     * @param orderId 주문 아이디
+     * @param status 주문 상태 (영어 대문자)
+     * @param orderStatus 주문상태 숫자 - redirect를 위함
+     * @return 주문 팝업 페이지
+     * @author 배수한
+     * @since 1.0
+     */
+    @PostMapping(value = "/orders/{orderId}", params = "status")
+    public String changeOrderStatus(
+            @PathVariable Long orderId,
+            @RequestParam("status") String status,
+            @RequestParam("code") Long orderStatus
+    ) {
+        OrderStatusCode orderStatusCode = OrderStatusCode.valueOf(status);
+        commandOrderService.appendOrderStatusCode(
+                orderId,
+                orderStatusCode
+        );
+        return "redirect:/mypage/order-popup?page=0&code=" + orderStatus;
+    }
+
 }

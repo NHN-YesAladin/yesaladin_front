@@ -27,6 +27,9 @@ public class MemberCouponSummaryDto {
     private String name;
     private String couponCode;
     private int amount;
+    private Integer minOrderAmount;
+    private Integer maxDiscountAmount;
+    private Boolean canBeOverlapped;
     private CouponTypeCode couponTypeCode;
     @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate expireDate;
@@ -42,6 +45,9 @@ public class MemberCouponSummaryDto {
                 .name(dto.getName())
                 .couponCode(dto.getCouponCode())
                 .amount(dto.getAmount())
+                .minOrderAmount(dto.getMinOrderAmount())
+                .maxDiscountAmount(dto.getMaxDiscountAmount())
+                .canBeOverlapped(dto.getCanBeOverlapped())
                 .couponTypeCode(dto.getCouponTypeCode())
                 .expireDate(dto.getExpireDate())
                 .used(dto.getUsed())

@@ -46,14 +46,8 @@
         <div class="card-body">
           <h2 class="h2 text-center mb-4">YesAladin의 기존 회원 입니다. 로그인 하시겠습니까?</h2>
           <form action="/auth-login" id="login-form" method="post" autocomplete="off" novalidate="">
-            <input th:value="${oauthMember.loginId}" name="loginId" hidden="hidden">
-            <label class="form-label">
-              Password
-            </label>
-            <input type="password" name="password" id="password" class="form-control"
-                   placeholder="password"
-                   pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$"
-                   autocomplete="off" required>
+            <input name="loginId" id="loginId" th:value="${oauthMember.loginId}" hidden="hidden">
+            <input name="password" id="password" th:value="${oauthMember.password}" hidden="hidden">
             <div class="form-footer">
               <button type="submit" class="btn btn-primary w-100">Sign in</button>
             </div>
