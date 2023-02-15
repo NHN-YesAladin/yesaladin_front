@@ -54,7 +54,7 @@ public class MemberCouponRestController {
      * @param dto 사용할 쿠폰 코드 리스트를 가진 dto
      * @return    회원의 쿠폰 사용 요청에 대한 응답
      */
-    @PostMapping
+    @PostMapping("/usage")
     public ResponseDto<RequestIdOnlyDto> sendUseMessage(@RequestBody CouponUseRequestDto dto) {
         RequestIdOnlyDto response = commandMemberCouponService.sendUseRequest(dto);
         return ResponseDto.<RequestIdOnlyDto>builder()
