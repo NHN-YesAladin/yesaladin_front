@@ -27,6 +27,9 @@ public class MemberCouponSummaryDto {
     private String name;
     private String couponCode;
     private int amount;
+    private Integer minOrderAmount;
+    private Integer maxDiscountAmount;
+    private Boolean canBeOverlapped;
     private CouponTypeCode couponTypeCode;
     @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate expireDate;
