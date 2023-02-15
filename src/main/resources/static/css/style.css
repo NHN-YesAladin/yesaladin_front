@@ -73,7 +73,7 @@ h1, h2, h3, h4, h5, h6, figure {
   background: #0bbbe6; }
 
 #fh5co-aside {
-  width: 38.2%;
+  width: 28.2%;
   top: 0;
   left: 0;
   bottom: 0;
@@ -97,7 +97,7 @@ h1, h2, h3, h4, h5, h6, figure {
       color: #fff; }
 
 #fh5co-main-content {
-  margin-left: 38.1966%;
+  margin-left: 28.1966%;
   position: relative;
   z-index: 999;
   min-height: 500px;
@@ -140,7 +140,7 @@ h1, h2, h3, h4, h5, h6, figure {
           line-height: 30px; } }
     .simply-countdown-one .simply-section .simply-word {
       display: block;
-      text-align: left;
+      text-align: right;
       font-weight: 700;
       color: #a7a7a7; }
 
