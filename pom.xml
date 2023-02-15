@@ -25,8 +25,28 @@
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
+        <repository>
+            <id>in-project</id>
+            <name>custom jars</name>
+            <url>file://${project.basedir}/lib</url>
+        </repository>
     </repositories>
     <dependencies>
+        <dependency>
+            <groupId>toast</groupId>
+            <artifactId>logncrash-logback-sdk</artifactId>
+            <version>3.0.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20220320</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.13</version>
+        </dependency>
         <dependency>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
             <groupId>org.springframework.boot</groupId>
@@ -117,12 +137,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
             <version>2.7.7</version>
-        </dependency>
-
-        <dependency>
-            <groupId>net.logstash.logback</groupId>
-            <artifactId>logstash-logback-encoder</artifactId>
-            <version>7.2</version>
         </dependency>
         <dependency>
             <artifactId>micrometer-registry-prometheus</artifactId>
