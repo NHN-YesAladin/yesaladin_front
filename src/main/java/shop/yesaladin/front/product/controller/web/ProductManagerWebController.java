@@ -9,6 +9,7 @@ import shop.yesaladin.front.common.dto.PageRequestDto;
 import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.product.dto.*;
 import shop.yesaladin.front.product.service.inter.CommandProductService;
+import shop.yesaladin.front.product.service.inter.ElasticCommandProductService;
 import shop.yesaladin.front.product.service.inter.QueryProductService;
 import shop.yesaladin.front.product.service.inter.QueryProductTypeService;
 
@@ -31,6 +32,7 @@ import java.util.Objects;
 public class ProductManagerWebController {
 
     private final CommandProductService commandProductService;
+    private final ElasticCommandProductService elasticCommandProductService;
     private final QueryProductService queryProductService;
 
     private final QueryProductTypeService queryProductTypeService;
@@ -103,6 +105,7 @@ public class ProductManagerWebController {
             @PathVariable long productId
     ) throws IOException {
         commandProductService.modify(modifyRequestDto, productId);
+        elasticCommandProductService.update(productId);
 
         return "redirect:/manager/products";
     }
@@ -119,7 +122,7 @@ public class ProductManagerWebController {
     @PostMapping("/manager/products/{productId}")
     public String softDelete(@PathVariable long productId, HttpServletRequest request) {
         commandProductService.softDelete(productId);
-
+        elasticCommandProductService.delete(productId);
         return "redirect:" + request.getHeader("Referer");
     }
 
@@ -133,6 +136,7 @@ public class ProductManagerWebController {
     @PostMapping("/manager/products/{productId}/is-sale")
     public String changeIsSale(@PathVariable long productId, HttpServletRequest request) {
         commandProductService.changeIsSale(productId);
+        elasticCommandProductService.changeIsSale(productId);
 
         return "redirect:" + request.getHeader("Referer");
     }
@@ -147,6 +151,7 @@ public class ProductManagerWebController {
     @PostMapping("/manager/products/{productId}/is-forced-out-of-stock")
     public String changeIsForcedOutOfStock(@PathVariable long productId, HttpServletRequest request) {
         commandProductService.changeIsForcedOutOfStock(productId);
+        elasticCommandProductService.changeIsForcedOutOfStock(productId);
 
         return "redirect:" + request.getHeader("Referer");
     }

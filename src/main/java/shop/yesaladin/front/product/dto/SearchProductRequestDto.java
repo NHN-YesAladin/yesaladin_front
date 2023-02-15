@@ -11,9 +11,4 @@ import javax.validation.constraints.Min;
 public class SearchProductRequestDto {
     String selected;
     String input;
-    @Min(value = 0)
-    int offset;
-    @Max(value = 20)
-    @Min(value = 1)
-    int size;
 }
