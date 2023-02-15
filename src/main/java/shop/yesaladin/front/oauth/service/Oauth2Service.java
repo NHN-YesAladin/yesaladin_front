@@ -1,14 +1,10 @@
 package shop.yesaladin.front.oauth.service;
 
 import static shop.yesaladin.front.oauth.util.Oauth2Utils.ACCESS_TOKEN;
-import static shop.yesaladin.front.oauth.util.Oauth2Utils.EMAIL;
-import static shop.yesaladin.front.oauth.util.Oauth2Utils.GITHUB;
-import static shop.yesaladin.front.oauth.util.Oauth2Utils.KAKAO_ACCOUNT;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Map;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -115,26 +111,12 @@ public abstract class Oauth2Service {
     /**
      * OAuth2 로그인시 YesAladin 자사 회원인지 판별하기 위한 기능입니다.
      *
-     * @param userInfo OAuth2에서 제공 받은 사용자 정보
-     * @param provider OAuth2 provider의 종류 입니다.
+     * @param dto OAuth Login을 위한 dto
      * @return 해당 유저가 YesAladin 자사 회원 인지에 대한 결과
      * @author 송학현
      * @since 1.0
      */
-    public boolean isAlreadyMember(Map<String, Object> userInfo, String provider) {
-        String loginId;
-        if (provider.equals(GITHUB.getValue())) {
-            Object email = userInfo.get(EMAIL.getValue());
-            loginId = Objects.nonNull(email) ? email
-                    .toString().split("@")[0] : userInfo.get("login").toString();
-            return oauth2Adapter.isAlreadyMember(loginId);
-        } else { // KAKAO 인 경우
-            Map<String, String> kakaoAccount = (Map) userInfo.get(KAKAO_ACCOUNT.getValue());
-            String email = kakaoAccount.get(EMAIL.getValue());
-            loginId = Objects.nonNull(email)
-                    ? email.split("@")[0]
-                    : userInfo.get("id").toString();
-            return oauth2Adapter.isAlreadyMember(loginId);
-        }
+    public boolean isAlreadyMember(Oauth2LoginRequestDto dto) {
+        return oauth2Adapter.isAlreadyMember(dto.getLoginId());
     }
 }

@@ -4,9 +4,7 @@ import static shop.yesaladin.front.member.jwt.AuthUtil.JWT_CODE;
 import static shop.yesaladin.front.member.jwt.AuthUtil.UUID_CODE;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -38,6 +36,7 @@ public class ReissueTokenInterceptor implements HandlerInterceptor {
     private final CookieUtils cookieUtils;
 
     private static final String X_EXPIRE_HEADER = "X-Expire";
+    private static final long TIME_TO_REISSUE = Duration.ofMinutes(5).toSeconds();
 
     /**
      * JWT Token 재발급을 위한 기능입니다.
@@ -95,10 +94,8 @@ public class ReissueTokenInterceptor implements HandlerInterceptor {
      * @since 1.0
      */
     private boolean isReissueRequired(AuthInfo authInfo) {
-        String expiredTime = authInfo.getExpiredTime();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
-        LocalDateTime base = LocalDateTime.parse(expiredTime, formatter);
-        return Duration.between(LocalDateTime.now(ZoneId.of("Asia/Seoul")), base)
-                .toMinutes() <= 5;
+        long expiredTime = Long.parseLong(authInfo.getExpiredTime());
+        long now = new Date().getTime();
+        return (expiredTime - (now / 1000) > TIME_TO_REISSUE);
     }
 }

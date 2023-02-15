@@ -95,7 +95,7 @@ public class GithubOauth2Service extends Oauth2Service {
         String email = (String) userInfo.get(EMAIL.getValue());
         Object password = userInfo.get("id");
         if (Objects.nonNull(email)) {
-            String loginId = email.split("@")[0];
+            String loginId = email.split("@")[0] + "@github.com";
             return new Oauth2LoginRequestDto(loginId, String.valueOf(password));
         }
         String loginId = userInfo.get("login").toString();

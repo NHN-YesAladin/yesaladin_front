@@ -16,9 +16,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.GetMapping;import shop.yesaladin.front.member.dto.MemberGrade;
+import shop.yesaladin.front.member.dto.MemberStatisticsResponseDto;
 import shop.yesaladin.front.member.service.inter.QueryMemberService;
 import shop.yesaladin.front.point.service.inter.QueryPointHistoryService;
 import shop.yesaladin.front.product.service.inter.QueryProductService;
+import shop.yesaladin.front.statistics.dto.PercentageResponseDto;
 
 /**
  * 메인 페이지, 마이 페이지, 관리자 페이지를 리턴하기 위한 Controller 클래스 입니다.
@@ -54,7 +56,7 @@ public class IndexController {
             throws JsonProcessingException {
         model.addAttribute(
                 "recentProductList",
-                queryProductService.findRecentProduct(PageRequest.of(0, 12)).getDataList()
+                queryProductService.findRecentProduct(PageRequest.of(0, 12))
         );
         model.addAttribute(
                 "recentViewProductList",
@@ -80,18 +82,6 @@ public class IndexController {
         model.addAttribute("grade", grade);
 
         return "mypage/index";
-    }
-
-    /**
-     * 관리자페이지를 반환시켜줍니다.
-     *
-     * @return 관리자페이지
-     * @author 송학현
-     * @since 1.0
-     */
-    @GetMapping("/manager")
-    public String manager() {
-        return "manager/index";
     }
 
     private Set<Long> getRecentViewProductList(Cookie cookie) throws JsonProcessingException {
