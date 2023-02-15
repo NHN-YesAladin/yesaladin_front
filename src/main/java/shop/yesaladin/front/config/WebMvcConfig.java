@@ -1,5 +1,6 @@
 package shop.yesaladin.front.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -8,6 +9,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import shop.yesaladin.front.common.utils.CookieUtils;
+import shop.yesaladin.front.interceptor.ProductViewCounterInterceptor;
 import shop.yesaladin.front.interceptor.ReissueTokenInterceptor;
 import shop.yesaladin.front.interceptor.RequestLoggingInterceptor;
 import shop.yesaladin.front.member.adapter.MemberAdapter;
@@ -27,6 +29,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     private final MemberAdapter memberAdapter;
     private final RedisTemplate<String, Object> redisTemplate;
+    private final ObjectMapper objectMapper;
     private final CookieUtils cookieUtils;
 
     /**
@@ -44,6 +47,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
         registry.addInterceptor(new ReissueTokenInterceptor(memberAdapter, redisTemplate, cookieUtils))
                 .excludePathPatterns("/css/**", "/js/**", "/libs/**", "/**/static/**", "/img/**", "/api/**", "/");
+
+        registry.addInterceptor(new ProductViewCounterInterceptor(redisTemplate, objectMapper)).addPathPatterns("/products/*");
     }
 
     @Override
