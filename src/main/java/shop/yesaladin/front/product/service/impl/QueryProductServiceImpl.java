@@ -2,6 +2,7 @@ package shop.yesaladin.front.product.service.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -182,7 +183,7 @@ public class QueryProductServiceImpl implements QueryProductService {
      * {@inheritDoc}
      */
     @Override
-    public PaginatedResponseDto<ProductRecentResponseDto> findRecentProduct(Pageable pageable) {
+    public List<ProductRecentResponseDto> findRecentProduct(Pageable pageable) {
         String uri = UriComponentsBuilder
                 .fromUriString(url)
                 .path(PATH + "/recent/product")
@@ -190,11 +191,12 @@ public class QueryProductServiceImpl implements QueryProductService {
                 .queryParam("page", pageable.getPageNumber())
                 .toUriString();
 
-        ResponseEntity<ResponseDto<PaginatedResponseDto<ProductRecentResponseDto>>> responseEntity = restTemplate.exchange(
+        ResponseEntity<ResponseDto<List<ProductRecentResponseDto>>> responseEntity = restTemplate.exchange(
                 uri,
                 HttpMethod.GET,
                 getHttpEntity(),
-                RECENT_PRODUCTION_CODE
+                new ParameterizedTypeReference<>() {
+                }
         );
         return Objects.requireNonNull(responseEntity.getBody()).getData();
     }

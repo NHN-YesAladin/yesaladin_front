@@ -56,7 +56,7 @@ public class IndexController {
             throws JsonProcessingException {
         model.addAttribute(
                 "recentProductList",
-                queryProductService.findRecentProduct(PageRequest.of(0, 12)).getDataList()
+                queryProductService.findRecentProduct(PageRequest.of(0, 12))
         );
         model.addAttribute(
                 "recentViewProductList",
