@@ -39,11 +39,11 @@
         <a href="/members/login" class="d-inline btn btn-primary">Login</a>
         <a href="/members/signup" class="d-inline btn btn-outline-primary">SignUp</a>
       </div>
-      <div class="nav-item dropdown">
+      <div class="nav-item dropdown" sec:authorize="isAuthenticated()">
         <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown"
            aria-label="Open user menu">
           <div class="d-none d-xl-block ps-2">
-            <div sec:authorize="isAuthenticated()">
+            <div>
               <span th:text="${#authentication.name}"></span> 님 안녕하세요!
             </div>
           </div>
