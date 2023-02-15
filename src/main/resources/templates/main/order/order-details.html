@@ -353,10 +353,9 @@
 
   function setActive() {
     let statusCode = document.getElementById("stepper").dataset["code"];
-    let statusCodeNegative = document.getElementById("stepper-negative").dataset["code"];
-
+    console.log(statusCode);
     stepItems.forEach(item => {
-      if (item.dataset["code"] === statusCode || item.dataset["code"] === statusCode) {
+      if (item.dataset["code"] === statusCode) {
         item.classList.add("active");
       }
     });
