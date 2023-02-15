@@ -293,8 +293,32 @@ function addEventListenerToCouponTriggerCode() {
   });
 }
 
+async function searchProductByTitle(title) {
+  const response = await fetch(`${SHOP_SERVER}/v1/search/products?title=${title}&size=20&offset=0`);
+  const parsedResponse = (await response.json()).data;
+  console.log(parsedResponse);
+}
+
+function addEventListenerToSearchBoxAndButton() {
+  const searchButton = document.querySelector('#product-search-button');
+  const searchBar = document.querySelector('#product-search-bar');
+  const callback = async () => {
+    console.log(searchBar.value);
+    await searchProductByTitle(searchBar.value);
+  };
+
+  searchButton.addEventListener('click', callback);
+  searchBar.addEventListener('keypress', (event) => {
+    if (event.code === 'Enter') {
+      event.preventDefault();
+      searchButton.click();
+    }
+  })
+}
+
 (function init() {
   initAlert();
+  addEventListenerToSearchBoxAndButton();
   addEventListenerToCouponTriggerCode();
   addEventListenerToCouponQuantity();
   addEventListenerToCouponType();
