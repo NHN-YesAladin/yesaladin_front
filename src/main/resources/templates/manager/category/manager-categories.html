@@ -19,7 +19,6 @@
     <link th:href="@{/css/tabler-payments.min.css}" rel="stylesheet"/>
     <link th:href="@{/css/tabler-vendors.min.css}" rel="stylesheet"/>
     <link th:href="@{/css/demo.min.css}" rel="stylesheet"/>
-  <script src="../../../static/js/coupon/manager-coupon-create.js"></script>
 </head>
 <body>
 <!-- Libs JS -->
@@ -134,7 +133,7 @@
                                   <select id="select-parent" th:name="parentCategory" class="form-select">
                                     <option value="none">선택</option>
                                     <option th:each="parentCategory : ${parentCategories}"
-                                            th:value="${parentCategory.id}" th:text="${parentCategory.name}" th:selected="${parentCategory.id == id}"></option>
+                                            th:value="${parentCategory.id}" th:text="${parentCategory.name}" th:selected="${parentCategory.id == parentId}"></option>
                                   </select>
                               </div>
                               <div th:if="${parent != null}" class="col-md-4">
@@ -170,7 +169,7 @@
                                           <td th:text="${#strings.isEmpty(category.order) ? '-' : category.order}"></td>
                                           <td>
                                             <a href="#" class="btn btn-dark btn-pill w-auto fs-5 btn-modal" data-bs-toggle="modal" data-bs-target="#modify-modal-report"
-                                               th:data-cat-parent-id="${id}" th:data-cat-id="${category.id}" th:data-cat-name="${category.name}" th:data-cat-shown="${category.isShown}">
+                                               th:data-cat-parent-id="${parentId}" th:data-cat-id="${category.id}" th:data-cat-name="${category.name}" th:data-cat-shown="${category.isShown}">
                                               수정
                                             </a>
 
@@ -230,26 +229,9 @@
                                 </div>
                               </div>
                             </div>
-                            <div class="card-footer d-flex align-items-center">
-                                <ul class="pagination m-0 ms-auto">
-                                    <li class="page-item" th:if="${start > 1}">
-                                        <a class="page-link" th:href="@{/manager/categories(id=${id},size=${size},page=(${start}-${blockSize}))}" tabindex="-1" aria-disabled="true">
-                                            <!-- Download SVG icon from http://tabler-icons.io/i/chevron-left -->
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><polyline points="15 6 9 12 15 18" /></svg>
-                                            prev
-                                        </a>
-                                    </li>
-                                    <li class="page-item" th:each="page : ${#numbers.sequence(start,last)}">
-                                      <a class="page-link" th:classappend="${currentPage==page}?'active'" th:href="@{/manager/categories(id=${id},size=${size},page=${page}-1)}" th:text="${page}"></a>
-                                    </li>
-                                    <li class="page-item" th:if="${last < totalPage}">
-                                        <a class="page-link" th:href="@{/manager/categories(id=${id},size=${size},page=(${start}+${blockSize}-1))}">
-                                            next <!-- Download SVG icon from http://tabler-icons.io/i/chevron-right -->
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><polyline points="9 6 15 12 9 18" /></svg>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
+                          <div
+                              th:replace="~{common/utils/paging :: paging('/manager/categories', ${code == null ? '' : '&code=' + code})}">
+                          </div>
                         </div>
                     </div>
                 </div>
@@ -266,7 +248,7 @@
 <script>
   let FRONT_SERVER;
   let SHOP_SERVER;
-  let catNameRegex = /^[a-zA-Z0-9\/\-]{1,30}$/;
+  let catNameRegex = /^[가-힣a-zA-Z0-9\/]{1,30}$/;
   let emptyRegex = /\s/g;
 
   window.addEventListener('DOMContentLoaded', (event) => {
@@ -277,9 +259,9 @@
   let buttonRegister = document.getElementById("btn-register");
   buttonRegister.addEventListener('click', (event) => {
     let form = document.getElementById("form-register");
-    let name = document.getElementById("name-register").innerText;
+    let name = document.getElementById("name-register").value;
     if (!catNameRegex.test(name) || emptyRegex.test(name)) {
-      alert("카테고리 이름을 1자 이상 30자 이내 및 해당하는 특수문자('/' 와 '-')만 입력하십시오.")
+      alert("카테고리 이름을 1자 이상 30자 이내 및 해당하는 특수문자('/')만 입력하십시오.")
       event.preventDefault();
       return;
     }
@@ -293,7 +275,7 @@
       location.href = '/manager/categories';
       return;
     }
-    location.href = '/manager/categories?id=' + value;
+    location.href = '/manager/categories?page=0&size=10&code=' + value;
   });
 
 
@@ -367,7 +349,7 @@
     const parentId = document.getElementById("modify-select-parent").value;
 
     if (!catNameRegex.test(name) || emptyRegex.test(name)) {
-      alert("카테고리 이름을 1자 이상 30자 이내 및 해당하는 특수문자('/' 와 '-')만 입력하십시오.")
+      alert("카테고리 이름을 1자 이상 30자 이내 및 해당하는 특수문자('/')만 입력하십시오.")
       event.preventDefault();
       return;
     }

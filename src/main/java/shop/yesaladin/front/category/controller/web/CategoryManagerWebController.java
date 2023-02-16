@@ -1,6 +1,7 @@
 package shop.yesaladin.front.category.controller.web;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -50,58 +51,42 @@ public class CategoryManagerWebController {
      */
     @GetMapping
     public String mangerCategories(
-            @RequestParam(name = "id", required = false) Long parentId,
+            @RequestParam(name = "code", required = false) Long parentId,
             @RequestParam(required = false) Integer page,
             @RequestParam(required = false) Integer size,
             Model model
     ) {
-        // paging을 위한 초기 값 셋팅
-        int initialPagingSize = 10;
-        long currentPage = 1L;
-        long totalPage = 1L;
-        long start = 1L;
-        long last = 1L;
-        int blockSize = 5; // 페이징시 1~5 / 6~10과 같이 블럭 사이즈를 지정하는 변수
-        List<CategoryResponseDto> dataList = new ArrayList<>();
-        // size가 정해지지 않았을 경우, initialPagingSize 값을 따른다.
-        model.addAttribute("size", size == null ? initialPagingSize : size);
-
         List<CategoryResponseDto> parentResponse = queryCategoryService.getParentCategories();
         model.addAttribute("parentCategories", parentResponse);
-        model.addAttribute("id", parentId);
+        System.out.println("parentResponse = " + parentResponse);
         Optional<CategoryResponseDto> parentOptional = parentResponse.stream()
                 .filter(parent -> parent.getId().equals(parentId))
                 .findAny();
         parentOptional.ifPresent(responseDto -> model.addAttribute("parent", responseDto));
 
-        if (Objects.nonNull(parentId)) {
-            // 페이징 전용 dto를 리턴 받는다.
-            PaginatedResponseDto<CategoryResponseDto> paginatedResponseDto = queryCategoryService.getChildCategoriesByParentId(
-                    new PageRequestDto(page, size),
-                    parentId
-            );
-            // dto에서 현재 페이지를 리턴하는 값을 변수에 저장
-            currentPage = paginatedResponseDto.getCurrentPage();
-            // dto에서 전체 페이지 개수의 값을 변수에 저장
-            totalPage = paginatedResponseDto.getTotalPage();
-            // dto에서 페이징된 데이터를 리스트에 저장
-            dataList = paginatedResponseDto.getDataList();
-
-            // 현재 블럭의 값 ex : block 1~5 = 0, block 6~10 = 1
-            int block = (int) (currentPage / blockSize);
-            // 블럭의 시작 지점 : 1부터 시작, block 변수 값에 따라 시작지점이 달라짐
-            start = block * blockSize + 1;
-            // 블럭의 마지막 지점 : 블럭의 마지막 값, blockSize의 배수 혹은 totalPage 값
-            last = ((start + blockSize - 1) < totalPage) ? (start + blockSize - 1) : totalPage;
-
+        model.addAttribute("parentId", parentId);
+        if (Objects.isNull(parentId)) {
+            model.addAttribute("code", null);
+            model.addAttribute("currentPage", 0);
+            model.addAttribute("totalPage", 1);
+            model.addAttribute("totalDataCount", 0);
+            model.addAttribute("dataList", Collections.EMPTY_LIST);
+            return "manager/category/manager-categories";
         }
-        model.addAttribute("currentPage", currentPage);
-        model.addAttribute("totalPage", totalPage);
-        model.addAttribute("dataList", dataList);
 
-        model.addAttribute("start", start);
-        model.addAttribute("last", last);
-        model.addAttribute("blockSize", blockSize);
+
+        PaginatedResponseDto<CategoryResponseDto> response = queryCategoryService.getChildCategoriesByParentId(
+                new PageRequestDto(page, size),
+                parentId
+        );
+
+        model.addAttribute("code", parentId);
+        model.addAttribute("currentPage", response.getCurrentPage());
+        model.addAttribute("totalPage", response.getTotalPage());
+        model.addAttribute("totalDataCount", response.getTotalDataCount());
+        model.addAttribute("dataList", response.getDataList());
+
+
         return "manager/category/manager-categories";
     }
 
