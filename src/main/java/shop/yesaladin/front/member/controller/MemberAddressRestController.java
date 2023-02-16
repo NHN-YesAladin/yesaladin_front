@@ -1,7 +1,6 @@
 package shop.yesaladin.front.member.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,11 +32,9 @@ public class MemberAddressRestController {
      * @author 최예린
      * @since 1.0
      */
-    @PostMapping("/api/address")
-    public MemberAddressResponseDto createMemberAddress(@RequestBody MemberAddressRequestDto request) {
-        ResponseDto<MemberAddressResponseDto> response = commandMemberAddressService.createMemberAddress(
-                request.toCreateRequestDto());
-        return (response.isSuccess()) ? response.getData() : null;
+    @PostMapping
+    public ResponseDto<MemberAddressResponseDto> createMemberAddress(@RequestBody MemberAddressRequestDto request) {
+        return commandMemberAddressService.createMemberAddress(request.toCreateRequestDto());
     }
 
     /**
@@ -48,10 +45,11 @@ public class MemberAddressRestController {
      * @author 최예린
      * @since 1.0
      */
-    @DeleteMapping("/api/address/{addressId}")
+    @PostMapping("/{addressId}")
     public boolean deleteMemberAddress(@PathVariable Long addressId) {
         ResponseDto<Object> response = commandMemberAddressService.deleteAddress(addressId);
 
         return response.isSuccess();
     }
+
 }

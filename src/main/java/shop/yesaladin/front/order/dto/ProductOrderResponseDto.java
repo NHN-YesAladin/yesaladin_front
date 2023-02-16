@@ -1,5 +1,6 @@
 package shop.yesaladin.front.order.dto;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,6 +27,7 @@ public class ProductOrderResponseDto {
     private Boolean isGivenPoint;
     private int givenPointRate;
     private int quantity;
+    private List<String> categories;
 
     /**
      * 상품의 할인 가격을 반환합니다.

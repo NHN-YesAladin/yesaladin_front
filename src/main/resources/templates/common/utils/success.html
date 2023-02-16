@@ -9,16 +9,14 @@
   const successBox = document.getElementById("success-box");
   const successText = document.getElementById("success-text");
 
-  window.addEventListener('DOMContentLoaded', () => {
-    hideSuccess();
+  window.addEventListener('DOMContentLoaded', (event) => {
+    successBox.classList.add("d-none");
   });
+
   function writeContentToSuccess(message) {
     successText.innerHTML = message;
-    successBox.hidden=false;
-    setTimeout(hideSuccess, 3000);
-  }
-  function hideSuccess() {
-    successBox.hidden=true;
+    successBox.classList.remove("d-none");
+    setTimeout(() => successBox.classList.add("d-none"), 3000);
   }
 
 </script>

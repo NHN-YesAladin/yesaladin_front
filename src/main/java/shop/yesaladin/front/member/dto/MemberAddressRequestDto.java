@@ -22,7 +22,7 @@ public class MemberAddressRequestDto {
     private String postAddress;
     private String roadAddress;
     private String detailAddress;
-    private Boolean isDefault;
+    private Boolean isDefault = false;
 
     /**
      * 요청 reqeust dto를 생성 dto 클래스로 변환합니다.

@@ -2,9 +2,14 @@ package shop.yesaladin.front.order.controller;
 
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import shop.yesaladin.common.dto.ResponseDto;
+import shop.yesaladin.front.coupon.dto.CouponOrderSheetRequestDto;
+import shop.yesaladin.front.coupon.dto.CouponOrderSheetResponseDto;
 import shop.yesaladin.front.order.dto.OrderStatusCode;
 import shop.yesaladin.front.order.service.inter.QueryOrderService;
 
@@ -15,7 +20,7 @@ import shop.yesaladin.front.order.service.inter.QueryOrderService;
  * @author 배수한
  * @since 1.0
  */
-
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/orders")
@@ -33,6 +38,22 @@ public class OrderRestController {
     public Map<OrderStatusCode, Long> getMyOrderCount() {
         return queryOrderService.getOrderCountByStatus();
 
+    }
+
+    /**
+     * 상품에 쿠폰을 적용합니다.
+     *
+     * @param request 상품과 쿠폰 데이터
+     * @return 할인된 상품 데이터
+     * @author 최예린
+     * @since 1.0
+     */
+    @GetMapping("/coupons")
+    public CouponOrderSheetResponseDto getDiscountPrice(@ModelAttribute
+            CouponOrderSheetRequestDto request
+            ) {
+        log.error("request : {}", request);
+        return queryOrderService.getDiscountPrice(request);
     }
 
 }

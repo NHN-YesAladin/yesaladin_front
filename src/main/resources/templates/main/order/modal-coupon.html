@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<body th:fragment="modal-copon">
+
+<div hidden="hidden" class="row w-full mb-1" style="height: fit-content"
+     id="member-coupon-common-template">
+  <label class="form-selectgroup-item">
+    <input type="radio" class="form-selectgroup-input" name="couponCode"
+           id="member-coupon-common-code">
+    <div class="form-selectgroup-label w-full align-items-center text-start p-3">
+      <div class="form-selectgroup-label-content">
+        <div class="row w-full">
+          <div class="col-12 form-selectgroup-title fs-3 strong mb-1" id="member-coupon-common-name"></div>
+        </div>
+        <div class="row w-full">
+          <small class="col-12 form-label-description text-danger" id="member-coupon-common-expire-date"></small>
+        </div>
+      </div>
+      <hr class="my-1">
+      <div class="form-selectgroup-label-content">
+        <div class="row w-full">
+          <small class="form-label-description col-6"
+               id="member-coupon-common-min-order-amount"></small>
+          <small class="form-label-description col-6" type="hidden"
+               id="member-coupon-common-max-order-amount"></small>
+        </div>
+      </div>
+    </div>
+  </label>
+</div>
+<div hidden="hidden" class="col-12 mb-1" id="member-coupon-duplicate-template">
+  <label class="form-selectgroup-item">
+    <input type="checkbox" class="form-selectgroup-input" name="duplicateCouponCode"
+           id="member-coupon-duplicate-code">
+    <div class="form-selectgroup-label w-full align-items-center text-start p-3">
+      <div class="form-selectgroup-label-content">
+        <div class="row w-full">
+          <div class="col-12 form-selectgroup-title fs-3 strong mb-1" id="member-coupon-duplicate-name"></div>
+        </div>
+        <div class="row w-full">
+          <small class="col-12 form-label-description text-danger" id="member-coupon-duplicate-expire-date"></small>
+        </div>
+      </div>
+      <hr class="my-1">
+      <div class="form-selectgroup-label-content">
+        <div class="row w-full">
+          <small class="form-label-description col-6"
+                 id="member-coupon-duplicate-min-order-amount"></small>
+          <small class="form-label-description col-6" type="hidden"
+                 id="member-coupon-duplicate-max-order-amount"></small>
+        </div>
+      </div>
+    </div>
+  </label>
+</div>
+<div hidden="hidden" class="w-full" id="member-coupon-applied-template">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       class="icon icon-tabler icon-tabler-chevron-down-left" width="24"
+       height="24" viewBox="0 0 24 24" stroke-width="2"
+       stroke="currentColor" fill="none" stroke-linecap="round"
+       stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+    <path d="M8 8v8h8"></path>
+  </svg>
+  <small class="text-info">
+    <input type="hidden" name="memberCoupons">
+  </small>
+</div>
+<!--쿠폰 관련 함수-->
+<script th:inline="javascript">
+  let selectProduct;
+  const memberCoupons = [[${info.memberCoupons}]];
+  let memberCouponStatus = new Map(memberCoupons.map(i => [i.couponCode, false]));
+
+  const memberCouponCommonTemplate = document.getElementById("member-coupon-common-template");
+  const memberCouponDuplicateTemplate = document.getElementById("member-coupon-duplicate-template");
+  const memberCouponAppliedTemplate = document.getElementById("member-coupon-applied-template");
+
+  const memberCouponCommon = document.getElementById("member-coupon-common");
+  const memberCouponDuplicate = document.getElementById("member-coupon-duplicate");
+
+  function createCommonCouponTemplate(i) {
+    const newCouponTemplate = memberCouponCommonTemplate.cloneNode(true);
+
+    newCouponTemplate.querySelector(
+        "#member-coupon-common-code").value = memberCoupons[i].couponCode;
+    newCouponTemplate.querySelector("#member-coupon-common-name").innerText = memberCoupons[i].name;
+    newCouponTemplate.querySelector(
+        "#member-coupon-common-expire-date").innerText = memberCoupons[i].expireDate.toString()
+        + " 까지 사용가능";
+    newCouponTemplate.querySelector(
+        "#member-coupon-common-min-order-amount").innerHTML = getStrongName("최소주문금액 ",
+        memberCoupons[i].minOrderAmount);
+    if (memberCoupons[i].couponTypeCode == "FIXED_RATE") {
+      newCouponTemplate.querySelector(
+          "#member-coupon-common-max-order-amount").innerHTML = getStrongName("최대할인금액 ",
+          memberCoupons[i].maxDiscountAmount);
+      newCouponTemplate.querySelector("#member-coupon-common-max-order-amount").hidden = false;
+    }
+    newCouponTemplate.hidden = false;
+    return newCouponTemplate;
+  }
+
+  function createDuplicateCouponTemplate(i) {
+    const newCouponTemplate = memberCouponDuplicateTemplate.cloneNode(true);
+
+    newCouponTemplate.querySelector(
+        "#member-coupon-duplicate-code").value = memberCoupons[i].couponCode;
+    newCouponTemplate.querySelector("#member-coupon-duplicate-name").innerText = memberCoupons[i].name;
+    newCouponTemplate.querySelector(
+        "#member-coupon-duplicate-expire-date").innerText = memberCoupons[i].expireDate.toString()
+        + " 까지 사용가능";
+    newCouponTemplate.querySelector(
+        "#member-coupon-duplicate-min-order-amount").innerHTML = getStrongName("최소주문금액 ",
+        memberCoupons[i].minOrderAmount);
+    if (memberCoupons[i].couponTypeCode == "FIXED_RATE") {
+      newCouponTemplate.querySelector(
+          "#member-coupon-duplicate-max-order-amount").innerHTML = getStrongName("최대할인금액 ",
+          memberCoupons[i].maxDiscountAmount);
+      newCouponTemplate.querySelector("#member-coupon-duplicate-max-order-amount").hidden = false;
+    }
+
+    newCouponTemplate.hidden = false;
+    return newCouponTemplate;
+  }
+  function createAppliedCouponTemplate(couponCode) {
+    const newCouponTemplate = memberCouponAppliedTemplate.cloneNode(true);
+
+    newCouponTemplate.querySelector("memberCoupons").value = couponCode;
+    newCouponTemplate.querySelector(".text-info").text = couponCode;
+    newCouponTemplate.hidden = false;
+    newCouponTemplate.id = "member-coupon-applied-" + couponCode;
+    return newCouponTemplate;
+  }
+
+  function getStrongName(description, target) {
+    return description + '<span class="strong">' + target.toLocaleString() + '</span>' + '원';
+  }
+
+  function addIntoMemberCouponCommon(i, product) {
+    //쿠폰 적용범위
+    if (memberCoupons[i].couponBoundCode == 'ALL') { //all
+      memberCouponCommon.appendChild(createCommonCouponTemplate(i));
+    } else if (memberCoupons[i].couponBoundCode === 'CATEGORY') { //category
+      if (product.categories == memberCoupons[i].couponBound) {
+        memberCouponCommon.appendChild(createCommonCouponTemplate(i));
+      }
+    } else { //isbn
+      if (product.isbn == memberCoupons[i].couponBound) {
+        memberCouponCommon.appendChild(createCommonCouponTemplate(i));
+      }
+    }
+  }
+
+  function addIntoMemberCouponDuplicate(i, product) {
+    //쿠폰 적용범위
+    if (memberCoupons[i].couponBoundCode == 'ALL') { //all
+      memberCouponDuplicate.appendChild(createDuplicateCouponTemplate(i));
+    } else if (memberCoupons[i].couponBoundCode == 'CATEGORY') { //category
+      if (product.categories == memberCoupons[i].couponBound) {
+        memberCouponDuplicate.appendChild(createDuplicateCouponTemplate(i));
+      }
+    } else { //isbn
+      if (product.isbn == memberCoupons[i].couponBound) {
+        memberCouponDuplicate.appendChild(createDuplicateCouponTemplate(i));
+      }
+    }
+  }
+
+  function openCouponModal(index) {
+    selectProduct = index;
+
+    const product = document.getElementById("order-product-" + index).value;
+    const productTotalAmount = document.getElementById("order-product-total-amount-" + index).innerText.replace(/\D/g, '');
+
+    memberCouponCommon.innerHTML = "";
+    memberCouponDuplicate.innerHTML = "";
+
+    for (let i = 0; i < memberCoupons.length; i++) {
+      if (memberCouponStatus.get(memberCoupons[i].couponCode) ||
+          memberCoupons[i].minOrderAmount > productTotalAmount) {
+        continue;
+      }
+      //중복 가능 여부에 따라 추가하는 장소 변경
+      if (memberCoupons[i].canBeOverlapped) { //일반 쿠폰
+        addIntoMemberCouponCommon(i, product);
+      } else {  //중복 쿠폰
+        addIntoMemberCouponDuplicate(i, product);
+      }
+    }
+    $('#coupon-modal').modal('show');
+  }
+
+  function useCoupon() {
+    console.log(selectProduct);
+    const isbn = document.getElementById("order-product-isbn-" + selectProduct).value;
+    const quantity = document.getElementById("order-product-quantity-" + selectProduct).innerText;
+
+    const couponCodeCommon = document.getElementsByName("couponCode");
+    let couponCode = "";
+    if (couponCodeCommon.length != 0 && couponCodeCommon[0].checked) {
+      couponCode = couponCodeCommon[0].value;
+    }
+
+    const couponCodeDuplicate = document.getElementsByName("duplicateCouponCode");
+    let duplicateCouponCode = [];
+    if (couponCodeDuplicate != null) {
+      for (let i = 0; i < couponCodeDuplicate.length; i++) {
+        if (!couponCodeDuplicate[i].checked) {
+          continue;
+        }
+        duplicateCouponCode.push(couponCodeDuplicate[i].value);
+      }
+    }
+
+    if (couponCode == "" && duplicateCouponCode.length == 0) {
+      writeContentToAlert("쿠폰을 선택해주세요.");
+      return;
+    }
+
+    const params = new URLSearchParams({
+      isbn: isbn,
+      quantity: quantity,
+      couponCode: couponCode,
+      duplicateCouponCode: duplicateCouponCode
+    })
+
+    fetch(`/api/orders/coupons?` + params.toString(), {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    }).then((resp) => resp.json())
+    .then((data) => {
+      console.log(document.getElementById("member-coupon-applied-amount-" + selectProduct));
+      document.getElementById("member-coupon-applied-amount-" + selectProduct).value = data.discountPrice;
+      document.getElementById("order-product-save-point-" + selectProduct).innerText = data.expectedPoint;
+      for (const coupon in data.memberCoupons) {
+        memberCouponStatus.set(coupon, true);
+        document.getElementById("member-coupon-applied-coupon-" + selectProduct).appendChild(createAppliedCouponTemplate(coupon));
+      }
+      document.getElementById("member-coupon-applied-group-" + selectProduct).hidden = false;
+      writeContentToSuccess("쿠폰이 적용되었습니다.");
+    })
+    document.getElementById("member-coupon-button-" + selectProduct).hidden = true;
+    document.getElementById("member-coupon-hidden-" + selectProduct).hidden = false;
+
+    memberCouponCommon.innerHTML = "";
+    memberCouponDuplicate.innerHTML = "";
+    selectProduct = null;
+
+    $('#coupon-modal').modal('hide');
+
+    setProductTotalPrice();
+  }
+</script>
+</body>
+</html>
