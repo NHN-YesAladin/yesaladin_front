@@ -22,6 +22,7 @@ import shop.yesaladin.front.common.exception.CustomNotFoundException;
 import shop.yesaladin.front.common.exception.CustomServerException;
 import shop.yesaladin.front.common.exception.CustomUnauthorizedException;
 import shop.yesaladin.front.common.exception.InvalidHttpHeaderException;
+import shop.yesaladin.front.common.exception.RestException;
 import shop.yesaladin.front.common.exception.ValidationFailedException;
 import shop.yesaladin.front.common.utils.CookieUtils;
 
@@ -114,6 +115,10 @@ public class WebControllerAdvice {
         return "common/errors/5xx";
     }
 
+    @ExceptionHandler(RestException.class)
+    public String handleRestException(Exception e){
+        return e.getMessage();
+    }
     @ExceptionHandler(Exception.class)
     public String handleException(Exception ex, Model model) {
         log.error("[Exception] : ", ex);
