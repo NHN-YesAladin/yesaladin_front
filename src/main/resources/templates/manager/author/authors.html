@@ -175,9 +175,8 @@
         if (res.status !== 201) {
           throw new Error(res.status + " 발생=> [저자명: " + authorName + ", 로그인 ID: " + authorLoginId + "]를 생성할 수 없습니다.");
         }
-        return res.json();
+        window.alert("저자('" + authorName + "')를 생성하였습니다.");
       })
-      .then(data => window.alert("저자('" + data.name + "')를 생성하였습니다."))
       .catch(err => {
         window.alert(err);
       })
@@ -214,9 +213,7 @@
         if (!res.ok) {
           throw new Error(res.status + " 발생=> [ID: " + id + " 저자명: " + name.value + ", 로그인 ID: " + loginId.value + "]로 수정할 수 없습니다.");
         }
-        return res.json();
-      }).then(data => {
-        window.alert("저자('" + data.name + "')를 수정하였습니다.")
+        window.alert("저자('" + name.value + "')를 수정하였습니다.")
       }).catch(err => {
         window.alert(err);
       }).finally(() => window.location.reload());
