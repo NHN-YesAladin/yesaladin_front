@@ -40,7 +40,7 @@ public class SearchProductWebController {
      * @since 1.0
      */
     @GetMapping
-    String searchProduct(
+    public String searchProduct(
             Model model,
             @ModelAttribute SearchProductRequestDto requestDto,
             @PageableDefault Pageable pageable
@@ -56,7 +56,7 @@ public class SearchProductWebController {
     }
 
     @GetMapping("/categories")
-    String searchProductByCategory(
+    public String searchProductByCategory(
             Model model,
             @RequestParam(name = "categoryid") Long categoryId,
             @PageableDefault Pageable pageable
