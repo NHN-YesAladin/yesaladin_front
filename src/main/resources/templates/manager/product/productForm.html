@@ -635,18 +635,16 @@
           event.preventDefault();
           return false;
         }
-        categories.forEach(function (category) {
-          category.checked = true;
-        })
-
-        let publishers = document.getElementsByName('publishers').length;
-        if(publishers === 0 || publishers > 1) {
+        let publisher = document.getElementsByName('publisher').length;
+        console.log("publisher: " + publisher)
+        if(publisher !== 1) {
           alert('출판사를 1개 선택해주세요')
           event.preventDefault();
           return false;
         }
 
         let authors = document.getElementsByName('authors').length;
+        console.log("author: " + authors)
         if(authors === 0) {
           alert('저자를 1개 이상 선택해주세요')
           event.preventDefault();
