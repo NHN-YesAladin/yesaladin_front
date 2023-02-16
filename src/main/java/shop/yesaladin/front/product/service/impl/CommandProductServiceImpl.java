@@ -118,6 +118,7 @@ public class CommandProductServiceImpl implements CommandProductService {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<ProductUpdateDto> httpEntity = new HttpEntity<>(productRequestDto, httpHeaders);
+
         restTemplate.exchange(
                 uriComponents.toUri(),
                 HttpMethod.PUT,
