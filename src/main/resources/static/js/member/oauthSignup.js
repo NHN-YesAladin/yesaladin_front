@@ -2,7 +2,7 @@ function nicknameCheck() {
   let nicknameCheckBtn = document.getElementById('nicknameCheckBtn');
   let nicknameInput = document.getElementById('nickname');
   let nicknameVal = nicknameInput.value;
-  let nicknameRegex = /^.*(?=.*[a-z])(?=.*[a-z\d])(?=.{2,8}).*$/;
+  let nicknameRegex = /^[가-힣ㄱ-ㅎa-zA-Z0-9._-]{2,15}$/;
   let emptyRegex = /\s/g;
 
   if (nicknameRegex.test(nicknameVal) && !emptyRegex.test(nicknameVal)) {
@@ -23,7 +23,7 @@ function nicknameCheck() {
       })
     });
   } else {
-    alert('닉네임은 영문으로 2자 이상 15자 이하만 가능합니다.');
+    alert('숫자, 영어, 한국어와 언더스코어를 허용하며 최소 2자 이상의 15자 이하의 닉네임만 가능합니다.')
   }
 }
 
@@ -58,7 +58,6 @@ function emailCheck() {
 
 function phoneCheck() {
   let phoneCheckBtn = document.getElementById('phoneCheckBtn');
-  let createAccountBtn = document.getElementById('createAccountBtn');
   let phoneInput = document.getElementById('phone');
   let phoneVal = phoneInput.value;
   let phoneRegex = /^\d{11}$/;
@@ -76,7 +75,6 @@ function phoneCheck() {
           alert('사용 가능한 휴대폰 번호 입니다.');
           phoneInput.readOnly = true;
           phoneCheckBtn.disabled = true;
-          createAccountBtn.disabled = false;
         } else {
           alert('이미 사용 중인 휴대폰 번호 입니다.');
         }
@@ -85,4 +83,36 @@ function phoneCheck() {
   } else {
     alert('휴대폰 번호를 - 없이 11자 입력해주세요.');
   }
+}
+
+function finalCheckEvent() {
+  let createAccountBtn = document.getElementById('createAccountBtn');
+  let genderVal = document.getElementById('gender').value;
+  let birthVal = document.getElementById('datepicker-icon-prepend').value;
+
+  let emptyRegex = /\s/g;
+
+  if (!emptyRegex.test(genderVal) && !emptyRegex.test(birthVal)) {
+    createAccountBtn.disabled = false;
+  } else {
+    alert('성별과 생년월일을 선택해 주세요.');
+  }
+}
+
+function againInputCheckEvent() {
+  let createAccountBtn = document.getElementById('createAccountBtn');
+  let phoneCheckBtn = document.getElementById('phoneCheckBtn');
+  let phoneInput = document.getElementById('phone');
+  let emailCheckBtn = document.getElementById('emailCheckBtn');
+  let emailInput = document.getElementById('email');
+  let nicknameCheckBtn = document.getElementById('nicknameCheckBtn');
+  let nicknameInput = document.getElementById('nickname');
+
+  nicknameInput.readOnly = false;
+  nicknameCheckBtn.disabled = false;
+  emailInput.readOnly = false;
+  emailCheckBtn.disabled = false;
+  phoneInput.readOnly = false;
+  phoneCheckBtn.disabled = false;
+  createAccountBtn.disabled = true;
 }
