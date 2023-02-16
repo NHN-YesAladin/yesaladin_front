@@ -29,6 +29,9 @@ public class ElasticCommandProductServiceImpl implements ElasticCommandProductSe
     private String host;
     private static final String PATH = "/v1/search/products";
 
+    /**
+     *{@inheritDoc}
+     */
     @Override
     public void update(Long id) throws JsonProcessingException {
         UriComponents url = UriComponentsBuilder.fromHttpUrl(host)
@@ -43,6 +46,9 @@ public class ElasticCommandProductServiceImpl implements ElasticCommandProductSe
         );
     }
 
+    /**
+     *{@inheritDoc}
+     */
     @Override
     public void changeIsSale(Long id) {
         UriComponents url = UriComponentsBuilder.fromHttpUrl(host)
@@ -57,6 +63,9 @@ public class ElasticCommandProductServiceImpl implements ElasticCommandProductSe
         );
     }
 
+    /**
+     *{@inheritDoc}
+     */
     @Override
     public void changeIsForcedOutOfStock(Long id) {
         UriComponents url = UriComponentsBuilder.fromHttpUrl(host)
@@ -71,6 +80,9 @@ public class ElasticCommandProductServiceImpl implements ElasticCommandProductSe
         );
     }
 
+    /**
+     *{@inheritDoc}
+     */
     @Override
     public void delete(Long id) {
         UriComponents url = UriComponentsBuilder.fromHttpUrl(host)

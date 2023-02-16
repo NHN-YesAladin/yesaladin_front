@@ -9,6 +9,6 @@ import javax.validation.constraints.Min;
 @Getter
 @AllArgsConstructor
 public class SearchProductRequestDto {
-    String selected;
-    String input;
+    private String selected;
+    private String input;
 }
