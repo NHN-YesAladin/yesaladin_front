@@ -7,6 +7,8 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.config.GatewayConfig;
 import shop.yesaladin.front.file.dto.FileUploadResponseDto;
@@ -108,12 +110,16 @@ public class CommandProductServiceImpl implements CommandProductService {
                 ebookFileResponse
         );
 
+        UriComponents uriComponents = UriComponentsBuilder.fromHttpUrl(
+                gatewayConfig.getShopUrl() + "/v1/products"
+        ).path("/" + productId).build();
+        log.info("uri = {}", uriComponents.toUri());
+
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-
-        HttpEntity httpEntity = new HttpEntity(productRequestDto, httpHeaders);
-        ResponseEntity<ResponseDto<ProductOnlyIdDto>> response = restTemplate.exchange(
-                gatewayConfig.getShopUrl() + "/v1/products/" + productId,
+        HttpEntity<ProductUpdateDto> httpEntity = new HttpEntity<>(productRequestDto, httpHeaders);
+        restTemplate.exchange(
+                uriComponents.toUri(),
                 HttpMethod.PUT,
                 httpEntity,
                 new ParameterizedTypeReference<ResponseDto<ProductOnlyIdDto>>() {
