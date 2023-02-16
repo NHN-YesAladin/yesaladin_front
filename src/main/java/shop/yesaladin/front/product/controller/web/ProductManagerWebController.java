@@ -97,7 +97,7 @@ public class ProductManagerWebController {
      * @author 이수정
      * @since 1.0
      */
-    @PutMapping("/manager/products/{productId}")
+    @PostMapping("/manager/products/modify/{productId}")
     public String modify(
             @ModelAttribute ProductModifyRequestDto modifyRequestDto,
             @PathVariable long productId
