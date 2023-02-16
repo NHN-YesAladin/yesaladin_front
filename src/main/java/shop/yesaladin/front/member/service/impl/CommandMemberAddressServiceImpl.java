@@ -1,6 +1,7 @@
 package shop.yesaladin.front.member.service.impl;
 
 import java.net.URI;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -8,9 +9,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import shop.yesaladin.common.dto.ResponseDto;
+import shop.yesaladin.common.exception.ClientException;
 import shop.yesaladin.front.common.dto.PeriodQueryRequestDto;
 import shop.yesaladin.front.config.GatewayConfig;
 import shop.yesaladin.front.member.dto.MemberAddressCreateRequestDto;
@@ -50,12 +53,14 @@ public class CommandMemberAddressServiceImpl implements CommandMemberAddressServ
                 .build()
                 .encode().toUri();
 
-        return restTemplate.exchange(
+        ResponseDto<MemberAddressResponseDto> response = restTemplate.exchange(
                 uri,
                 HttpMethod.POST,
                 entity,
                 MEMBER_ADDRESS_RESPONSE
         ).getBody();
+
+        return response;
     }
 
     /**
@@ -105,5 +110,13 @@ public class CommandMemberAddressServiceImpl implements CommandMemberAddressServ
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         return new HttpEntity<>(headers);
+    }
+    @ExceptionHandler(ClientException.class)
+    public ResponseDto<Object> exceptionHandler(ClientException ce) {
+        return ResponseDto.builder()
+                .success(false)
+                .status(ce.getResponseStatus())
+                .errorMessages(List.of(ce.getDisplayErrorMessage()))
+                .build();
     }
 }

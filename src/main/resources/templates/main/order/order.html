@@ -98,7 +98,7 @@
                         <label class="form-label required">수령인 이름</label>
                         <input type="text" class="form-control" id="recipient-name"
                                name="recipientName" value=""
-                               placeholder="홍길동" maxlength="20">
+                               placeholder="홍길동" minlength="1" maxlength="20">
                         <label class="form-label required mt-2">전화번호</label>
                         <input type="text" class="form-control" id="recipient-phone-number"
                                name="recipientPhoneNumber" value=""
@@ -202,9 +202,9 @@
                         </td>
                         <td class="text-center">
                           <div sec:authorize="isAuthenticated()"
+                               th:id="${'order-product-save-point-' + productStat.index}"
                                th:text="${#numbers.formatInteger(product.expectedPoint * product.quantity, 1, 'COMMA')}">
                             <input type="hidden"
-                                   th:id="|order-product-save-point-${productStat.index}|"
                                    name="savePoint"
                                    th:value="${product.expectedPoint * product.quantity}">
                           </div>
@@ -216,36 +216,39 @@
                             th:id="${'order-product-quantity-' + productStat.index}"
                             th:text="${product.quantity}">
                         </td>
-                        <td class="text-center"
-                            th:id="${'order-product-total-amount-' + productStat.index}"
-                            th:text="${#numbers.formatInteger(product.getSalePrice() * product.quantity, 1, 'COMMA')}">
+                        <td class="text-center">
+                          <div th:id="${'order-product-total-amount-' + productStat.index}"
+                               th:text="${#numbers.formatInteger(product.getSalePrice() * product.quantity, 1, 'COMMA')}"></div>
+                          <div class="fw-bold text-danger"
+                               th:id="${'member-coupon-applied-amount-' + productStat.index}">
+                          </div>
+                          <input type="hidden" name="orderProductTotalAmount"
+                                 th:value="${product.getSalePrice() * product.quantity}">
                         </td>
                         <td class="text-center">
                           <!--회원 : 쿠폰 사용 -->
                           <div sec:authorize="isAuthenticated()" style="width: fit-content;">
                             <button class="btn btn-outline-secondary btn-sm float-end"
-                                    th:id="${'member-coupon-button-' + productStat.index}" type="button"
+                                    th:id="${'member-coupon-button-' + productStat.index}"
+                                    type="button"
                                     th:onclick="|openCouponModal(${productStat.index})|">
                               쿠폰 적용
                             </button>
-                            <span th:id="${'member-coupon-hidden-' + productStat.index}"
-                                  hidden="hidden">
-                              <button type="button" class="btn btn-outline-danger btn-sm float-end">
-                                쿠폰 취소
-                              </button>
-                              <input  readonly type="text" name="couponAppliedAmount" value="0"
-                                      style="width: fit-content"
-                                     th:id="${'member-coupon-applied-amount-' + productStat.index}">
-                                할인된 금액
-                            </span>
+                            <button type="button" class="btn btn-outline-danger btn-sm float-end"
+                                    th:id="${'member-coupon-button-cancel-' + productStat.index}"
+                                    hidden="hidden">
+                              쿠폰 취소
+                            </button>
                           </div>
                           <!--비회원-->
                           <small sec:authorize="!isAuthenticated()">사용불가</small>
                         </td>
                       </tr>
-                      <tr type="hidden" th:id="${'member-coupon-applied-group-' + productStat.index}">
+                      <tr type="hidden"
+                          th:id="${'member-coupon-applied-group-' + productStat.index}">
                         <td></td>
-                        <td colspan="6" th:id="${'member-coupon-applied-coupon-' + productStat.index}">
+                        <td colspan="6"
+                            th:id="${'member-coupon-applied-coupon-' + productStat.index}">
                         </td>
                       </tr>
                       </tbody>
@@ -403,16 +406,17 @@
                            th:id="|orderer-address-id-${address.id}|"
                            name="ordererAddressId" th:value="${address.id}"
                            th:checked="${address.id == info.getDefaultAddress().id}">
-                    <span class="form-selectgroup-label d-flex align-items-center p-3">
-                    <span class="me-3">
-                      <span class="form-selectgroup-check"></span>
+                    <span class="form-selectgroup-label d-flex align-items-center p-3"
+                          th:classappend="${address.id == info.getDefaultAddress().id ? 'border-dark' : ''}">
+                      <span class="me-3">
+                        <span class="form-selectgroup-check"></span>
+                      </span>
+                      <span class="form-selectgroup-label-content">
+                        <span class="form-selectgroup-title strong mb-1"
+                              th:id="|orderer-address-${address.id}|"
+                              th:text="${address.address}"></span>
+                      </span>
                     </span>
-                    <span class="form-selectgroup-label-content">
-                      <span class="form-selectgroup-title strong mb-1"
-                            th:id="|orderer-address-${address.id}|"
-                            th:text="${address.address}"></span>
-                    </span>
-                  </span>
                   </label>
                 </div>
                 <div class="col-1 col-sm-2 p-0">
@@ -532,9 +536,264 @@
   </div>
 </form>
 
-<div th:replace="~{main/order/modal-coupon :: modal-copon}"></div>
+<div hidden="hidden" class="row w-full mb-1" style="height: fit-content"
+     id="member-coupon-common-template">
+  <label class="form-selectgroup-item">
+    <input type="radio" class="form-selectgroup-input" name="couponCode"
+           id="member-coupon-common-code">
+    <div class="form-selectgroup-label w-full align-items-center text-start p-3">
+      <div class="form-selectgroup-label-content">
+        <div class="row w-full">
+          <div class="col-12 form-selectgroup-title fs-3 strong mb-1"
+               id="member-coupon-common-name"></div>
+        </div>
+        <div class="row w-full">
+          <small class="col-12 form-label-description text-danger"
+                 id="member-coupon-common-expire-date"></small>
+        </div>
+      </div>
+      <hr class="my-1">
+      <div class="form-selectgroup-label-content">
+        <div class="row w-full">
+          <small class="form-label-description col-6"
+                 id="member-coupon-common-min-order-amount"></small>
+          <small class="form-label-description col-6" type="hidden"
+                 id="member-coupon-common-max-order-amount"></small>
+        </div>
+      </div>
+    </div>
+  </label>
+</div>
+<div hidden="hidden" class="col-12 mb-1" id="member-coupon-duplicate-template">
+  <label class="form-selectgroup-item">
+    <input type="checkbox" class="form-selectgroup-input" name="duplicateCouponCode"
+           id="member-coupon-duplicate-code">
+    <div class="form-selectgroup-label w-full align-items-center text-start p-3">
+      <div class="form-selectgroup-label-content">
+        <div class="row w-full">
+          <div class="col-12 form-selectgroup-title fs-3 strong mb-1"
+               id="member-coupon-duplicate-name"></div>
+        </div>
+        <div class="row w-full">
+          <small class="col-12 form-label-description text-danger"
+                 id="member-coupon-duplicate-expire-date"></small>
+        </div>
+      </div>
+      <hr class="my-1">
+      <div class="form-selectgroup-label-content">
+        <div class="row w-full">
+          <small class="form-label-description col-6"
+                 id="member-coupon-duplicate-min-order-amount"></small>
+          <small class="form-label-description col-6" type="hidden"
+                 id="member-coupon-duplicate-max-order-amount"></small>
+        </div>
+      </div>
+    </div>
+  </label>
+</div>
+<div hidden="hidden" class="w-full" id="member-coupon-applied-template">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       class="icon icon-tabler icon-tabler-chevron-down-left" width="24"
+       height="24" viewBox="0 0 24 24" stroke-width="2"
+       stroke="currentColor" fill="none" stroke-linecap="round"
+       stroke-linejoin="round">
+    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+    <path d="M8 8v8h8"></path>
+  </svg>
+  <small class="text-info" id="member-coupon-text"></small>
+  <input id="member-coupon-input" name="memberCoupons">
+</div>
 </body>
+<!--쿠폰 관련 함수-->
+<script th:inline="javascript">
+  let selectProduct;
+  const memberCoupons = [[${info.memberCoupons}]];
+  let memberCouponStatus = new Map(memberCoupons.map(i => [i.couponCode, false]));
 
+  const memberCouponCommonTemplate = document.getElementById("member-coupon-common-template");
+  const memberCouponDuplicateTemplate = document.getElementById("member-coupon-duplicate-template");
+  const memberCouponAppliedTemplate = document.getElementById("member-coupon-applied-template");
+
+  const memberCouponCommon = document.getElementById("member-coupon-common");
+  const memberCouponDuplicate = document.getElementById("member-coupon-duplicate");
+
+  function createCommonCouponTemplate(i) {
+    const newCouponTemplate = memberCouponCommonTemplate.cloneNode(true);
+
+    newCouponTemplate.querySelector(
+        "#member-coupon-common-code").value = memberCoupons[i].couponCode;
+    newCouponTemplate.querySelector("#member-coupon-common-name").innerText = memberCoupons[i].name;
+    newCouponTemplate.querySelector(
+        "#member-coupon-common-expire-date").innerText = memberCoupons[i].expireDate.toString()
+        + " 까지 사용가능";
+    newCouponTemplate.querySelector(
+        "#member-coupon-common-min-order-amount").innerHTML = getStrongName("최소주문금액 ",
+        memberCoupons[i].minOrderAmount);
+    if (memberCoupons[i].couponTypeCode == "FIXED_RATE") {
+      newCouponTemplate.querySelector(
+          "#member-coupon-common-max-order-amount").innerHTML = getStrongName("최대할인금액 ",
+          memberCoupons[i].maxDiscountAmount);
+      newCouponTemplate.querySelector("#member-coupon-common-max-order-amount").hidden = false;
+    }
+    newCouponTemplate.hidden = false;
+    return newCouponTemplate;
+  }
+
+  function createDuplicateCouponTemplate(i) {
+    const newCouponTemplate = memberCouponDuplicateTemplate.cloneNode(true);
+
+    newCouponTemplate.querySelector(
+        "#member-coupon-duplicate-code").value = memberCoupons[i].couponCode;
+    newCouponTemplate.querySelector(
+        "#member-coupon-duplicate-name").innerText = memberCoupons[i].name;
+    newCouponTemplate.querySelector(
+        "#member-coupon-duplicate-expire-date").innerText = memberCoupons[i].expireDate.toString()
+        + " 까지 사용가능";
+    newCouponTemplate.querySelector(
+        "#member-coupon-duplicate-min-order-amount").innerHTML = getStrongName("최소주문금액 ",
+        memberCoupons[i].minOrderAmount);
+    if (memberCoupons[i].couponTypeCode == "FIXED_RATE") {
+      newCouponTemplate.querySelector(
+          "#member-coupon-duplicate-max-order-amount").innerHTML = getStrongName("최대할인금액 ",
+          memberCoupons[i].maxDiscountAmount);
+      newCouponTemplate.querySelector("#member-coupon-duplicate-max-order-amount").hidden = false;
+    }
+
+    newCouponTemplate.hidden = false;
+    return newCouponTemplate;
+  }
+
+  function createAppliedCouponTemplate(couponCode) {
+    const newCouponTemplate = memberCouponAppliedTemplate.cloneNode(true);
+
+    newCouponTemplate.querySelector("#member-coupon-input").value = couponCode;
+    newCouponTemplate.querySelector("#member-coupon-input").hidden = true;
+    newCouponTemplate.querySelector("#member-coupon-text").innerText = couponCode;
+    newCouponTemplate.hidden = false;
+    newCouponTemplate.id = "member-coupon-applied-" + couponCode;
+    return newCouponTemplate;
+  }
+
+  function getStrongName(description, target) {
+    return description + '<span class="strong">' + target.toLocaleString() + '</span>' + '원';
+  }
+
+  function addIntoMemberCouponCommon(i, product) {
+    //쿠폰 적용범위
+    if (memberCoupons[i].couponBoundCode == 'ALL') { //all
+      memberCouponCommon.appendChild(createCommonCouponTemplate(i));
+    } else if (memberCoupons[i].couponBoundCode === 'CATEGORY') { //category
+      if (product.categories == memberCoupons[i].couponBound) {
+        memberCouponCommon.appendChild(createCommonCouponTemplate(i));
+      }
+    } else { //isbn
+      if (product.isbn == memberCoupons[i].couponBound) {
+        memberCouponCommon.appendChild(createCommonCouponTemplate(i));
+      }
+    }
+  }
+
+  function addIntoMemberCouponDuplicate(i, product) {
+    //쿠폰 적용범위
+    if (memberCoupons[i].couponBoundCode == 'ALL') { //all
+      memberCouponDuplicate.appendChild(createDuplicateCouponTemplate(i));
+    } else if (memberCoupons[i].couponBoundCode == 'CATEGORY') { //category
+      if (product.categories == memberCoupons[i].couponBound) {
+        memberCouponDuplicate.appendChild(createDuplicateCouponTemplate(i));
+      }
+    } else { //isbn
+      if (product.isbn == memberCoupons[i].couponBound) {
+        memberCouponDuplicate.appendChild(createDuplicateCouponTemplate(i));
+      }
+    }
+  }
+
+  function openCouponModal(index) {
+    selectProduct = index;
+
+    const product = document.getElementById("order-product-" + index).value;
+    const productTotalAmount = document.getElementById(
+        "order-product-total-amount-" + index).innerText.replace(/\D/g, '');
+
+    memberCouponCommon.innerHTML = "";
+    memberCouponDuplicate.innerHTML = "";
+
+    for (let i = 0; i < memberCoupons.length; i++) {
+      if (memberCouponStatus.get(memberCoupons[i].couponCode) ||
+          memberCoupons[i].minOrderAmount > productTotalAmount) {
+        continue;
+      }
+      //중복 가능 여부에 따라 추가하는 장소 변경
+      if (memberCoupons[i].canBeOverlapped) { //일반 쿠폰
+        addIntoMemberCouponCommon(i, product);
+      } else {  //중복 쿠폰
+        addIntoMemberCouponDuplicate(i, product);
+      }
+    }
+    $('#coupon-modal').modal('show');
+  }
+
+  function useCoupon() {
+    const isbn = document.getElementById("order-product-isbn-" + selectProduct).value;
+    const quantity = document.getElementById("order-product-quantity-" + selectProduct).innerText;
+
+    const couponCodeCommon = document.getElementsByName("couponCode");
+    let couponCode = "";
+    if (couponCodeCommon.length != 0 && couponCodeCommon[0].checked) {
+      couponCode = couponCodeCommon[0].value;
+    }
+
+    const couponCodeDuplicate = document.getElementsByName("duplicateCouponCode");
+    let duplicateCouponCode = [];
+    if (couponCodeDuplicate != null) {
+      for (let i = 0; i < couponCodeDuplicate.length; i++) {
+        if (!couponCodeDuplicate[i].checked) {
+          continue;
+        }
+        duplicateCouponCode.push(couponCodeDuplicate[i].value);
+      }
+    }
+
+    if (couponCode == "" && duplicateCouponCode.length == 0) {
+      writeContentToAlert("쿠폰을 선택해주세요.");
+      return;
+    }
+
+    const params = new URLSearchParams({
+      isbn: isbn,
+      quantity: quantity,
+      couponCode: couponCode,
+      duplicateCouponCode: duplicateCouponCode
+    })
+
+    fetch(`/api/orders/coupons?` + params.toString(), {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    }).then((resp) => {
+      return resp.json();
+    }).then((data) => {
+      document.getElementById("member-coupon-applied-amount-" + selectProduct).innerText = "-"
+          + data.discountPrice.toLocaleString();
+      document.getElementById("order-product-save-point-"
+          + selectProduct).innerText = data.expectedPoint.toLocaleString();
+      for (let i = 0; i < data.memberCoupons.length; i++) {
+        memberCouponStatus.set(data.memberCoupons[i], true);
+        document.getElementById("member-coupon-applied-coupon-" + selectProduct).appendChild(
+            createAppliedCouponTemplate(data.memberCoupons[i]));
+      }
+      document.getElementById("member-coupon-applied-group-" + selectProduct).hidden = false;
+      writeContentToSuccess("쿠폰이 적용되었습니다.");
+    })
+    document.getElementById("member-coupon-button-" + selectProduct).hidden = true;
+    document.getElementById("member-coupon-button-cancel-" + selectProduct).hidden = false;
+
+    $('#coupon-modal').modal('hide');
+
+    setProductTotalPrice();
+  }
+</script>
 <!--배송지 관련 함수-->
 <script th:inline="javascript">
   const frontUrl = [[${@environment.getProperty('yesaladin.front.url')}]];
@@ -582,8 +841,12 @@
   }
 
   async function deleteAddress(id) {
-    console.log(frontUrl);
-    console.log(id);
+    const defaultAddress = [[${info.getDefaultAddress()}]];
+    if (defaultAddress != null && id == defaultAddress.id) {
+      alert("대표 배송지는 삭제가 불가능합니다. 마이페이지에서 수정해주세요.");
+      return;
+    }
+
     await fetch(`${frontUrl}/api/address/${id}`, {
       method: "POST",
       headers: {
@@ -611,7 +874,7 @@
       return;
     }
     console.log("start to create address");
-    await fetch(`${frontUrl}/api/address`, {
+    let promise = fetch(`${frontUrl}/api/address`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -624,27 +887,35 @@
       })
     }).then((resp) => {
       return resp.json();
-    }).then((data) => {
-      if (data === null) {
-        return;
-      }
-      const addressId = data.id;
-      const address = data.address;
-      const newMemberAddress = memberAddressTemplate.cloneNode(true);
+    });
 
-      newMemberAddress.hidden = false;
-      newMemberAddress.id = "member-addresses-" + addressId;
-      newMemberAddress.querySelector("#member-address-template-input").id = "orderer-address-id-"
-          + addressId;
-      newMemberAddress.querySelector("#member-address-template-label").innerText = address;
-      newMemberAddress.querySelector("#member-address-template-label").id = "orderer-address-"
-          + addressId;
-      newMemberAddress.querySelector("#member-address-template-cancel").addEventListener("click",
-          () => deleteAddress(addressId));
-      memberAddressGroup.append(newMemberAddress);
+    try {
+      await promise.then((data) => {
+        if (!data.success) {
+          alert(data.errorMessages);
+          return;
+        }
+        const addressData = data.data;
+        const addressId = addressData.id;
+        const address = addressData.address;
+        const newMemberAddress = memberAddressTemplate.cloneNode(true);
 
-      closeAddressForm();
-    })
+        newMemberAddress.hidden = false;
+        newMemberAddress.id = "member-addresses-" + addressId;
+        newMemberAddress.querySelector("#member-address-template-input").id = "orderer-address-id-"
+            + addressId;
+        newMemberAddress.querySelector("#member-address-template-label").innerText = address;
+        newMemberAddress.querySelector("#member-address-template-label").id = "orderer-address-"
+            + addressId;
+        newMemberAddress.querySelector("#member-address-template-cancel").addEventListener("click",
+            () => deleteAddress(addressId));
+        memberAddressGroup.append(newMemberAddress);
+
+        closeAddressForm();
+      })
+    } catch (e) {
+      alert("배송지는 최대 10개까지 등록 가능합니다.");
+    }
   }
 </script>
 
@@ -667,7 +938,8 @@
   }
 
   function setProductTotalPrice() {
-    let totalPrice = parseInt(document.getElementById("expected-total-amount").innerText.replace(/\D/g, ''));
+    let totalPrice = parseInt(
+        document.getElementById("expected-total-amount").innerText.replace(/\D/g, ''));
 
     const pointAppliedAmount = document.getElementById("point-applied-amount");
     if (pointAppliedAmount != null) {
@@ -677,7 +949,8 @@
         couponTotalAppliedAmount += parseInt(couponAppliedAmount[i].value);
       }
       totalPrice -= (couponTotalAppliedAmount + parseInt(pointAppliedAmount.value));
-      document.getElementById("point").innerText = parseInt(pointAppliedAmount.value).toLocaleString();
+      document.getElementById("point").innerText = parseInt(
+          pointAppliedAmount.value).toLocaleString();
       document.getElementById("coupon").innerText = couponTotalAppliedAmount.toLocaleString();
 
     }
