@@ -163,7 +163,7 @@
                 <td>
                   <div>
                     <a th:href="@{'/products/' + ${product.getId()}}"
-                       th:text="${'[도서] ' + product.getTitle()}" target="_blank"></a>
+                       th:text="${'[도서] ' + product.getTitle()}" target="_blank"  style="word-break: break-all"></a>
                     <div th:if="${product.getIsOutOfStack()}" class="badge bg-red">품절</div>
                   </div>
                   <div>
@@ -309,7 +309,7 @@
               <td>
                 <div>
                   <a th:href="@{'/products/' + ${product.id}}"
-                     th:text="${'[eBook] ' + product.getTitle()}" target="_blank"></a>
+                     th:text="${'[eBook] ' + product.getTitle()}" target="_blank" style="word-break: break-all"></a>
                   <div th:if="${product.getIsOutOfStack()}" class="badge bg-red">품절</div>
                 </div>
                 <div>
