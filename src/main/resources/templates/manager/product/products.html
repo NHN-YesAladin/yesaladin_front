@@ -36,7 +36,7 @@
   <div class="page-wrapper">
     <div th:replace="~{common/fragments/header :: fragment-header}"></div>
     <div class="page-header d-print-none">
-      <div class="container-xl">
+      <div class="container-fill mx-4">
         <div class="row g-2 align-items-center">
           <div class="col">
             <h2 class="page-title">
@@ -57,7 +57,7 @@
     </div>
 
     <!-- TODO 3: BODY -->
-    <div class="page-body container-xl">
+    <div class="page-body container-fill mx-4">
       <div class="card">
         <div class="card-header row">
           <h3 class="card-title col-md-2">상품 관리</h3>
@@ -90,7 +90,7 @@
             <tbody>
               <tr th:each="product, i : ${products}">
                 <td class="text-center"><span class="text-muted" th:text="${i.count}"></span></td>
-                <td><a class="text-dark" th:text="${product.title}" th:href="|/products/${product.id}|"/></td>
+                <td><a class="text-dark d-inline-block" th:text="${product.title}" th:href="|/products/${product.id}|" style="overflow: hidden; text-overflow: ellipsis; max-width: 400px;"/></td>
                 <td>
                   <div th:each="author, j : ${product.authors}" style="display: inline">
                     <p th:text="${author.name}" style="display: inline"></p>
@@ -196,7 +196,7 @@
 
     const deleteButton = document.getElementById('modal-product-delete');
     deleteButton.addEventListener('click', function (event) {
-      fetch(location.origin.toString() + "/manager/products/" + titleId.value, {
+      fetch(location.origin.toString() + "/manager/products/" + titleId.value + "/delete", {
         method: "POST"
       })
       .then(res => window.location.reload())

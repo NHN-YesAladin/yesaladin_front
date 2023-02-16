@@ -9,11 +9,6 @@ import javax.validation.constraints.Min;
 @Getter
 @AllArgsConstructor
 public class SearchProductRequestDto {
-    String selected;
-    String input;
-    @Min(value = 0)
-    int offset;
-    @Max(value = 20)
-    @Min(value = 1)
-    int size;
+    private String selected;
+    private String input;
 }

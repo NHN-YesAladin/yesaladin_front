@@ -9,6 +9,7 @@ import shop.yesaladin.front.common.dto.PageRequestDto;
 import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.product.dto.*;
 import shop.yesaladin.front.product.service.inter.CommandProductService;
+import shop.yesaladin.front.product.service.inter.ElasticCommandProductService;
 import shop.yesaladin.front.product.service.inter.QueryProductService;
 import shop.yesaladin.front.product.service.inter.QueryProductTypeService;
 
@@ -31,6 +32,7 @@ import java.util.Objects;
 public class ProductManagerWebController {
 
     private final CommandProductService commandProductService;
+    private final ElasticCommandProductService elasticCommandProductService;
     private final QueryProductService queryProductService;
 
     private final QueryProductTypeService queryProductTypeService;
@@ -89,7 +91,7 @@ public class ProductManagerWebController {
     }
 
     /**
-     * [PUT /products/{productId}] 특정 상품을 수정합니다.
+     * [POST /products/{productId}] 특정 상품을 수정합니다.
      *
      * @param modifyRequestDto 상품의 수정할 정보를 담고 있는 Dto
      * @param productId        수정할 상품의 Id
@@ -97,18 +99,19 @@ public class ProductManagerWebController {
      * @author 이수정
      * @since 1.0
      */
-    @PostMapping("/manager/products/modify/{productId}")
+    @PostMapping("/manager/products/{productId}")
     public String modify(
             @ModelAttribute ProductModifyRequestDto modifyRequestDto,
             @PathVariable long productId
     ) throws IOException {
         commandProductService.modify(modifyRequestDto, productId);
+        elasticCommandProductService.update(productId);
 
         return "redirect:/manager/products";
     }
 
     /**
-     * [DELETE /products/{productId}] 특정 상품을 삭제합니다.
+     * [POST /products/{productId}] 특정 상품을 삭제합니다.
      *
      * @param productId 삭제할 상품의 Id
      * @param request   새로고침할 주소를 받아오기 위한 request
@@ -116,10 +119,10 @@ public class ProductManagerWebController {
      * @author 이수정
      * @since 1.0
      */
-    @PostMapping("/manager/products/{productId}")
+    @PostMapping("/manager/products/{productId}/delete")
     public String softDelete(@PathVariable long productId, HttpServletRequest request) {
         commandProductService.softDelete(productId);
-
+        elasticCommandProductService.delete(productId);
         return "redirect:" + request.getHeader("Referer");
     }
 
@@ -133,6 +136,7 @@ public class ProductManagerWebController {
     @PostMapping("/manager/products/{productId}/is-sale")
     public String changeIsSale(@PathVariable long productId, HttpServletRequest request) {
         commandProductService.changeIsSale(productId);
+        elasticCommandProductService.changeIsSale(productId);
 
         return "redirect:" + request.getHeader("Referer");
     }
@@ -147,6 +151,7 @@ public class ProductManagerWebController {
     @PostMapping("/manager/products/{productId}/is-forced-out-of-stock")
     public String changeIsForcedOutOfStock(@PathVariable long productId, HttpServletRequest request) {
         commandProductService.changeIsForcedOutOfStock(productId);
+        elasticCommandProductService.changeIsForcedOutOfStock(productId);
 
         return "redirect:" + request.getHeader("Referer");
     }

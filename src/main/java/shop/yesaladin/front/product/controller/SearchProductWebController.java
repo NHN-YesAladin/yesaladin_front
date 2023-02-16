@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.product.dto.SearchProductRequestDto;
 import shop.yesaladin.front.product.dto.SearchedProductResponseDto;
 import shop.yesaladin.front.product.service.inter.SearchProductService;
@@ -39,60 +40,42 @@ public class SearchProductWebController {
      * @since 1.0
      */
     @GetMapping
-    String searchProduct(Model model, @ModelAttribute SearchProductRequestDto requestDto) {
-        SearchedProductResponseDto response = searchProductService.searchProductsByProductField(
-                requestDto);
-        model.addAttribute("products", response.getProducts());
-        getPageInfo(
-                model,
-                requestDto.getOffset(),
-                requestDto.getSize(),
-                response.getCount()
+    public String searchProduct(
+            Model model,
+            @ModelAttribute SearchProductRequestDto requestDto,
+            @PageableDefault Pageable pageable
+    ) {
+        PaginatedResponseDto<SearchedProductResponseDto> response = searchProductService.searchProductsByProductField(
+                requestDto,
+                pageable
         );
-        model.addAttribute("offset", requestDto.getOffset());
+        getDefaultInfo(model, response);
         model.addAttribute("selected", requestDto.getSelected());
         model.addAttribute("input", requestDto.getInput());
-        model.addAttribute("blockSize", BLOCK_SIZE);
+        model.addAttribute("size", pageable.getPageSize());
         return "main/product/searched-products";
     }
 
     @GetMapping("/categories")
-    String searchProductByCategory(
+    public String searchProductByCategory(
             Model model,
             @RequestParam(name = "categoryid") Long categoryId,
             @PageableDefault Pageable pageable
     ) {
-        SearchedProductResponseDto response = searchProductService.searchProductByCategoryId(
+        PaginatedResponseDto<SearchedProductResponseDto> response = searchProductService.searchProductByCategoryId(
                 categoryId,
                 pageable
         );
-        getPageInfo(model, pageable.getPageNumber(), pageable.getPageSize(), response.getCount());
-        model.addAttribute("blockSize", BLOCK_SIZE);
-        model.addAttribute("products", response.getProducts());
+        getDefaultInfo(model, response);
         model.addAttribute("categoriesid", categoryId);
         return "main/product/category-products";
     }
 
-    private void getPageInfo(Model model, int offset, int size, Long count) {
-
-        long totalPage = count % size == 0 ? count / size : count / size + 1;
-        int block = (int) ((long) offset / BLOCK_SIZE);
-        long start = (long) block * BLOCK_SIZE + 1;
-        long last = Math.min((start + BLOCK_SIZE - 1), totalPage);
-        if (start > last) {
-            last = start;
-        }
-
-        log.info("size: " + size);
-        log.info("totalPage: " + totalPage);
-        log.info("currentPage: " + offset);
-        log.info("start: " + start);
-        log.info("last: " + last);
-
-        model.addAttribute("size", size);
-        model.addAttribute("totalPage", totalPage);
-        model.addAttribute("currentPage", offset);
-        model.addAttribute("start", start);
-        model.addAttribute("last", last);
+    private void getDefaultInfo(Model model, PaginatedResponseDto<SearchedProductResponseDto> dto) {
+        model.addAttribute("totalPage", dto.getTotalPage());
+        model.addAttribute("currentPage", dto.getCurrentPage());
+        model.addAttribute("totalDataCount", dto.getTotalDataCount());
+        model.addAttribute("products", dto.getDataList());
+        model.addAttribute("url", "/search/products");
     }
 }

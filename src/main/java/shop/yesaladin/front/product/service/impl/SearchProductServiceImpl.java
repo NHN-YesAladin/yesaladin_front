@@ -12,6 +12,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 import shop.yesaladin.common.dto.ResponseDto;
+import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.product.dto.SearchProductRequestDto;
 import shop.yesaladin.front.product.dto.SearchedProductResponseDto;
 import shop.yesaladin.front.product.service.inter.SearchProductService;
@@ -33,25 +34,23 @@ public class SearchProductServiceImpl implements SearchProductService {
     @Value("${yesaladin.gateway.shop}")
     private String host;
     private static final String PATH = "/v1/search/products";
-    private static final String OFFSET = "offset";
-    private static final String SIZE = "size";
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public SearchedProductResponseDto searchProductsByProductField(SearchProductRequestDto requestDto) {
+    public PaginatedResponseDto<SearchedProductResponseDto> searchProductsByProductField(SearchProductRequestDto requestDto, Pageable pageable) {
         UriComponents url = UriComponentsBuilder.fromHttpUrl(host)
                 .path(PATH)
                 .queryParam(requestDto.getSelected(), requestDto.getInput())
-                .queryParam(OFFSET, requestDto.getOffset() - 1)
-                .queryParam(SIZE, requestDto.getSize())
+                .queryParam("page", pageable.getPageNumber())
+                .queryParam("size", pageable.getPageSize())
                 .build();
-        ResponseEntity<ResponseDto<SearchedProductResponseDto>> result = restTemplate.exchange(
+        ResponseEntity<ResponseDto<PaginatedResponseDto<SearchedProductResponseDto>>> result = restTemplate.exchange(
                 url.toUriString(),
                 HttpMethod.GET,
                 null,
-                new ParameterizedTypeReference<ResponseDto<SearchedProductResponseDto>>() {
+                new ParameterizedTypeReference<ResponseDto<PaginatedResponseDto<SearchedProductResponseDto>>>() {
                 }
         );
         return Objects.requireNonNull(result.getBody()).getData();
@@ -61,24 +60,23 @@ public class SearchProductServiceImpl implements SearchProductService {
      * {@inheritDoc}
      */
     @Override
-    public SearchedProductResponseDto searchProductByCategoryId(
+    public PaginatedResponseDto<SearchedProductResponseDto> searchProductByCategoryId(
             Long categoryId,
             Pageable pageable
     ) {
         UriComponents url = UriComponentsBuilder.fromHttpUrl(host)
                 .path(PATH)
                 .queryParam("categoryid", categoryId)
-                .queryParam(OFFSET, pageable.getPageNumber())
-                .queryParam(SIZE, pageable.getPageSize())
+                .queryParam("page", pageable.getPageNumber())
+                .queryParam("size", pageable.getPageSize())
                 .build();
-        ResponseEntity<ResponseDto<SearchedProductResponseDto>> result = restTemplate.exchange(
+        ResponseEntity<ResponseDto<PaginatedResponseDto<SearchedProductResponseDto>>> result = restTemplate.exchange(
                 url.toUriString(),
                 HttpMethod.GET,
                 null,
-                new ParameterizedTypeReference<ResponseDto<SearchedProductResponseDto>>() {
+                new ParameterizedTypeReference<ResponseDto<PaginatedResponseDto<SearchedProductResponseDto>>>() {
                 }
         );
-        log.info(result.getBody().getData().getProducts().size() + "");
         return Objects.requireNonNull(result.getBody()).getData();
     }
 }
