@@ -92,7 +92,7 @@
           </div>
         </div>
       </div>
-      <div th:replace="~{common/utils/paging-bar :: paging('/products/categries', 'categoriesid=' + ${categoriesid})}"></div>
+      <div th:replace="~{common/utils/paging-bar :: paging('/search/products/categories', '&categoryid=' + ${categoriesid})}"></div>
     </div>
   </div>
   <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>

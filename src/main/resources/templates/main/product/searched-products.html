@@ -72,7 +72,7 @@
       </div>
     </div>
   </div>
-  <div th:replace="~{common/utils/paging-bar :: paging(${url}, '&' + ${selected} + '=' + ${input})}"></div>
+  <div th:replace="~{common/utils/paging-bar :: paging(${url}, '&size=' + ${size} + '&selected=' + ${selected} + '&input=' + ${input})}"></div>
   <!-- TODO 5 : footer -->
   <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
 </body>

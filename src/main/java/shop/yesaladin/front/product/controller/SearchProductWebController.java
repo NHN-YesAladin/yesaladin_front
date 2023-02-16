@@ -52,6 +52,7 @@ public class SearchProductWebController {
         getDefaultInfo(model, response);
         model.addAttribute("selected", requestDto.getSelected());
         model.addAttribute("input", requestDto.getInput());
+        model.addAttribute("size", pageable.getPageSize());
         return "main/product/searched-products";
     }
 
