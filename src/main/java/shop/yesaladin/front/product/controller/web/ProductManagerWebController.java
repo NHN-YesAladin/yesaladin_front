@@ -89,7 +89,7 @@ public class ProductManagerWebController {
     }
 
     /**
-     * [PUT /products/{productId}] 특정 상품을 수정합니다.
+     * [POST /products/{productId}] 특정 상품을 수정합니다.
      *
      * @param modifyRequestDto 상품의 수정할 정보를 담고 있는 Dto
      * @param productId        수정할 상품의 Id
@@ -97,7 +97,7 @@ public class ProductManagerWebController {
      * @author 이수정
      * @since 1.0
      */
-    @PostMapping("/manager/products/modify/{productId}")
+    @PostMapping("/manager/products/{productId}")
     public String modify(
             @ModelAttribute ProductModifyRequestDto modifyRequestDto,
             @PathVariable long productId
@@ -108,7 +108,7 @@ public class ProductManagerWebController {
     }
 
     /**
-     * [DELETE /products/{productId}] 특정 상품을 삭제합니다.
+     * [POST /products/{productId}] 특정 상품을 삭제합니다.
      *
      * @param productId 삭제할 상품의 Id
      * @param request   새로고침할 주소를 받아오기 위한 request
@@ -116,7 +116,7 @@ public class ProductManagerWebController {
      * @author 이수정
      * @since 1.0
      */
-    @PostMapping("/manager/products/{productId}")
+    @PostMapping("/manager/products/{productId}/delete")
     public String softDelete(@PathVariable long productId, HttpServletRequest request) {
         commandProductService.softDelete(productId);
 
