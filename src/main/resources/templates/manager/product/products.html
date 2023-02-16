@@ -196,7 +196,7 @@
 
     const deleteButton = document.getElementById('modal-product-delete');
     deleteButton.addEventListener('click', function (event) {
-      fetch(location.origin.toString() + "/manager/products/" + titleId.value, {
+      fetch(location.origin.toString() + "/manager/products/" + titleId.value + "/delete", {
         method: "POST"
       })
       .then(res => window.location.reload())
