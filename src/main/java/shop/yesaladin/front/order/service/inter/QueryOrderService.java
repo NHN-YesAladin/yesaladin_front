@@ -12,6 +12,7 @@ import shop.yesaladin.front.order.dto.OrderSheetResponseDto;
 import shop.yesaladin.front.order.dto.OrderStatusCode;
 import shop.yesaladin.front.order.dto.OrderStatusResponseDto;
 import shop.yesaladin.front.order.dto.OrderSummaryResponseDto;
+import shop.yesaladin.front.statistics.dto.SalesStatisticsResponseDto;
 
 /**
  * 주문 조회 서비스 인터페이스
@@ -79,4 +80,15 @@ public interface QueryOrderService {
      */
     OrderDetailsResponseDto getOrderDetailsDtoByOrderNumber(String orderNumber);
 
+    /**
+     * 기간에 따른 매출 통계 정보를 반환받습니다.
+     *
+     * @param pageable 페이징을 위한 Pageable
+     * @param start    시작일
+     * @param end      종료일
+     * @return 매출 통계 정보
+     * @author 이수정
+     * @since 1.0
+     */
+    PaginatedResponseDto<SalesStatisticsResponseDto> getSalesStatistics(Pageable pageable, String start, String end);
 }
