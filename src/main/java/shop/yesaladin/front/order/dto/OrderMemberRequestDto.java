@@ -8,6 +8,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
@@ -23,6 +24,7 @@ import shop.yesaladin.front.payment.dto.PaymentViewRequestDto;
 @Getter
 @ToString
 @Setter
+@NoArgsConstructor
 public class OrderMemberRequestDto {
 
     @NotBlank
@@ -58,8 +60,7 @@ public class OrderMemberRequestDto {
     private List<String> orderCoupons;
     @Min(value = 0)
     private long usePoint;
-    @Min(value = 0)
-    private long savePoint;
+    private List<Long> savePoint;
 
     public OrderMemberCreateRequestDto toOrderMemberCreateRequest() {
         return OrderMemberCreateRequestDto.builder()
@@ -73,7 +74,7 @@ public class OrderMemberRequestDto {
                 .wrappingFee((int) wrappingFee)
                 .orderCoupons(orderCoupons)
                 .usePoint(usePoint)
-                .savePoint(savePoint)
+                .savePoint(savePoint.stream().mapToLong(point -> point).sum())
                 .build();
     }
 

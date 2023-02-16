@@ -204,10 +204,9 @@
                           <div sec:authorize="isAuthenticated()"
                                th:id="${'order-product-save-point-' + productStat.index}"
                                th:text="${#numbers.formatInteger(product.expectedPoint * product.quantity, 1, 'COMMA')}">
-                            <input type="hidden"
-                                   name="savePoint"
-                                   th:value="${product.expectedPoint * product.quantity}">
                           </div>
+                          <input th:id="${'order-product-save-point-amount-' + productStat.index}"
+                                 name="savePoint" th:value="${product.expectedPoint * product.quantity}">
                           <div sec:authorize="!isAuthenticated()">
                             <small>적립불가</small>
                           </div>
@@ -222,8 +221,6 @@
                           <div class="fw-bold text-danger"
                                th:id="${'member-coupon-applied-amount-' + productStat.index}">
                           </div>
-                          <input type="hidden" name="orderProductTotalAmount"
-                                 th:value="${product.getSalePrice() * product.quantity}">
                         </td>
                         <td class="text-center">
                           <!--회원 : 쿠폰 사용 -->
@@ -601,7 +598,7 @@
     <path d="M8 8v8h8"></path>
   </svg>
   <small class="text-info" id="member-coupon-text"></small>
-  <input id="member-coupon-input" name="memberCoupons">
+  <input id="member-coupon-input" name="orderCoupons">
 </div>
 </body>
 <!--쿠폰 관련 함수-->
@@ -663,14 +660,23 @@
     return newCouponTemplate;
   }
 
-  function createAppliedCouponTemplate(couponCode) {
+  function createAppliedCouponTemplate(couponCode, discountPrice, index) {
     const newCouponTemplate = memberCouponAppliedTemplate.cloneNode(true);
 
     newCouponTemplate.querySelector("#member-coupon-input").value = couponCode;
     newCouponTemplate.querySelector("#member-coupon-input").hidden = true;
+
+    const productTotalAmount = parseInt(document.getElementById(
+        "order-product-total-amount-" + index).innerText.replace(/\D/g, ''));
+    const couponAppliedAmount = document.createElement('input');
+    couponAppliedAmount.name = "couponAppliedAmount";
+    couponAppliedAmount.value = productTotalAmount - parseInt(discountPrice);
+
     newCouponTemplate.querySelector("#member-coupon-text").innerText = couponCode;
     newCouponTemplate.hidden = false;
     newCouponTemplate.id = "member-coupon-applied-" + couponCode;
+    newCouponTemplate.append(couponAppliedAmount);
+
     return newCouponTemplate;
   }
 
@@ -774,24 +780,26 @@
     }).then((resp) => {
       return resp.json();
     }).then((data) => {
-      document.getElementById("member-coupon-applied-amount-" + selectProduct).innerText = "-"
-          + data.discountPrice.toLocaleString();
+      document.getElementById("member-coupon-applied-amount-" + selectProduct).innerText = data.discountPrice.toLocaleString();
       document.getElementById("order-product-save-point-"
           + selectProduct).innerText = data.expectedPoint.toLocaleString();
+      document.getElementById("order-product-save-point-amount-" + selectProduct).value = data.expectedPoint;
       for (let i = 0; i < data.memberCoupons.length; i++) {
         memberCouponStatus.set(data.memberCoupons[i], true);
+
         document.getElementById("member-coupon-applied-coupon-" + selectProduct).appendChild(
-            createAppliedCouponTemplate(data.memberCoupons[i]));
+            createAppliedCouponTemplate(data.memberCoupons[i], data.discountPrice, selectProduct));
       }
       document.getElementById("member-coupon-applied-group-" + selectProduct).hidden = false;
       writeContentToSuccess("쿠폰이 적용되었습니다.");
+    }).then(() => {
+      document.getElementById("member-coupon-button-" + selectProduct).hidden = true;
+      document.getElementById("member-coupon-button-cancel-" + selectProduct).hidden = false;
+
+      $('#coupon-modal').modal('hide');
+
+      setProductTotalPrice();
     })
-    document.getElementById("member-coupon-button-" + selectProduct).hidden = true;
-    document.getElementById("member-coupon-button-cancel-" + selectProduct).hidden = false;
-
-    $('#coupon-modal').modal('hide');
-
-    setProductTotalPrice();
   }
 </script>
 <!--배송지 관련 함수-->
@@ -824,10 +832,8 @@
       if (ordererAddressId[i].checked === true) {
         let id = ordererAddressId[i].value;
         let ordererAddress = document.getElementById("orderer-address-" + id);
-        console.log(ordererAddress);
         const addresses = ordererAddress.innerText.split("/");
 
-        console.log(addresses);
         ordererPostAddress.value = addresses[0];
         ordererRoadAddress.value = addresses[1];
         ordererDetailAddress.value = addresses[2];
@@ -873,7 +879,6 @@
       alert("주소를 입력해주세요.");
       return;
     }
-    console.log("start to create address");
     let promise = fetch(`${frontUrl}/api/address`, {
       method: "POST",
       headers: {
@@ -1123,7 +1128,6 @@
     }).then((resp) => {
       return resp.json();
     }).then((data) => {
-      console.log(data);
       if (!data.success) {
         alert(data.errorMessages.toString());
       } else {
