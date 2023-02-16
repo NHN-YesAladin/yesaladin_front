@@ -74,7 +74,7 @@
             <div class="modal modal-blur fade" id="register-modal-report" tabindex="-1" style="display: none;" aria-hidden="true">
               <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                 <div class="modal-content">
-                  <form method="post" action="/manager/categories">
+                  <form id = "form-register" method="post" action="/manager/categories">
                     <div class="modal-header">
                       <h5 class="modal-title">카테고리 생성</h5>
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -82,7 +82,7 @@
                     <div class="modal-body">
                       <div class="mb-3">
                         <label class="form-label">카테고리 이름</label>
-                        <input type="text" class="form-control" name="name" placeholder="이름" required>
+                        <input id="name-register" type="text" class="form-control" name="name" placeholder="이름" required>
                       </div>
                       <label class="row mb-3">
                         <span class="col">노출 여부</span>
@@ -97,7 +97,7 @@
                         <div class="col-lg-4">
                           <div class="mb-3">
                             <label class="form-label">1차 카테고리 지정</label>
-                            <select id="register-select-parent" th:name="parentId" class="form-select">
+                            <select id="register-select-parent" th:name="parentId" class="form-select" readonly>
                               <option value="">없음</option>
                               <option th:each="parentCategory : ${parentCategories}"
                                       th:value="${parentCategory.id}" th:text="${parentCategory.name}" th:selected="${parentCategory.id == id}"></option>
@@ -105,12 +105,15 @@
                           </div>
                         </div>
                       </div>
+                      <div class="mb-3">
+                        <label class="form-label text-muted">2차 카테고리 생성은 99개 까지만 가능합니다.</label>
+                      </div>
                     </div>
                     <div class="modal-footer">
                       <a href="#" class="btn btn-link link-secondary" data-bs-dismiss="modal">
                         Cancel
                       </a>
-                      <button type="submit" class="btn btn-primary">등록</button>
+                      <button id="btn-register" type="button" class="btn btn-primary">등록</button>
                     </div>
                   </form>
                 </div>
@@ -207,7 +210,7 @@
                                         <div class="row">
                                           <div class="col-lg-4">
                                             <div class="mb-3">
-                                              <label class="form-label">1차 카테고리 지정</label>
+                                              <label id="modify-label" class="form-label">1차 카테고리 지정</label>
                                               <select id="modify-select-parent" th:name="parentId" class="form-select">
                                                 <option value="">없음</option>
                                                 <option th:each="parentCategory : ${parentCategories}"
@@ -263,11 +266,25 @@
 <script>
   let FRONT_SERVER;
   let SHOP_SERVER;
+  let catNameRegex = /^[a-zA-Z0-9\/\-]{1,30}$/;
+  let emptyRegex = /\s/g;
 
-  (async function init() {
+  window.addEventListener('DOMContentLoaded', (event) => {
     FRONT_SERVER = document.querySelector("#front-server-url").textContent;
     SHOP_SERVER = document.querySelector("#shop-server-url").textContent;
-  })();
+  });
+
+  let buttonRegister = document.getElementById("btn-register");
+  buttonRegister.addEventListener('click', (event) => {
+    let form = document.getElementById("form-register");
+    let name = document.getElementById("name-register").innerText;
+    if (!catNameRegex.test(name) || emptyRegex.test(name)) {
+      alert("카테고리 이름을 1자 이상 30자 이내 및 해당하는 특수문자('/' 와 '-')만 입력하십시오.")
+      event.preventDefault();
+      return;
+    }
+    form.submit();
+  });
 
   const t = document.getElementById('select-parent');
   t.addEventListener('change', function (event) {
@@ -316,13 +333,16 @@
     }
     shownTag.value = isShown;
 
+    let label = document.getElementById("modify-label");
     const selectTag = document.getElementById("modify-select-parent");
     if (parentId === null) {
       selectTag.classList.add("d-none");
+      label.classList.add("d-none");
     } else {
       selectTag.classList.remove("d-none");
       const opTag = document.getElementById(parentId);
       opTag.selected = true;
+      label.classList.remove("d-none");
     }
 
 
@@ -345,6 +365,12 @@
     const name = document.getElementById("category-name").value;
     const shown = document.getElementById("category-isShown").value;
     const parentId = document.getElementById("modify-select-parent").value;
+
+    if (!catNameRegex.test(name) || emptyRegex.test(name)) {
+      alert("카테고리 이름을 1자 이상 30자 이내 및 해당하는 특수문자('/' 와 '-')만 입력하십시오.")
+      event.preventDefault();
+      return;
+    }
 
     const newForm = document.createElement('form');
     newForm.name = 'newForm';
