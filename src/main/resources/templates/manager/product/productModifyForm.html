@@ -42,8 +42,8 @@
   <!-- TODO 3: BODY -->
   <div class="page-body">
     <div class="container">
-      <form class="card product-form" th:action="|/manager/products/${productId}|" method="post" enctype="multipart/form-data">
-        <input type="hidden" name="_method" value="put"/>
+      <form class="card product-form" th:action="|/manager/products/modify/${productId}|" method="post" enctype="multipart/form-data">
+<!--        <input type="hidden" name="_method" value="put"/>-->
 
         <div class="card-header">
           <div class="card-title">
@@ -267,7 +267,7 @@
 
           <div class="mb-3">
             <label class="form-label">정가</label>
-            <input type="text" class="form-control" name="actualPrice" placeholder="Actual Price..."
+            <input type="number" class="form-control" name="actualPrice" placeholder="Actual Price..."
                    min="1" pattern="([0-9]{1,})" th:value="${productModifyInitDto.getActualPrice()}" required>
             <div class="invalid-feedback">정가를 숫자로 올바르게 입력해주세요.</div>
             <br/>

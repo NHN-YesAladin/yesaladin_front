@@ -31,6 +31,7 @@ import shop.yesaladin.front.order.dto.OrderStatusCode;
 import shop.yesaladin.front.order.dto.OrderStatusResponseDto;
 import shop.yesaladin.front.order.dto.OrderSummaryResponseDto;
 import shop.yesaladin.front.order.service.inter.QueryOrderService;
+import shop.yesaladin.front.statistics.dto.SalesStatisticsResponseDto;
 
 /**
  * 주문 조회 서비스 구현체
@@ -206,6 +207,29 @@ public class QueryOrderServiceImpl implements QueryOrderService {
         );
 
         return responseEntity.getBody();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public PaginatedResponseDto<SalesStatisticsResponseDto> getSalesStatistics(Pageable pageable, String start, String end) {
+        URI uri = UriComponentsBuilder.fromHttpUrl(gatewayConfig.getShopUrl())
+                .path("/v1/orders/statistics")
+                .queryParam("page", pageable.getPageNumber())
+                .queryParam("size", pageable.getPageSize())
+                .queryParam("start", start)
+                .queryParam("end", end)
+                .build().toUri();
+
+        ResponseEntity<ResponseDto<PaginatedResponseDto<SalesStatisticsResponseDto>>> response = restTemplate.exchange(
+                uri,
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<ResponseDto<PaginatedResponseDto<SalesStatisticsResponseDto>>>() {}
+        );
+
+        return Objects.requireNonNull(response.getBody()).getData();
     }
 
     private HttpEntity<String> getHttpEntity() {
