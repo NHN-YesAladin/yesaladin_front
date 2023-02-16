@@ -25,39 +25,37 @@ public class SignUpRequestDto {
 
     @NotBlank
     @Size(min = 2, max = 50)
+    @Pattern(regexp = "^[가-힣a-zA-Z]{2,50}$", message = "이름은 한글 또는 영어 2자에서 50자까지 입력 가능합니다.")
     private String name;
 
     @NotBlank
     @Size(min = 2, max = 15)
     @Pattern(regexp = "^[가-힣ㄱ-ㅎa-zA-Z0-9._-]{2,15}$",
-            message = "숫자, 영어, 한국어와 언더스코어, 공백을 허용하며 최소 2자 이상의 15자 이하의 닉네임만 가능합니다.")
+            message = "숫자, 영어, 한국어와 언더스코어를 허용하며 최소 2자 이상의 15자 이하의 닉네임만 가능합니다.")
     private String nickname;
 
     @NotBlank
     @Size(min = 8, max = 15)
-    @Pattern(regexp = "^[a-zA-Z0-9]{8,15}$", message = "영문 또는 숫자로 8자 이상 15자 이하만 가능 합니다")
+    @Pattern(regexp = "^[a-zA-Z0-9]{8,15}$", message = "영문 또는 숫자로 8자 이상 15자 이하만 가능 합니다.")
     private String loginId;
 
-    @Email
-    @NotBlank
+    @Email(message = "이메일 양식을 지켜주세요.")
+    @NotBlank(message = "email을 입력해주세요.")
     @Size(max = 100)
     private String email;
 
-    @NotBlank
-    @Size(min = 11, max = 11)
+    @NotBlank(message = "전화번호를 입력해주세요.")
+    @Size(min = 11, max = 11, message = "- 없이 11자 입력해주세요.")
     private String phone;
 
     @NotBlank
-    @Size(min = 8)
-    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$",
-            message = "최소 8자, 하나 이상의 문자와 하나의 숫자 및 하나의 특수 문자")
+    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,20}$",
+            message = "비밀번호는 최소 8자 최대 20자, 하나 이상의 문자와 하나의 숫자 및 하나의 특수 문자가 들어가야 합니다.")
     private String password;
 
-    @NotBlank
-    @Size(min = 8, max = 8)
-    @Pattern(regexp = "^[0-9]{8}")
+    @NotBlank(message = "생년월일을 체크해 주세요.")
     private String birth;
 
-    @NotBlank
+    @NotBlank(message = "성별을 체크해 주세요.")
     private String gender;
 }
