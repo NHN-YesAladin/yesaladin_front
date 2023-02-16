@@ -60,7 +60,7 @@
                             <h2 class="badge bg-purple-lt" th:if="${productDetailResponseDto.getIsEbook()} == true" style="display: inline">E-Book</h2>
                             <h2 class="badge bg-green-lt" th:if="${productDetailResponseDto.getIsSubscriptionAvailable()} == true">구독상품</h2>
                         </div>
-                        <h1 th:text="${productDetailResponseDto.getTitle()}"></h1>
+                        <h1 style="word-break: break-all" th:text="${productDetailResponseDto.getTitle()}"></h1>
                         <h3>저자 :
                             <div th:each="author, j : ${productDetailResponseDto.getAuthors()}" style="display: inline">
                                 <p th:text="${author.name}" style="display: inline"></p>
