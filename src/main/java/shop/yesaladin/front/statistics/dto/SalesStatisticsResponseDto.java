@@ -24,7 +24,6 @@ public class SalesStatisticsResponseDto {
     private long numberOfOrders;
     // 주문 개수
     private long totalQuantity;
-
     // 순매출액
     private String netSales;
 
