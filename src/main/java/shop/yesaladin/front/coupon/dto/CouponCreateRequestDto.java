@@ -49,6 +49,7 @@ public class CouponCreateRequestDto {
     @Positive
     private Integer discountAmount;
     private String couponBoundCode;
+    private String isbn;
     private Long categoryId;
     private String triggerCode;
     private boolean canBeOverlapped;
