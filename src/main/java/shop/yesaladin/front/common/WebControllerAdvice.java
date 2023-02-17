@@ -117,10 +117,6 @@ public class WebControllerAdvice {
         return "common/errors/5xx";
     }
 
-    @ExceptionHandler(RestException.class)
-    public String handleRestException(Exception e){
-        return e.getMessage();
-    }
     @ExceptionHandler(Exception.class)
     public String handleException(Exception ex, Model model) {
         log.error("[Exception] : ", ex);
