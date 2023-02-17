@@ -861,7 +861,7 @@
     if (defaultAddress != null && id == defaultAddress.id) {
       alert("대표 배송지는 삭제가 불가능합니다. 마이페이지에서 수정해주세요.");
       return;
-    }정
+    }
 
     await fetch(`${frontUrl}/api/address/${id}`, {
       method: "POST",
@@ -929,7 +929,7 @@
         closeAddressForm();
       })
     } catch (e) {
-      alert("배송지는 최대 10개까지 등록 가능합니다.");
+      console.log(e.message)
     }
   }
 </script>

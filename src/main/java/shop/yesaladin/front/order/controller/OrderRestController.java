@@ -63,7 +63,7 @@ public class OrderRestController {
             @ModelAttribute
             CouponOrderSheetRequestDto request
     ) {
-        log.error("request : {}", request);
+        log.info("request : {}", request);
         return queryOrderService.getDiscountPrice(request);
     }
 

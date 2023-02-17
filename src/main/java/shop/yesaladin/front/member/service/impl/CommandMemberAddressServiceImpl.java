@@ -8,6 +8,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.client.RestTemplate;
@@ -53,14 +54,15 @@ public class CommandMemberAddressServiceImpl implements CommandMemberAddressServ
                 .build()
                 .encode().toUri();
 
-        ResponseDto<MemberAddressResponseDto> response = restTemplate.exchange(
+        ResponseEntity<ResponseDto<MemberAddressResponseDto>> exchange = restTemplate.exchange(
                 uri,
                 HttpMethod.POST,
                 entity,
-                MEMBER_ADDRESS_RESPONSE
-        ).getBody();
+                new ParameterizedTypeReference<>() {
+                }
+        );
 
-        return response;
+        return exchange.getBody();
     }
 
     /**
