@@ -2,38 +2,44 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <body th:fragment="util-search-bar">
 <div class="container-xl mt-3">
-    <div class="my-2 my-md-0 flex-grow-1 flex-md-grow-0 order-first order-md-last">
-        <form action="/search/products" method="get">
-                <div class="d-flex justify-content-evenly mb-3">
-                    <select id="selected" class="form-select w-auto" name="selected">
-                        <option value="title">제목</option>
-                        <option value="content">내용</option>
-                        <option value="isbn">ISBN</option>
-                        <option value="author">저자</option>
-                        <option value="publisher">출판사</option>
-                        <option value="tag">태그</option>
-                    </select>
-                    <select id="size" class="form-select w-auto" name="size">
-                        <option value="10">10개</option>
-                        <option value="20">20개</option>
-                    </select>
-                  <input id="input" type="text" class="form-control w-75" placeholder="Search…" aria-label="Search in website"/>
-                  <button type="button" class="btn btn-primary w-auto" onclick="search();">Search</button>
-                </div>
-        </form>
+  <div class="my-2 my-md-0 flex-grow-1 flex-md-grow-0 order-first order-md-last">
+    <div class="d-flex justify-content-evenly mb-3">
+      <select id="selected" class="form-select w-auto" name="selected">
+        <option value="title">제목</option>
+        <option value="content">내용</option>
+        <option value="isbn">ISBN</option>
+        <option value="author">저자</option>
+        <option value="publisher">출판사</option>
+        <option value="tag">태그</option>
+      </select>
+      <select id="size" class="form-select w-auto" name="size">
+        <option value="10">10개</option>
+        <option value="20">20개</option>
+      </select>
+      <input id="input" type="text" class="form-control w-75" placeholder="Search…"
+             aria-label="Search in website"/>
+      <button id="searchButton" type="button" class="btn btn-primary w-auto">Search</button>
     </div>
+  </div>
 </div>
 <script>
-  function search() {
+  document.getElementById('input').addEventListener('keyup', function (e) {
+    if (e.keyCode === 13) {
+      e.preventDefault();
+      document.getElementById('searchButton').click();
+    }
+  })
+
+  document.getElementById('searchButton').addEventListener('click', function (e) {
     const input = document.getElementById('input')
-    if(input.value.length > 30) {
+    if (input.value.length > 30) {
       alert('최대 글자 수는 30까지 허용합니다.')
       return
     }
     const size = document.getElementById('size')
     const selected = document.getElementById('selected')
     location.replace('/search/products?page=0&size=' + size.options[size.selectedIndex].value + '&selected=' + selected.options[selected.selectedIndex].value + '&input='+ input.value)
-  }
+  })
 </script>
 </body>
 </html>
