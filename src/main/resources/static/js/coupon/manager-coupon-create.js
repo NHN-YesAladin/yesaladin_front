@@ -244,6 +244,12 @@ function addEventListenerToCouponTriggerCode() {
       "#coupon-duration-end-date-input");
   const duration = document.querySelector('#duration');
   const expireDate = document.querySelector('#expire-date');
+  const unlimitedQuantityCheckbox = document.querySelector(
+      "#coupon-unlimited-quantity-check");
+  const quantityInput = document.querySelector("#coupon-quantity-input");
+
+  unlimitedQuantityCheckbox.checked = true;
+  quantityInput.disabled = true;
 
   couponTriggerSelect.addEventListener("change", async () => {
     couponDurationInput.disabled = true;
@@ -253,8 +259,12 @@ function addEventListenerToCouponTriggerCode() {
     if (couponTriggerSelect.options[couponTriggerSelect.selectedIndex].value
         === 'COUPON_OF_THE_MONTH') {
       couponOfMonthMetaInput.style.display = 'block';
+      unlimitedQuantityCheckbox.checked = false;
+      quantityInput.disabled = false;
     } else {
       couponOfMonthMetaInput.style.display = 'none';
+      unlimitedQuantityCheckbox.checked = true;
+      quantityInput.disabled = true;
     }
 
     if (couponTriggerSelect.options[couponTriggerSelect.selectedIndex].value
