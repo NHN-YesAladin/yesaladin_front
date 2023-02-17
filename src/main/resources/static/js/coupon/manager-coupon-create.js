@@ -5,6 +5,7 @@ const RESPONSE_KEY = "response";
 const parentCategories = []
 const categories = {};
 let activeCategoryId;
+let activeIsbn;
 
 function addEventListenerToCouponDuration() {
   const couponDurationRadioList = document.querySelectorAll(
@@ -195,6 +196,12 @@ function handleSubmitEvent() {
         return;
       }
       formData.append("categoryId", activeCategoryId);
+    } else if (formData.get("couponBoundCode") === "PRODUCT") {
+      if (!activeIsbn) {
+        alert("상품이 선택되지 않았습니다.")
+        return;
+      }
+      formData.append("isbn", activeIsbn);
     }
 
     const response = await fetch(`${FRONT_SERVER}/manager/coupon/create`,
@@ -294,9 +301,33 @@ function addEventListenerToCouponTriggerCode() {
 }
 
 async function searchProductByTitle(title) {
-  const response = await fetch(`${SHOP_SERVER}/v1/search/products?title=${title}&size=20&offset=0`);
+  const response = await fetch(
+      `${SHOP_SERVER}/v1/search/products?title=${title}&size=20&offset=0`);
   const parsedResponse = (await response.json()).data;
-  console.log(parsedResponse);
+
+  return parsedResponse.dataList;
+}
+
+function initActiveIsbn() {
+  activeIsbn = null;
+  const searchedItem = document.querySelectorAll('.searched-list-item');
+  searchedItem.forEach(item => item.classList.remove('active'));
+}
+
+function addSearchedProductList(dataList) {
+  const searchedListGroup = document.querySelector("#searched-list-group");
+  searchedListGroup.innerHTML = '';
+  dataList.forEach(data => {
+    const li = document.createElement('li');
+    li.classList.add('list-group-item', 'searched-list-item');
+    li.textContent = data.title;
+    li.addEventListener('click', (e) => {
+      initActiveIsbn();
+      activeIsbn = data.isbn;
+      e.target.classList.add('active');
+    })
+    searchedListGroup.appendChild(li);
+  });
 }
 
 function addEventListenerToSearchBoxAndButton() {
@@ -304,7 +335,9 @@ function addEventListenerToSearchBoxAndButton() {
   const searchBar = document.querySelector('#product-search-bar');
   const callback = async () => {
     console.log(searchBar.value);
-    await searchProductByTitle(searchBar.value);
+    initActiveIsbn();
+    const dataList = await searchProductByTitle(searchBar.value);
+    addSearchedProductList(dataList);
   };
 
   searchButton.addEventListener('click', callback);
