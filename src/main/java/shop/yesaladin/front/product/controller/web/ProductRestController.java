@@ -1,6 +1,5 @@
 package shop.yesaladin.front.product.controller.web;
 
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -12,6 +11,8 @@ import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.product.dto.ProductRecentResponseDto;
 import shop.yesaladin.front.product.dto.RelationsResponseDto;
 import shop.yesaladin.front.product.service.inter.QueryProductService;
+
+import java.util.List;
 
 /**
  * 상품의 Rest 컨트롤러
