@@ -45,7 +45,7 @@ public class CartRestController {
      * @since 1.0
      */
     @PostMapping
-    public ResponseDto<Void> addToCart(
+    public ResponseDto<String> addToCart(
             @RequestBody AddToCartDto cartDto,
             @CookieValue(value = "CART_NO", required = false) Cookie cookie,
             @CookieValue(value = "YA_AUT", required = false) Cookie member,
@@ -56,11 +56,21 @@ public class CartRestController {
         log.info("isEbook = {}", cartDto.getIsEbook());
         log.info("isSubscribe = {}", cartDto.getIsSubscriptionAvailable());
 
+        // 0, 음수인 수량을 담으면 에러
+        if (cartDto.getQuantity() <= 0) {
+            return ResponseDto.<String>builder()
+                    .success(false)
+                    .status(HttpStatus.BAD_REQUEST)
+                    .data("0 혹은 음수인 수량은 장바구니에 담을 수 없습니다.")
+                    .build();
+        }
+
         // 비회원이 구독상품, Ebook 상품을 담으려고 할 때
         if (Objects.isNull(member) && (cartDto.getIsEbook() || cartDto.getIsSubscriptionAvailable())) {
-            return ResponseDto.<Void>builder()
+            return ResponseDto.<String>builder()
                     .success(false)
                     .status(HttpStatus.UNAUTHORIZED)
+                    .data("E-book 또는 구독상품은 회원만 담을 수 있습니다.")
                     .build();
         }
 
@@ -94,9 +104,10 @@ public class CartRestController {
         if (Objects.nonNull(preQuantity) && Integer.parseInt(preQuantity.toString()) == 1
                 && (cartDto.getIsEbook() || cartDto.getIsSubscriptionAvailable())) {
             // 구독상품, Ebook이고 이전에 담았던 상품인 경우
-            return ResponseDto.<Void>builder()
+            return ResponseDto.<String>builder()
                     .success(false)
                     .status(HttpStatus.BAD_REQUEST)
+                    .data("E-book 또는 구독상품은 1개만 담을 수 있습니다.")
                     .build();
         }
 
@@ -116,9 +127,10 @@ public class CartRestController {
             redisTemplate.expire(cookie.getValue(), 30, TimeUnit.DAYS);
         }
 
-        return ResponseDto.<Void>builder()
+        return ResponseDto.<String>builder()
                 .success(true)
                 .status(HttpStatus.OK)
+                .data("Success")
                 .build();
     }
 
