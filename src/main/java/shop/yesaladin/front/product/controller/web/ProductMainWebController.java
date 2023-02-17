@@ -68,7 +68,7 @@ public class ProductMainWebController {
     ) throws JsonProcessingException {
         ProductDetailResponseDto response = queryProductService.getProductDetail(productId);
         model.addAttribute(response);
-        if (authentication instanceof AnonymousAuthenticationToken) {
+        if (authentication.isAuthenticated()) {
             model.addAttribute(WISHLIST, commandWishlistService.isExist(productId));
         } else {
             model.addAttribute(WISHLIST, false);
