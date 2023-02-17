@@ -264,7 +264,7 @@
           <div class="mb-3">
             <label class="form-label">노출 우선 순위</label>
             <input type="number" class="form-control" id="preferentialShowRanking"
-                   name="preferentialShowRanking" min="-1000" max="1000"
+                   name="preferentialShowRanking" min="-100" max="100"
                    placeholder="Show Ranking..." required>
             <div class="invalid-feedback">노출 우선 순위를 입력해주세요.</div>
           </div>
@@ -645,9 +645,9 @@
 
         if (!preferentialShowRankingRegex.test(preferentialShowRankingVal) ||
                 emptyRegex.test(preferentialShowRankingVal) ||
-                preferentialShowRankingVal < -1000 || preferentialShowRankingVal > 1000
+                preferentialShowRankingVal < -100 || preferentialShowRankingVal > 100
         ) {
-          alert('노출 우선순위를 입력해주세요. (음수 가능, 낮을수록 조회 상단에 위치하게 됩니다.) [범위 -1,000 ~ 1,000]');
+          alert('노출 우선순위를 입력해주세요. (음수 가능, 낮을수록 조회 상단에 위치하게 됩니다.) [범위 -100 ~ 100]');
           event.preventDefault();
           return false;
         }
@@ -661,12 +661,6 @@
 
         if (!numberRegex.test(quantityVal) || BigInt(quantityVal) > BigInt('2000000')) {
           alert('수량을 1 부터 2,000,000 까지의 숫자로 입력해주세요.');
-          event.preventDefault();
-          return false;
-        }
-
-        if ((quantityVal * actualVal) > 2000000) {
-          alert('정가 * 수량이 2,000,000 을 넘지 않도록 입력해주세요.');
           event.preventDefault();
           return false;
         }
