@@ -25,6 +25,7 @@ public class Oauth2SignUpRequestDto {
 
     @NotBlank
     @Size(min = 2, max = 50)
+    @Pattern(regexp = "^[가-힣a-zA-Z]{2,50}$", message = "이름은 한글 또는 영어 2자에서 50자까지 입력 가능합니다.")
     private String name;
 
     @NotBlank
@@ -37,23 +38,21 @@ public class Oauth2SignUpRequestDto {
     @Size(min = 1, max = 50)
     private String loginId;
 
-    @Email
-    @NotBlank
+    @Email(message = "이메일 양식을 지켜주세요.")
+    @NotBlank(message = "email을 입력해주세요.")
     @Size(max = 100)
     private String email;
 
-    @NotBlank
-    @Size(min = 11, max = 11)
+    @NotBlank(message = "전화번호를 입력해주세요.")
+    @Size(min = 11, max = 11, message = "- 없이 11자 입력해주세요.")
     private String phone;
 
     @NotBlank
     private String password;
 
-    @NotBlank
-    @Size(min = 8, max = 8)
-    @Pattern(regexp = "^[0-9]{8}")
+    @NotBlank(message = "생년월일을 체크해 주세요.")
     private String birth;
 
-    @NotBlank
+    @NotBlank(message = "성별을 체크해 주세요.")
     private String gender;
 }

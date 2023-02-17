@@ -23,6 +23,8 @@ import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.common.dto.PeriodQueryRequestDto;
 import shop.yesaladin.front.config.GatewayConfig;
+import shop.yesaladin.front.coupon.dto.CouponOrderSheetRequestDto;
+import shop.yesaladin.front.coupon.dto.CouponOrderSheetResponseDto;
 import shop.yesaladin.front.order.dto.OrderDetailsResponseDto;
 import shop.yesaladin.front.order.dto.OrderSheetResponseDto;
 import shop.yesaladin.front.order.dto.OrderStatusCode;
@@ -177,6 +179,34 @@ public class QueryOrderServiceImpl implements QueryOrderService {
                 }
         );
         return Objects.requireNonNull(responseEntity.getBody()).getData();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public CouponOrderSheetResponseDto getDiscountPrice(CouponOrderSheetRequestDto request) {
+        MultiValueMap<String, String> param = new LinkedMultiValueMap<>();
+        param.add("isbn", request.getIsbn());
+        param.add("quantity", request.getQuantity());
+        param.add("couponCode", request.getCouponCode());
+        param.put("duplicateCouponCode", request.getDuplicateCouponCode());
+
+        URI uri = UriComponentsBuilder.fromHttpUrl(gatewayConfig.getShopUrl())
+                .path("/v1/order-coupons")
+                .queryParams(param)
+                .build()
+                .toUri();
+
+        ResponseEntity<CouponOrderSheetResponseDto> responseEntity = restTemplate.exchange(
+                uri,
+                HttpMethod.GET,
+                getHttpEntity(),
+                new ParameterizedTypeReference<>() {
+                }
+        );
+
+        return responseEntity.getBody();
     }
 
     /**

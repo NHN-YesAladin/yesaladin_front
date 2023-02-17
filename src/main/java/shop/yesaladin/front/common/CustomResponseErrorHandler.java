@@ -44,18 +44,25 @@ public class CustomResponseErrorHandler implements ResponseErrorHandler {
         InputStream is = response.getBody();
         String messageBody = StreamUtils.copyToString(is, StandardCharsets.UTF_8);
         log.info("messageBody={}", messageBody);
-        ResponseDto exception = objectMapper.readValue(messageBody, ResponseDto.class);
+        ResponseDto<Object> exception = objectMapper.readValue(messageBody, ResponseDto.class);
+
 
         int status = response.getStatusCode().value();
         List<String> errorMessages = exception.getErrorMessages();
+
+        if(exception.isSuccess()) {
+            throw new RestException(errorMessages.toString());
+        }
 
         if (status == HttpStatus.UNAUTHORIZED.value()) {
             throw new CustomUnauthorizedException(errorMessages.toString());
         } else if (status == HttpStatus.NOT_FOUND.value()) {
             throw new CustomNotFoundException(errorMessages.toString());
-        } else if (status == HttpStatus.BAD_REQUEST.value()) {
+        }
+        else if (status == HttpStatus.BAD_REQUEST.value()) {
             throw new CustomBadRequestException(errorMessages.toString());
-        } else if (status == HttpStatus.METHOD_NOT_ALLOWED.value()) {
+        }
+        else if (status == HttpStatus.METHOD_NOT_ALLOWED.value()) {
             throw new CustomMethodNotAllowedException(errorMessages.toString());
         } else if (status == HttpStatus.CONFLICT.value()) {
             throw new CustomConflictException(errorMessages.toString());

@@ -22,6 +22,7 @@ import shop.yesaladin.front.common.exception.CustomNotFoundException;
 import shop.yesaladin.front.common.exception.CustomServerException;
 import shop.yesaladin.front.common.exception.CustomUnauthorizedException;
 import shop.yesaladin.front.common.exception.InvalidHttpHeaderException;
+import shop.yesaladin.front.common.exception.RestException;
 import shop.yesaladin.front.common.exception.ValidationFailedException;
 import shop.yesaladin.front.common.utils.CookieUtils;
 
@@ -93,8 +94,10 @@ public class WebControllerAdvice {
 
         Cookie authCookie = cookieUtils.createCookie(UUID_CODE.getValue(), "", 0);
         Cookie cartCookie = cookieUtils.createCookie("CART_NO", "", 0);
+        Cookie yaAuthCookie = cookieUtils.createCookie("YA_AUT", "", 0);
         response.addCookie(authCookie);
         response.addCookie(cartCookie);
+        response.addCookie(yaAuthCookie);
 
         HttpSession session = request.getSession();
         session.invalidate();
@@ -103,7 +106,7 @@ public class WebControllerAdvice {
         SecurityContextHolder.clearContext();
         context.setAuthentication(null);
         model.addAttribute("error", ex.getMessage());
-        return "common/errors/unauthorized";
+        return "redirect:/members/login";
     }
 
     @ExceptionHandler({CustomServerException.class, InvalidHttpHeaderException.class})
@@ -114,6 +117,10 @@ public class WebControllerAdvice {
         return "common/errors/5xx";
     }
 
+    @ExceptionHandler(RestException.class)
+    public String handleRestException(Exception e){
+        return e.getMessage();
+    }
     @ExceptionHandler(Exception.class)
     public String handleException(Exception ex, Model model) {
         log.error("[Exception] : ", ex);

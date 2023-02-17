@@ -112,7 +112,7 @@
 
   const parentCategories = []
   const tempParentCategories = {};
-  let childCategories = {};
+  let tempChildCategories = {};
   const categories = {};
   let activeCategoryId;
   let activeCategoryOrder;
@@ -135,8 +135,8 @@
         present = tempParentCategories[orderIdx];
         prev = tempParentCategories[orderIdx - 1];
       } else {
-        present = childCategories[orderIdx];
-        prev = childCategories[orderIdx - 1];
+        present = tempChildCategories[orderIdx];
+        prev = tempChildCategories[orderIdx - 1];
       }
 
 
@@ -156,8 +156,8 @@
         tempParentCategories[orderIdx] = prev;
         tempParentCategories[orderIdx - 1] = present;
       }else{
-        childCategories[orderIdx] = prev;
-        childCategories[orderIdx - 1] = present;
+        tempChildCategories[orderIdx] = prev;
+        tempChildCategories[orderIdx - 1] = present;
       }
       itemPrev.classList.add("active");
 
@@ -175,6 +175,9 @@
       let next;
 
       const isParent = parseInt(activeCategoryId) % 10000 === 0;
+      console.log(tempChildCategories)
+      // TODO activeCategoryOrder가 현재의 순서 값이지만 map의 값은 순차적으로 증가한 값이므로
+      // order와 idx의 괴리를 어떻게 좁힐 것인가.
       if (isParent) {
         present = tempParentCategories[orderIdx];
         next = tempParentCategories[orderIdx + 1];
@@ -183,10 +186,10 @@
           return;
         }
       } else {
-        present = childCategories[orderIdx];
-        next = childCategories[orderIdx + 1];
+        present = tempChildCategories[orderIdx];
+        next = tempChildCategories[orderIdx + 1];
 
-        if ( activeCategoryOrder == Object.keys(childCategories).length) {
+        if ( activeCategoryOrder == Object.keys(tempChildCategories).length) {
           alert("가장 마지막 요소입니다.");
           return;
         }
@@ -208,8 +211,8 @@
         tempParentCategories[orderIdx + 1] = present;
       }else{
         initActiveChildCategory();
-        childCategories[orderIdx] = next;
-        childCategories[orderIdx + 1] = present;
+        tempChildCategories[orderIdx] = next;
+        tempChildCategories[orderIdx + 1] = present;
       }
       itemNext.classList.add("active");
 
@@ -233,7 +236,7 @@
       if (isParent) {
         categoriesJson = JSON.stringify(Object.values(tempParentCategories));
       }else{
-        categoriesJson = JSON.stringify(Object.values(childCategories));
+        categoriesJson = JSON.stringify(Object.values(tempChildCategories));
       }
 
       const response = await fetch(`${SHOP_SERVER}/v1/categories/order`,
@@ -284,7 +287,8 @@
         "#children-category-group");
     childrenCategoryGroup.innerHTML = "";
 
-    childCategories = {};
+    tempChildCategories = {};
+    let idx = 1;
     categories[parentCategoryId].forEach(c => {
       const item = document.createElement("li");
       item.classList.add("list-group-item", "child-category-item");
@@ -292,7 +296,8 @@
       item.id = c.id;
       item.dataset['categoryOrder'] = c.order;
       childrenCategoryGroup.appendChild(item);
-      childCategories[c.order] = c;
+      // tempChildCategories[c.order] = c;
+      tempChildCategories[idx++] = c;
     })
     addEventListenerToChildCategoryItems();
   }
@@ -341,9 +346,11 @@
       const response = await fetch(
           `${FRONT_SERVER}/api/categories?cate=parents`);
       const parsedBody = await response.json();
+      let idx = 1;
       parsedBody.forEach(c => {
         parentCategories.push(c);
-        tempParentCategories[c.order] = c;
+        // tempParentCategories[c.order] = c;
+        tempParentCategories[idx++] = c;
       });
       addParentCategoryItemsToDiv()
     } catch (e) {

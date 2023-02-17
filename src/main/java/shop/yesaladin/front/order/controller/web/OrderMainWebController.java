@@ -3,7 +3,6 @@ package shop.yesaladin.front.order.controller.web;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,7 +27,6 @@ import shop.yesaladin.front.payment.dto.PaymentViewRequestDto;
  * @author 최예린
  * @since 1.0
  */
-@Slf4j
 @RequiredArgsConstructor
 @Controller
 @RequestMapping("/orders")
@@ -63,7 +61,6 @@ public class OrderMainWebController {
         }
         model.addAttribute("info", response.getData());
 
-        log.error("response : {}", response.getData());
         return (request.getServletPath().contains("subscribe")) ? "main/order/subscribe"
                 : "main/order/order";
     }
@@ -108,11 +105,14 @@ public class OrderMainWebController {
      * 주문 & 결제 성공시 보여주는 완료 페이지
      *
      * @param orderNumber 주문 번호
-     * @param model 모델
+     * @param model       모델
      * @return 결제 완료 페이지
      */
     @GetMapping(value = "/order-complete", params = "orderNumber")
-    public String getOrderComplete(@RequestParam(name = "orderNumber") String orderNumber, Model model) {
+    public String getOrderComplete(
+            @RequestParam(name = "orderNumber") String orderNumber,
+            Model model
+    ) {
         model.addAttribute("orderNumber", orderNumber);
         return "main/order/order-complete";
     }
@@ -122,7 +122,7 @@ public class OrderMainWebController {
      * 주문 & 결제 실패시 보여주는 실패 페이지
      *
      * @param requestDto 주문번호, 주문이름, 총 결제액
-     * @param model 모델
+     * @param model      모델
      * @return 결제 실패 페이지
      */
     @GetMapping(value = "/order-fail", params = "orderNumber")

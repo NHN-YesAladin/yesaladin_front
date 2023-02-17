@@ -7,8 +7,7 @@
 * Copyright 2018-2022 codecalm.net Paweł Kuna
 * Licensed under MIT (https://github.com/tabler/tabler/blob/master/LICENSE)
 -->
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-      th:with="usable=${#request.getParameter('usable') == null ? true : #request.getParameter('usabele')}">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
@@ -42,6 +41,10 @@
       margin-left: 1rem;
       width: 1rem;
       height: 100%;
+    }
+
+    .point-coupon-card {
+      cursor: pointer;
     }
 
     .usable {
@@ -116,12 +119,12 @@
                       <ul class="nav nav-pills card-header-pills">
                         <li class="nav-item">
                           <a aria-current="true" class="nav-link"
-                             th:classappend="${(#request.getParameter('usable') == null || #request.getParameter('usable') == 'true') ? 'active' : ''}"
+                             th:classappend="${usable ? 'active' : ''}"
                              th:href="@{/mypage/coupon(usable=true)}">사용 가능</a>
                         </li>
                         <li class="nav-item">
                           <a class="nav-link"
-                             th:classappend="${#request.getParameter('usable') == 'false' ? 'active' : ''}"
+                             th:classappend="${!usable ? 'active' : ''}"
                              th:href="@{/mypage/coupon(usable=false)}">사용 불가능</a>
                         </li>
                       </ul>
@@ -129,14 +132,16 @@
                     <div class="card-body d-grid coupon-container">
                       <div class="coupon-card my-2"
                            th:each="memberCoupon: ${memberCouponList.dataList}"
-                           th:classappend="${memberCoupon.couponTypeCode.name() == 'POINT' ? 'cursor-pointer' : ''}"
-                           th:attrappend="data-bs-toggle=${memberCoupon.couponTypeCode.name() == 'POINT' ? 'modal' : ''}, data-bs-target=${memberCoupon.couponTypeCode.name() == 'POINT' ? '#exampleModal' : ''}"
+                           onclick="saveCouponCode(this.dataset.couponcode)"
+                           th:classappend="${usable && (memberCoupon.couponTypeCode.name() == 'POINT') ? 'point-coupon-card' : ''}"
+                           th:attrappend="data-bs-toggle=${usable && (memberCoupon.couponTypeCode.name() == 'POINT') ? 'modal' : ''}, data-bs-target=${usable && (memberCoupon.couponTypeCode.name() == 'POINT') ? '#exampleModal' : ''}, data-couponCode=${usable && (memberCoupon.couponTypeCode.name() == 'POINT') ? memberCoupon.couponCode : ''}"
+
                       >
                         <div class="coupon-deco"
-                             th:classappend="${(#request.getParameter('usable') == null || #request.getParameter('usable') == 'true') ? 'usable' : 'unusable'}">
+                             th:classappend="${usable ? 'usable' : 'unusable'}">
                         </div>
                         <div style="text-align: center; margin: auto">
-                          <div th:if="${memberCoupon.couponTypeCode.name() == 'POINT'}"
+                          <div th:if="${usable && (memberCoupon.couponTypeCode.name() == 'POINT')}"
                                class="coupon-description">
                             <span>클릭해서 사용</span>
                           </div>
@@ -177,7 +182,9 @@
                           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                             취소
                           </button>
-                          <button type="button" class="btn btn-primary use-point-coupon-btn">사용</button>
+                          <button type="button" class="btn btn-primary use-point-coupon-btn"
+                                  data-bs-dismiss="modal">사용
+                          </button>
                         </div>
                       </div>
                     </div>
@@ -189,11 +196,22 @@
         </div>
       </div>
     </div>
+    <div
+        class="justify-content-center align-items-center"
+        id="loading"
+        style="height: 100%; width: 100%; position: absolute; left: 0; bottom: 0; background-color: #ffffff77; display: none">
+      <div class="spinner-border" role="status" style="width: 3rem; height: 3rem;">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+    <div class="d-none" id="shop-server-url" th:text="${shopServerUrl}"></div>
     <div class="d-none" id="front-server-url" th:text="${frontServerUrl}"></div>
   </div>
   <!-- TODO 4 : footer -->
   <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+<script th:src="@{/js/coupon/stomp.js}"></script>
 <script th:src="@{/js/coupon/point-coupon.js}"></script>
 </body>
 </html>

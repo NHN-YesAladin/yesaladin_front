@@ -7,9 +7,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -56,6 +60,7 @@ public class WishWebController {
     private static final String TOTALPAGE = "totalPage";
     private static final String URL = "url";
     private final CookieUtils cookieUtils;
+    private static final Pageable DEFAULT_PAGEABLE = PageRequest.of(0, 10);
 
     /**
      * 마이페이지의 위시리스트 페이지로 이동하면서 필요한 리스트를 받음
@@ -76,12 +81,19 @@ public class WishWebController {
         Set<Long> recentViewList = getRecentViewList(cookie, response);
         modelAndView.addObject(
                 RECENTVIEWLIST,
-                queryProductService.findRecentViewProduct(recentViewList, PageRequest.of(0, 10))
-                        .getDataList()
+                sort(
+                        recentViewList,
+                        queryProductService.findRecentViewProduct(
+                                        recentViewList,
+                                        DEFAULT_PAGEABLE
+                                )
+                                .getDataList(),
+                        DEFAULT_PAGEABLE
+                )
         );
         modelAndView.addObject(
                 WISHLIST,
-                queryWishlistService.getWishlist(PageRequest.of(0, 10)).getDataList()
+                queryWishlistService.getWishlist(DEFAULT_PAGEABLE).getDataList()
         );
         return modelAndView;
     }
@@ -112,7 +124,10 @@ public class WishWebController {
         modelAndView.addObject(CURRENTPAGE, result.getCurrentPage());
         modelAndView.addObject(TOTALPAGE, result.getTotalPage());
         modelAndView.addObject(URL, "/interest/recent");
-        modelAndView.addObject(RECENTVIEWLIST, result.getDataList());
+        modelAndView.addObject(
+                RECENTVIEWLIST,
+                sort(recentViewList, result.getDataList(), pageable)
+        );
         return modelAndView;
     }
 
@@ -124,7 +139,7 @@ public class WishWebController {
      * @author 김선홍
      * @since 1.0
      */
-    @GetMapping(value = "/wishlist",params = "page")
+    @GetMapping(value = "/wishlist", params = "page")
     ModelAndView wishlistView(@PageableDefault Pageable pageable) {
         ModelAndView modelAndView = new ModelAndView("mypage/product/wishlist");
         PaginatedResponseDto<WishlistResponseDto> result = queryWishlistService.getWishlist(pageable);
@@ -188,12 +203,12 @@ public class WishWebController {
         Set<Long> recentViewList = getRecentViewList(cookie, response);
         modelAndView.addObject(
                 RECENTVIEWLIST,
-                queryProductService.findRecentViewProduct(recentViewList, PageRequest.of(0, 10))
+                queryProductService.findRecentViewProduct(recentViewList, DEFAULT_PAGEABLE)
                         .getDataList()
         );
         modelAndView.addObject(
                 WISHLIST,
-                queryWishlistService.getWishlist(PageRequest.of(0, 10)).getDataList()
+                queryWishlistService.getWishlist(DEFAULT_PAGEABLE).getDataList()
         );
         return modelAndView;
     }
@@ -219,8 +234,13 @@ public class WishWebController {
         Set<Long> recentViewList = deleteRecentViewProductByProductId(cookie, response, productId);
         modelAndView.addObject(
                 RECENTVIEWLIST,
-                queryProductService.findRecentViewProduct(recentViewList, PageRequest.of(0, 10))
-                        .getDataList()
+                sort(recentViewList,
+                        queryProductService.findRecentViewProduct(
+                                recentViewList,
+                                DEFAULT_PAGEABLE
+                        ).getDataList(),
+                        DEFAULT_PAGEABLE
+                )
         );
         modelAndView.addObject(
                 WISHLIST,
@@ -257,7 +277,10 @@ public class WishWebController {
         modelAndView.addObject(CURRENTPAGE, result.getCurrentPage());
         modelAndView.addObject(TOTALPAGE, result.getTotalPage());
         modelAndView.addObject(URL, "/interest/recent");
-        modelAndView.addObject(RECENTVIEWLIST, result.getDataList());
+        modelAndView.addObject(
+                RECENTVIEWLIST,
+                sort(recentViewList, result.getDataList(), pageable)
+        );
         return modelAndView;
     }
 
@@ -347,5 +370,28 @@ public class WishWebController {
                 URLEncoder.encode(objectMapper.writeValueAsString(value), StandardCharsets.UTF_8),
                 259200
         );
+    }
+
+    private List<ProductRecentResponseDto> sort(
+            Set<Long> recentViewSet,
+            List<ProductRecentResponseDto> recentViewlist,
+            Pageable pageable
+    ) {
+        List<Long> sort = new ArrayList<>(recentViewSet)
+                .subList(
+                        pageable.getPageSize() * pageable.getPageNumber(),
+                        pageable.getPageSize() * pageable.getPageNumber() + recentViewlist.size()
+                );
+        List<ProductRecentResponseDto> list = new ArrayList<>();
+        for (Long id : sort) {
+            for (ProductRecentResponseDto productRecentResponseDto : recentViewlist) {
+                if (productRecentResponseDto.getId().equals(id)) {
+                    list.add(productRecentResponseDto);
+                    break;
+                }
+            }
+        }
+        Collections.reverse(list);
+        return list;
     }
 }

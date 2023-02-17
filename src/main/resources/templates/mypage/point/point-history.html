@@ -76,14 +76,14 @@
                           <div class="card-body border-bottom py-3">
                             <div class="d-flex">
                               <div class="text-muted">
-                                <input type="radio" name="code" onclick="location.href='/mypage/point-history/test'"
+                                <input type="radio" name="code" onclick="location.href='/mypage/point-history'"
                                        th:checked="${param.code == null || #strings.equals(param.code, '')}"> 전체
                                 <input type="radio" name="code"
-                                       onclick="location.href='/mypage/point-history/test?code=USE'"
+                                       onclick="location.href='/mypage/point-history?code=USE'"
                                        th:checked="${(param.code != null) && (#strings.equals(param.code,'USE'))}">
                                 사용
                                 <input type="radio" name="code"
-                                       onclick="location.href='/mypage/point-history/test?code=SAVE'"
+                                       onclick="location.href='/mypage/point-history?code=SAVE'"
                                        th:checked="${(param.code != null) && (#strings.equals(param.code,'SAVE'))}">
                                 적립
                               </div>
@@ -110,7 +110,7 @@
                             </table>
                           </div>
                           <div
-                              th:replace="~{common/utils/paging :: paging('/mypage/point-history/test', ${code == null ? '' : '&code=' + code})}"></div>
+                              th:replace="~{common/utils/paging :: paging('/mypage/point-history', ${code == null ? '' : '&code=' + code})}"></div>
                         </div>
                       </div>
                     </div>

@@ -5,20 +5,30 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import javax.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.GetMapping;import shop.yesaladin.front.member.dto.MemberGrade;
+import org.springframework.web.bind.annotation.GetMapping;
+import shop.yesaladin.front.common.dto.PaginatedResponseDto;
+import shop.yesaladin.front.coupon.dto.MemberCouponSummaryDto;
+import shop.yesaladin.front.coupon.service.inter.QueryCouponService;
+import shop.yesaladin.front.member.dto.MemberGrade;
 import shop.yesaladin.front.member.dto.MemberStatisticsResponseDto;
 import shop.yesaladin.front.member.service.inter.QueryMemberService;
 import shop.yesaladin.front.point.service.inter.QueryPointHistoryService;
+import shop.yesaladin.front.product.dto.ProductRecentResponseDto;
 import shop.yesaladin.front.product.service.inter.QueryProductService;
 import shop.yesaladin.front.statistics.dto.PercentageResponseDto;
 
@@ -35,6 +45,7 @@ import shop.yesaladin.front.statistics.dto.PercentageResponseDto;
 public class IndexController {
 
     private final QueryMemberService queryMemberService;
+    private final QueryCouponService queryCouponService;
     private final QueryPointHistoryService pointHistoryService;
     private final QueryProductService queryProductService;
     private final ObjectMapper objectMapper;
@@ -58,10 +69,16 @@ public class IndexController {
                 "recentProductList",
                 queryProductService.findRecentProduct(PageRequest.of(0, 12))
         );
+        Set<Long> recentViewSet = getRecentViewProductList(recentViewProductList);
         model.addAttribute(
                 "recentViewProductList",
-                queryProductService.findRecentViewProduct(getRecentViewProductList(
-                        recentViewProductList), PageRequest.of(0, 10)).getDataList()
+                sort(recentViewSet,
+                        queryProductService.findRecentViewProduct(
+                                recentViewSet,
+                                PageRequest.of(0, 10)
+                        ).getDataList(),
+                        PageRequest.of(0, 10)
+                )
         );
         return "main/index";
     }
@@ -74,12 +91,18 @@ public class IndexController {
      * @since 1.0
      */
     @GetMapping("/mypage")
-    public String mypage(Model model) {
+    public String mypage(Model model, Authentication authentication) {
         long point = pointHistoryService.getMemberPoint();
         MemberGrade grade = MemberGrade.valueOf(queryMemberService.getMemberGrade());
+        PaginatedResponseDto<MemberCouponSummaryDto> memberCouponList = queryCouponService.getMemberCouponList(
+                authentication.getName(),
+                true,
+                PageRequest.of(0, 1)
+        );
 
         model.addAttribute("point", point);
         model.addAttribute("grade", grade);
+        model.addAttribute("coupon", memberCouponList.getTotalDataCount());
 
         return "mypage/index";
     }
@@ -93,5 +116,28 @@ public class IndexController {
             );
         }
         return new LinkedHashSet<Long>();
+    }
+
+    private List<ProductRecentResponseDto> sort(
+            Set<Long> recentViewSet,
+            List<ProductRecentResponseDto> recentViewlist,
+            Pageable pageable
+    ) {
+        List<Long> sort = new ArrayList<>(recentViewSet)
+                .subList(
+                        pageable.getPageSize() * pageable.getPageNumber(),
+                        pageable.getPageSize() * pageable.getPageNumber() + recentViewlist.size()
+                );
+        List<ProductRecentResponseDto> list = new ArrayList<>();
+        for (Long id : sort) {
+            for (ProductRecentResponseDto productRecentResponseDto : recentViewlist) {
+                if (productRecentResponseDto.getId().equals(id)) {
+                    list.add(productRecentResponseDto);
+                    break;
+                }
+            }
+        }
+        Collections.reverse(list);
+        return list;
     }
 }
