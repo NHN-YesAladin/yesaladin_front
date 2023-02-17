@@ -51,7 +51,7 @@
             <div class="mb-3">
               <label class="form-label">이름</label>
               <input type="text" class="form-control" id="name" th:name="name" placeholder="이름"
-                     pattern="^.*(?=.*[가-힣a-z])(?=^.{2,200}).*$"
+                     pattern="^.*(?=.*[가-힣a-z])(?=^.{2,50}).*$"
                      required>
               <div class="invalid-feedback">
                 이름을 입력해주세요.
@@ -61,10 +61,7 @@
               <label class="form-label">닉네임</label>
               <input type="text" class="form-control" id="nickname" th:name="nickname"
                      pattern="^[가-힣ㄱ-ㅎa-zA-Z0-9._-]{2,15}$"
-                     placeholder="숫자, 영어, 한국어와 언더스코어, 공백을 허용하며 최소 2자 이상의 15자 이하의 닉네임만 가능합니다." required>
-              <div class="invalid-feedback">
-                숫자, 영어, 한국어와 언더스코어, 공백을 허용하며 최소 2자 이상의 15자 이하의 닉네임만 가능합니다.
-              </div>
+                     placeholder="숫자, 영어, 한국어와 언더스코어를 허용하며 최소 2자 이상의 15자 이하의 닉네임만 가능합니다." required>
               <div class="button-box">
                 <button class="nicknameCheckBtn" id="nicknameCheckBtn" type="button" onclick="nicknameCheck()">중복 확인</button>
               </div>
@@ -76,9 +73,6 @@
               <input type="email" class="form-control" id="email" th:name="email" placeholder="이메일"
                      pattern="^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$"
                      required>
-              <div class="invalid-feedback">
-                이메일 주소를 입력해주세요.
-              </div>
               <div class="button-box">
                 <button class="emailCheckBtn" id="emailCheckBtn" type="button" onclick="emailCheck()">중복 확인</button>
               </div>
@@ -88,20 +82,29 @@
               <input type="text" class="form-control" id="phone" th:name="phone"
                      pattern="([0-9]{11})"
                      placeholder="휴대폰 번호 ex) 01012345678" required>
-              <div class="invalid-feedback">
-                휴대폰 번호를 - 없이 11자 입력해주세요.
-              </div>
               <div class="button-box">
                 <button class="phoneCheckBtn" id="phoneCheckBtn" type="button" onclick="phoneCheck()">중복 확인</button>
               </div>
             </div>
             <div class="mb-3">
               <label class="form-label">생년월일</label>
-              <input type="text" class="form-control" id="birth" placeholder="예시: 20230101"
-                     pattern="([0-9]{8})"
-                     th:name="birth" required>
-              <div class="invalid-feedback">
-                생년월일을 정확하게 입력해주세요.
+              <div class="input-icon">
+                <span class="input-icon-addon"><!-- Download SVG icon from http://tabler-icons.io/i/calendar -->
+                  <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
+                       viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                       stroke-linecap="round" stroke-linejoin="round"><path stroke="none"
+                                                                            d="M0 0h24v24H0z"
+                                                                            fill="none"></path><rect
+                      x="4" y="5" width="16" height="16" rx="2"></rect><line x1="16" y1="3" x2="16"
+                                                                             y2="7"></line><line
+                      x1="8" y1="3" x2="8" y2="7"></line><line x1="4" y1="11" x2="20"
+                                                               y2="11"></line><line x1="11" y1="15"
+                                                                                    x2="12"
+                                                                                    y2="15"></line><line
+                      x1="12" y1="15" x2="12" y2="18"></line></svg>
+                </span>
+                <input type="date" class="form-control" name="birth"
+                       id="datepicker-icon-prepend" value="" required>
               </div>
             </div>
             <div class="mb-3">
@@ -113,11 +116,12 @@
                     <option value="MALE">남성</option>
                     <option value="FEMALE">여성</option>
                   </select>
-                  <div class="invalid-feedback">
-                    성별을 선택해주세요.
-                  </div>
                 </div>
               </div>
+            </div>
+            <div class="button-box">
+              <button class="finalCheckBtn" id="finalCheckBtn" type="button" onclick="finalCheckEvent()">입력 완료 확인</button>
+              <button class="againCheckBtn" id="againCheckBtn" type="button" onclick="againInputCheckEvent()">다시 입력하시겠습니까?</button>
             </div>
             <div class="form-footer">
               <button type="submit" class="btn btn-primary w-100" id="createAccountBtn" disabled>Create new account</button>
@@ -131,51 +135,5 @@
   <!-- TODO 4 : footer -->
   <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
 </div>
-<script>
-  window.addEventListener('load', () => {
-    const signupForm = document.getElementsByClassName('signup-form');
-
-    let emptyRegex = /\s/g;
-    let nameRegex = /^.*(?=.*[가-힣a-z])(?=^.{2,200}).*$/;
-    let nicknameRegex = /^[가-힣ㄱ-ㅎa-zA-Z0-9._-]{2,15}$/;
-    let birthdayRegex = /^.*(?=.*\d)(?=^.{6}).*$/;
-    let phoneRegex = /^\d{11}$/;
-
-    Array.prototype.filter.call(signupForm, (signupForm) => {
-      signupForm.addEventListener('submit', function (event) {
-        if (signupForm.checkValidity() === false) {
-          event.preventDefault();
-          event.stopPropagation();
-        }
-
-        let nameVal = document.getElementById('name').value;
-        if (!nameRegex.test(nameVal) || emptyRegex.test(nameVal)) {
-          alert('이름을 올바르게 입력해주세요.')
-          return false;
-        }
-
-        let nicknameVal = document.getElementById('nickname').value;
-        if (!nicknameRegex.test(nicknameVal) || emptyRegex.test(nicknameVal)) {
-          alert('숫자, 영어, 한국어와 언더스코어, 공백을 허용하며 최소 2자 이상의 15자 이하의 닉네임만 가능합니다.');
-          return false;
-        }
-
-        let birthdayVal = document.getElementById('birth').value;
-        if (!birthdayRegex.test(birthdayVal) || emptyRegex.test(birthdayVal)) {
-          alert('생년월일 8자를 - 없이 입력해주세요. ex) 20230101');
-          return false;
-        }
-
-        let phoneVal = document.getElementById('phone').value;
-        if (!phoneRegex.test(phoneVal) || emptyRegex.test(phoneVal)) {
-          alert('휴대폰 번호를 - 없이 13자 입력해주세요.');
-          return false;
-        }
-
-        signupForm.classList.add('was-validated');
-      }, false);
-    });
-  }, false);
-</script>
 </body>
 </html>

@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import shop.yesaladin.front.common.dto.PaginatedResponseDto;
+import shop.yesaladin.front.config.FrontServerMetaConfig;
+import shop.yesaladin.front.config.GatewayConfig;
 import shop.yesaladin.front.coupon.dto.MemberCouponSummaryDto;
 import shop.yesaladin.front.coupon.service.inter.QueryCouponService;
 
@@ -18,6 +20,8 @@ import shop.yesaladin.front.coupon.service.inter.QueryCouponService;
 public class CouponMemberWebController {
 
     private final QueryCouponService queryCouponService;
+    private final FrontServerMetaConfig frontServerMetaConfig;
+    private final GatewayConfig gatewayConfig;
 
     @GetMapping
     public String memberCouponListPage(
@@ -31,6 +35,9 @@ public class CouponMemberWebController {
                 usable,
                 pageable
         );
+        model.addAttribute("shopServerUrl", gatewayConfig.getShopUrl());
+        model.addAttribute("usable", usable);
+        model.addAttribute("frontServerUrl", frontServerMetaConfig.getFrontServerUrl());
         model.addAttribute("memberCouponList", memberCouponList);
         model.addAttribute("currentPage", memberCouponList.getCurrentPage());
         model.addAttribute("totalPage", memberCouponList.getTotalPage());

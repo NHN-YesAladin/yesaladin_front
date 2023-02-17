@@ -16,6 +16,7 @@
   function writeContentToAlert(message) {
     alertText.innerHTML = message;
     alertBox.classList.remove("d-none");
+    setTimeout(() => alertBox.classList.add("d-none"), 3000);
   }
 
 </script>
