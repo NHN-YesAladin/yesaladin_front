@@ -164,7 +164,7 @@
                                 <!-- 정기구독 불가능 -->
                                 <div class="row px-2 py-1" th:if="${!productDetailResponseDto.isSubscriptionAvailable}">
                                     <button type="submit" form="product"
-                                            onclick="form.action='/orders/order-sheets'"
+                                            onclick="orderProduct()"
                                             class="btn btn-facebook w-100">
                                         <svg xmlns="http://www.w3.org/2000/svg"
                                              class="icon icon-tabler icon-tabler-brand-cashapp" width="24" height="24"
@@ -318,6 +318,27 @@
     let IS_EBOOK = document.getElementById('is-ebook').value;
     let IS_SUBSCRIPTION_AVAILABLE = document.getElementById('is-subscription-available').value;
 
+    function orderProduct() {
+        let quantityRegex = /^[+]?\d*(\.?\d*)?$/;
+        const quantity = document.getElementById('quantity').value;
+        const isbn = [[${productDetailResponseDto.isbn}]];
+
+        if (!quantityRegex.test(quantity) || quantity == 0) {
+            writeContentToAlert('올바른 수량을 입력해주세요.(1 이상의 숫자)');
+            return;
+        }
+        fetch(SHOP_SERVER + "/v1/products/quantity/" + PRODUCT_ID, {
+            method: "GET"
+        }).then(res => res.json()).then(response => {
+            if (quantity > response.data) {
+                writeContentToAlert("구매 가능한 수량을 초과하였습니다! => 재고 : " + response.data);
+            } else {
+                const quantity = document.getElementById('quantity').value;
+
+                location.replace(`${FRONT_SERVER}/orders/order-sheets?isbn=${isbn}&quantity=${quantity}`);
+            }
+        })
+    }
     document.getElementById('cart-event').addEventListener('click', function (event) {
         let quantityRegex = /^[+]?\d*(\.?\d*)?$/;
         const quantity = document.getElementById('quantity').value;
