@@ -94,8 +94,10 @@ public class WebControllerAdvice {
 
         Cookie authCookie = cookieUtils.createCookie(UUID_CODE.getValue(), "", 0);
         Cookie cartCookie = cookieUtils.createCookie("CART_NO", "", 0);
+        Cookie yaAuthCookie = cookieUtils.createCookie("YA_AUT", "", 0);
         response.addCookie(authCookie);
         response.addCookie(cartCookie);
+        response.addCookie(yaAuthCookie);
 
         HttpSession session = request.getSession();
         session.invalidate();
@@ -104,7 +106,7 @@ public class WebControllerAdvice {
         SecurityContextHolder.clearContext();
         context.setAuthentication(null);
         model.addAttribute("error", ex.getMessage());
-        return "common/errors/unauthorized";
+        return "redirect:/members/login";
     }
 
     @ExceptionHandler({CustomServerException.class, InvalidHttpHeaderException.class})
