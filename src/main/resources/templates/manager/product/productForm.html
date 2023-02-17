@@ -688,7 +688,7 @@
     }).then((res) => res.json())
     .then(function (data) {
       initSearchTable(searchedTable)
-      initPaging(page, data.count, offset, offset / size)
+      initPaging(page, data.count, size, offset, searchTag)
       const body = createHeadAndBody(searchedTable, input)
 
       data.searchedTagDtoList.forEach(function (dto) {
@@ -754,7 +754,7 @@
     const searchedTable = document.getElementById('searched-author-table')
     const page = document.getElementById('author-page')
     const url = '/api/authors/search'
-
+    console.log("input: " + input.value + ", offset: " + offset + ", size: " + size)
     if(input.value == null) {
       alert('검색할 단어를 입력해주세요')
       return
@@ -765,7 +765,7 @@
     .then((res) => res.json())
     .then(function (data) {
       initSearchTable(searchedTable)
-      initPaging(page, data.count, offset, offset / size)
+      initPaging(page, data.count, size, offset, searchAuthor)
       const body = createHeadAndBody(searchedTable, input)
       data.searchedAuthorDtoList.forEach(function (dto){
         const bodyRow = body.insertRow();
@@ -877,7 +877,7 @@
     .then((res) => res.json())
     .then(function (data) {
       initSearchTable(searchedTable)
-      initPaging(page, data.count, size, offset / size)
+      initPaging(page, data.count, size, offset, searchCategories)
       const body = createHeadAndBody(searchedTable, input)
       data.searchedCategoryDtoList.forEach(function (dto) {
         const row = body.insertRow()
@@ -979,7 +979,7 @@
     .then((res) => (res.json()))
     .then(function (data) {
       initSearchTable(searchedTable)
-      initPaging(ul, data.count, size, offset / size)
+      initPaging(ul, data.count, size, offset, searchPublisher)
       const body = createHeadAndBody(searchedTable, input)
       data.searchedPublisherDtoList.forEach(function (dto){
         const row = body.insertRow()
@@ -1070,7 +1070,6 @@
   // 중복값 확인
   function checkValue(checkbox, id) {
     for (let i = 0; i < checkbox.length; i++) {
-      console.log(checkbox[i].value)
       if (checkbox[i].value == id) {
         return true;
       }
@@ -1107,10 +1106,13 @@
    * @param count 총 갯수
    * @param size 데이터 갯수
    * @param currentPage 현재 페이지
+   * @param search 검색 메서드
    */
-  function initPaging(ul, count, size, currentPage) {
+  function initPaging(ul, count, size, currentPage, search) {
     ul.innerHTML = ''
-    console.log(currentPage)
+    console.log("current: " + currentPage)
+    console.log("count: "  + count)
+    console.log("size: " + size)
     if(currentPage > 0) {
       const pre = document.createElement('li')
       pre.className += 'page-item'
@@ -1118,7 +1120,7 @@
       const preLink = document.createElement('a')
       preLink.className += 'page-link'
       preLink.innerText = 'Previous'
-      preLink.addEventListener('click', function () {searchTag(currentPage -1, size)})
+      preLink.addEventListener('click', function () {search((currentPage -1), size)})
 
       pre.appendChild(preLink)
       ul.appendChild(pre)
@@ -1140,7 +1142,7 @@
       next.className += 'page-item'
 
       const nextLink = document.createElement('a')
-      nextLink.addEventListener('click', function (){searchTag(currentPage + 1, size)})
+      nextLink.addEventListener('click', function (){search(currentPage + 1, size)})
       nextLink.className += 'page-link'
       nextLink.innerText = 'Next'
 
