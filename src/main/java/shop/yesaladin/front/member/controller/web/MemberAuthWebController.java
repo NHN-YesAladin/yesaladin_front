@@ -7,9 +7,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import shop.yesaladin.front.common.exception.ValidationFailedException;
+import org.springframework.web.servlet.ModelAndView;
 import shop.yesaladin.front.member.dto.SignUpRequestDto;
 import shop.yesaladin.front.member.dto.SignUpResponseDto;
 import shop.yesaladin.front.member.service.inter.CommandMemberService;
@@ -37,8 +38,8 @@ public class MemberAuthWebController {
      * @since : 1.0
      */
     @GetMapping("/signup")
-    public String signupForm() {
-        return "auth/signup-form";
+    public ModelAndView signupForm(@ModelAttribute(name = "member") SignUpRequestDto member) {
+        return new ModelAndView("auth/signup-form");
     }
 
     /**
@@ -46,26 +47,26 @@ public class MemberAuthWebController {
      *
      * @param request       사용자가 입력한 회원정보 등록 폼 데이터의 모음입니다.
      * @param bindingResult @Valid 검증을 위한 파라미터입니다.
-     * @param model         등록 처리 이후 회원가입 성공 페이지로 넘어갈 때 필요한 데이터를 view에 넘겨주기 위한 객체 입니다.
      * @return 회원 등록 성공 페이지 입니다.
      * @author : 송학현
      * @since : 1.0
      */
     @PostMapping("/signup")
-    public String signup(
-            @Valid SignUpRequestDto request,
-            BindingResult bindingResult,
-            Model model
+    public ModelAndView signup(
+            @Valid @ModelAttribute(name = "member") SignUpRequestDto request,
+            BindingResult bindingResult
     ) {
         if (bindingResult.hasErrors()) {
-            throw new ValidationFailedException(bindingResult);
+            return new ModelAndView("auth/signup-form");
         }
-
+        String birth = request.getBirth().replaceAll("-", "");
+        request.setBirth(birth);
+        log.info("request={}", request);
         SignUpResponseDto response = commandMemberService.signUp(request);
-        log.info("response={}", response);
-        model.addAttribute("response", response);
 
-        return "auth/signup-success";
+        ModelAndView modelAndView = new ModelAndView("auth/signup-success");
+        modelAndView.addObject("response", response);
+        return modelAndView;
     }
 
     /**
@@ -85,11 +86,12 @@ public class MemberAuthWebController {
             Model model
     ) {
         if (bindingResult.hasErrors()) {
-            throw new ValidationFailedException(bindingResult);
+            model.addAttribute("error", "추가 정보 입력 값들이 맞지 않아 가입 실패. 다시 시도하세요.");
+            return "common/errors/bad-request";
         }
-
+        String birth = request.getBirth().replaceAll("-", "");
+        request.setBirth(birth);
         SignUpResponseDto response = commandMemberService.signUp(request);
-        log.info("response={}", response);
         model.addAttribute("response", response);
 
         return "auth/signup-success";
