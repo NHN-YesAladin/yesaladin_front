@@ -24,6 +24,10 @@
     #category-select-div li {
       cursor: pointer;
     }
+
+    .searched-list-item {
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -174,6 +178,16 @@
                       <ul class="list-group" id="children-category-group">
                       </ul>
                     </div>
+                  </div>
+                </div>
+                <div id="search-container" class="mb-3" style="display: none">
+                  <div class="mb-3">
+                    <input class="form-control d-inline-block w-75" id="product-search-bar" placeholder="제목을 입력하세요">
+                    <input type="button" class="d-inline-block btn btn-primary" id="product-search-button" value="검색">
+                  </div>
+                  <div class="card" style="overflow-y: scroll; height: 20rem; width: 85%">
+                    <ul class="list-group" id="searched-list-group">
+                    </ul>
                   </div>
                 </div>
                 <div class="mb-3 row">
