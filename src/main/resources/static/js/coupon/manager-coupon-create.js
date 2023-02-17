@@ -5,6 +5,7 @@ const RESPONSE_KEY = "response";
 const parentCategories = []
 const categories = {};
 let activeCategoryId;
+let activeIsbn;
 
 function addEventListenerToCouponDuration() {
   const couponDurationRadioList = document.querySelectorAll(
@@ -156,20 +157,30 @@ async function initParentCategories() {
   }
 }
 
+function addEventListenerToSearchedItems() {
+  const searchedItems = document.querySelectorAll('.searched-list-item');
+  searchedItems.forEach(item => item.addEventListener('click', (event) => {
+    searchedItems.forEach(
+        searchedItem => searchedItem.classList.remove('active'));
+    event.target.classList.add('active');
+  }))
+}
+
 function addEventListenerToCouponBound() {
   const couponBoundSelect = document.querySelector("#coupon-bound-select");
   const categorySelectDiv = document.querySelector("#category-select-div");
+  const searchContainer = document.querySelector('#search-container')
   couponBoundSelect.addEventListener("change", async () => {
-    console.log(
-        couponBoundSelect.options[couponBoundSelect.selectedIndex].value)
-    if (couponBoundSelect.options[couponBoundSelect.selectedIndex].value
-        === 'CATEGORY') {
-      console.log('category')
+    categorySelectDiv.style.display = 'none';
+    searchContainer.style.display = 'none'
+    const value = couponBoundSelect.options[couponBoundSelect.selectedIndex].value;
+    if (value === 'CATEGORY') {
       activeCategoryId = null;
       await initParentCategories();
       categorySelectDiv.style.display = '';
-    } else {
-      categorySelectDiv.style.display = 'none';
+    } else if (value === 'PRODUCT') {
+      searchContainer.style.display = '';
+      addEventListenerToSearchedItems();
     }
   })
 }
@@ -185,6 +196,12 @@ function handleSubmitEvent() {
         return;
       }
       formData.append("categoryId", activeCategoryId);
+    } else if (formData.get("couponBoundCode") === "PRODUCT") {
+      if (!activeIsbn) {
+        alert("상품이 선택되지 않았습니다.")
+        return;
+      }
+      formData.append("isbn", activeIsbn);
     }
 
     const response = await fetch(`${FRONT_SERVER}/manager/coupon/create`,
@@ -244,6 +261,12 @@ function addEventListenerToCouponTriggerCode() {
       "#coupon-duration-end-date-input");
   const duration = document.querySelector('#duration');
   const expireDate = document.querySelector('#expire-date');
+  const unlimitedQuantityCheckbox = document.querySelector(
+      "#coupon-unlimited-quantity-check");
+  const quantityInput = document.querySelector("#coupon-quantity-input");
+
+  unlimitedQuantityCheckbox.checked = true;
+  quantityInput.disabled = true;
 
   couponTriggerSelect.addEventListener("change", async () => {
     couponDurationInput.disabled = true;
@@ -253,8 +276,12 @@ function addEventListenerToCouponTriggerCode() {
     if (couponTriggerSelect.options[couponTriggerSelect.selectedIndex].value
         === 'COUPON_OF_THE_MONTH') {
       couponOfMonthMetaInput.style.display = 'block';
+      unlimitedQuantityCheckbox.checked = false;
+      quantityInput.disabled = false;
     } else {
       couponOfMonthMetaInput.style.display = 'none';
+      unlimitedQuantityCheckbox.checked = true;
+      quantityInput.disabled = true;
     }
 
     if (couponTriggerSelect.options[couponTriggerSelect.selectedIndex].value
@@ -273,8 +300,58 @@ function addEventListenerToCouponTriggerCode() {
   });
 }
 
+async function searchProductByTitle(title) {
+  const response = await fetch(
+      `${SHOP_SERVER}/v1/search/products?title=${title}&size=20&offset=0`);
+  const parsedResponse = (await response.json()).data;
+
+  return parsedResponse.dataList;
+}
+
+function initActiveIsbn() {
+  activeIsbn = null;
+  const searchedItem = document.querySelectorAll('.searched-list-item');
+  searchedItem.forEach(item => item.classList.remove('active'));
+}
+
+function addSearchedProductList(dataList) {
+  const searchedListGroup = document.querySelector("#searched-list-group");
+  searchedListGroup.innerHTML = '';
+  dataList.forEach(data => {
+    const li = document.createElement('li');
+    li.classList.add('list-group-item', 'searched-list-item');
+    li.textContent = data.title;
+    li.addEventListener('click', (e) => {
+      initActiveIsbn();
+      activeIsbn = data.isbn;
+      e.target.classList.add('active');
+    })
+    searchedListGroup.appendChild(li);
+  });
+}
+
+function addEventListenerToSearchBoxAndButton() {
+  const searchButton = document.querySelector('#product-search-button');
+  const searchBar = document.querySelector('#product-search-bar');
+  const callback = async () => {
+    console.log(searchBar.value);
+    initActiveIsbn();
+    const dataList = await searchProductByTitle(searchBar.value);
+    addSearchedProductList(dataList);
+  };
+
+  searchButton.addEventListener('click', callback);
+  searchBar.addEventListener('keypress', (event) => {
+    if (event.code === 'Enter') {
+      event.preventDefault();
+      searchButton.click();
+    }
+  })
+}
+
 (function init() {
   initAlert();
+  addEventListenerToSearchBoxAndButton();
   addEventListenerToCouponTriggerCode();
   addEventListenerToCouponQuantity();
   addEventListenerToCouponType();

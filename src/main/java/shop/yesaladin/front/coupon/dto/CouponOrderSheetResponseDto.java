@@ -19,6 +19,7 @@ import lombok.Setter;
 public class CouponOrderSheetResponseDto {
     private String isbn;
     private List<String> memberCoupons;
+    private List<String> memberCouponNames;
     private long discountPrice;
     private long expectedPoint;
 }
