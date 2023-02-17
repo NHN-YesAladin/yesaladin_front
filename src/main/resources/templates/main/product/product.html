@@ -31,6 +31,12 @@
         th, td {
             display: block;
         }
+
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
     </style>
 </head>
 <body>
@@ -100,9 +106,9 @@
                                                 <path d="M5 12l14 0"></path>
                                             </svg>
                                         </button>
-                                        <input type="text" class="form-control d-inline text-center" min="1"
+                                        <input type="number" class="form-control d-inline text-center" min="1" max="9999"
                                                th:readonly="${productDetailResponseDto.isEbook}" value="1"
-                                               id="quantity" maxlength="4" name="quantity" style="width:60px">
+                                               id="quantity" maxlength="4" name="quantity" style="width:60px;" >
                                         <button type="button" class="btn btn-secondary btn-icon"
                                                 onclick="upQuantity()" style="width: 35px"
                                                 th:disabled="${productDetailResponseDto.getIsEbook() || productDetailResponseDto.getIsSubscriptionAvailable()}">
