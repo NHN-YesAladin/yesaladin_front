@@ -531,12 +531,6 @@
           return false;
         }
 
-        if ((quantityVal * actualVal) > 2000000) {
-          alert('정가 * 수량이 2,000,000 을 넘지 않도록 입력해주세요.');
-          event.preventDefault();
-          return false;
-        }
-
         let categories = document.getElementsByName('categories').length;
         if(categories === 0 || categories > 3) {
           alert('카테고리를 1 ~ 3개까지 선택해주세요')
