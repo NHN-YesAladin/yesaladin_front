@@ -264,7 +264,7 @@
           <div class="mb-3">
             <label class="form-label">노출 우선 순위</label>
             <input type="number" class="form-control" id="preferentialShowRanking"
-                   name="preferentialShowRanking" min="-1000" max="1000"
+                   name="preferentialShowRanking" min="-100" max="100"
                    placeholder="Show Ranking..." required>
             <div class="invalid-feedback">노출 우선 순위를 입력해주세요.</div>
           </div>
@@ -645,9 +645,9 @@
 
         if (!preferentialShowRankingRegex.test(preferentialShowRankingVal) ||
                 emptyRegex.test(preferentialShowRankingVal) ||
-                preferentialShowRankingVal < -1000 || preferentialShowRankingVal > 1000
+                preferentialShowRankingVal < -100 || preferentialShowRankingVal > 100
         ) {
-          alert('노출 우선순위를 입력해주세요. (음수 가능, 낮을수록 조회 상단에 위치하게 됩니다.) [범위 -1,000 ~ 1,000]');
+          alert('노출 우선순위를 입력해주세요. (음수 가능, 낮을수록 조회 상단에 위치하게 됩니다.) [범위 -100 ~ 100]');
           event.preventDefault();
           return false;
         }

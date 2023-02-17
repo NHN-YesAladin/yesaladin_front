@@ -113,7 +113,6 @@ public class CommandProductServiceImpl implements CommandProductService {
         UriComponents uriComponents = UriComponentsBuilder.fromHttpUrl(
                 gatewayConfig.getShopUrl() + "/v1/products"
         ).path("/" + productId).build();
-        log.info("uri = {}", uriComponents.toUri());
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
@@ -121,7 +120,7 @@ public class CommandProductServiceImpl implements CommandProductService {
 
         restTemplate.exchange(
                 uriComponents.toUri(),
-                HttpMethod.PUT,
+                HttpMethod.POST,
                 httpEntity,
                 new ParameterizedTypeReference<ResponseDto<ProductOnlyIdDto>>() {
                 }
@@ -137,7 +136,7 @@ public class CommandProductServiceImpl implements CommandProductService {
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         HttpEntity httpEntity = new HttpEntity(headers);
-        restTemplate.postForEntity(gatewayConfig.getShopUrl() + "/v1/products/" + productId, httpEntity, Void.class);
+        restTemplate.postForEntity(gatewayConfig.getShopUrl() + "/v1/products/" + productId + "/delete", httpEntity, Void.class);
     }
 
     /**
