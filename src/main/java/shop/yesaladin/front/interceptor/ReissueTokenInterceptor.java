@@ -89,7 +89,7 @@ public class ReissueTokenInterceptor implements HandlerInterceptor {
      * AccessToken의 만료 시간과 현재 시간을 비교 하여 토큰 재발급을 처리해야 하는 지 판별하기 위한 기능 입니다.
      *
      * @param authInfo AccessToken과 User 정보를 담은 클래스 입니다.
-     * @return AccessToken의 만료 시간이 5분 이하 인지 판단한 결과 입니다.
+     * @return AccessToken의 만료 시간이 현재 시간과 비교하여 매 1분 마다 실행하도록 판단한 결과입니다.
      * @author 송학현
      * @since 1.0
      */
