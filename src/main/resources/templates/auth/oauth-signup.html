@@ -38,57 +38,63 @@
   <!-- TODO 3: BODY -->
 
   <div class="page-wrapper">
-    <div class="page page-center">
-      <div class="container container-tight py-4">
-        <div class="text-center mb-4">
-          <a href="." class="navbar-brand navbar-brand-autodark"><img src="./static/logo.svg"
-                                                                      height="36" alt=""></a>
-        </div>
-        <form class="signup-form" id="signup-form" action="/members/oauth2/signup" method="post"
-              autocomplete="off" novalidate="">
-          <div class="card-body">
-            <h2 class="card-title text-center mb-4">OAuth2 Login 시 YesAladin 자사 회원 등록을 위해 추가 정보를 입력해주세요.</h2>
-            <div class="mb-3">
-              <label class="form-label">이름</label>
-              <input type="text" class="form-control" id="name" th:name="name" placeholder="이름"
-                     pattern="^.*(?=.*[가-힣a-z])(?=^.{2,50}).*$"
-                     required>
-              <div class="invalid-feedback">
-                이름을 입력해주세요.
-              </div>
+    <div class="container container-tight py-4">
+      <div class="text-center mb-4">
+        <a href="." class="navbar-brand navbar-brand-autodark"><img src="./static/logo.svg"
+                                                                    height="36" alt=""></a>
+      </div>
+      <form class="signup-form" id="signup-form" action="/members/oauth2/signup" method="post"
+            autocomplete="off" novalidate="">
+        <div class="card-body">
+          <h2 class="card-title text-center mb-4">OAuth2 Login 시 YesAladin 자사 회원 등록을 위해 추가 정보를
+            입력해주세요.</h2>
+          <div class="mb-3">
+            <label class="form-label">이름</label>
+            <input type="text" class="form-control" id="name" th:name="name" placeholder="이름"
+                   pattern="^.*(?=.*[가-힣a-z])(?=^.{2,50}).*$"
+                   required>
+            <div class="invalid-feedback">
+              이름을 입력해주세요.
             </div>
-            <div class="mb-3">
-              <label class="form-label">닉네임</label>
-              <input type="text" class="form-control" id="nickname" th:name="nickname"
-                     pattern="^[가-힣ㄱ-ㅎa-zA-Z0-9._-]{2,15}$"
-                     placeholder="숫자, 영어, 한국어와 언더스코어를 허용하며 최소 2자 이상의 15자 이하의 닉네임만 가능합니다." required>
-              <div class="button-box">
-                <button class="nicknameCheckBtn" id="nicknameCheckBtn" type="button" onclick="nicknameCheck()">중복 확인</button>
-              </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">닉네임</label>
+            <input type="text" class="form-control" id="nickname" th:name="nickname"
+                   pattern="^[가-힣ㄱ-ㅎa-zA-Z0-9._-]{2,15}$"
+                   placeholder="숫자, 영어, 한국어와 언더스코어를 허용하며 최소 2자 이상의 15자 이하의 닉네임만 가능합니다." required>
+            <div class="button-box">
+              <button class="nicknameCheckBtn" id="nicknameCheckBtn" type="button"
+                      onclick="nicknameCheck()">중복 확인
+              </button>
             </div>
-            <input th:value="${oauthMember.loginId}" id="loginId" name="loginId" hidden="hidden">
-            <input th:value="${oauthMember.password}" id="password" name="password" hidden="hidden">
-            <div class="mb-3">
-              <label class="form-label">이메일 주소</label>
-              <input type="email" class="form-control" id="email" th:name="email" placeholder="이메일"
-                     pattern="^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$"
-                     required>
-              <div class="button-box">
-                <button class="emailCheckBtn" id="emailCheckBtn" type="button" onclick="emailCheck()">중복 확인</button>
-              </div>
+          </div>
+          <input th:value="${oauthMember.loginId}" id="loginId" name="loginId" hidden="hidden">
+          <input th:value="${oauthMember.password}" id="password" name="password" hidden="hidden">
+          <div class="mb-3">
+            <label class="form-label">이메일 주소</label>
+            <input type="email" class="form-control" id="email" th:name="email" placeholder="이메일"
+                   pattern="^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$"
+                   required>
+            <div class="button-box">
+              <button class="emailCheckBtn" id="emailCheckBtn" type="button" onclick="emailCheck()">
+                중복 확인
+              </button>
             </div>
-            <div class="mb-3">
-              <label class="form-label">휴대폰 번호</label>
-              <input type="text" class="form-control" id="phone" th:name="phone"
-                     pattern="([0-9]{11})"
-                     placeholder="휴대폰 번호 ex) 01012345678" required>
-              <div class="button-box">
-                <button class="phoneCheckBtn" id="phoneCheckBtn" type="button" onclick="phoneCheck()">중복 확인</button>
-              </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">휴대폰 번호</label>
+            <input type="text" class="form-control" id="phone" th:name="phone"
+                   pattern="([0-9]{11})"
+                   placeholder="휴대폰 번호 ex) 01012345678" required>
+            <div class="button-box">
+              <button class="phoneCheckBtn" id="phoneCheckBtn" type="button" onclick="phoneCheck()">
+                중복 확인
+              </button>
             </div>
-            <div class="mb-3">
-              <label class="form-label">생년월일</label>
-              <div class="input-icon">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">생년월일</label>
+            <div class="input-icon">
                 <span class="input-icon-addon"><!-- Download SVG icon from http://tabler-icons.io/i/calendar -->
                   <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
                        viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
@@ -103,32 +109,37 @@
                                                                                     y2="15"></line><line
                       x1="12" y1="15" x2="12" y2="18"></line></svg>
                 </span>
-                <input type="date" class="form-control" name="birth"
-                       id="datepicker-icon-prepend" value="" required>
-              </div>
-            </div>
-            <div class="mb-3">
-              <label class="form-label">성별</label>
-              <div class="row g-2">
-                <div class="col-5">
-                  <select name="gender" class="form-select" id="gender" required>
-                    <option value="">성별</option>
-                    <option value="MALE">남성</option>
-                    <option value="FEMALE">여성</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-            <div class="button-box">
-              <button class="finalCheckBtn" id="finalCheckBtn" type="button" onclick="finalCheckEvent()">입력 완료 확인</button>
-              <button class="againCheckBtn" id="againCheckBtn" type="button" onclick="againInputCheckEvent()">다시 입력하시겠습니까?</button>
-            </div>
-            <div class="form-footer">
-              <button type="submit" class="btn btn-primary w-100" id="createAccountBtn" disabled>Create new account</button>
+              <input type="date" class="form-control" name="birth"
+                     id="datepicker-icon-prepend" value="" required>
             </div>
           </div>
-        </form>
-      </div>
+          <div class="mb-3">
+            <label class="form-label">성별</label>
+            <div class="row g-2">
+              <div class="col-5">
+                <select name="gender" class="form-select" id="gender" required>
+                  <option value="">성별</option>
+                  <option value="MALE">남성</option>
+                  <option value="FEMALE">여성</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="button-box">
+            <button class="finalCheckBtn" id="finalCheckBtn" type="button"
+                    onclick="finalCheckEvent()">입력 완료 확인
+            </button>
+            <button class="againCheckBtn" id="againCheckBtn" type="button"
+                    onclick="againInputCheckEvent()">다시 입력하시겠습니까?
+            </button>
+          </div>
+          <div class="form-footer">
+            <button type="submit" class="btn btn-primary w-100" id="createAccountBtn" disabled>
+              Create new account
+            </button>
+          </div>
+        </div>
+      </form>
     </div>
   </div>
 

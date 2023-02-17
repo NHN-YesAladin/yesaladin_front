@@ -227,13 +227,25 @@
                                     <path d="M6 20v-2a6 6 0 1 1 12 0v2a1 1 0 0 1 -1 1h-10a1 1 0 0 1 -1 -1z"></path>
                                     <path d="M6 4v2a6 6 0 1 0 12 0v-2a1 1 0 0 0 -1 -1h-10a1 1 0 0 0 -1 1z"></path>
                                 </svg> 최근 본 상품</h3>
-                                    <div th:each="product: ${recentViewProductList}" class="row h-auto">
-                                        <a th:href="|/products/${product.id}|">
-                                        <div class="col-6 mb-3">
-                                            <div class="img-responsive img-responsive-3x4 card-img-top" th:style="'background-image: url(' + ${product.thumbnailFileUrl} + ');'"></div>
-                                        </div>
-                                        </a>
-                                    </div>
+<!--                                    <div th:each="product: ${recentViewProductList}" class="row h-auto">-->
+<!--                                        <a th:href="|/products/${product.id}|">-->
+<!--                                        <div class="col-6 mb-3">-->
+<!--                                            <div class="img-responsive img-responsive-3x4 card-img-top" th:style="'background-image: url(' + ${product.thumbnailFileUrl} + ');'"></div>-->
+<!--                                        </div>-->
+<!--                                        </a>-->
+<!--                                    </div>-->
+                            <table class="table table-sm table-borderless" style="display: block;">
+                                <tbody>
+                                    <tr th:each="product, status: ${recentViewProductList}">
+                                        <td>
+                                            <a class="text-dark "
+                                               th:href="|/products/${product.id}|" onclick="setWcode('011_003');">
+                                                <span class="badge bg-azure" th:text="${status.count}"></span><span th:text="${product.title}" style="width: 100px;text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"></span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     <div class="card mt-3">
                         <div class="card-body">
@@ -250,7 +262,7 @@
                                     <tr>
                                         <td>
                                             <a class="text-dark "
-                                                    href="http://www.yes24.com/Product/Search?query=%ec%8a%ac%eb%9e%a8%eb%8d%a9%ed%81%ac&amp;domain=ALL" onclick="setWcode('011_003');">
+                                                    href="#" onclick="setWcode('011_003');">
                                                 <span class="badge bg-azure">1위</span> <span class="m-1">슬램덩크</span>
                                             </a>
                                         </td>
@@ -259,7 +271,7 @@
                                     <tr>
                                         <td>
                                         <a class="text-dark "
-                                           href="http://www.yes24.com/Product/Search?query=%ec%88%98%eb%8a%a5%ed%8a%b9%ea%b0%95&amp;domain=ALL" onclick="setWcode('011_003');">
+                                           href="#" onclick="setWcode('011_003');">
                                             <span class="badge bg-azure">2위</span> <span class="m-1">수능특강</span>
                                         </a>
                                         </td>
@@ -268,7 +280,7 @@
                                     <tr>
                                         <td>
                                         <a class="text-dark "
-                                           href="http://www.yes24.com/Product/Search?query=NCT+DREAM&amp;domain=ALL" onclick="setWcode('011_003');">
+                                           href="#" onclick="setWcode('011_003');">
                                             <span class="badge bg-azure">3위</span> <span class="m-1">NCT DREAM</span>
                                         </a>
                                         </td>
@@ -277,7 +289,7 @@
                                     <tr>
                                         <td>
                                         <a class="text-dark "
-                                           href="http://www.yes24.com/Product/Search?query=%eb%8d%94%eb%b3%b4%ec%9d%b4%ec%a6%88&amp;domain=ALL" onclick="setWcode('011_003');">
+                                           href="#" onclick="setWcode('011_003');">
                                             <span class="badge bg-azure">4위</span> <span class="m-1">더보이즈</span>
                                         </a>
                                         </td>
@@ -286,7 +298,7 @@
                                     <tr>
                                         <td>
                                         <a class="text-dark "
-                                           href="http://www.yes24.com/Product/Search?query=%eb%89%b4%ec%a7%84%ec%8a%a4&amp;domain=ALL" onclick="setWcode('011_003');">
+                                           href="#" onclick="setWcode('011_003');">
                                             <span class="badge bg-azure">5위</span> <span class="m-1">뉴진스</span>
                                         </a>
                                         </td>
@@ -295,7 +307,7 @@
                                     <tr>
                                         <td>
                                         <a class="text-dark "
-                                           href="http://www.yes24.com/Product/Search?query=%eb%b6%80%ec%84%9d%ec%88%9c&amp;domain=ALL" onclick="setWcode('011_003');">
+                                           href="#" onclick="setWcode('011_003');">
                                             <span class="badge bg-azure">6위</span> <span class="m-1">부석순</span>
                                         </a>
                                         </td>
@@ -304,7 +316,7 @@
                                     <tr>
                                         <td>
                                         <a class="text-dark "
-                                           href="http://www.yes24.com/Product/Search?query=%ec%8b%ad%ec%9d%b4%ea%b5%ad%ea%b8%b0&amp;domain=ALL" onclick="setWcode('011_003');">
+                                           href="#" onclick="setWcode('011_003');">
                                             <span class="badge bg-azure">7위</span> <span class="m-1">십이국기</span>
                                         </a>
                                         </td>
@@ -313,7 +325,7 @@
                                     <tr>
                                         <td>
                                         <a class="text-dark "
-                                           href="http://www.yes24.com/Product/Search?query=nct&amp;domain=ALL" onclick="setWcode('011_003');">
+                                           href="#" onclick="setWcode('011_003');">
                                             <span class="badge bg-azure">8위</span> <span class="m-1">nct</span>
                                         </a>
                                         </td>
@@ -322,7 +334,7 @@
                                     <tr>
                                         <td>
                                         <a class="text-dark "
-                                           href="http://www.yes24.com/Product/Search?query=%eb%b8%8c%eb%a1%9c%ec%bb%a4&amp;domain=ALL" onclick="setWcode('011_003');">
+                                           href="#" onclick="setWcode('011_003');">
                                             <span class="badge bg-azure">9위</span> <span class="m-1">브로커</span>
                                         </a>
                                         </td>
@@ -331,7 +343,7 @@
                                     <tr>
                                         <td>
                                         <a class="text-dark "
-                                           href="http://www.yes24.com/Product/Search?query=%ed%86%a0%ec%9d%b5&amp;domain=ALL" onclick="setWcode('011_003');">
+                                           href="#" onclick="setWcode('011_003');">
                                             <span class="badge bg-azure">10위</span> <span class="m-1">토익</span>
                                         </a>
                                         </td>

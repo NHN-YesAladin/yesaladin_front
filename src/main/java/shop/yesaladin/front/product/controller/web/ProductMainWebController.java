@@ -5,8 +5,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -63,16 +61,11 @@ public class ProductMainWebController {
             @PathVariable long productId,
             Model model,
             @CookieValue(name = "recent", required = false) Cookie recent,
-            HttpServletResponse httpServletResponse,
-            Authentication authentication
+            HttpServletResponse httpServletResponse
     ) throws JsonProcessingException {
         ProductDetailResponseDto response = queryProductService.getProductDetail(productId);
         model.addAttribute(response);
-        if (authentication instanceof AnonymousAuthenticationToken) {
-            model.addAttribute(WISHLIST, commandWishlistService.isExist(productId));
-        } else {
-            model.addAttribute(WISHLIST, false);
-        }
+        model.addAttribute(WISHLIST, false);
         checkCookieValue(recent, httpServletResponse, productId);
         return DETAIL_VIEW;
     }

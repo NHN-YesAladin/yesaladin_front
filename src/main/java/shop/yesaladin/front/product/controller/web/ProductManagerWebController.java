@@ -171,7 +171,7 @@ public class ProductManagerWebController {
     public String managerProducts(
             @RequestParam(required = false) Integer typeId,
             @RequestParam(required = false, defaultValue = "0") Integer page,
-            @RequestParam(required = false, defaultValue = "30") Integer size,
+            @RequestParam(required = false, defaultValue = "10") Integer size,
             Model model
     ) {
         PaginatedResponseDto<ProductsResponseDto> products = queryProductService.findAllForManager(

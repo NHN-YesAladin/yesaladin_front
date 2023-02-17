@@ -5,13 +5,16 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import javax.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,6 +28,7 @@ import shop.yesaladin.front.member.dto.MemberGrade;
 import shop.yesaladin.front.member.dto.MemberStatisticsResponseDto;
 import shop.yesaladin.front.member.service.inter.QueryMemberService;
 import shop.yesaladin.front.point.service.inter.QueryPointHistoryService;
+import shop.yesaladin.front.product.dto.ProductRecentResponseDto;
 import shop.yesaladin.front.product.service.inter.QueryProductService;
 import shop.yesaladin.front.statistics.dto.PercentageResponseDto;
 
@@ -65,10 +69,16 @@ public class IndexController {
                 "recentProductList",
                 queryProductService.findRecentProduct(PageRequest.of(0, 12))
         );
+        Set<Long> recentViewSet = getRecentViewProductList(recentViewProductList);
         model.addAttribute(
                 "recentViewProductList",
-                queryProductService.findRecentViewProduct(getRecentViewProductList(
-                        recentViewProductList), PageRequest.of(0, 10)).getDataList()
+                sort(recentViewSet,
+                        queryProductService.findRecentViewProduct(
+                                recentViewSet,
+                                PageRequest.of(0, 10)
+                        ).getDataList(),
+                        PageRequest.of(0, 10)
+                )
         );
         return "main/index";
     }
@@ -106,5 +116,28 @@ public class IndexController {
             );
         }
         return new LinkedHashSet<Long>();
+    }
+
+    private List<ProductRecentResponseDto> sort(
+            Set<Long> recentViewSet,
+            List<ProductRecentResponseDto> recentViewlist,
+            Pageable pageable
+    ) {
+        List<Long> sort = new ArrayList<>(recentViewSet)
+                .subList(
+                        pageable.getPageSize() * pageable.getPageNumber(),
+                        pageable.getPageSize() * pageable.getPageNumber() + recentViewlist.size()
+                );
+        List<ProductRecentResponseDto> list = new ArrayList<>();
+        for (Long id : sort) {
+            for (ProductRecentResponseDto productRecentResponseDto : recentViewlist) {
+                if (productRecentResponseDto.getId().equals(id)) {
+                    list.add(productRecentResponseDto);
+                    break;
+                }
+            }
+        }
+        Collections.reverse(list);
+        return list;
     }
 }

@@ -190,7 +190,7 @@
                                         <tbody >
                                         <tr th:each="sales, i : ${salesStatistics}">
                                             <td th:text="${i.count + currentPage * size}"></td>
-                                            <td><a class="text-dark" th:text="${sales.title}" th:href="|/products/${sales.id}|"/></td>
+                                            <td><a class="text-dark d-inline-block" th:text="${sales.title}" th:href="|/products/${sales.id}|" style="overflow: hidden; text-overflow: ellipsis; max-width: 500px;"/></td>
                                             <td th:text="${sales.numberOfOrders}"></td>
                                             <td th:text="${sales.totalQuantity}"></td>
                                             <td th:text="|${#numbers.formatInteger(sales.netSales, 1, 'COMMA')}원|"></td>

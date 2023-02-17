@@ -30,7 +30,7 @@ public class ElasticCommandProductServiceImpl implements ElasticCommandProductSe
     private static final String PATH = "/v1/search/products";
 
     /**
-     *{@inheritDoc}
+     * {@inheritDoc}
      */
     @Override
     public void update(Long id) throws JsonProcessingException {
@@ -41,13 +41,14 @@ public class ElasticCommandProductServiceImpl implements ElasticCommandProductSe
                 url.toUri(),
                 HttpMethod.PUT,
                 null,
-                new ParameterizedTypeReference<ResponseDto<ProductOnlyIdDto>>(){}
+                new ParameterizedTypeReference<ResponseDto<ProductOnlyIdDto>>() {
+                }
 
         );
     }
 
     /**
-     *{@inheritDoc}
+     * {@inheritDoc}
      */
     @Override
     public void changeIsSale(Long id) {
@@ -58,13 +59,14 @@ public class ElasticCommandProductServiceImpl implements ElasticCommandProductSe
                 url.toUri(),
                 HttpMethod.GET,
                 null,
-                new ParameterizedTypeReference<ResponseDto<ProductOnlyIdDto>>(){}
+                new ParameterizedTypeReference<ResponseDto<ProductOnlyIdDto>>() {
+                }
 
         );
     }
 
     /**
-     *{@inheritDoc}
+     * {@inheritDoc}
      */
     @Override
     public void changeIsForcedOutOfStock(Long id) {
@@ -75,13 +77,14 @@ public class ElasticCommandProductServiceImpl implements ElasticCommandProductSe
                 url.toUri(),
                 HttpMethod.GET,
                 null,
-                new ParameterizedTypeReference<ResponseDto<ProductOnlyIdDto>>(){}
+                new ParameterizedTypeReference<ResponseDto<ProductOnlyIdDto>>() {
+                }
 
         );
     }
 
     /**
-     *{@inheritDoc}
+     * {@inheritDoc}
      */
     @Override
     public void delete(Long id) {
@@ -92,7 +95,8 @@ public class ElasticCommandProductServiceImpl implements ElasticCommandProductSe
                 url.toUri(),
                 HttpMethod.POST,
                 null,
-                new ParameterizedTypeReference<ResponseDto<Void>>(){}
+                new ParameterizedTypeReference<ResponseDto<Void>>() {
+                }
 
         );
     }
