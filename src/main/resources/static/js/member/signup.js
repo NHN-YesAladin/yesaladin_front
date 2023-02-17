@@ -31,7 +31,7 @@ function loginIdCheck() {
   let loginIdCheckBtn = document.getElementById('loginIdCheckBtn');
   let loginIdInput = document.getElementById('loginId');
   let loginIdVal = loginIdInput.value;
-  let loginIdRegex = /^[a-zA-Z0-9]{8,15}$/g;
+  let loginIdRegex = /^[a-zA-Z0-9]{8,15}$/;
   let emptyRegex = /\s/g;
 
   if (loginIdRegex.test(loginIdVal) && !emptyRegex.test(loginIdVal)) {
