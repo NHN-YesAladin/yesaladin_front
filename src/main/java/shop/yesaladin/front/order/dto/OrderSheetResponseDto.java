@@ -43,6 +43,17 @@ public class OrderSheetResponseDto {
                 .findFirst()
                 .orElse(null);
     }
+    /**
+     * 회원의 대표 배송지의 유무를 반환합니다.
+     *
+     * @return 대표 배송지 유무
+     * @author 최예린
+     * @since 1.0
+     */
+    public boolean hasDefaultAddress() {
+        return memberAddress != null && memberAddress.stream()
+                .anyMatch(MemberAddressResponseDto::getIsDefault);
+    }
 
     /**
      * 주문 상품의 isbn 과 수량을 반환합니다.
