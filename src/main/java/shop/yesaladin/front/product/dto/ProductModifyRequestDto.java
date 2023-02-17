@@ -73,7 +73,7 @@ public class ProductModifyRequestDto {
     @Override
     public String toString() {
         return "ProductModifyRequestDto{" +
-                ", thumbnailFile=" + thumbnailFile +
+                "thumbnailFile=" + thumbnailFile +
                 ", title='" + title + '\'' +
                 ", contents='" + contents + '\'' +
                 ", description='" + description + '\'' +
@@ -101,31 +101,31 @@ public class ProductModifyRequestDto {
             FileUploadResponseDto thumbnailFileResponse,
             FileUploadResponseDto ebookFileResponse
     ) {
-        return new ProductUpdateDto(
-                title,
-                contents,
-                description,
-                authors,
-                publisher,
-                actualPrice,
-                discountRate,
-                changeStringToBoolean(isSeparatelyDiscount),
-                givenPointRate,
-                changeStringToBoolean(isGivenPoint),
-                issn,
-                changeStringToBoolean(isSubscriptionAvailable),
-                quantity,
-                publishedDate,
-                preferentialShowRanking,
-                thumbnailFileResponse.getUrl(),
-                thumbnailFileResponse.getFileUploadDateTime(),
-                ebookFileResponse.getUrl(),
-                ebookFileResponse.getFileUploadDateTime(),
-                productTypeCode,
-                productSavingMethodCode,
-                tags,
-                categories
-        );
+        return ProductUpdateDto.builder()
+                .title(title)
+                .contents(contents)
+                .description(description)
+                .authors(authors)
+                .publisherId(publisher)
+                .actualPrice(actualPrice)
+                .discountRate(discountRate)
+                .isSeparatelyDiscount(changeStringToBoolean(isSeparatelyDiscount))
+                .givenPointRate(givenPointRate)
+                .isGivenPoint(changeStringToBoolean(isGivenPoint))
+                .issn(issn)
+                .isSubscriptionAvailable(changeStringToBoolean(isSubscriptionAvailable))
+                .quantity(quantity)
+                .publishedDate(publishedDate)
+                .preferentialShowRanking(preferentialShowRanking)
+                .thumbnailFileUrl(thumbnailFileResponse.getUrl())
+                .thumbnailFileUploadDateTime(thumbnailFileResponse.getFileUploadDateTime())
+                .ebookFileUrl(ebookFileResponse.getUrl())
+                .ebookFileUploadDateTime(ebookFileResponse.getFileUploadDateTime())
+                .productTypeCode(productTypeCode)
+                .productSavingMethodCode(productSavingMethodCode)
+                .tags(tags)
+                .categories(categories)
+                .build();
     }
 
     private boolean changeStringToBoolean(String target) {

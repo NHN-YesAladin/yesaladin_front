@@ -113,7 +113,6 @@ public class CommandProductServiceImpl implements CommandProductService {
         UriComponents uriComponents = UriComponentsBuilder.fromHttpUrl(
                 gatewayConfig.getShopUrl() + "/v1/products"
         ).path("/" + productId).build();
-        log.info("uri = {}", uriComponents.toUri());
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
