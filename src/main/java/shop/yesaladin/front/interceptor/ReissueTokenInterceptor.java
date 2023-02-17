@@ -36,7 +36,7 @@ public class ReissueTokenInterceptor implements HandlerInterceptor {
     private final CookieUtils cookieUtils;
 
     private static final String X_EXPIRE_HEADER = "X-Expire";
-    private static final long TIME_TO_REISSUE = Duration.ofMinutes(5).toSeconds();
+    private static final long TIME_TO_REISSUE = Duration.ofMinutes(59).toSeconds();
 
     /**
      * JWT Token 재발급을 위한 기능입니다.
