@@ -8,6 +8,7 @@ import java.util.Optional;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -44,51 +45,58 @@ public class CategoryManagerWebController {
      * manger-categories.html 을 보여주기 위한 컨트롤러 메서드 페이징된 2차 카테고리 리스트 제공과 생성,수정,삭제를 위한 기반 화면이다.
      *
      * @param parentId 페이징된 2차 카테고리 리스트를 보기 위해서는 1차 카테고리의 id값이 있어야한다
-     * @param page     현재 페이지
-     * @param size     페이징 사이즈
+     * @param pageable 페이징 처리
      * @param model
      * @return category/manager-categories.html
      */
     @GetMapping
     public String mangerCategories(
             @RequestParam(name = "code", required = false) Long parentId,
-            @RequestParam(required = false) Integer page,
-            @RequestParam(required = false) Integer size,
+            Pageable pageable,
             Model model
     ) {
+
         List<CategoryResponseDto> parentResponse = queryCategoryService.getParentCategories();
         model.addAttribute("parentCategories", parentResponse);
-        System.out.println("parentResponse = " + parentResponse);
-        Optional<CategoryResponseDto> parentOptional = parentResponse.stream()
-                .filter(parent -> parent.getId().equals(parentId))
-                .findAny();
-        parentOptional.ifPresent(responseDto -> model.addAttribute("parent", responseDto));
 
-        model.addAttribute("parentId", parentId);
+        Optional<CategoryResponseDto> parentOptional;
         if (Objects.isNull(parentId)) {
+            parentOptional = Optional.ofNullable(parentResponse.get(0));
+
+        } else {
+            parentOptional = parentResponse.stream()
+                    .filter(parent -> parent.getId().equals(parentId))
+                    .findAny();
+        }
+
+        if (parentOptional.isEmpty()) {
+            model.addAttribute("parent", null);
+
             model.addAttribute("code", null);
             model.addAttribute("currentPage", 0);
             model.addAttribute("totalPage", 1);
             model.addAttribute("totalDataCount", 0);
-            model.addAttribute("dataList", Collections.EMPTY_LIST);
+            model.addAttribute("dataList", Collections.emptyList());
             return "manager/category/manager-categories";
         }
 
+        CategoryResponseDto responseDto = parentOptional.get();
+        model.addAttribute("parent", responseDto);
 
+        Long parentIdView = responseDto.getId();
         PaginatedResponseDto<CategoryResponseDto> response = queryCategoryService.getChildCategoriesByParentId(
-                new PageRequestDto(page, size),
-                parentId
+                pageable,
+                parentIdView
         );
 
-        model.addAttribute("code", parentId);
+        model.addAttribute("code", parentIdView);
         model.addAttribute("currentPage", response.getCurrentPage());
         model.addAttribute("totalPage", response.getTotalPage());
         model.addAttribute("totalDataCount", response.getTotalDataCount());
         model.addAttribute("dataList", response.getDataList());
-
-
         return "manager/category/manager-categories";
     }
+
 
     @GetMapping("/order")
     public String changeOrders() {
@@ -114,11 +122,11 @@ public class CategoryManagerWebController {
         CategoryResponseDto responseDto = commandCategoryService.create(createRequest);
 
         if (Objects.isNull(responseDto.getParentId())) {
-            return "redirect:/manager/categories?id=" + responseDto.getId();
+            return "redirect:/manager/categories?code=" + responseDto.getId();
         }
 
         // html 경로를 return
-        return "redirect:/manager/categories?id=" + responseDto.getParentId();
+        return "redirect:/manager/categories?code=" + responseDto.getParentId();
     }
 
     /**
@@ -142,11 +150,11 @@ public class CategoryManagerWebController {
         CategoryResponseDto responseDto = commandCategoryService.modify(categoryId, modifyRequest);
 
         if (Objects.isNull(responseDto.getParentId())) {
-            return "redirect:/manager/categories?id=" + responseDto.getId();
+            return "redirect:/manager/categories?code=" + responseDto.getId();
         }
 
         // html 경로를 return
-        return "redirect:/manager/categories?id=" + responseDto.getParentId();
+        return "redirect:/manager/categories?code=" + responseDto.getParentId();
     }
 
     /**

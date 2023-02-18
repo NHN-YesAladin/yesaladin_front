@@ -5,6 +5,7 @@ import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -83,17 +84,14 @@ public class QueryCategoryServiceImpl implements QueryCategoryService {
      */
     @Override
     public PaginatedResponseDto<CategoryResponseDto> getChildCategoriesByParentId(
-            PageRequestDto pageRequestDto,
+            Pageable pageable,
             Long parentId
     ) {
         UriComponents uriComponents = UriComponentsBuilder.fromHttpUrl(
                         gatewayConfig.getShopUrl() + "/v1/categories")
                 .queryParam("parentId", parentId)
-                .queryParam("page", pageRequestDto.getPage() == null ? 0 : pageRequestDto.getPage())
-                .queryParam(
-                        "size",
-                        pageRequestDto.getSize() == null ? 10 : pageRequestDto.getSize()
-                )
+                .queryParam("page", pageable.getPageNumber())
+                .queryParam("size", pageable.getPageSize() == 0 ? 10 : pageable.getPageSize())
                 .build();
 
         ResponseEntity<ResponseDto<PaginatedResponseDto<CategoryResponseDto>>> responseEntity = restTemplate.exchange(
