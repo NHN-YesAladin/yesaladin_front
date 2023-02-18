@@ -39,7 +39,7 @@ public interface CommandOrderService {
      * 주문 상태 로그를 추가합니다.
      *
      * @param orderId 주문 아이디
-     * @param code 주문 상태
+     * @param code    주문 상태
      * @return 상태로그dto
      * @author 배수한
      * @since 1.0
