@@ -1,5 +1,6 @@
 package shop.yesaladin.front.config;
 
+import javax.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
@@ -47,7 +48,6 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChainDev(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .mvcMatchers("/mypage/**").authenticated()
-//                .mvcMatchers("/manager/**").hasAuthority("ROLE_ADMIN")
                 .mvcMatchers("/coupon").authenticated()
                 .anyRequest().permitAll();
         http.formLogin().loginPage("/members/login");

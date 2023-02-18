@@ -1,14 +1,12 @@
 package shop.yesaladin.front.product.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.PositiveOrZero;
+import javax.validation.constraints.*;
 import java.util.List;
 
 /**
@@ -18,16 +16,19 @@ import java.util.List;
  * @since 1.0
  */
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductUpdateDto {
     // 상품 설명
     @NotBlank
-    @Length(max = 255)
+    @Length(min = 1, max = 255)
     private String title;
     @NotBlank
+    @Length(min = 1, max = 21844)
     private String contents;
     @NotBlank
+    @Length(min = 1, max = 21844)
     private String description;
 
     // 저자, 출판사
@@ -37,6 +38,7 @@ public class ProductUpdateDto {
 
     // 정가, 할인율, 포인트 적립율
     @PositiveOrZero
+    @Max(2000000)
     private long actualPrice;
     @PositiveOrZero
     @Max(100)
@@ -48,15 +50,18 @@ public class ProductUpdateDto {
     private Boolean isGivenPoint;
 
     // 구독 상품 관련
-    @Length(max = 9)
+    @Length(max = 8)
     private String issn;
     private Boolean isSubscriptionAvailable;
 
     // 수량, 출간일, 노출우선순위
     @PositiveOrZero
+    @Max(2000000)
     private long quantity;
     @NotBlank
     private String publishedDate;
+    @Min(-100)
+    @Max(100)
     private int preferentialShowRanking;
 
     // 썸네일 파일

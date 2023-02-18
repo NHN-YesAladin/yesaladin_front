@@ -24,6 +24,10 @@
     #category-select-div li {
       cursor: pointer;
     }
+
+    .searched-list-item {
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -69,7 +73,7 @@
                 <div class="mb-3 row">
                   <label for="coupon-name-input" class="col-sm-2 col-form-label">쿠폰명</label>
                   <input type="text" required id="coupon-name-input" class="form-control w-50"
-                         th:field="*{name}"
+                         th:field="*{name}" maxlength="50"
                          name="name">
                 </div>
                 <div class="mb-3 row">
@@ -80,7 +84,7 @@
                              name="couponTypeCode"
                              th:field="*{couponTypeCode}"
                              th:value="${typeCode.name()}"
-                             th:id="${typeCode.name()}" checked>
+                             th:id="${typeCode.name()}" checked required="required">
                       <label class="form-check-label" th:for="${typeCode.name()}"
                              th:text="${typeCode.displayName}">정액할인</label>
                     </div>
@@ -89,7 +93,7 @@
                 <div class="mb-3 row">
                   <label for="coupon-name-input" class="col-sm-2 col-form-label">발행수량</label>
                   <input type="number" required id="coupon-quantity-input" class="form-control w-25"
-                         min="1" name="quantity" th:field="*{quantity}">
+                         min="1" max="5000" name="quantity" th:field="*{quantity}">
                   <input type="checkbox" id="coupon-unlimited-quantity-check"
                          class="form-check-input ms-3" name="isUnlimited" th:field="*{isUnlimited}">
                   <label class="col form-check-label"
@@ -107,7 +111,7 @@
                   <div class="mb-3 row">
                     <label class="col-sm-2 col-form-label" for="coupon-open-date">쿠폰 오픈일</label>
                     <input class="form-control w-50" id="coupon-open-date" name="couponOpenDate"
-                           th:field="*{couponOpenDate}" type="number">
+                           max="31" th:field="*{couponOpenDate}" type="number">
                   </div>
                   <div class="mb-3 row">
                     <label class="col-sm-2 col-form-label" for="coupon-open-time">쿠폰 오픈 시간</label>
@@ -129,7 +133,7 @@
                   <label class="col-sm-2 col-form-label fs-5"
                          for="coupon-name-input">할인금액/할인율</label>
                   <input type="number" required id="coupon-discount-value-input"
-                         name="discountAmount"
+                         name="discountAmount" max="5000000"
                          th:field="*{discountAmount}"
                          class="form-control w-50" min="1" placeholder="할인율 또는 금액">
                 </div>
@@ -141,7 +145,8 @@
                          name="maxDiscountAmount"
                          class="form-control w-50"
                          disabled
-                         min="1">
+                         min="1"
+                         max="5000000">
                 </div>
                 <div id="coupon-min-order-price-div" class="mb-3 row">
                   <label for="coupon-min-order-price-input"
@@ -150,7 +155,8 @@
                          class="form-control w-50"
                          th:field="*{minOrderAmount}"
                          name="minOrderAmount"
-                         min="1">
+                         min="1"
+                         max="500000">
                 </div>
                 <div class="mb-3 row" id="coupon-bound-select-div">
                   <label for="coupon-bound-select" class="col-sm-2 col-form-label">사용가능상품</label>
@@ -174,21 +180,34 @@
                     </div>
                   </div>
                 </div>
+                <div id="search-container" class="mb-3" style="display: none">
+                  <div class="mb-3">
+                    <input class="form-control d-inline-block w-75" id="product-search-bar" placeholder="제목을 입력하세요">
+                    <input type="button" class="d-inline-block btn btn-primary" id="product-search-button" value="검색">
+                  </div>
+                  <div class="card" style="overflow-y: scroll; height: 20rem; width: 85%">
+                    <ul class="list-group" id="searched-list-group">
+                    </ul>
+                  </div>
+                </div>
                 <div class="mb-3 row">
                   <label class="col-sm-2 col-form-label">만료일</label>
                   <div class="col" id="duration">
                     <label class="form-check-label">쿠폰이 발행된
                       날부터
-                      <input class="form-control w-4 d-inline-block" id="coupon-duration-input"
-                             name="duration"
+                      <input class="form-control d-inline-block" id="coupon-duration-input"
+                             style="width:4rem"
+                             name="duration" min="1" maxlength="3"
                              th:field="*{duration}" type="text"> 일 후까지 사용 가능
                     </label>
                   </div>
                   <div class="col" id="expire-date" style="display: none">
                     <label class="form-check-label">
-                      <input class="form-control w-25 d-inline-block" disabled id="coupon-duration-start-date-input"
+                      <input class="form-control w-25 d-inline-block" disabled
+                             id="coupon-duration-start-date-input"
                              type="date"> ~
-                      <input class="form-control w-25 d-inline-block" disabled id="coupon-duration-end-date-input"
+                      <input class="form-control w-25 d-inline-block" disabled
+                             id="coupon-duration-end-date-input"
                              name="expirationDate" th:field="*{expirationDate}"
                              type="date">
                     </label>
@@ -200,7 +219,7 @@
                   <input type="checkbox" id="coupon-can-be-duplicated-input"
                          name="canBeOverlapped"
                          class="form-check-input col-sm-2" th:field="*{canBeOverlapped}">
-                  <span class="col-sm-2">중복 할인 가능</span>
+                  <span class="col-sm-3">중복 할인 가능</span>
                 </div>
                 <button type="submit" class="btn btn-primary">저장</button>
                 <button class="btn btn-secondary">취소</button>
