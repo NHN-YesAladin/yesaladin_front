@@ -203,7 +203,7 @@ public class QueryProductServiceImpl implements QueryProductService {
 
     @Override
     public PaginatedResponseDto<ProductRecentResponseDto> findRecentViewProduct(
-            Set<Long> recentViewList,
+            RecentViewProductRequestDto dto,
             @PageableDefault Pageable pageable
     ) throws JsonProcessingException {
         String uri = UriComponentsBuilder
@@ -215,7 +215,7 @@ public class QueryProductServiceImpl implements QueryProductService {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        String requestJson = objectMapper.writeValueAsString(new ArrayList<>(recentViewList));
+        String requestJson = objectMapper.writeValueAsString(dto);
         HttpEntity<String> httpEntity = new HttpEntity<>(requestJson, headers);
 
         ResponseEntity<ResponseDto<PaginatedResponseDto<ProductRecentResponseDto>>> responseEntity = restTemplate.exchange(

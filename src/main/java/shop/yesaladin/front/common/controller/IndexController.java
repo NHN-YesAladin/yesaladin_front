@@ -15,25 +15,23 @@ import java.util.Set;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.common.utils.CookieUtils;
 import shop.yesaladin.front.coupon.dto.MemberCouponSummaryDto;
 import shop.yesaladin.front.coupon.service.inter.QueryCouponService;
 import shop.yesaladin.front.member.dto.MemberGrade;
-import shop.yesaladin.front.member.dto.MemberStatisticsResponseDto;
 import shop.yesaladin.front.member.service.inter.QueryMemberService;
 import shop.yesaladin.front.point.service.inter.QueryPointHistoryService;
 import shop.yesaladin.front.product.dto.ProductRecentResponseDto;
+import shop.yesaladin.front.product.dto.RecentViewProductRequestDto;
 import shop.yesaladin.front.product.service.inter.QueryProductService;
-import shop.yesaladin.front.statistics.dto.PercentageResponseDto;
 import shop.yesaladin.front.wishlist.service.inter.QueryWishlistService;
 
 /**
@@ -44,6 +42,7 @@ import shop.yesaladin.front.wishlist.service.inter.QueryWishlistService;
  * @author : 김선홍
  * @since 1.0
  */
+@Slf4j
 @RequiredArgsConstructor
 @Controller
 public class IndexController {
@@ -68,23 +67,26 @@ public class IndexController {
     @GetMapping
     public String main(
             Model model,
-            @CookieValue(required = false, name = COOKIE) Cookie recentViewProductList
+            @CookieValue(required = false, name = COOKIE) Cookie cookie,
+            HttpServletResponse response
     )
             throws JsonProcessingException {
         model.addAttribute(
                 "recentProductList",
                 queryProductService.findRecentProduct(PageRequest.of(0, 12))
         );
-        Set<Long> recentViewSet = getRecentViewProductList(recentViewProductList);
+        List<Long> recentViewList = new ArrayList<>(getPageRecentViewProductList(cookie, response));
         model.addAttribute(
                 "recentViewProductList",
                 sort(
-                        recentViewSet,
+                        recentViewList,
                         queryProductService.findRecentViewProduct(
-                                recentViewSet,
+                                new RecentViewProductRequestDto(
+                                        new ArrayList<>(getTotalRecentViewProductList(cookie, response)),
+                                        recentViewList
+                                ),
                                 PageRequest.of(0, 10)
-                        ).getDataList(),
-                        PageRequest.of(0, 10)
+                        ).getDataList()
                 )
         );
         return "main/index";
@@ -111,15 +113,18 @@ public class IndexController {
                 true,
                 PageRequest.of(0, 1)
         );
-        Set<Long> recentViewList = getRecentViewList(cookie, response);
-        model.addAttribute("recentViewList",sort(
+
+        List<Long> recentViewList = new ArrayList<>(getPageRecentViewProductList(cookie, response));
+        model.addAttribute("recentViewList", sort(
                 recentViewList,
                 queryProductService.findRecentViewProduct(
-                                recentViewList,
+                                new RecentViewProductRequestDto(
+                                        new ArrayList<>(getTotalRecentViewProductList(cookie, response)),
+                                        recentViewList
+                                ),
                                 PageRequest.of(0, 12)
                         )
-                        .getDataList(),
-                PageRequest.of(0, 12)
+                        .getDataList()
         ));
         model.addAttribute(
                 "wishlist",
@@ -132,43 +137,9 @@ public class IndexController {
         return "mypage/index";
     }
 
-    private Set<Long> getRecentViewProductList(Cookie cookie) throws JsonProcessingException {
-        if (Objects.nonNull(cookie)) {
-            return objectMapper.readValue(
-                    URLDecoder.decode(cookie.getValue(), StandardCharsets.UTF_8),
-                    new TypeReference<LinkedHashSet<Long>>() {
-                    }
-            );
-        }
-        return new LinkedHashSet<Long>();
-    }
-
-    private List<ProductRecentResponseDto> sort(
-            Set<Long> recentViewSet,
-            List<ProductRecentResponseDto> recentViewlist,
-            Pageable pageable
-    ) {
-        List<Long> sort = new ArrayList<>(recentViewSet)
-                .subList(
-                        pageable.getPageSize() * pageable.getPageNumber(),
-                        pageable.getPageSize() * pageable.getPageNumber() + recentViewlist.size()
-                );
-        List<ProductRecentResponseDto> list = new ArrayList<>();
-        for (Long id : sort) {
-            for (ProductRecentResponseDto productRecentResponseDto : recentViewlist) {
-                if (productRecentResponseDto.getId().equals(id)) {
-                    list.add(productRecentResponseDto);
-                    break;
-                }
-            }
-        }
-        Collections.reverse(list);
-        return list;
-    }
-
-    private Set<Long> getRecentViewList(Cookie cookie, HttpServletResponse response)
+    private Set<Long> getTotalRecentViewProductList(Cookie cookie, HttpServletResponse response)
             throws JsonProcessingException {
-        if (!Objects.isNull(cookie)) {
+        if (Objects.nonNull(cookie)) {
             return objectMapper.readValue(
                     URLDecoder.decode(cookie.getValue(), StandardCharsets.UTF_8),
                     new TypeReference<LinkedHashSet<Long>>() {
@@ -178,6 +149,40 @@ public class IndexController {
         Set<Long> recentViewList = new LinkedHashSet<>();
         response.addCookie(createCookie(recentViewList));
         return recentViewList;
+    }
+
+    private Set<Long> getPageRecentViewProductList(Cookie cookie, HttpServletResponse response)
+            throws JsonProcessingException {
+        if (Objects.nonNull(cookie)) {
+            Set<Long> set = objectMapper.readValue(
+                    URLDecoder.decode(cookie.getValue(), StandardCharsets.UTF_8),
+                    new TypeReference<LinkedHashSet<Long>>() {
+                    }
+            );
+            List<Long> list = new ArrayList<>(set);
+            Collections.reverse(list);
+            int size = Math.min(list.size(), 10);
+            return new LinkedHashSet<>(list.subList(0, size));
+        }
+        Set<Long> recentViewList = new LinkedHashSet<>();
+        response.addCookie(createCookie(recentViewList));
+        return recentViewList;
+    }
+
+    private List<ProductRecentResponseDto> sort(
+            List<Long> pageIds,
+            List<ProductRecentResponseDto> recentViewlist
+    ) {
+        List<ProductRecentResponseDto> list = new ArrayList<>();
+        for (Long id : pageIds) {
+            for (ProductRecentResponseDto productRecentResponseDto : recentViewlist) {
+                if (productRecentResponseDto.getId().equals(id)) {
+                    list.add(productRecentResponseDto);
+                    break;
+                }
+            }
+        }
+        return list;
     }
 
     private Cookie createCookie(Set<Long> value) throws JsonProcessingException {
