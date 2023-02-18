@@ -133,7 +133,7 @@
                                   <select id="select-parent" th:name="parentCategory" class="form-select">
                                     <option value="none">선택</option>
                                     <option th:each="parentCategory : ${parentCategories}"
-                                            th:value="${parentCategory.id}" th:text="${parentCategory.name}" th:selected="${parentCategory.id == parentId}"></option>
+                                            th:value="${parentCategory.id}" th:text="${parentCategory.name}" th:selected="${parentCategory.id == code}"></option>
                                   </select>
                               </div>
                               <div th:if="${parent != null}" class="col-md-4">
@@ -169,10 +169,9 @@
                                           <td th:text="${#strings.isEmpty(category.order) ? '-' : category.order}"></td>
                                           <td>
                                             <a href="#" class="btn btn-dark btn-pill w-auto fs-5 btn-modal" data-bs-toggle="modal" data-bs-target="#modify-modal-report"
-                                               th:data-cat-parent-id="${parentId}" th:data-cat-id="${category.id}" th:data-cat-name="${category.name}" th:data-cat-shown="${category.isShown}">
+                                               th:data-cat-parent-id="${category.parentId}" th:data-cat-id="${category.id}" th:data-cat-name="${category.name}" th:data-cat-shown="${category.isShown}">
                                               수정
                                             </a>
-
                                           </td>
 
                                           <td>

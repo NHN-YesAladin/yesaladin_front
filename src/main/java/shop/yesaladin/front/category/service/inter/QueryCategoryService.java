@@ -1,6 +1,7 @@
 package shop.yesaladin.front.category.service.inter;
 
 import java.util.List;
+import org.springframework.data.domain.Pageable;
 import shop.yesaladin.front.category.dto.CategoryResponseDto;
 import shop.yesaladin.front.common.dto.PageRequestDto;
 import shop.yesaladin.front.common.dto.PaginatedResponseDto;
@@ -30,12 +31,12 @@ public interface QueryCategoryService {
     /**
      * 1차 카테고리 id를 통해서 자식 카테고리(=2차 카테고리)를 페이징하여 조회하는 기능
      *
-     * @param pageRequestDto page와 size를 담고있는 dto
+     * @param pageable paging 처리
      * @param parentId       1차 카테고리 id
      * @return 페이징 정보 및 데이터 리스트를 담고있는 dto
      */
     PaginatedResponseDto<CategoryResponseDto> getChildCategoriesByParentId(
-            PageRequestDto pageRequestDto,
+            Pageable pageable,
             Long parentId
     );
 
