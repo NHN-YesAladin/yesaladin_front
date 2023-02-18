@@ -87,9 +87,10 @@
                       <!-- 대표 배송지 여부 -->
                       <div class="col-1 m-auto">
                         <spn>
-                        <a th:href="@{/mypage/address/default(addressId=${address.id})}"
-                           th:classappend="${address.isDefault ? 'active' : ''}"
-                           class="switch-icon switch-icon-scale m-auto" data-bs-toggle="switch-icon">
+                          <a th:href="@{/mypage/address/default(addressId=${address.id})}"
+                             th:classappend="${address.isDefault ? 'active' : ''}"
+                             class="switch-icon switch-icon-scale m-auto"
+                             data-bs-toggle="switch-icon">
                           <span class="switch-icon-a text-muted">
                             <svg xmlns="http://www.w3.org/2000/svg"
                                  class="icon icon-tabler icon-tabler-star" width="24"
@@ -101,7 +102,7 @@
                                   d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"></path>
                             </svg>
                           </span>
-                          <span class="switch-icon-b text-yellow">
+                            <span class="switch-icon-b text-yellow">
                             <svg xmlns="http://www.w3.org/2000/svg"
                                  class="icon icon-tabler icon-tabler-star-filled text-yellow"
                                  width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
@@ -113,7 +114,7 @@
                                   fill="currentColor"></path>
                             </svg>
                           </span>
-                        </a>
+                          </a>
                         </spn>
                       </div>
                       <!-- 배송지 삭제-->
@@ -137,6 +138,7 @@
                     </div>
                   </div>
                 </div>
+                <div th:replace="~{common/utils/success :: custom-success}"></div>
               </div>
             </div>
           </div>
@@ -159,51 +161,88 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
         </button>
       </div>
-      <form method="post" action="/mypage/address">
-        <div class="modal-body">
-          <div class="row mb-3 align-items-end">
-            <div class="col-12">
-              <label class="form-label">
-                주소
-                <a type="button" class="btn btn-outline-secondary btn-sm float-end"
-                   onclick="getAddress();">
-                  우편번호 찾기
-                </a>
-              </label>
-              <label class="row w-full ms-0">
-                <div class="col-3 ps-0 pe-0">
-                  <input type="text" class="form-control" id="post-address"
-                         name="postAddress" placeholder="우편번호" readonly>
-                </div>
-                <div class="col-9 pe-0">
-                  <input type="text" class="form-control" id="road-address"
-                         name="roadAddress" placeholder="도로명 주소" readonly>
-                </div>
-              </label>
-              <input type="text" class="form-control mt-1" id="detail-address"
-                     name="detailAddress" placeholder="상세 주소">
-            </div>
-          </div>
-          <div class="row mb-1 align-items-end">
-            <span class="col">대표 배송지 설정</span>
-            <div class="col">
-              <label class="form-check form-check-single form-switch float-end ">
-                <input class="form-check-input" name="isDefault" type="checkbox" checked>
-              </label>
-            </div>
+      <div class="modal-body">
+        <div class="row mb-3 align-items-end">
+          <div class="col-12">
+            <label class="form-label">
+              주소
+              <a type="button" class="btn btn-outline-secondary btn-sm float-end"
+                 onclick="getAddress();">
+                우편번호 찾기
+              </a>
+            </label>
+            <label class="row w-full ms-0">
+              <div class="col-3 ps-0 pe-0">
+                <input type="text" class="form-control" id="post-address"
+                       name="postAddress" placeholder="우편번호" readonly>
+              </div>
+              <div class="col-9 pe-0">
+                <input type="text" class="form-control" id="road-address"
+                       name="roadAddress" placeholder="도로명 주소" readonly>
+              </div>
+            </label>
+            <input type="text" class="form-control mt-1" id="detail-address" maxlength="190"
+                   name="detailAddress" placeholder="상세 주소">
           </div>
         </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-primary w-full" data-bs-dismiss="modal">
-            등록
-          </button>
+        <div class="row mb-1 align-items-end">
+          <span class="col">대표 배송지 설정</span>
+          <div class="col">
+            <label class="form-check form-check-single form-switch float-end ">
+              <input class="form-check-input" id="is-default" name="isDefault" type="checkbox"
+                     checked>
+            </label>
+          </div>
         </div>
-      </form>
+      </div>
+      <div class="modal-footer">
+        <button onclick="createAddress()" class="btn btn-primary w-full">
+          등록
+        </button>
+      </div>
+      <div th:replace="~{common/fragments/alert :: custom-alert}"></div>
     </div>
   </div>
 </div>
 </div>
-<script>
+<script th:inline="javascript">
+  const frontUrl = [[${@environment.getProperty('yesaladin.front.url')}]];
+
+  function createAddress() {
+    const postAddress = document.getElementById("post-address").value;
+    const roadAddress = document.getElementById("road-address").value;
+    const detailAddress = document.getElementById("detail-address").value;
+    const isDefault = document.getElementById("is-default").checked;
+
+    if (postAddress == "" || roadAddress == "" || detailAddress == "") {
+      writeContentToAlert("배송지를 입력해주세요.");
+      return;
+    }
+    fetch(`${frontUrl}/api/address`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        postAddress: postAddress,
+        roadAddress: roadAddress,
+        detailAddress: detailAddress,
+        isDefault: isDefault
+      })
+    }).then((resp) => {
+      return resp.json();
+    }).then((data) => {
+      if (!data.success) {
+        writeContentToAlert(data.errorMessages);
+      }
+      else {
+        writeContentToSuccess("배송지 등록에 성공하셨습니다.");
+        location.reload();
+      }
+    })
+
+  }
+
   function getAddress() {
     new daum.Postcode({
       oncomplete: function (data) {

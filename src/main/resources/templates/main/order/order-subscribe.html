@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
-<head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
-  <title>Yes Aladin!</title>
+    <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+    <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <title>Yes Aladin!</title>
   <!-- CSS files -->
   <link th:href="@{/css/tabler.min.css}" rel="stylesheet"/>
   <link th:href="@{/css/tabler-flags.min.css}" rel="stylesheet"/>
@@ -141,17 +141,17 @@
                         <div class="col-3 ps-0">
                           <input type="text" class="form-control" id="orderer-post-address"
                                  name="ordererPostAddress" placeholder="우편번호" readonly
-                                 th:value="${info.hasDefaultAddress() && info.getDefaultAddress() != null ? info.getDefaultAddress().getPostAddress() : ''}">
+                                 th:value="${info.memberAddress != null && info.getDefaultAddress() != null ? info.getDefaultAddress().getPostAddress() : ''}">
                         </div>
                         <div class="col-9 ps-0 pe-0">
                           <input type="text" class="form-control" id="orderer-road-address"
                                  name="ordererRoadAddress" placeholder="도로명 주소" readonly
-                                 th:value="${info.hasDefaultAddress() && info.getDefaultAddress() != null ? info.getDefaultAddress().getRoadAddress() : ''}">
+                                 th:value="${info.memberAddress != null && info.getDefaultAddress() != null ? info.getDefaultAddress().getRoadAddress() : ''}">
                         </div>
                       </div>
                       <input type="text" class="form-control mt-1" id="orderer-detail-address"
                              name="ordererDetailAddress" placeholder="상세 주소" maxlength="190"
-                             th:value="${info.hasDefaultAddress() && info.getDefaultAddress() != null ? info.getDefaultAddress().getDetailAddress() : ''}">
+                             th:value="${info.memberAddress != null && info.getDefaultAddress() != null ? info.getDefaultAddress().getDetailAddress() : ''}">
                     </div>
                     <label class="form-label d-lg-inline float-start mt-2">희망배송날짜</label>
                     <input class="form-control mb-2" id="datepicker"
@@ -934,7 +934,7 @@
         closeAddressForm();
       })
     } catch (e) {
-      console.log(e.message)
+      alert("배송지는 최대 10개까지 등록 가능합니다.");
     }
   }
 </script>
@@ -1191,66 +1191,7 @@
       console.log(data);
     })
   }
-  async function nonMemberOrder() {
-    const expectedShippingDate = expectedShippingDateDoc.value;
-    const orderProducts = [[${info.getProductOrderRequest()}]];
-    const productTotalAmount = parseInt(totalProductPrice.innerText.replace(/\D/g, ''));
-    const shippingFee = parseInt(shippingFeeDoc.value);
-    const wrappingFee = parseInt(wrappingFeeDoc.value);
-    const recipientName = recipientNameDoc.value;
-    const recipientPhoneNumber = recipientPhoneNumberDoc.value;
 
-    const ordererName = ordererNameDoc.value;
-    const ordererPhoneNumber = ordererPhoneNumberDoc.value;
-    const address = [ordererPostAddress.value, ordererRoadAddress.value,
-      ordererDetailAddress.value].join("/");
-
-    // orderCheck(this);
-
-    await fetch(`${shopUrl}/v1/orders/non-member`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        expectedShippingDate: expectedShippingDate,
-        orderProducts: orderProducts,
-        productTotalAmount: productTotalAmount,
-        shippingFee: shippingFee,
-        wrappingFee: wrappingFee,
-        recipientName: recipientName,
-        recipientPhoneNumber: recipientPhoneNumber,
-        ordererName: ordererName,
-        ordererPhoneNumber: ordererPhoneNumber,
-        ordererAddress: address
-      })
-    }).then((resp) => {
-      return resp.json();
-    }).then((data) => {
-      if (!data.success) {
-        alert(data.errorMessages.toString());
-      } else {
-        const productAmount = [[${info.getTotalProductAmount()}]];
-        const params = {
-          ordererName: ordererName,
-          ordererPhoneNumber: ordererPhoneNumber,
-          recipientName: recipientName,
-          recipientPhoneNumber: recipientPhoneNumber,
-          recipientAddress: address,
-          recipientExpectedDate: expectedShippingDate,
-          orderNumber: data.data.orderNumber,
-          productAmount: productAmount,
-          discountAmount: productAmount - productTotalAmount,
-          shippingFee: shippingFee,
-          wrappingFee: wrappingFee,
-          orderName: data.data.orderName,
-          totalAmount: productTotalAmount + shippingFee + wrappingFee
-        }
-        let searchParams = new URLSearchParams(params);
-        window.location.href = `${frontUrl}/payments/pay?${searchParams.toString()}`;
-      }
-    });
-  }
 </script>
 <!--다음 주소지 API-->
 <script>

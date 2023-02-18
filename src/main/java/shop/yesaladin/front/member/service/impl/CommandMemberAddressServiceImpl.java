@@ -3,6 +3,7 @@ package shop.yesaladin.front.member.service.impl;
 import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -27,6 +28,7 @@ import shop.yesaladin.front.member.service.inter.CommandMemberAddressService;
  * @author 최예린
  * @since 1.0
  */
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class CommandMemberAddressServiceImpl implements CommandMemberAddressService {
@@ -58,11 +60,9 @@ public class CommandMemberAddressServiceImpl implements CommandMemberAddressServ
                 uri,
                 HttpMethod.POST,
                 entity,
-                new ParameterizedTypeReference<>() {
-                }
-        );
-
-        return exchange.getBody();
+                MEMBER_ADDRESS_RESPONSE
+        ).getBody();
+        return response;
     }
 
     /**
