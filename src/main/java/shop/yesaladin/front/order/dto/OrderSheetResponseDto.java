@@ -1,14 +1,11 @@
 package shop.yesaladin.front.order.dto;
 
-import java.util.List;
-import java.util.stream.Collectors;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import shop.yesaladin.front.coupon.dto.MemberCouponSummaryDto;
 import shop.yesaladin.front.member.dto.MemberAddressResponseDto;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 회원 주문서에 필요한 데이터를 반환하는 dto 클래스입니다.
@@ -43,6 +40,7 @@ public class OrderSheetResponseDto {
                 .findFirst()
                 .orElse(null);
     }
+
     /**
      * 회원의 대표 배송지의 유무를 반환합니다.
      *
