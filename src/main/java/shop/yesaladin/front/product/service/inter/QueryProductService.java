@@ -95,14 +95,14 @@ public interface QueryProductService {
     /**
      * 최근 본 상품 조회 메서드
      *
-     * @param recentViewList 최근 본 상품들의 id 리스트
+     * @param dto 최근 본 상품 요청 dto
      * @param pageable       페이지 정보
      * @return 최근 본 상품의 정보 리스트
      * @author 김선홍
      * @since 1.0
      */
     PaginatedResponseDto<ProductRecentResponseDto> findRecentViewProduct(
-            Set<Long> recentViewList,
+            RecentViewProductRequestDto dto,
             Pageable pageable
     ) throws JsonProcessingException;
 }

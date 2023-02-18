@@ -53,8 +53,10 @@
             </div>
               <div class="card-body row g-2 g-md-3">
                 <div class="col-4">
+                  <a th:href="|/products/${product.id}|">
                   <div class="img-responsive img-responsive-3x4 rounded-3 border"
                        th:style="|background-image: url(${product.thumbnailFile})|" width="300" height="400"></div>
+                  </a>
                 </div>
                 <div class="col-8">
                   <p th:text="|${product.getAuthorLine()} 저|"></p>
