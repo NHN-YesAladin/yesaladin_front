@@ -122,21 +122,22 @@
   function changeOrderUp() {
     const upButton = document.querySelector('#order-up');
     upButton.addEventListener("click", () => {
-      if ( activeCategoryOrder == 1) {
+      if ( activeCategoryOrder === 1) {
         alert("가장 첫번째 요소입니다.");
         return;
       }
       let orderIdx = parseInt(activeCategoryOrder);
+      let preOrderIdx = orderIdx - 1;
       let present;
       let prev;
 
       const isParent = parseInt(activeCategoryId) % 10000 === 0;
       if (isParent) {
         present = tempParentCategories[orderIdx];
-        prev = tempParentCategories[orderIdx - 1];
+        prev = tempParentCategories[preOrderIdx];
       } else {
         present = tempChildCategories[orderIdx];
-        prev = tempChildCategories[orderIdx - 1];
+        prev = tempChildCategories[preOrderIdx];
       }
 
 
@@ -163,7 +164,7 @@
 
       //순서 변경
       [present.order, prev.order] = [prev.order, present.order];
-      activeCategoryOrder = present.order;
+      activeCategoryOrder = preOrderIdx;
     });
   }
 
@@ -171,25 +172,23 @@
     const downButton = document.querySelector('#order-down');
     downButton.addEventListener("click", () => {
       let orderIdx = parseInt(activeCategoryOrder);
+      let nextOrderIdx = orderIdx + 1;
       let present;
       let next;
 
       const isParent = parseInt(activeCategoryId) % 10000 === 0;
-      console.log(tempChildCategories)
-      // TODO activeCategoryOrder가 현재의 순서 값이지만 map의 값은 순차적으로 증가한 값이므로
-      // order와 idx의 괴리를 어떻게 좁힐 것인가.
       if (isParent) {
         present = tempParentCategories[orderIdx];
-        next = tempParentCategories[orderIdx + 1];
-        if ( activeCategoryOrder == Object.keys(tempParentCategories).length) {
+        next = tempParentCategories[nextOrderIdx];
+        if ( activeCategoryOrder === Object.keys(tempParentCategories).length) {
           alert("가장 마지막 요소입니다.");
           return;
         }
       } else {
         present = tempChildCategories[orderIdx];
-        next = tempChildCategories[orderIdx + 1];
+        next = tempChildCategories[nextOrderIdx];
 
-        if ( activeCategoryOrder == Object.keys(tempChildCategories).length) {
+        if ( activeCategoryOrder === Object.keys(tempChildCategories).length) {
           alert("가장 마지막 요소입니다.");
           return;
         }
@@ -208,17 +207,17 @@
       if (isParent) {
         initActiveParentCategory();
         tempParentCategories[orderIdx] = next;
-        tempParentCategories[orderIdx + 1] = present;
+        tempParentCategories[nextOrderIdx] = present;
       }else{
         initActiveChildCategory();
         tempChildCategories[orderIdx] = next;
-        tempChildCategories[orderIdx + 1] = present;
+        tempChildCategories[nextOrderIdx] = present;
       }
       itemNext.classList.add("active");
 
       //순서 변경
       [present.order, next.order] = [next.order, present.order];
-      activeCategoryOrder = present.order;
+      activeCategoryOrder = nextOrderIdx;
     });
   }
 
@@ -242,7 +241,7 @@
       const response = await fetch(`${SHOP_SERVER}/v1/categories/order`,
           {method: "PUT", headers: { "Content-Type": "application/json" }, body: categoriesJson });
       let result = await response.json();
-      if (result.success == true) {
+      if (result.success === true) {
         alert("순서 변경 완료");
       }else {
         alert("순서 변경 실패");
@@ -258,7 +257,6 @@
     if (cancelConfirm) {
       window.location.reload();
     }
-
   });
 
   function initActiveParentCategory() {
@@ -277,7 +275,7 @@
     childCategoryItems.forEach(c => c.addEventListener('click', async () => {
       initActiveChildCategory();
       activeCategoryId = c.id;
-      activeCategoryOrder = c.dataset['categoryOrder'];
+      activeCategoryOrder = getKeyByValueId(tempChildCategories, c.id);
       c.classList.add("active");
     }));
   }
@@ -310,7 +308,7 @@
       initActiveParentCategory();
       initActiveChildCategory();
       activeCategoryId = parentCategoryId;
-      activeCategoryOrder = c.dataset['categoryOrder'];
+      activeCategoryOrder = getKeyByValueId(tempParentCategories, c.id);
       c.classList.add("active");
       if (!categories[parentCategoryId]) {
         const response = await fetch(
@@ -335,6 +333,10 @@
       parentCategoryGroup.appendChild(item);
     });
     addEventListenerToParentCategoryItems();
+  }
+
+  function getKeyByValueId(object, value) {
+    return Object.keys(object).find(key => object[key].id.toString() === value.toString());
   }
 
   async function initParentCategories() {
