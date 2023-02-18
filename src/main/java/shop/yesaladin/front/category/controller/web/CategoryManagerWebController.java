@@ -122,11 +122,11 @@ public class CategoryManagerWebController {
         CategoryResponseDto responseDto = commandCategoryService.create(createRequest);
 
         if (Objects.isNull(responseDto.getParentId())) {
-            return "redirect:/manager/categories?id=" + responseDto.getId();
+            return "redirect:/manager/categories?code=" + responseDto.getId();
         }
 
         // html 경로를 return
-        return "redirect:/manager/categories?id=" + responseDto.getParentId();
+        return "redirect:/manager/categories?code=" + responseDto.getParentId();
     }
 
     /**
@@ -150,11 +150,11 @@ public class CategoryManagerWebController {
         CategoryResponseDto responseDto = commandCategoryService.modify(categoryId, modifyRequest);
 
         if (Objects.isNull(responseDto.getParentId())) {
-            return "redirect:/manager/categories?id=" + responseDto.getId();
+            return "redirect:/manager/categories?code=" + responseDto.getId();
         }
 
         // html 경로를 return
-        return "redirect:/manager/categories?id=" + responseDto.getParentId();
+        return "redirect:/manager/categories?code=" + responseDto.getParentId();
     }
 
     /**

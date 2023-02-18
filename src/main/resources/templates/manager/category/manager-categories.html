@@ -73,7 +73,7 @@
             <div class="modal modal-blur fade" id="register-modal-report" tabindex="-1" style="display: none;" aria-hidden="true">
               <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
                 <div class="modal-content">
-                  <form id = "form-register" method="post" action="/manager/categories">
+                  <form id = "form-register" method="post" action="/manager/categories" th:data-total-count="${totalDataCount}">
                     <div class="modal-header">
                       <h5 class="modal-title">카테고리 생성</h5>
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -105,6 +105,7 @@
                         </div>
                       </div>
                       <div class="mb-3">
+                        <label class="form-label text-muted">1차 카테고리가 '없음'일 경우, 1차 카테고리가 됩니다.</label>
                         <label class="form-label text-muted">2차 카테고리 생성은 99개 까지만 가능합니다.</label>
                       </div>
                     </div>
@@ -259,11 +260,20 @@
   buttonRegister.addEventListener('click', (event) => {
     let form = document.getElementById("form-register");
     let name = document.getElementById("name-register").value;
+    let parentId = document.getElementById("register-select-parent").value;
+    let totalCount = parseInt(form.dataset["totalCount"]);
     if (!catNameRegex.test(name) || emptyRegex.test(name)) {
       alert("카테고리 이름을 1자 이상 30자 이내 및 해당하는 특수문자('/')만 입력하십시오.")
       event.preventDefault();
       return;
     }
+
+    if (totalCount >= 99) {
+      alert("2차 카테고리는 99개 까지만 생성이 가능합니다.")
+      event.preventDefault();
+      return;
+    }
+    form.action = `/manager/categories?page=0&code=${parentId}`
     form.submit();
   });
 
@@ -325,8 +335,6 @@
       opTag.selected = true;
       label.classList.remove("d-none");
     }
-
-
   })
 
   modal.addEventListener("hide.bs.modal", function (event) {
