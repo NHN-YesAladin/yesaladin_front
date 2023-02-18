@@ -66,9 +66,10 @@
                     <h2 class="align-content-center text-center mb-0 mt-3">베스트셀러</h2>
                     <div id="bestseller" class="multiple-items col-12">
                         <div class="card m-3" th:each="product: ${bestseller}">
-                            <div class="img-responsive img-responsive-3x4 card-img-top"
-                                 th:href="|/products/${product.id}|"
-                                 th:style="|background-image: url(${product.thumbnailFileUrl})|"></div>
+                            <a th:href="|/products/${product.id}|">
+                                <div class="img-responsive img-responsive-3x4 card-img-top"
+                                     th:style="'background-image: url(' + ${product.thumbnailFileUrl} + ');'"></div>
+                            </a>
                             <div class="card-body">
                                 <h3 class="card-title mb-1" style="text-overflow:ellipsis; white-space: nowrap; overflow: hidden"
                                     th:text="${product.title}"></h3>
