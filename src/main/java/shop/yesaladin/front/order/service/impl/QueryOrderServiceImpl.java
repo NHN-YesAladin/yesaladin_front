@@ -233,11 +233,8 @@ public class QueryOrderServiceImpl implements QueryOrderService {
      */
     @Override
     public List<BestsellerResponseDto> getBestSeller() {
-        LocalDate now = LocalDate.now();
         URI uri = UriComponentsBuilder.fromHttpUrl(gatewayConfig.getShopUrl())
                 .path("/v1/bestseller")
-                .queryParam("start", now.minusMonths(1).toString())
-                .queryParam("end", now.toString())
                 .build().toUri();
 
         ResponseEntity<ResponseDto<List<BestsellerResponseDto>>> response = restTemplate.exchange(
