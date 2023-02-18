@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import shop.yesaladin.front.common.dto.PaginatedResponseDto;
+import shop.yesaladin.front.common.utils.CookieUtils;
 import shop.yesaladin.front.coupon.dto.MemberCouponSummaryDto;
 import shop.yesaladin.front.coupon.service.inter.QueryCouponService;
 import shop.yesaladin.front.member.dto.MemberGrade;
@@ -31,6 +34,7 @@ import shop.yesaladin.front.point.service.inter.QueryPointHistoryService;
 import shop.yesaladin.front.product.dto.ProductRecentResponseDto;
 import shop.yesaladin.front.product.service.inter.QueryProductService;
 import shop.yesaladin.front.statistics.dto.PercentageResponseDto;
+import shop.yesaladin.front.wishlist.service.inter.QueryWishlistService;
 
 /**
  * 메인 페이지, 마이 페이지, 관리자 페이지를 리턴하기 위한 Controller 클래스 입니다.
@@ -48,6 +52,8 @@ public class IndexController {
     private final QueryCouponService queryCouponService;
     private final QueryPointHistoryService pointHistoryService;
     private final QueryProductService queryProductService;
+    private final QueryWishlistService queryWishlistService;
+    private final CookieUtils cookieUtils;
     private final ObjectMapper objectMapper;
     private static final String COOKIE = "recent";
 
@@ -72,7 +78,8 @@ public class IndexController {
         Set<Long> recentViewSet = getRecentViewProductList(recentViewProductList);
         model.addAttribute(
                 "recentViewProductList",
-                sort(recentViewSet,
+                sort(
+                        recentViewSet,
                         queryProductService.findRecentViewProduct(
                                 recentViewSet,
                                 PageRequest.of(0, 10)
@@ -91,7 +98,12 @@ public class IndexController {
      * @since 1.0
      */
     @GetMapping("/mypage")
-    public String mypage(Model model, Authentication authentication) {
+    public String mypage(
+            Model model,
+            Authentication authentication,
+            @CookieValue(name = "recent", required = false) Cookie cookie,
+            HttpServletResponse response
+    ) throws JsonProcessingException {
         long point = pointHistoryService.getMemberPoint();
         MemberGrade grade = MemberGrade.valueOf(queryMemberService.getMemberGrade());
         PaginatedResponseDto<MemberCouponSummaryDto> memberCouponList = queryCouponService.getMemberCouponList(
@@ -99,7 +111,20 @@ public class IndexController {
                 true,
                 PageRequest.of(0, 1)
         );
-
+        Set<Long> recentViewList = getRecentViewList(cookie, response);
+        model.addAttribute("recentViewList",sort(
+                recentViewList,
+                queryProductService.findRecentViewProduct(
+                                recentViewList,
+                                PageRequest.of(0, 12)
+                        )
+                        .getDataList(),
+                PageRequest.of(0, 12)
+        ));
+        model.addAttribute(
+                "wishlist",
+                queryWishlistService.getWishlist(PageRequest.of(0, 12)).getDataList()
+        );
         model.addAttribute("point", point);
         model.addAttribute("grade", grade);
         model.addAttribute("coupon", memberCouponList.getTotalDataCount());
@@ -139,5 +164,27 @@ public class IndexController {
         }
         Collections.reverse(list);
         return list;
+    }
+
+    private Set<Long> getRecentViewList(Cookie cookie, HttpServletResponse response)
+            throws JsonProcessingException {
+        if (!Objects.isNull(cookie)) {
+            return objectMapper.readValue(
+                    URLDecoder.decode(cookie.getValue(), StandardCharsets.UTF_8),
+                    new TypeReference<LinkedHashSet<Long>>() {
+                    }
+            );
+        }
+        Set<Long> recentViewList = new LinkedHashSet<>();
+        response.addCookie(createCookie(recentViewList));
+        return recentViewList;
+    }
+
+    private Cookie createCookie(Set<Long> value) throws JsonProcessingException {
+        return cookieUtils.createCookie(
+                COOKIE,
+                URLEncoder.encode(objectMapper.writeValueAsString(value), StandardCharsets.UTF_8),
+                259200
+        );
     }
 }
