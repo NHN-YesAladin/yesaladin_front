@@ -2,6 +2,8 @@ package shop.yesaladin.front.product.controller.web;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -185,7 +187,134 @@ public class ProductManagerWebController {
         model.addAllAttributes(Map.of(
                 "products", products.getDataList(),
                 "typeId", Objects.isNull(typeId) ? "" : typeId,
-                "types", queryProductTypeService.findAll()
+                "types", queryProductTypeService.findAll(),
+                "input", ""
+        ));
+
+        return "manager/product/products";
+    }
+
+    @GetMapping(value = "/manager/products", params = "title")
+    public String managerProductsByTitle(
+            @RequestParam(required = false) String title,
+            @PageableDefault Pageable pageable,
+            Model model
+    ) {
+        log.info(title);
+        PaginatedResponseDto<ProductsResponseDto> products = queryProductService.findByTitleForManager(
+                title,
+                pageable
+        );
+
+        Map<String, Object> pageInfoMap = getPageInfo(products);
+        model.addAllAttributes(pageInfoMap);
+
+        model.addAllAttributes(Map.of(
+                "products", products.getDataList(),
+                "typeId", "",
+                "types", queryProductTypeService.findAll(),
+                "selected", "title",
+                "input", title
+        ));
+
+        return "manager/product/products";
+    }
+
+    @GetMapping(value = "/manager/products", params = "content")
+    public String managerProductsByContent(
+            @RequestParam(required = false) String content,
+            @PageableDefault Pageable pageable,
+            Model model
+    ) {
+        PaginatedResponseDto<ProductsResponseDto> products = queryProductService.findByContentForManager(
+                content,
+                pageable
+        );
+
+        Map<String, Object> pageInfoMap = getPageInfo(products);
+        model.addAllAttributes(pageInfoMap);
+
+        model.addAllAttributes(Map.of(
+                "products", products.getDataList(),
+                "typeId", "",
+                "types", queryProductTypeService.findAll(),
+                "selected", "content",
+                "input", content
+        ));
+
+        return "manager/product/products";
+    }
+
+    @GetMapping(value = "/manager/products", params = "publisher")
+    public String managerProductsByPublisher(
+            @RequestParam(required = false) String publisher,
+            @PageableDefault Pageable pageable,
+            Model model
+    ) {
+        PaginatedResponseDto<ProductsResponseDto> products = queryProductService.findByPublisherForManager(
+                publisher,
+                pageable
+        );
+
+        Map<String, Object> pageInfoMap = getPageInfo(products);
+        model.addAllAttributes(pageInfoMap);
+
+        model.addAllAttributes(Map.of(
+                "products", products.getDataList(),
+                "typeId", "",
+                "types", queryProductTypeService.findAll(),
+                "selected", "publisher",
+                "input", publisher
+        ));
+
+        return "manager/product/products";
+    }
+
+    @GetMapping(value = "/manager/products", params = "author")
+    public String managerProductsByAuthor(
+            @RequestParam(required = false) String author,
+            @PageableDefault Pageable pageable,
+            Model model
+    ) {
+        PaginatedResponseDto<ProductsResponseDto> products = queryProductService.findByAuthorForManager(
+                author,
+                pageable
+        );
+
+        Map<String, Object> pageInfoMap = getPageInfo(products);
+        model.addAllAttributes(pageInfoMap);
+
+        model.addAllAttributes(Map.of(
+                "products", products.getDataList(),
+                "typeId", "",
+                "types", queryProductTypeService.findAll(),
+                "selected", "author",
+                "input", author
+        ));
+
+        return "manager/product/products";
+    }
+
+    @GetMapping(value = "/manager/products", params = "isbn")
+    public String managerProductsByISBN(
+            @RequestParam(required = false) String isbn,
+            @PageableDefault Pageable pageable,
+            Model model
+    ) {
+        PaginatedResponseDto<ProductsResponseDto> products = queryProductService.findByISBNForManager(
+                isbn,
+                pageable
+        );
+
+        Map<String, Object> pageInfoMap = getPageInfo(products);
+        model.addAllAttributes(pageInfoMap);
+
+        model.addAllAttributes(Map.of(
+                "products", products.getDataList(),
+                "typeId", "",
+                "types", queryProductTypeService.findAll(),
+                "selected", "isbn",
+                "input", isbn
         ));
 
         return "manager/product/products";

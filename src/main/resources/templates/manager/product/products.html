@@ -68,6 +68,25 @@
             </select>
           </div>
         </div>
+        <div class="card-header row">
+          <h3 class="card-title col-md-2">검색</h3>
+          <div class="col-md-1">
+            <select id="selected" class="form-select w-auto" name="selected">
+              <option value="title">제목</option>
+              <option value="content">내용</option>
+              <option value="isbn">ISBN</option>
+              <option value="author">저자</option>
+              <option value="publisher">출판사</option>
+            </select>
+          </div>
+          <div class="col-md-7">
+            <input id="input" type="text" class="form-control w-75" placeholder="Search…"
+                   aria-label="Search in website"/>
+          </div>
+          <div class="col-md-2">
+            <button id="searchButton" type="button" class="btn btn-primary w-auto">Search</button>
+          </div>
+        </div>
 
         <div class="table-responsive">
           <table class="table card-table table-vcenter text-nowrap datatable">
@@ -142,11 +161,9 @@
             </tbody>
           </table>
         </div>
-
-        <div th:replace="~{common/utils/paging-bar :: paging('/manager/products', ${typeId == null ? '' : '&typeId=' + typeId})}"></div>
+        <div th:replace="~{common/utils/paging-bar :: paging('/manager/products', ${typeId == null ? '' : '&typeId=' + typeId + '&' + selected + '=' + input})}"></div>
       </div>
     </div>
-
     <!-- TODO 4 : footer -->
     <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
 
@@ -253,5 +270,27 @@
       a.click();
     });
   </script>
+
+<script>
+  const input = document.getElementById('input')
+  input.addEventListener('keydown', function (e) {
+    if(e.key === 'Enter') {
+      search()
+    }
+  })
+  document.getElementById('searchButton').addEventListener('click', function (e) {
+    e.preventDefault()
+    search()
+  })
+
+  function search(){
+    if (input.value.length > 30) {
+      alert('최대 글자 수는 30까지 허용합니다.')
+      return
+    }
+    const selected = document.getElementById('selected')
+    location.replace('/manager/products?' + selected.options[selected.selectedIndex].value + '=' + input.value)
+  }
+</script>
 </body>
 </html>
