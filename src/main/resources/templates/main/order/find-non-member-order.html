@@ -65,14 +65,14 @@
     e.preventDefault();
     let orderNumber = e.target["orderNumber"].value;
 
+    let emptyRegex = /\s/g;
     let orderNumRegex = /^\d{4}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])-[a-z0-9]{8}$/;
-    if (!orderNumRegex.test(orderNumber)) {
-      alert("주문 번호를 다시 확인하여 입력해주십시오.")
+    if (!orderNumRegex.test(orderNumber) || emptyRegex.test(orderNumber)) {
+      alert("주문 번호를 다시 확인하여 입력해주십시오.");
       return;
     }
 
-    window.location.href = `/orders/${orderNumber}`;
-
+    window.location.href = `/orders/${orderNumber}?type=none`;
   });
 </script>
 </body>
