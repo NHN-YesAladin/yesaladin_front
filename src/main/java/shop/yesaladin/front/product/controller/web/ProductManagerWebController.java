@@ -194,6 +194,16 @@ public class ProductManagerWebController {
         return "manager/product/products";
     }
 
+    /**
+     * 제목으로 상품검색
+     *
+     * @param title 검색할 상품의 제목
+     * @param pageable 페이지 정보
+     * @param model 뷰에 데이터 전달
+     * @return 검색 결과
+     * @author 김선홍
+     * @since 1.0
+     */
     @GetMapping(value = "/manager/products", params = "title")
     public String managerProductsByTitle(
             @RequestParam(required = false) String title,
@@ -220,6 +230,16 @@ public class ProductManagerWebController {
         return "manager/product/products";
     }
 
+    /**
+     * 내용으로 상품검색
+     *
+     * @param content 검색할 내용
+     * @param pageable 페이지 정보
+     * @param model 뷰에 데이터 전달
+     * @return 검색 결과
+     * @author 김선홍
+     * @since 1.0
+     */
     @GetMapping(value = "/manager/products", params = "content")
     public String managerProductsByContent(
             @RequestParam(required = false) String content,
@@ -245,6 +265,16 @@ public class ProductManagerWebController {
         return "manager/product/products";
     }
 
+    /**
+     * 출찬사명으로 상품검색
+     *
+     * @param publisher 검색할 상품의 저자
+     * @param pageable 페이지 정보
+     * @param model 뷰에 데이터 전달
+     * @return 검색 결과
+     * @author 김선홍
+     * @since 1.0
+     */
     @GetMapping(value = "/manager/products", params = "publisher")
     public String managerProductsByPublisher(
             @RequestParam(required = false) String publisher,
@@ -270,6 +300,16 @@ public class ProductManagerWebController {
         return "manager/product/products";
     }
 
+    /**
+     * 저자명으로 상품검색
+     *
+     * @param author 검색할 상품의 저자
+     * @param pageable 페이지 정보
+     * @param model 뷰에 데이터 전달
+     * @return 검색 결과
+     * @author 김선홍
+     * @since 1.0
+     */
     @GetMapping(value = "/manager/products", params = "author")
     public String managerProductsByAuthor(
             @RequestParam(required = false) String author,
@@ -295,6 +335,16 @@ public class ProductManagerWebController {
         return "manager/product/products";
     }
 
+    /**
+     * isbn으로 상품검색
+     *
+     * @param isbn 검색할 상품의 isbn
+     * @param pageable 페이지 정보
+     * @param model 뷰에 데이터 전달
+     * @return 검색 결과
+     * @author 김선홍
+     * @since 1.0
+     */
     @GetMapping(value = "/manager/products", params = "isbn")
     public String managerProductsByISBN(
             @RequestParam(required = false) String isbn,
