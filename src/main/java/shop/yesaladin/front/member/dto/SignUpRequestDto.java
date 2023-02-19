@@ -45,7 +45,7 @@ public class SignUpRequestDto {
     private String email;
 
     @NotBlank(message = "전화번호를 입력해주세요.")
-    @Size(min = 11, max = 11, message = "- 없이 11자 입력해주세요.")
+    @Pattern(regexp = "^01([0|1])\\d{4}\\d{4}$", message = "휴대폰 번호를 - 없이 11자 입력해주세요. 앞 자리는 010 또는 011 양식입니다.")
     private String phone;
 
     @NotBlank
