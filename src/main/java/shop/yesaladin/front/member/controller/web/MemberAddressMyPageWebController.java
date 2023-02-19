@@ -43,23 +43,6 @@ public class MemberAddressMyPageWebController {
     }
 
     /**
-     * 회원의 배송지를 등록합니다.
-     *
-     * @param request 배송지 정보
-     * @return 등록된 회원 배송지
-     * @author 최예린
-     * @since 1.0
-     */
-    @PostMapping
-    public String registerAddress(
-            @ModelAttribute MemberAddressRequestDto request
-    ) {
-        memberAddressCommandService.createMemberAddress(request.toCreateRequestDto());
-
-        return "redirect:/mypage/address";
-    }
-
-    /**
      * 대표 배송지를 설정합니다.
      *
      * @param addressId 대표 배송지 pk
