@@ -1,9 +1,10 @@
 package shop.yesaladin.front.order.dto;
 
-import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 /**
  * 주문 상태 변경 내역 생성 후 반환하는 dto 클래스 입니다.

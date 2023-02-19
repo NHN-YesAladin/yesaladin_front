@@ -19,10 +19,8 @@ import shop.yesaladin.front.product.dto.*;
 import shop.yesaladin.front.product.service.inter.QueryProductService;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 /**
  * 상품 조회 요청을 위한 service 구현체 입니다.

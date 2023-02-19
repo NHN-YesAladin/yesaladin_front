@@ -3,17 +3,6 @@ package shop.yesaladin.front.common.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -28,18 +17,27 @@ import shop.yesaladin.front.coupon.dto.MemberCouponSummaryDto;
 import shop.yesaladin.front.coupon.service.inter.QueryCouponService;
 import shop.yesaladin.front.member.dto.MemberGrade;
 import shop.yesaladin.front.member.service.inter.QueryMemberService;
+import shop.yesaladin.front.order.service.inter.QueryOrderService;
 import shop.yesaladin.front.point.service.inter.QueryPointHistoryService;
 import shop.yesaladin.front.product.dto.ProductRecentResponseDto;
 import shop.yesaladin.front.product.dto.RecentViewProductRequestDto;
 import shop.yesaladin.front.product.service.inter.QueryProductService;
 import shop.yesaladin.front.wishlist.service.inter.QueryWishlistService;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+
 /**
  * 메인 페이지, 마이 페이지, 관리자 페이지를 리턴하기 위한 Controller 클래스 입니다.
  *
- * @author : 송학현
- * @author : 최예린
- * @author : 김선홍
+ * @author 송학현
+ * @author 최예린
+ * @author 김선홍
+ * @author 이수정
  * @since 1.0
  */
 @Slf4j
@@ -49,6 +47,7 @@ public class IndexController {
 
     private final QueryMemberService queryMemberService;
     private final QueryCouponService queryCouponService;
+    private final QueryOrderService queryOrderService;
     private final QueryPointHistoryService pointHistoryService;
     private final QueryProductService queryProductService;
     private final QueryWishlistService queryWishlistService;
@@ -57,11 +56,12 @@ public class IndexController {
     private static final String COOKIE = "recent";
 
     /**
-     * 메인페이지를 반환시켜줍니다. 신간 상품과, 최근 본 상품 리스트를 가져옵니다.
+     * 메인페이지를 반환시켜줍니다. 베스트셀러 및 신간 상품과 최근 본 상품 리스트를 가져옵니다.
      *
      * @return 메인페이지
      * @author 송학현
      * @author 김선홍
+     * @author 이수정
      * @since 1.0
      */
     @GetMapping
@@ -69,12 +69,17 @@ public class IndexController {
             Model model,
             @CookieValue(required = false, name = COOKIE) Cookie cookie,
             HttpServletResponse response
-    )
-            throws JsonProcessingException {
+    ) throws JsonProcessingException {
+        model.addAttribute(
+                "bestseller",
+                queryOrderService.getBestSeller()
+        );
+
         model.addAttribute(
                 "recentProductList",
                 queryProductService.findRecentProduct(PageRequest.of(0, 12))
         );
+
         List<Long> recentViewList = new ArrayList<>(getPageRecentViewProductList(cookie, response));
         model.addAttribute(
                 "recentViewProductList",

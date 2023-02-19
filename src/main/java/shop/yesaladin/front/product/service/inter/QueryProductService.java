@@ -7,7 +7,6 @@ import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.product.dto.*;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * 상품 조회 요청을 위한 Service Interface 입니다.
@@ -95,8 +94,8 @@ public interface QueryProductService {
     /**
      * 최근 본 상품 조회 메서드
      *
-     * @param dto 최근 본 상품 요청 dto
-     * @param pageable       페이지 정보
+     * @param dto      최근 본 상품 요청 dto
+     * @param pageable 페이지 정보
      * @return 최근 본 상품의 정보 리스트
      * @author 김선홍
      * @since 1.0
