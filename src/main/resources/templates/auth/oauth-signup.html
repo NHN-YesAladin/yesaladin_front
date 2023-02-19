@@ -19,6 +19,7 @@
   <link th:href="@{/css/tabler-payments.min.css}" rel="stylesheet"/>
   <link th:href="@{/css/tabler-vendors.min.css}" rel="stylesheet"/>
   <link th:href="@{/css/demo.min.css}" rel="stylesheet"/>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 <body>
 <!-- Libs JS -->
@@ -147,5 +148,11 @@
   <!-- TODO 4 : footer -->
   <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
 </div>
+<script>
+  let now_utc = Date.now()
+  let timeOff = new Date().getTimezoneOffset()*60000;
+  let today = new Date(now_utc-timeOff).toISOString().split("T")[0];
+  document.getElementById("datepicker-icon-prepend").setAttribute("max", today);
+</script>
 </body>
 </html>

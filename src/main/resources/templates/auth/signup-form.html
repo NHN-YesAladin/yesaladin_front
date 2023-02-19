@@ -191,8 +191,8 @@
             new account
           </button>
         </div>
+      </form>
     </div>
-    </form>
     <div class="text-center text-muted mt-3">
       Already have account? <a href="/members/login" tabindex="-1">Sign in</a>
     </div>
@@ -201,7 +201,12 @@
 
 <!-- TODO 4 : footer -->
 <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
-</div>
+<script>
+  let now_utc = Date.now()
+  let timeOff = new Date().getTimezoneOffset()*60000;
+  let today = new Date(now_utc-timeOff).toISOString().split("T")[0];
+  document.getElementById("datepicker-icon-prepend").setAttribute("max", today);
+</script>
 <style>
   .error {
     color: red;
