@@ -1,11 +1,13 @@
 let FRONT_SERVER;
 let SHOP_SERVER;
+let SOCKET_SERVER;
 let pointCouponCode;
 const SOCKET_PATH = '/ws';
 
 function initConnectionInfo() {
   FRONT_SERVER = document.querySelector(`#front-server-url`).textContent;
   SHOP_SERVER = document.querySelector("#shop-server-url").textContent
+  SOCKET_SERVER = document.querySelector("#socket-server-url").textContent
 }
 
 function saveCouponCode(couponCode) {
@@ -27,7 +29,7 @@ function hideLoadingScreen() {
 }
 
 function openSocket(requestId) {
-  const socket = new SockJS(`${SHOP_SERVER}${SOCKET_PATH}`);
+  const socket = new SockJS(`${SOCKET_SERVER}${SOCKET_PATH}`);
   const stompClient = Stomp.over(socket);
 
   stompClient.connect({}, function (frame) {

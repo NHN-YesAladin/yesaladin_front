@@ -3,6 +3,7 @@ package shop.yesaladin.front.writing.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -57,6 +58,64 @@ public class QueryAuthorServiceImpl implements QueryAuthorService {
                 .path(PATH + "/manager")
                 .queryParam("page", pageRequestDto.getPage())
                 .queryParam("size", pageRequestDto.getSize())
+                .encode()
+                .build()
+                .toUri();
+
+        ResponseEntity<ResponseDto<PaginatedResponseDto<AuthorsResponseDto>>> authors = restTemplate.exchange(
+                uri,
+                HttpMethod.GET,
+                getHttpEntity(),
+                new ParameterizedTypeReference<ResponseDto<PaginatedResponseDto<AuthorsResponseDto>>>() {
+                }
+        );
+
+        return Objects.requireNonNull(authors.getBody()).getData();
+    }
+
+    /**
+     *{@inheritDoc}
+     */
+    @Override
+    public PaginatedResponseDto<AuthorsResponseDto> findByLoginIdForManager(
+            String loginId,
+            Pageable pageable
+    ) {
+        URI uri = UriComponentsBuilder
+                .fromUriString(url)
+                .path(PATH + "/manager")
+                .queryParam("loginid", loginId)
+                .queryParam("page", pageable.getPageNumber())
+                .queryParam("size", pageable.getPageSize())
+                .encode()
+                .build()
+                .toUri();
+
+        ResponseEntity<ResponseDto<PaginatedResponseDto<AuthorsResponseDto>>> authors = restTemplate.exchange(
+                uri,
+                HttpMethod.GET,
+                getHttpEntity(),
+                new ParameterizedTypeReference<ResponseDto<PaginatedResponseDto<AuthorsResponseDto>>>() {
+                }
+        );
+
+        return Objects.requireNonNull(authors.getBody()).getData();
+    }
+
+    /**
+     *{@inheritDoc}
+     */
+    @Override
+    public PaginatedResponseDto<AuthorsResponseDto> findByNameForManager(
+            String name,
+            Pageable pageable
+    ) {
+        URI uri = UriComponentsBuilder
+                .fromUriString(url)
+                .path(PATH + "/manager")
+                .queryParam("name", name)
+                .queryParam("page", pageable.getPageNumber())
+                .queryParam("size", pageable.getPageSize())
                 .encode()
                 .build()
                 .toUri();

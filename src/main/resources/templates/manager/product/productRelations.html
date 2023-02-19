@@ -232,7 +232,7 @@
         })
             .then(res => {
                 if (res.status !== 201) {
-                    throw new Error(res.status + " 발생=> 연관관계[MainID: " + registerBase.value + ", SubID: " + targetId.value + "]로 등록할 수 없습니다.");
+                    throw new Error("연관관계[MainID: " + registerBase.value + ", SubID: " + targetId.value + "]로 등록할 수 없습니다.");
                 }
                 return res.json();
             })

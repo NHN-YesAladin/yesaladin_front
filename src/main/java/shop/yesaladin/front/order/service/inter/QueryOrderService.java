@@ -1,20 +1,18 @@
 package shop.yesaladin.front.order.service.inter;
 
 
-import java.util.List;
-import java.util.Map;
 import org.springframework.data.domain.Pageable;
 import shop.yesaladin.common.dto.ResponseDto;
+import shop.yesaladin.front.common.dto.BestsellerResponseDto;
 import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.common.dto.PeriodQueryRequestDto;
 import shop.yesaladin.front.coupon.dto.CouponOrderSheetRequestDto;
 import shop.yesaladin.front.coupon.dto.CouponOrderSheetResponseDto;
-import shop.yesaladin.front.order.dto.OrderDetailsResponseDto;
-import shop.yesaladin.front.order.dto.OrderSheetResponseDto;
-import shop.yesaladin.front.order.dto.OrderStatusCode;
-import shop.yesaladin.front.order.dto.OrderStatusResponseDto;
-import shop.yesaladin.front.order.dto.OrderSummaryResponseDto;
+import shop.yesaladin.front.order.dto.*;
 import shop.yesaladin.front.statistics.dto.SalesStatisticsResponseDto;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 주문 조회 서비스 인터페이스
@@ -103,4 +101,13 @@ public interface QueryOrderService {
      * @since 1.0
      */
     PaginatedResponseDto<SalesStatisticsResponseDto> getSalesStatistics(Pageable pageable, String start, String end);
+
+    /**
+     * 매출을 기반으로 베스트셀러를 조회하여 반환받습니다.
+     *
+     * @return 조회된 베스트셀러
+     * @author 이수정
+     * @since 1.0
+     */
+    List<BestsellerResponseDto> getBestSeller();
 }

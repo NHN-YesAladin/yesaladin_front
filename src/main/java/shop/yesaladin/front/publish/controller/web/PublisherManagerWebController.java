@@ -1,6 +1,8 @@
 package shop.yesaladin.front.publish.controller.web;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,6 +50,31 @@ public class PublisherManagerWebController {
 
         Map<String, Object> pageInfoMap = getPageInfo(publishers);
         model.addAllAttributes(pageInfoMap);
+
+        return "manager/publisher/publishers";
+    }
+
+    /**
+     * @param model 뷰로 데이터 전달
+     * @return 검색 결과 와 뷰
+     * @author 김선홍
+     * @since 1.0
+     */
+    @GetMapping(value = "/manager/publishers", params = "name")
+    public String managerPublishers(
+            @RequestParam(required = false) String name,
+            @PageableDefault Pageable pageable,
+            Model model
+    ) {
+        PaginatedResponseDto<PublishersResponseDto> publishers = queryPublisherService.findByNameForManager(
+                name,
+                pageable
+        );
+
+        Map<String, Object> pageInfoMap = getPageInfo(publishers);
+        model.addAllAttributes(pageInfoMap);
+        model.addAttribute("selected", "name");
+        model.addAttribute("input", name);
 
         return "manager/publisher/publishers";
     }

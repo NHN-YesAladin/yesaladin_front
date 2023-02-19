@@ -36,6 +36,7 @@ public class CouponMemberWebController {
                 pageable
         );
         model.addAttribute("shopServerUrl", gatewayConfig.getShopUrl());
+        model.addAttribute("socketServerUrl", gatewayConfig.getSocketUrl());
         model.addAttribute("usable", usable);
         model.addAttribute("frontServerUrl", frontServerMetaConfig.getFrontServerUrl());
         model.addAttribute("memberCouponList", memberCouponList);

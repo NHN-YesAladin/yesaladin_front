@@ -2,6 +2,7 @@ package shop.yesaladin.front.publish.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -41,6 +42,34 @@ public class QueryPublisherServiceImpl implements QueryPublisherService {
                 .path(PATH + "/manager")
                 .queryParam("page", pageRequestDto.getPage())
                 .queryParam("size", pageRequestDto.getSize())
+                .encode()
+                .build()
+                .toUri();
+
+        ResponseEntity<ResponseDto<PaginatedResponseDto<PublishersResponseDto>>> publishers = restTemplate.exchange(
+                uri,
+                HttpMethod.GET,
+                getHttpEntity(),
+                new ParameterizedTypeReference<ResponseDto<PaginatedResponseDto<PublishersResponseDto>>>() {
+                }
+        );
+        return Objects.requireNonNull(publishers.getBody()).getData();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public PaginatedResponseDto<PublishersResponseDto> findByNameForManager(
+            String name,
+            Pageable pageable
+    ) {
+        URI uri = UriComponentsBuilder
+                .fromUriString(gatewayConfig.getShopUrl())
+                .path(PATH + "/manager")
+                .queryParam("name", name)
+                .queryParam("page", pageable.getPageNumber())
+                .queryParam("size", pageable.getPageSize())
                 .encode()
                 .build()
                 .toUri();

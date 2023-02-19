@@ -1,6 +1,8 @@
 package shop.yesaladin.front.tag.controller.web;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,6 +51,33 @@ public class TagManagerWebController {
         Map<String, Object> pageInfoMap = getPageInfo(tags);
         model.addAllAttributes(pageInfoMap);
 
+        return "manager/tag/tags";
+    }
+
+    /**
+     * 이름으로 태그를 검색하는 메서드
+     *
+     * @param name 검색할 이름
+     * @param pageable 페이지 정보
+     * @return 검색 결과
+     * @author 김선홍
+     * @since 1.0
+     */
+    @GetMapping(value = "/manager/tags", params = "name")
+    public String findByName(
+            @RequestParam String name,
+            @PageableDefault Pageable pageable,
+            Model model
+    ) {
+        PaginatedResponseDto<TagsResponseDto> tags = queryTagService.findByNameForManager(
+                name,
+                pageable
+        );
+
+        Map<String, Object> pageInfoMap = getPageInfo(tags);
+        model.addAllAttributes(pageInfoMap);
+        model.addAttribute("input", name);
+        model.addAttribute("selected", "name");
         return "manager/tag/tags";
     }
 

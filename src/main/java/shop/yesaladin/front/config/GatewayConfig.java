@@ -25,4 +25,7 @@ public class GatewayConfig {
 
     @Value("${yesaladin.gateway.auth}")
     private String authUrl;
+
+    @Value("${yesaladin.gateway.socket}")
+    private String socketUrl;
 }

@@ -31,6 +31,7 @@ import org.springframework.web.servlet.ModelAndView;
 import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.common.utils.CookieUtils;
 import shop.yesaladin.front.product.dto.ProductRecentResponseDto;
+import shop.yesaladin.front.product.dto.RecentViewProductRequestDto;
 import shop.yesaladin.front.product.service.inter.QueryProductService;
 import shop.yesaladin.front.wishlist.dto.WishlistResponseDto;
 import shop.yesaladin.front.wishlist.service.inter.CommandWishlistService;
@@ -63,42 +64,6 @@ public class WishWebController {
     private static final Pageable DEFAULT_PAGEABLE = PageRequest.of(0, 10);
 
     /**
-     * 마이페이지의 위시리스트 페이지로 이동하면서 필요한 리스트를 받음
-     *
-     * @param cookie   최근 본 상품 리스트에 대한 정보가 담겨있는 리스트
-     * @param response 쿠키를 저장할 response
-     * @return 뷰와 리스트들
-     * @throws JsonProcessingException json 파싱 실패 exception
-     * @author 김선홍
-     * @since 1.0
-     */
-    @GetMapping
-    public ModelAndView memberWishList(
-            @CookieValue(name = RECENT, required = false) Cookie cookie,
-            HttpServletResponse response
-    ) throws JsonProcessingException {
-        ModelAndView modelAndView = new ModelAndView(VIEW);
-        Set<Long> recentViewList = getRecentViewList(cookie, response);
-        modelAndView.addObject(
-                RECENTVIEWLIST,
-                sort(
-                        recentViewList,
-                        queryProductService.findRecentViewProduct(
-                                        recentViewList,
-                                        DEFAULT_PAGEABLE
-                                )
-                                .getDataList(),
-                        DEFAULT_PAGEABLE
-                )
-        );
-        modelAndView.addObject(
-                WISHLIST,
-                queryWishlistService.getWishlist(DEFAULT_PAGEABLE).getDataList()
-        );
-        return modelAndView;
-    }
-
-    /**
      * 최근 본 상품 더보기 페이지로 이동
      *
      * @param pageable 페이지 정보
@@ -115,10 +80,18 @@ public class WishWebController {
             @CookieValue(name = RECENT, required = false) Cookie cookie,
             HttpServletResponse response
     ) throws JsonProcessingException {
+        log.info("recentView page: " + pageable.getPageNumber());
         ModelAndView modelAndView = new ModelAndView("mypage/product/recent-view-products");
-        Set<Long> recentViewList = getRecentViewList(cookie, response);
+        List<Long> recentViewList = new ArrayList<>(getPageRecentViewProductList(
+                cookie,
+                response,
+                pageable
+        ));
         PaginatedResponseDto<ProductRecentResponseDto> result = queryProductService.findRecentViewProduct(
-                recentViewList,
+                new RecentViewProductRequestDto(new ArrayList<>(getTotalRecentViewProductList(
+                        cookie,
+                        response
+                )), recentViewList),
                 pageable
         );
         modelAndView.addObject(CURRENTPAGE, result.getCurrentPage());
@@ -126,7 +99,7 @@ public class WishWebController {
         modelAndView.addObject(URL, "/interest/recent");
         modelAndView.addObject(
                 RECENTVIEWLIST,
-                sort(recentViewList, result.getDataList(), pageable)
+                sort(recentViewList, result.getDataList())
         );
         return modelAndView;
     }
@@ -143,7 +116,6 @@ public class WishWebController {
     ModelAndView wishlistView(@PageableDefault Pageable pageable) {
         ModelAndView modelAndView = new ModelAndView("mypage/product/wishlist");
         PaginatedResponseDto<WishlistResponseDto> result = queryWishlistService.getWishlist(pageable);
-        log.info(result.getCurrentPage() + "");
         modelAndView.addObject(CURRENTPAGE, result.getCurrentPage());
         modelAndView.addObject(TOTALPAGE, result.getTotalPage());
         modelAndView.addObject(URL, "/interest/wishlist");
@@ -192,25 +164,11 @@ public class WishWebController {
      * @since 1.0
      */
     @GetMapping("/mypage/delete")
-    public ModelAndView deleteWishlistInInterestProduct(
-            @CookieValue(name = RECENT, required = false) Cookie cookie,
-            HttpServletResponse response,
+    public String deleteWishlistInInterestProduct(
             @RequestParam(name = "productid") Long productId
-    ) throws JsonProcessingException {
+    ) {
         wishlistService.delete(productId);
-
-        ModelAndView modelAndView = new ModelAndView(VIEW);
-        Set<Long> recentViewList = getRecentViewList(cookie, response);
-        modelAndView.addObject(
-                RECENTVIEWLIST,
-                queryProductService.findRecentViewProduct(recentViewList, DEFAULT_PAGEABLE)
-                        .getDataList()
-        );
-        modelAndView.addObject(
-                WISHLIST,
-                queryWishlistService.getWishlist(DEFAULT_PAGEABLE).getDataList()
-        );
-        return modelAndView;
+        return "redirect:/mypage";
     }
 
     /**
@@ -225,28 +183,13 @@ public class WishWebController {
      * @since 1.0
      */
     @GetMapping("/recentview")
-    public ModelAndView deleteRecentViewProduct(
+    public String deleteRecentViewProduct(
             @CookieValue(name = RECENT, required = false) Cookie cookie,
             HttpServletResponse response,
             @RequestParam(name = "productid") Long productId
     ) throws JsonProcessingException {
-        ModelAndView modelAndView = new ModelAndView(VIEW);
-        Set<Long> recentViewList = deleteRecentViewProductByProductId(cookie, response, productId);
-        modelAndView.addObject(
-                RECENTVIEWLIST,
-                sort(recentViewList,
-                        queryProductService.findRecentViewProduct(
-                                recentViewList,
-                                DEFAULT_PAGEABLE
-                        ).getDataList(),
-                        DEFAULT_PAGEABLE
-                )
-        );
-        modelAndView.addObject(
-                WISHLIST,
-                queryWishlistService.getWishlist(PageRequest.of(0, 10)).getDataList()
-        );
-        return modelAndView;
+        deleteRecentViewProductByProductId(cookie, response, productId);
+        return "redirect:/mypage";
     }
 
     /**
@@ -262,26 +205,15 @@ public class WishWebController {
      * @since 1.0
      */
     @GetMapping("/recent/delete")
-    public ModelAndView deleteRecentViewProductInRecentViewProduct(
+    public String deleteRecentViewProductInRecentViewProduct(
             @CookieValue(name = RECENT, required = false) Cookie cookie,
             HttpServletResponse response,
             @RequestParam(name = "productid") Long productId,
             @PageableDefault Pageable pageable
     ) throws JsonProcessingException {
-        ModelAndView modelAndView = new ModelAndView("mypage/product/recent-view-products");
-        Set<Long> recentViewList = deleteRecentViewProductByProductId(cookie, response, productId);
-        PaginatedResponseDto<ProductRecentResponseDto> result = queryProductService.findRecentViewProduct(
-                recentViewList,
-                pageable
-        );
-        modelAndView.addObject(CURRENTPAGE, result.getCurrentPage());
-        modelAndView.addObject(TOTALPAGE, result.getTotalPage());
-        modelAndView.addObject(URL, "/interest/recent");
-        modelAndView.addObject(
-                RECENTVIEWLIST,
-                sort(recentViewList, result.getDataList(), pageable)
-        );
-        return modelAndView;
+        log.info("deleteRecentViewProductInRecentViewProduct page: " + pageable.getPageNumber());
+        deleteRecentViewProductByProductId(cookie, response, productId);
+        return "redirect:/interest/recent?page="+pageable.getPageNumber() + "&size="+pageable.getPageSize();
     }
 
     @GetMapping("/wishlist/delete")
@@ -299,29 +231,6 @@ public class WishWebController {
         return modelAndView;
     }
 
-    /**
-     * 쿠키에 최근 본 상품 리스트를 얻는다. 없다면 리스트를 만들어 준다.
-     *
-     * @param cookie   최근 본 상품 리스트를 담고 있는 쿠키
-     * @param response 쿠키를 저장할 HttpServletResponse
-     * @return 최근 본 상품 리스트
-     * @throws JsonProcessingException json 파싱 실패 exception
-     * @author 김선홍
-     * @since 1.0
-     */
-    private Set<Long> getRecentViewList(Cookie cookie, HttpServletResponse response)
-            throws JsonProcessingException {
-        if (!Objects.isNull(cookie)) {
-            return objectMapper.readValue(
-                    URLDecoder.decode(cookie.getValue(), StandardCharsets.UTF_8),
-                    new TypeReference<LinkedHashSet<Long>>() {
-                    }
-            );
-        }
-        Set<Long> recentViewList = new LinkedHashSet<>();
-        response.addCookie(createCookie(recentViewList));
-        return recentViewList;
-    }
 
     /**
      * 최근 본 상품 삭제 메서드, 리스트에 삭제할 메서드가 없다면 아무일도 이러나지 않는다. 만약 쿠키에 리스트가 없다면 리스트를 만들어준다.
@@ -329,12 +238,11 @@ public class WishWebController {
      * @param cookie    최근 본 상품 리스트를 담고 있는 쿠키
      * @param response  쿠키를 저장할 HttpServletResponse
      * @param productId 삭제할 상품의 id
-     * @return 삭제 후 최근 본 상품 리스트
      * @throws JsonProcessingException json 파싱 실패 exception
      * @author 김선홍
      * @since 1.0
      */
-    private Set<Long> deleteRecentViewProductByProductId(
+    private void deleteRecentViewProductByProductId(
             Cookie cookie,
             HttpServletResponse response,
             Long productId
@@ -348,11 +256,65 @@ public class WishWebController {
             );
             recentViewList.remove(productId);
             response.addCookie(createCookie(recentViewList));
-            return recentViewList;
+            return;
+        }
+        Set<Long> recentViewList = new LinkedHashSet<>();
+        response.addCookie(createCookie(recentViewList));
+    }
+
+    private Set<Long> getTotalRecentViewProductList(Cookie cookie, HttpServletResponse response)
+            throws JsonProcessingException {
+        if (Objects.nonNull(cookie)) {
+            return objectMapper.readValue(
+                    URLDecoder.decode(cookie.getValue(), StandardCharsets.UTF_8),
+                    new TypeReference<LinkedHashSet<Long>>() {
+                    }
+            );
         }
         Set<Long> recentViewList = new LinkedHashSet<>();
         response.addCookie(createCookie(recentViewList));
         return recentViewList;
+    }
+
+    private Set<Long> getPageRecentViewProductList(
+            Cookie cookie,
+            HttpServletResponse response,
+            Pageable pageable
+    )
+            throws JsonProcessingException {
+        if (Objects.nonNull(cookie)) {
+            Set<Long> set = objectMapper.readValue(
+                    URLDecoder.decode(cookie.getValue(), StandardCharsets.UTF_8),
+                    new TypeReference<LinkedHashSet<Long>>() {
+                    }
+            );
+            List<Long> list = new ArrayList<>(set);
+            Collections.reverse(list);
+            int start = pageable.getPageNumber() * pageable.getPageSize();
+            int size = Math.min(list.size() - pageable.getPageNumber() * pageable.getPageSize(), 10);
+            log.info("list.size: " + list.size());
+            log.info("start: " + start + ", size = " + size);
+            return new LinkedHashSet<>(list.subList(start, start+size));
+        }
+        Set<Long> recentViewList = new LinkedHashSet<>();
+        response.addCookie(createCookie(recentViewList));
+        return recentViewList;
+    }
+
+    private List<ProductRecentResponseDto> sort(
+            List<Long> pageIds,
+            List<ProductRecentResponseDto> recentViewlist
+    ) {
+        List<ProductRecentResponseDto> list = new ArrayList<>();
+        for (Long id : pageIds) {
+            for (ProductRecentResponseDto productRecentResponseDto : recentViewlist) {
+                if (productRecentResponseDto.getId().equals(id)) {
+                    list.add(productRecentResponseDto);
+                    break;
+                }
+            }
+        }
+        return list;
     }
 
     /**
@@ -370,28 +332,5 @@ public class WishWebController {
                 URLEncoder.encode(objectMapper.writeValueAsString(value), StandardCharsets.UTF_8),
                 259200
         );
-    }
-
-    private List<ProductRecentResponseDto> sort(
-            Set<Long> recentViewSet,
-            List<ProductRecentResponseDto> recentViewlist,
-            Pageable pageable
-    ) {
-        List<Long> sort = new ArrayList<>(recentViewSet)
-                .subList(
-                        pageable.getPageSize() * pageable.getPageNumber(),
-                        pageable.getPageSize() * pageable.getPageNumber() + recentViewlist.size()
-                );
-        List<ProductRecentResponseDto> list = new ArrayList<>();
-        for (Long id : sort) {
-            for (ProductRecentResponseDto productRecentResponseDto : recentViewlist) {
-                if (productRecentResponseDto.getId().equals(id)) {
-                    list.add(productRecentResponseDto);
-                    break;
-                }
-            }
-        }
-        Collections.reverse(list);
-        return list;
     }
 }

@@ -111,7 +111,9 @@
     <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
       <div class="col" th:each="coupon: ${couponList.dataList}">
         <div class="card mb-4 rounded-3 shadow-sm">
-          <img class="card-img-top" src="https://via.placeholder.com/200" style="height: 15rem">
+          <div class="card-img-top">
+            <img th:src="${coupon.couponSummaryDto.fileUri} != null ? ${coupon.couponSummaryDto.fileUri} : 'https://api-storage.cloud.toast.com/v1/AUTH_fcb81f74e379456b8ca0e091d351a7af/yesaladin/coupon/coupon/default.png'" style="width: 100%; height: auto;"/>
+          </div>
           <div class="card-body">
             <h1 class="card-title pricing-card-title" th:text="${coupon.couponSummaryDto.name}">
               1,000원 할인쿠폰</h1>
@@ -150,6 +152,7 @@
 
   <div class="d-none" id="shop-server-url" th:text="${shopServerUrl}"></div>
   <div class="d-none" id="front-server-url" th:text="${frontServerUrl}"></div>
+  <div class="d-none" id="socket-server-url" th:text="${socketServerUrl}"></div>
   <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
