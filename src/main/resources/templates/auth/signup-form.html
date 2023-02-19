@@ -100,8 +100,9 @@
           <div class="mb-3">
             <label class="form-label">휴대폰 번호</label>
             <input type="text" class="form-control" id="phone" th:name="phone"
-                   pattern="([0-9]{11})"
-                   placeholder="휴대폰 번호 ex) 01012345678" required>
+                   pattern="/^01([0|1])\d{4}\d{4}$/" maxlength="11"
+                   placeholder="휴대폰 번호 ex) 01012345678" required
+                   oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
             <div class="error" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}">phone
             </div>
             <div class="button-box">
