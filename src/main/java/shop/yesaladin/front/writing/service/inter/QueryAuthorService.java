@@ -1,5 +1,6 @@
 package shop.yesaladin.front.writing.service.inter;
 
+import org.springframework.data.domain.Pageable;
 import shop.yesaladin.front.common.dto.PageRequestDto;
 import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.writing.dto.AuthorResponseDto;
@@ -31,4 +32,26 @@ public interface QueryAuthorService {
      * @return 응답받은 저자 전체 조회 Dto
      */
     PaginatedResponseDto<AuthorsResponseDto> findAllForManager(PageRequestDto pageRequestDto);
+
+    /**
+     * 로그인 아이디로 저자를 검색하는 메서드
+     *
+     * @param loginId 검색할 로그인 아이디
+     * @param pageable 페이지 정보
+     * @return 검색 결과
+     * @author 김선홍
+     * @since 1.0
+     */
+    PaginatedResponseDto<AuthorsResponseDto> findByLoginIdForManager(String loginId, Pageable pageable);
+
+    /**
+     * 이름으로 저자를 검색하는 메서드
+     *
+     * @param name 검색할 로그인 아이디
+     * @param pageable 페이지 정보
+     * @return 검색 결과
+     * @author 김선홍
+     * @since 1.0
+     */
+    PaginatedResponseDto<AuthorsResponseDto> findByNameForManager(String name, Pageable pageable);
 }
