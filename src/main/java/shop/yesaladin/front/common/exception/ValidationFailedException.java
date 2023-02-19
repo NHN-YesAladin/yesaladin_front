@@ -1,7 +1,8 @@
 package shop.yesaladin.front.common.exception;
 
-import java.util.stream.Collectors;
 import org.springframework.validation.BindingResult;
+
+import java.util.stream.Collectors;
 
 public class ValidationFailedException extends RuntimeException {
     public ValidationFailedException(BindingResult bindingResult) {

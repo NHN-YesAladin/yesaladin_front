@@ -19,10 +19,8 @@ import shop.yesaladin.front.product.dto.*;
 import shop.yesaladin.front.product.service.inter.QueryProductService;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 /**
  * 상품 조회 요청을 위한 service 구현체 입니다.
@@ -203,7 +201,7 @@ public class QueryProductServiceImpl implements QueryProductService {
 
     @Override
     public PaginatedResponseDto<ProductRecentResponseDto> findRecentViewProduct(
-            Set<Long> recentViewList,
+            RecentViewProductRequestDto dto,
             @PageableDefault Pageable pageable
     ) throws JsonProcessingException {
         String uri = UriComponentsBuilder
@@ -215,7 +213,7 @@ public class QueryProductServiceImpl implements QueryProductService {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        String requestJson = objectMapper.writeValueAsString(new ArrayList<>(recentViewList));
+        String requestJson = objectMapper.writeValueAsString(dto);
         HttpEntity<String> httpEntity = new HttpEntity<>(requestJson, headers);
 
         ResponseEntity<ResponseDto<PaginatedResponseDto<ProductRecentResponseDto>>> responseEntity = restTemplate.exchange(

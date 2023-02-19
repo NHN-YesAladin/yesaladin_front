@@ -1,8 +1,9 @@
 package shop.yesaladin.front.order.dto;
 
-import java.util.Arrays;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+
+import java.util.Arrays;
 
 /**
  * 주문 상태 코드 Enum : 마이페이지 - 주문상태에서 사용
