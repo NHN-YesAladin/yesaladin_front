@@ -1,5 +1,6 @@
 package shop.yesaladin.front.order.controller.web;
 
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -58,11 +59,14 @@ public class OrderMainWebController {
     }
 
 
-    @GetMapping("/{orderNumber}")
-    public String getOrderDetails(@PathVariable String orderNumber, Model model) {
+    @GetMapping(value = "/{orderNumber}")
+    public String getOrderDetails(
+            @PathVariable String orderNumber,
+            @RequestParam(value = "type", required = false) String type,
+            Model model
+    ) {
         OrderDetailsResponseDto detailsResponseDto = queryOrderService.getOrderDetailsDtoByOrderNumber(
-                orderNumber);
-        System.out.println("detailsResponseDto = " + detailsResponseDto);
+                orderNumber, type);
         model.addAttribute("response", detailsResponseDto);
         return "main/order/order-details";
     }

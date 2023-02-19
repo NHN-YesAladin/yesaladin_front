@@ -1,13 +1,14 @@
 package shop.yesaladin.front.coupon.dto;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import shop.yesaladin.coupon.code.CouponTypeCode;
 import shop.yesaladin.coupon.code.TriggerTypeCode;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * 쿠폰에 대한 요약 정보를 담기 위해 사용하는 dto 클래스 입니다.
@@ -26,6 +27,7 @@ public class CouponSummaryDto {
     private TriggerTypeCode triggerTypeCode;
     private CouponTypeCode couponTypeCode;
     private Boolean isUnlimited;
+    private String fileUri;
     private Integer duration;
     private LocalDate expirationDate;
     private LocalDateTime createdDateTime;

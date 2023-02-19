@@ -78,7 +78,7 @@ public interface QueryOrderService {
      * @author 배수한
      * @since 1.0
      */
-    OrderDetailsResponseDto getOrderDetailsDtoByOrderNumber(String orderNumber);
+    OrderDetailsResponseDto getOrderDetailsDtoByOrderNumber(String orderNumber, String type);
 
     /**
      * 상품에 쿠폰을 적용합니다.

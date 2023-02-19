@@ -40,13 +40,21 @@ public class MemberManagerWebController {
     /**
      * 관리자의 회원 관리 뷰로 이동
      *
+     * @param pageable 페이징 정보
      * @return 관리자의 회원 관리 뷰
      * @author 김선홍
      * @since 1.0
      */
     @GetMapping
-    public String goView() {
-        return VIEW;
+    public ModelAndView goView(@PageableDefault Pageable pageable) {
+        ModelAndView modelAndView = new ModelAndView(VIEW);
+        PaginatedResponseDto<MemberManagerResponseDto> result = queryMemberService.manageMemberInfo(pageable);
+        modelAndView.addObject("memberList", result.getDataList());
+        modelAndView.addObject("currentPage", result.getCurrentPage());
+        modelAndView.addObject("totalPage", result.getTotalPage());
+        modelAndView.addObject("url", URL);
+        modelAndView.addObject("queryParam", "");
+        return modelAndView;
     }
 
     /**
