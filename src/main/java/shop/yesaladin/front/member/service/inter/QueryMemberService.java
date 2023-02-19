@@ -80,6 +80,15 @@ public interface QueryMemberService {
     String getMemberGrade();
 
     /**
+     * 관리자가 회원의 정보를 조회합니다.
+     *
+     * @return 해당 loginId 의 회원 정보
+     * @author 김선홍
+     * @since 1.0
+     */
+    PaginatedResponseDto<MemberManagerResponseDto> manageMemberInfo(Pageable pageable);
+
+    /**
      * 관리자가 회원의 loginId 로 해당 회원의 정보를 조회합니다.
      *
      * @param  loginId 회원의 loginId
