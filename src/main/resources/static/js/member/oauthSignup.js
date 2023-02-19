@@ -60,7 +60,7 @@ function phoneCheck() {
   let phoneCheckBtn = document.getElementById('phoneCheckBtn');
   let phoneInput = document.getElementById('phone');
   let phoneVal = phoneInput.value;
-  let phoneRegex = /^\d{11}$/;
+  let phoneRegex = /^01([0|1])\d{4}\d{4}$/;
   let emptyRegex = /\s/g;
 
   if (phoneRegex.test(phoneVal) && !emptyRegex.test(phoneVal)) {
@@ -81,7 +81,7 @@ function phoneCheck() {
       })
     });
   } else {
-    alert('휴대폰 번호를 - 없이 11자 입력해주세요.');
+    alert('휴대폰 번호를 - 없이 11자 입력해주세요. 앞 자리는 010 또는 011 양식입니다.');
   }
 }
 

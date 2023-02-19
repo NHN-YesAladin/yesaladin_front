@@ -61,7 +61,22 @@
           <div class="card-header row">
             <h3 class="card-title col-md-2">저자 관리</h3>
           </div>
-
+          <div class="card-header row">
+            <h3 class="card-title col-md-1">저자 검색</h3>
+            <div class="col-md-2">
+              <select id="selected" class="form-select">
+                <option value="loginid">아이디</option>
+                <option value="name">이름</option>
+              </select>
+            </div>
+            <div class="col-md-7">
+              <input id="input" type="text" class="form-control w-75" placeholder="Search…"
+                     aria-label="Search in website"/>
+            </div>
+            <div class="col-md-2">
+              <button id="searchButton" type="button" class="btn btn-primary w-auto">Search</button>
+            </div>
+          </div>
           <div class="table-responsive">
             <table class="table card-table table-vcenter text-nowrap datatable">
               <thead>
@@ -173,7 +188,7 @@
       })
       .then(res => {
         if (res.status !== 201) {
-          throw new Error(res.status + " 발생=> [저자명: " + authorName + ", 로그인 ID: " + authorLoginId + "]를 생성할 수 없습니다.");
+          throw new Error("[저자명: " + authorName + ", 로그인 ID: " + authorLoginId + "]를 생성할 수 없습니다.");
         }
         window.alert("저자('" + authorName + "')를 생성하였습니다.");
       })
@@ -211,7 +226,7 @@
         })
       }).then(res => {
         if (!res.ok) {
-          throw new Error(res.status + " 발생=> [ID: " + id + " 저자명: " + name.value + ", 로그인 ID: " + loginId.value + "]로 수정할 수 없습니다.");
+          throw new Error("[ID: " + id + " 저자명: " + name.value + ", 로그인 ID: " + loginId.value + "]로 수정할 수 없습니다.");
         }
         window.alert("저자('" + name.value + "')를 수정하였습니다.")
       }).catch(err => {
@@ -219,5 +234,25 @@
       }).finally(() => window.location.reload());
     });
   </script>
+<script>
+  const input = document.getElementById('input')
+  input.addEventListener('keyup', function (e) {
+    if(e.key === 'Enter') {
+      search()
+    }
+  })
+  document.getElementById('searchButton').addEventListener('click', function (e) {
+    e.preventDefault()
+    search()
+  })
+  function search() {
+    if (input.value.length > 30) {
+      alert('최대 글자 수는 30까지 허용합니다.')
+      return
+    }
+    const selected = document.getElementById('selected')
+    location.replace('/manager/authors?' + selected.options[selected.selectedIndex].value + '=' + input.value)
+  }
+</script>
 </body>
 </html>

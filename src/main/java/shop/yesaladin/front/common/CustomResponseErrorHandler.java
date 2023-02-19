@@ -1,13 +1,6 @@
 package shop.yesaladin.front.common;
 
-import static org.springframework.http.HttpStatus.Series.CLIENT_ERROR;
-import static org.springframework.http.HttpStatus.Series.SERVER_ERROR;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -17,6 +10,14 @@ import org.springframework.util.StreamUtils;
 import org.springframework.web.client.ResponseErrorHandler;
 import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.common.exception.*;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+
+import static org.springframework.http.HttpStatus.Series.CLIENT_ERROR;
+import static org.springframework.http.HttpStatus.Series.SERVER_ERROR;
 
 /**
  * RestTemplate으로 서버에 보낸 요청의 예외 발생 시 HttpStatus 코드에 따라 예외를 발생 시키기 위한 Handler 입니다.
@@ -50,7 +51,7 @@ public class CustomResponseErrorHandler implements ResponseErrorHandler {
         int status = response.getStatusCode().value();
         List<String> errorMessages = exception.getErrorMessages();
 
-        if(exception.isSuccess()) {
+        if (exception.isSuccess()) {
             throw new RestException(errorMessages.toString());
         }
 
@@ -58,11 +59,9 @@ public class CustomResponseErrorHandler implements ResponseErrorHandler {
             throw new CustomUnauthorizedException(errorMessages.toString());
         } else if (status == HttpStatus.NOT_FOUND.value()) {
             throw new CustomNotFoundException(errorMessages.toString());
-        }
-        else if (status == HttpStatus.BAD_REQUEST.value()) {
+        } else if (status == HttpStatus.BAD_REQUEST.value()) {
             throw new CustomBadRequestException(errorMessages.toString());
-        }
-        else if (status == HttpStatus.METHOD_NOT_ALLOWED.value()) {
+        } else if (status == HttpStatus.METHOD_NOT_ALLOWED.value()) {
             throw new CustomMethodNotAllowedException(errorMessages.toString());
         } else if (status == HttpStatus.CONFLICT.value()) {
             throw new CustomConflictException(errorMessages.toString());

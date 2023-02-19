@@ -156,11 +156,11 @@
                                     <div class="col-auto ms-auto d-print-none btn-list">
                                         <span class="page-pretitle">시작일</span>
                                         <div class="input-icon">
-                                            <input type="date" class="form-control" name="start" th:value="${start}">
+                                            <input type="date" id="start-date" class="form-control" name="start" th:value="${start}">
                                         </div>
                                         <span class="page-pretitle">~ 종료일</span>
                                         <div class="input-icon">
-                                            <input type="date" class="form-control" name="end" th:value="${end}">
+                                            <input type="date" id="end-date" class="form-control" name="end" th:value="${end}">
                                         </div>
                                         <div class="input-icon">
                                             <button type="submit" class="btn btn-primary w-100 btn-icon">
@@ -187,10 +187,10 @@
                                             <th>취소액</th>
                                         </tr>
                                         </thead>
-                                        <tbody >
+                                        <tbody>
                                         <tr th:each="sales, i : ${salesStatistics}">
                                             <td th:text="${i.count + currentPage * size}"></td>
-                                            <td><a class="text-dark d-inline-block" th:text="${sales.title}" th:href="|/products/${sales.id}|" style="overflow: hidden; text-overflow: ellipsis; max-width: 500px;"/></td>
+                                            <td><a class="text-dark d-inline-block" th:text="${sales.title}" th:href="|/products/${sales.id}|" style="overflow: hidden; text-overflow: ellipsis; width: 400px;"/></td>
                                             <td th:text="${sales.numberOfOrders}"></td>
                                             <td th:text="${sales.totalQuantity}"></td>
                                             <td th:text="|${#numbers.formatInteger(sales.netSales, 1, 'COMMA')}원|"></td>
@@ -212,8 +212,15 @@
         <!-- TODO 4 : footer -->
         <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
     </div>
-
-
 </div>
+<script>
+    document.getElementById('start-date').addEventListener('change', () => {
+        document.getElementById('end-date').setAttribute('min', document.getElementById('start-date').value);
+    });
+
+    document.getElementById('end-date').addEventListener('change', () => {
+        document.getElementById('start-date').setAttribute('max', document.getElementById('end-date').value);
+    });
+</script>
 </body>
 </html>

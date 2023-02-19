@@ -3,6 +3,7 @@ package shop.yesaladin.front.tag.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -57,6 +58,34 @@ public class QueryTagServiceImpl implements QueryTagService {
                 .path(PATH + "/manager")
                 .queryParam("page", pageRequestDto.getPage())
                 .queryParam("size", pageRequestDto.getSize())
+                .encode()
+                .build()
+                .toUri();
+
+        ResponseEntity<ResponseDto<PaginatedResponseDto<TagsResponseDto>>> tags = restTemplate.exchange(
+                uri,
+                HttpMethod.GET,
+                getHttpEntity(),
+                new ParameterizedTypeReference<ResponseDto<PaginatedResponseDto<TagsResponseDto>>>() {
+                }
+        );
+        return Objects.requireNonNull(tags.getBody()).getData();
+    }
+
+    /**
+     *{@inheritDoc}
+     */
+    @Override
+    public PaginatedResponseDto<TagsResponseDto> findByNameForManager(
+            String name,
+            Pageable pageable
+    ) {
+        URI uri = UriComponentsBuilder
+                .fromUriString(url)
+                .path(PATH + "/manager")
+                .queryParam("name", name)
+                .queryParam("page", pageable.getPageNumber())
+                .queryParam("size", pageable.getPageSize())
                 .encode()
                 .build()
                 .toUri();

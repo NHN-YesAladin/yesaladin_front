@@ -19,10 +19,8 @@ import shop.yesaladin.front.product.dto.*;
 import shop.yesaladin.front.product.service.inter.QueryProductService;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 /**
  * 상품 조회 요청을 위한 service 구현체 입니다.
@@ -84,6 +82,146 @@ public class QueryProductServiceImpl implements QueryProductService {
                 .queryParam("typeId", typeId)
                 .queryParam("page", pageRequestDto.getPage())
                 .queryParam("size", pageRequestDto.getSize())
+                .encode()
+                .build()
+                .toUri();
+
+        ResponseEntity<ResponseDto<PaginatedResponseDto<ProductsResponseDto>>> products = restTemplate.exchange(
+                uri,
+                HttpMethod.GET,
+                getHttpEntity(),
+                new ParameterizedTypeReference<ResponseDto<PaginatedResponseDto<ProductsResponseDto>>>() {
+                }
+        );
+        return Objects.requireNonNull(products.getBody()).getData();
+    }
+
+    /**
+     *{@inheritDoc}
+     */
+    @Override
+    public PaginatedResponseDto<ProductsResponseDto> findByTitleForManager(
+            String title,
+            Pageable pageable
+    ) {
+        URI uri = UriComponentsBuilder
+                .fromUriString(url)
+                .path(PATH + "/manager")
+                .queryParam("title", title)
+                .queryParam("page", pageable.getPageNumber())
+                .queryParam("size", pageable.getPageSize())
+                .encode()
+                .build()
+                .toUri();
+
+        ResponseEntity<ResponseDto<PaginatedResponseDto<ProductsResponseDto>>> products = restTemplate.exchange(
+                uri,
+                HttpMethod.GET,
+                getHttpEntity(),
+                new ParameterizedTypeReference<ResponseDto<PaginatedResponseDto<ProductsResponseDto>>>() {
+                }
+        );
+        return Objects.requireNonNull(products.getBody()).getData();
+    }
+
+    /**
+     *{@inheritDoc}
+     */
+    @Override
+    public PaginatedResponseDto<ProductsResponseDto> findByISBNForManager(
+            String isbn,
+            Pageable pageable
+    ) {
+        URI uri = UriComponentsBuilder
+                .fromUriString(url)
+                .path(PATH + "/manager")
+                .queryParam("isbn", isbn)
+                .queryParam("page", pageable.getPageNumber())
+                .queryParam("size", pageable.getPageSize())
+                .encode()
+                .build()
+                .toUri();
+
+        ResponseEntity<ResponseDto<PaginatedResponseDto<ProductsResponseDto>>> products = restTemplate.exchange(
+                uri,
+                HttpMethod.GET,
+                getHttpEntity(),
+                new ParameterizedTypeReference<ResponseDto<PaginatedResponseDto<ProductsResponseDto>>>() {
+                }
+        );
+        return Objects.requireNonNull(products.getBody()).getData();
+    }
+
+    /**
+     *{@inheritDoc}
+     */
+    @Override
+    public PaginatedResponseDto<ProductsResponseDto> findByContentForManager(
+            String content,
+            Pageable pageable
+    ) {
+        URI uri = UriComponentsBuilder
+                .fromUriString(url)
+                .path(PATH + "/manager")
+                .queryParam("content", content)
+                .queryParam("page", pageable.getPageNumber())
+                .queryParam("size", pageable.getPageSize())
+                .encode()
+                .build()
+                .toUri();
+
+        ResponseEntity<ResponseDto<PaginatedResponseDto<ProductsResponseDto>>> products = restTemplate.exchange(
+                uri,
+                HttpMethod.GET,
+                getHttpEntity(),
+                new ParameterizedTypeReference<ResponseDto<PaginatedResponseDto<ProductsResponseDto>>>() {
+                }
+        );
+        return Objects.requireNonNull(products.getBody()).getData();
+    }
+
+    /**
+     *{@inheritDoc}
+     */
+    @Override
+    public PaginatedResponseDto<ProductsResponseDto> findByPublisherForManager(
+            String publisher,
+            Pageable pageable
+    ) {
+        URI uri = UriComponentsBuilder
+                .fromUriString(url)
+                .path(PATH + "/manager")
+                .queryParam("publisher", publisher)
+                .queryParam("page", pageable.getPageNumber())
+                .queryParam("size", pageable.getPageSize())
+                .encode()
+                .build()
+                .toUri();
+
+        ResponseEntity<ResponseDto<PaginatedResponseDto<ProductsResponseDto>>> products = restTemplate.exchange(
+                uri,
+                HttpMethod.GET,
+                getHttpEntity(),
+                new ParameterizedTypeReference<ResponseDto<PaginatedResponseDto<ProductsResponseDto>>>() {
+                }
+        );
+        return Objects.requireNonNull(products.getBody()).getData();
+    }
+
+    /**
+     *{@inheritDoc}
+     */
+    @Override
+    public PaginatedResponseDto<ProductsResponseDto> findByAuthorForManager(
+            String author,
+            Pageable pageable
+    ) {
+        URI uri = UriComponentsBuilder
+                .fromUriString(url)
+                .path(PATH + "/manager")
+                .queryParam("author", author)
+                .queryParam("page", pageable.getPageNumber())
+                .queryParam("size", pageable.getPageSize())
                 .encode()
                 .build()
                 .toUri();
@@ -203,7 +341,7 @@ public class QueryProductServiceImpl implements QueryProductService {
 
     @Override
     public PaginatedResponseDto<ProductRecentResponseDto> findRecentViewProduct(
-            Set<Long> recentViewList,
+            RecentViewProductRequestDto dto,
             @PageableDefault Pageable pageable
     ) throws JsonProcessingException {
         String uri = UriComponentsBuilder
@@ -215,7 +353,7 @@ public class QueryProductServiceImpl implements QueryProductService {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        String requestJson = objectMapper.writeValueAsString(new ArrayList<>(recentViewList));
+        String requestJson = objectMapper.writeValueAsString(dto);
         HttpEntity<String> httpEntity = new HttpEntity<>(requestJson, headers);
 
         ResponseEntity<ResponseDto<PaginatedResponseDto<ProductRecentResponseDto>>> responseEntity = restTemplate.exchange(

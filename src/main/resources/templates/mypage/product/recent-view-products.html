@@ -108,8 +108,8 @@
                             </svg>
                             상세보기
                           </a>
-                          <a th:data-id="${product.id}"
-                             th:onclick="recentViewProductDelete(this.getAttribute('data-id'))"
+                          <a th:data-id="${product.id}" th:data-index="${currentPage}"
+                             th:onclick="'recentViewProductDelete(' + ${product.id} + ',' + ${currentPage} + ')'"
                              class="btn btn-danger btn-pill ms-auto">
                             삭제
                           </a>
@@ -126,11 +126,11 @@
     </div>
     <div class="card-footer d-flex align-items-center" th:if="${totalPage != 0}">
       <ul class="pagination m-0 ms-auto"
-          th:with="start=${(currentPage / 20) * 20 + 1},
-                    last=(${start + 19 < totalPage ? start + 19 : totalPage})">
-        <li class="page-item" th:classappend="${currentPage < 20 ? 'disabled' : ''}">
+          th:with="start=${(currentPage / 10) * 10 + 1},
+                    last=(${start + 9 < totalPage ? start + 9 : totalPage})">
+        <li class="page-item" th:classappend="${currentPage < 10 ? 'disabled' : ''}">
           <a class="page-link"
-             th:href="@{${url} + '?page=' + ${(currentPage / 20) * 20 - 1} + '&size=20'}"
+             th:href="@{${url} + '?page=' + ${(currentPage / 10) * 10 - 1} + '&size=20'}"
              tabindex="-1">
             <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
                  viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
@@ -143,13 +143,13 @@
         </li>
         <li class="page-item" th:each="num: ${#numbers.sequence(start, last)}"
             th:classappend="${(currentPage + 1) == num ? 'disabled': ''}">
-          <a class="page-link" th:href="@{${url} + '?page=' + ${num - 1} + '&size=20'}"
+          <a class="page-link" th:href="@{${url} + '?page=' + ${num - 1}}"
              th:text="${num}"></a>
         </li>
         <li class="page-item"
-            th:classappend="${currentPage / 20 == (totalPage - 1) / 20 ? 'disabled' : ''}">
+            th:classappend="${currentPage / 10 == (totalPage - 1) / 10 ? 'disabled' : ''}">
           <a class="page-link"
-             th:href="@{${url} + '?page=' + ${(currentPage / 20 + 1) * 20} + '&size=20'}">
+             th:href="@{${url} + '?page=' + ${(currentPage / 10 + 1) * 10}}">
             next
             <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
                  viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
@@ -167,10 +167,10 @@
 </div>
 </body>
 <script>
-  function recentViewProductDelete(id) {
+  function recentViewProductDelete(id, page) {
     const check = window.confirm('해당 최근 본 상품을 제거하시겠습니까?')
     if (check === true) {
-      location.replace('/interest/recent/delete?productid=' + id)
+      location.replace('/interest/recent/delete?productid=' + id + '&page=' + page)
     }
   }
 </script>

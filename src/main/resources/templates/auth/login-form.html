@@ -46,9 +46,9 @@
         <h2 class="h2 text-center mb-4">Login to your account</h2>
         <form action="/auth-login" id="login-form" method="post" autocomplete="off" novalidate="">
           <div class="mb-3">
-            <label class="form-label">YesAladin 자사 Login ID</label>
+            <label class="form-label">YesAladin Login ID</label>
             <input type="text" name="loginId" id="loginId" class="form-control"
-                   placeholder="자사 회원 로그인 아이디를 입력해주세요"
+                   placeholder="YesAladin 회원 로그인 아이디를 입력해주세요"
                    pattern="^.*(?=.*[a-z])(?=.*\d)(?=^.{8,15}).*$"
                    autocomplete="off" required>
           </div>
@@ -61,18 +61,6 @@
                      placeholder="password"
                      pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$"
                      autocomplete="off" required>
-              <span class="input-group-text">
-                    <a href="#" class="link-secondary" data-bs-toggle="tooltip"
-                       aria-label="Show password" data-bs-original-title="Show password"><!-- Download SVG icon from http://tabler-icons.io/i/eye -->
-                      <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
-                           viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                           stroke-linecap="round" stroke-linejoin="round"><path stroke="none"
-                                                                                d="M0 0h24v24H0z"
-                                                                                fill="none"></path><circle
-                          cx="12" cy="12" r="2"></circle><path
-                          d="M22 12c-2.667 4.667 -6 7 -10 7s-7.333 -2.333 -10 -7c2.667 -4.667 6 -7 10 -7s7.333 2.333 10 7"></path></svg>
-                    </a>
-                  </span>
             </div>
           </div>
           <div class="form-footer">
@@ -99,19 +87,6 @@
               Login with Github
             </div>
           </button>
-
-          <!--            <button type="button" class="btn w-100" id="naver">-->
-          <!--              <div class="col">-->
-          <!--                <svg xmlns="http://www.w3.org/2000/svg" class="icon text-naver" width="24"-->
-          <!--                     height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"-->
-          <!--                     fill="none" stroke-linecap="round" stroke-linejoin="round">-->
-          <!--                  <image-->
-          <!--                      href="https://user-images.githubusercontent.com/60968342/211952496-ac841cef-8efd-493a-a3b7-406037b375f2.png"-->
-          <!--                      height="24" width="24"/>-->
-          <!--                </svg>-->
-          <!--                Login with Naver-->
-          <!--              </div>-->
-          <!--            </button>-->
 
           <button type="button" class="btn w-100" id="kakao">
             <div class="col">

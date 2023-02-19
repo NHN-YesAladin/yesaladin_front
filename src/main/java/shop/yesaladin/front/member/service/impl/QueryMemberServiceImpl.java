@@ -230,6 +230,26 @@ public class QueryMemberServiceImpl implements QueryMemberService {
         return "";
     }
 
+    /**
+     *{@inheritDoc}
+     */
+    @Override
+    public PaginatedResponseDto<MemberManagerResponseDto> manageMemberInfo(Pageable pageable) {
+        String uri = UriComponentsBuilder
+                .fromUriString(gatewayConfig.getShopUrl())
+                .path("/v1/members/manage")
+                .queryParam("page", pageable.getPageNumber())
+                .queryParam("size", pageable.getPageSize())
+                .toUriString();
+        ResponseEntity<ResponseDto<PaginatedResponseDto<MemberManagerResponseDto>>> responseEntity = restTemplate.exchange(
+                uri,
+                HttpMethod.GET,
+                null,
+                MEMBER_MANAGER_RESPONSE_DTO
+        );
+        return Objects.requireNonNull(Objects.requireNonNull(responseEntity.getBody()).getData());
+    }
+
     private static HttpEntity getEntity() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -248,7 +268,6 @@ public class QueryMemberServiceImpl implements QueryMemberService {
                 .queryParam("page", pageable.getPageNumber())
                 .queryParam("size", pageable.getPageSize())
                 .toUriString();
-        log.info(uri);
         ResponseEntity<ResponseDto<PaginatedResponseDto<MemberManagerResponseDto>>> responseEntity = restTemplate.exchange(
                 uri,
                 HttpMethod.GET,

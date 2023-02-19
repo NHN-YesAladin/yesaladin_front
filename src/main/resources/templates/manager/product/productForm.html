@@ -694,6 +694,10 @@
 
 
 <script>
+  document.getElementById('tag-input').addEventListener('keydown', (e) =>{
+    e.preventDefault()
+    searchTag(0, 5)
+  })
   document.getElementById('tag-search').addEventListener('click', function (e) {
     e.preventDefault()
     searchTag(0, 5)
@@ -779,6 +783,10 @@
   }
 </script>
 <script>
+  document.getElementById('author-input').addEventListener('keydown', (e) =>{
+    e.preventDefault()
+    searchAuthor(0, 5)
+  })
   document.getElementById('author-search').addEventListener('click', (e) => {
     e.preventDefault()
     searchAuthor(0, 5)
@@ -891,6 +899,10 @@
 
 </script>
 <script>
+  document.getElementById('category-input').addEventListener('keydown', (e) =>{
+    e.preventDefault()
+    searchCategories(0, 5)
+  })
   document.getElementById('category-search').addEventListener('click', function (e){
     e.preventDefault()
     searchCategories(0, 5)
@@ -998,6 +1010,11 @@
   }
 </script>
 <script>
+  document.getElementById('publisher-input').addEventListener('keydown', (e) =>{
+    e.preventDefault()
+    searchPublisher(0, 5)
+  })
+
   document.getElementById('publisher-search').addEventListener('click', (e) => {
     e.preventDefault()
     searchPublisher(0, 5)
@@ -1145,9 +1162,6 @@
    */
   function initPaging(ul, count, size, currentPage, search) {
     ul.innerHTML = ''
-    console.log("current: " + currentPage)
-    console.log("count: "  + count)
-    console.log("size: " + size)
     if(currentPage > 0) {
       const pre = document.createElement('li')
       pre.className += 'page-item'

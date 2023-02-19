@@ -7,7 +7,6 @@ import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.product.dto.*;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * 상품 조회 요청을 위한 Service Interface 입니다.
@@ -41,6 +40,61 @@ public interface QueryProductService {
             PageRequestDto pageRequestDto,
             Integer typeId
     );
+
+    /**
+     * 관리자용 상품 제목 검색 메서드
+     *
+     * @param title 검색할 제목
+     * @param pageable 페이지 정보
+     * @return 검색 결과
+     * @author 김선홍
+     * @since 1, 0
+     */
+    PaginatedResponseDto<ProductsResponseDto> findByTitleForManager(String title, Pageable pageable);
+
+    /**
+     * 관리자용 상품 isbn 검색 메서드
+     *
+     * @param isbn 검색할 isbn
+     * @param pageable 페이지 정보
+     * @return 검색 결과
+     * @author 김선홍
+     * @since 1, 0
+     */
+    PaginatedResponseDto<ProductsResponseDto> findByISBNForManager(String isbn, Pageable pageable);
+
+    /**
+     * 관리자용 상품 내용 검색 메서드
+     *
+     * @param content 검색할 제목
+     * @param pageable 페이지 정보
+     * @return 검색 결과
+     * @author 김선홍
+     * @since 1, 0
+     */
+    PaginatedResponseDto<ProductsResponseDto> findByContentForManager(String content, Pageable pageable);
+
+    /**
+     * 관리자용 상품 출판사 검색 메서드
+     *
+     * @param publisher 검색할 제목
+     * @param pageable 페이지 정보
+     * @return 검색 결과
+     * @author 김선홍
+     * @since 1, 0
+     */
+    PaginatedResponseDto<ProductsResponseDto> findByPublisherForManager(String publisher, Pageable pageable);
+
+    /**
+     * 관리자용 상품 저자 검색 메서드
+     *
+     * @param author 검색할 제목
+     * @param pageable 페이지 정보
+     * @return 검색 결과
+     * @author 김선홍
+     * @since 1, 0
+     */
+    PaginatedResponseDto<ProductsResponseDto> findByAuthorForManager(String author, Pageable pageable);
 
     /**
      * 모든 사용자용 상품 전체 조회를 요청하여 응답받습니다.
@@ -95,14 +149,14 @@ public interface QueryProductService {
     /**
      * 최근 본 상품 조회 메서드
      *
-     * @param recentViewList 최근 본 상품들의 id 리스트
-     * @param pageable       페이지 정보
+     * @param dto      최근 본 상품 요청 dto
+     * @param pageable 페이지 정보
      * @return 최근 본 상품의 정보 리스트
      * @author 김선홍
      * @since 1.0
      */
     PaginatedResponseDto<ProductRecentResponseDto> findRecentViewProduct(
-            Set<Long> recentViewList,
+            RecentViewProductRequestDto dto,
             Pageable pageable
     ) throws JsonProcessingException;
 }
