@@ -47,18 +47,6 @@
               <input type="text" name="orderNumber" id="orderNumber" class="form-control"
                      placeholder="주문 번호를 입력해주세요" required>
             </div>
-            <span  class="text-muted">테스트 용으로 "20230210-0ad4df3d" 쓰세요</span>
-<!--        TODO 비회원 확인용으로 넣을지 고민    -->
-<!--            <div class="mb-2">-->
-<!--              <label class="form-label fs-3 fw-bold required">주문자 이름</label>-->
-<!--              <input type="text" name="ordererName" id="ordererName" class="form-control"-->
-<!--                     placeholder="주문자 성함을 입력해주세요" required>-->
-<!--            </div>-->
-<!--            <div class="mb-2">-->
-<!--              <label class="form-label fs-3 fw-bold required">주문자 전화번호</label>-->
-<!--              <input type="text" name="ordererPhoneNumber" id="ordererPhoneNumber" class="form-control"-->
-<!--                     placeholder="주문자의 전화번호를 입력해주세요" required>-->
-<!--            </div>-->
             <div class="form-footer">
               <button type="submit" class="btn btn-dark w-100">조회</button>
             </div>
@@ -76,11 +64,15 @@
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     let orderNumber = e.target["orderNumber"].value;
-    // let ordererName = e.target["ordererName"].value;
-    // let ordererPhoneNumber = e.target["ordererPhoneNumber"].value;
-    window.location.href = `/orders/${orderNumber}`;
-    // form.action = ;
-    // form.submit();
+
+    let emptyRegex = /\s/g;
+    let orderNumRegex = /^\d{4}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])-[a-z0-9]{8}$/;
+    if (!orderNumRegex.test(orderNumber) || emptyRegex.test(orderNumber)) {
+      alert("주문 번호를 다시 확인하여 입력해주십시오.");
+      return;
+    }
+
+    window.location.href = `/orders/${orderNumber}?type=none`;
   });
 </script>
 </body>

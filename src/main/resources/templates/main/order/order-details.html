@@ -71,7 +71,7 @@
                 <li id="step-ready" data-code="READY" class="step-item">배송 준비중</li>
                 <li id="step-delivery" data-code="DELIVERY" class="step-item ">배송중</li>
                 <li id="step-complete" data-code="COMPLETE" class="step-item">배송 완료</li>
-                <li id="step-confirm" data-code="CONFIRM" class="step-item">주문 확정</li>
+                <li th:if="${response.order.orderCode != '비회원 주문'}" id="step-confirm" data-code="CONFIRM" class="step-item">주문 확정</li>
               </ul>
             </div>
           </div>
@@ -165,7 +165,7 @@
                       <td></td>
                       <td th:text="${product.productDto.isbn}">
                       </td>
-                      <td th:text="${product.productDto.title}"></td>
+                      <td class="text-truncate" style="max-width: 190px;" th:text="${product.productDto.title}"></td>
                       <td>
                         <del class="fs-6"
                              th:text="${#numbers.formatInteger(product.productDto.actualPrice, 1, 'COMMA')}+'원'">
