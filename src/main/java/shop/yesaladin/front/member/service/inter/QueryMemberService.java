@@ -8,6 +8,7 @@ import shop.yesaladin.front.common.dto.PaginatedResponseDto;
 import shop.yesaladin.front.member.dto.MemberBlockRequestDto;
 import shop.yesaladin.front.member.dto.MemberBlockResponseDto;
 import shop.yesaladin.front.member.dto.MemberManagerResponseDto;
+import shop.yesaladin.front.member.dto.MemberPasswordResponseDto;
 import shop.yesaladin.front.member.dto.MemberProfileExistResponseDto;
 import shop.yesaladin.front.member.dto.MemberQueryResponseDto;
 import shop.yesaladin.front.member.dto.MemberStatisticsResponseDto;
@@ -173,4 +174,13 @@ public interface QueryMemberService {
      * @since 1.0
      */
     MemberStatisticsResponseDto getMemberStatistics();
+
+    /**
+     * 회원이 패스워드 변경 시 기존 패스워드 확인을 위해 요청합니다.
+     *
+     * @return 회원의 패스워드
+     * @author 송학현
+     * @since 1.0
+     */
+    MemberPasswordResponseDto getMemberPassword();
 }

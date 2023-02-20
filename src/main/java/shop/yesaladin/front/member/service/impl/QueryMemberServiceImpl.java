@@ -25,6 +25,7 @@ import shop.yesaladin.front.member.dto.MemberBlockRequestDto;
 import shop.yesaladin.front.member.dto.MemberBlockResponseDto;
 import shop.yesaladin.front.member.dto.MemberGradeQueryResponseDto;
 import shop.yesaladin.front.member.dto.MemberManagerResponseDto;
+import shop.yesaladin.front.member.dto.MemberPasswordResponseDto;
 import shop.yesaladin.front.member.dto.MemberProfileExistResponseDto;
 import shop.yesaladin.front.member.dto.MemberQueryResponseDto;
 import shop.yesaladin.front.member.dto.MemberStatisticsResponseDto;
@@ -426,6 +427,29 @@ public class QueryMemberServiceImpl implements QueryMemberService {
                 .toUriString();
 
         ResponseEntity<ResponseDto<MemberStatisticsResponseDto>> response = restTemplate.exchange(
+                uri,
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<>() {
+                }
+        );
+
+        return Objects.requireNonNull(response.getBody()).getData();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public MemberPasswordResponseDto getMemberPassword() {
+        String uri = UriComponentsBuilder
+                .fromUriString(gatewayConfig.getShopUrl())
+                .path("/v1/members/password-check")
+                .encode()
+                .build()
+                .toUriString();
+
+        ResponseEntity<ResponseDto<MemberPasswordResponseDto>> response = restTemplate.exchange(
                 uri,
                 HttpMethod.GET,
                 null,

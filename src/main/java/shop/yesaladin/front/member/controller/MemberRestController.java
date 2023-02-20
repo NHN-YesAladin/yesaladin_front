@@ -3,10 +3,12 @@ package shop.yesaladin.front.member.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.member.dto.MemberBlockRequestDto;
@@ -14,11 +16,13 @@ import shop.yesaladin.front.member.dto.MemberBlockResponseDto;
 import shop.yesaladin.front.member.dto.MemberEmailUpdateRequestDto;
 import shop.yesaladin.front.member.dto.MemberNameUpdateRequestDto;
 import shop.yesaladin.front.member.dto.MemberNicknameUpdateRequestDto;
+import shop.yesaladin.front.member.dto.MemberPasswordResponseDto;
 import shop.yesaladin.front.member.dto.MemberPhoneUpdateRequestDto;
 import shop.yesaladin.front.member.dto.MemberProfileExistResponseDto;
 import shop.yesaladin.front.member.dto.MemberUnblockResponseDto;
 import shop.yesaladin.front.member.dto.MemberUpdateResponseDto;
 import shop.yesaladin.front.member.dto.MemberWithdrawResponseDto;
+import shop.yesaladin.front.member.dto.MemberPasswordUpdateRequestDto;
 import shop.yesaladin.front.member.service.inter.CommandMemberService;
 import shop.yesaladin.front.member.service.inter.QueryMemberService;
 
@@ -35,6 +39,7 @@ public class MemberRestController {
 
     private final QueryMemberService queryMemberService;
     private final CommandMemberService commandMemberService;
+    private final PasswordEncoder passwordEncoder;
 
     /**
      * 회원 가입 시 사용하고자 하는 닉네임이 존재하는지 체크합니다.
@@ -203,5 +208,33 @@ public class MemberRestController {
         return response.getData();
     }
 
-    // TODO: 비밀번호 조회 후 passwordEncoder.matches()로 비교하여 비밀번호 확인하는 메소드 추가
+
+    /**
+     * 확인을 위해 입력한 회원의 비밀번호가 DB에 encoding된 채로 저장된 비밀번호와 일치하는지 확인합니다.
+     *
+     * @param curPassword 변경 전 확인을 위한 회원의 현재 패스워드
+     * @return DB에 저장된 encoding된 패스워드와의 일치 여부
+     * @author 송학현
+     * @since 1.0
+     */
+    @PostMapping("/password-check")
+    public boolean checkPassword(@RequestParam(name = "curPassword") String curPassword) {
+        MemberPasswordResponseDto response = queryMemberService.getMemberPassword();
+        return passwordEncoder.matches(curPassword, response.getPassword());
+    }
+
+    /**
+     * 회원의 패스워드를 수정합니다.
+     *
+     * @param request 수정할 회원 정보
+     * @return 수정된 결과
+     * @author 송학현
+     * @since 1.0
+     */
+    @PostMapping("/edit/members/password")
+    public MemberUpdateResponseDto editMemberPassword(@RequestBody MemberPasswordUpdateRequestDto request) {
+        ResponseDto<MemberUpdateResponseDto> response = commandMemberService.editPassword(request);
+        log.info("response={}",response.getData());
+        return response.getData();
+    }
 }

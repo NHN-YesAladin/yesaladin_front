@@ -204,7 +204,6 @@
   <!-- TODO 4 : footer -->
   <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
 </div>
-<!--<div class="d-none" id="front-server-url" th:text="${@environment.getProperty('yesaladin.front.url')}"></div>-->
 
 <!--비밀번호 Modal-->
 <div class="modal modal-blur fade" id="modal-password"
@@ -224,7 +223,8 @@
                  pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$"
                  required>
           <div class="valid-feedback">완료</div>
-          <div class="invalid-feedback">Password는 최소 8자, 하나 이상의 문자와 하나의 숫자 및 하나의 특수 문자로 입력해주세요.</div>
+          <div class="invalid-feedback">Password는 최소 8자, 하나 이상의 문자와 하나의 숫자 및 하나의 특수 문자로 입력해주세요.
+          </div>
           <button id="check-current-pwd" type="button" class="btn btn-outline-info"
                   onclick="passwordCheck()">비밀번호 확인
           </button>
@@ -235,7 +235,6 @@
                  placeholder="Password는 최소 8자, 하나 이상의 문자와 하나의 숫자 및 하나의 특수 문자로 입력해주세요."
                  name="new-password"
                  pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$"
-                 onchange="validatePassword()"
                  required disabled>
 
           <label class="form-label required" for="new-password-check"> 새로운 비밀번호 확인</label>
@@ -243,28 +242,20 @@
                  placeholder="Password는 최소 8자, 하나 이상의 문자와 하나의 숫자 및 하나의 특수 문자로 입력해주세요."
                  name="new-password-check"
                  pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$"
-                 onchange="validatePassword()"
                  required disabled>
         </div>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                aria-label="Close">닫기
+        </button>
+        <button type="button" class="btn btn-info link-secondary" id="updatePasswordBtn"
+                onclick="updatePassword()" disabled>
+          변경하기
+        </button>
       </div>
       <hr class="mt-0 mb-1">
-      <!-- 비밀번호 Footer -->
-      <div class="modal-footer" id="member-address-footer">
-        <div class="row w-full ms-0 me-0">
-          <div class="col-12 ps-0 pe-0">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">닫기</button>
-<!--            <button type="submit" class="btn btn-primary">변경하기</button>-->
-            <button type="button" class="btn btn-info link-secondary" id="updatePasswordBtn"
-                    onclick="updatePassword()" disabled>
-              변경하기
-            </button>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </div>
-
 
 <!--이름 변경 Modal-->
 <div class="modal modal-blur fade" id="modal-name"
@@ -276,18 +267,20 @@
       </div>
       <!-- body -->
       <div class="modal-body">
-          <br/>
-          <div class="form-group">
-            <label for="changeName">변경할 이름</label>
-            <input type="text" class="form-control" id="changeName"
-                   placeholder="이름은 한글 또는 영어 2자에서 50자까지 입력 가능합니다." name="changeName"
-                   pattern="^.*(?=.*[가-힣a-z])(?=^.{2,50}).*$"
-                   required>
-            <div class="valid-feedback">완료</div>
-            <div class="invalid-feedback">이름 형식에 맞지않습니다.</div>
-          </div>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">닫기</button>
-          <button onclick="updateName()" class="btn btn-primary">변경하기</button>
+        <br/>
+        <div class="form-group">
+          <label for="changeName">변경할 이름</label>
+          <input type="text" class="form-control" id="changeName"
+                 placeholder="이름은 한글 또는 영어 2자에서 50자까지 입력 가능합니다." name="changeName"
+                 pattern="^.*(?=.*[가-힣a-z])(?=^.{2,50}).*$"
+                 required>
+          <div class="valid-feedback">완료</div>
+          <div class="invalid-feedback">이름 형식에 맞지않습니다.</div>
+        </div>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">
+          닫기
+        </button>
+        <button onclick="updateName()" class="btn btn-primary">변경하기</button>
       </div>
     </div>
   </div>
@@ -304,18 +297,21 @@
       </div>
       <!-- body -->
       <div class="modal-body">
-          <br/>
-          <div class="form-group">
-            <label for="changeNickname">변경할 닉네임</label>
-            <input type="text" class="form-control" id="changeNickname"
-                   placeholder="숫자, 영어, 한국어와 언더스코어를 허용하며 최소 2자 이상의 15자 이하의 닉네임만 가능합니다." name="changeNickname"
-                   pattern="^[가-힣ㄱ-ㅎa-zA-Z0-9._-]{2,15}$"
-                   required>
-            <div class="valid-feedback">완료</div>
-            <div class="invalid-feedback">닉네임 형식에 맞지않습니다.</div>
-          </div>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">닫기</button>
-          <button onclick="updateNickname()" class="btn btn-primary">변경하기</button>
+        <br/>
+        <div class="form-group">
+          <label for="changeNickname">변경할 닉네임</label>
+          <input type="text" class="form-control" id="changeNickname"
+                 placeholder="숫자, 영어, 한국어와 언더스코어를 허용하며 최소 2자 이상의 15자 이하의 닉네임만 가능합니다."
+                 name="changeNickname"
+                 pattern="^[가-힣ㄱ-ㅎa-zA-Z0-9._-]{2,15}$"
+                 required>
+          <div class="valid-feedback">완료</div>
+          <div class="invalid-feedback">닉네임 형식에 맞지않습니다.</div>
+        </div>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">
+          닫기
+        </button>
+        <button onclick="updateNickname()" class="btn btn-primary">변경하기</button>
       </div>
     </div>
   </div>
@@ -332,18 +328,20 @@
       </div>
       <!-- body -->
       <div class="modal-body">
-          <br/>
-          <div class="form-group">
-            <label for="changeEmail">변경할 이메일</label>
-            <input type="email" class="form-control" id="changeEmail"
-                   placeholder="abc@xxxx.xxx" name="changeEmail"
-                   pattern="^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$"
-                   required>
-            <div class="valid-feedback">완료</div>
-            <div class="invalid-feedback">이메일 형식에 맞지않습니다.</div>
-          </div>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">닫기</button>
-          <button onclick="updateEmail()" class="btn btn-primary">변경하기</button>
+        <br/>
+        <div class="form-group">
+          <label for="changeEmail">변경할 이메일</label>
+          <input type="email" class="form-control" id="changeEmail"
+                 placeholder="abc@xxxx.xxx" name="changeEmail"
+                 pattern="^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$"
+                 required>
+          <div class="valid-feedback">완료</div>
+          <div class="invalid-feedback">이메일 형식에 맞지않습니다.</div>
+        </div>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">
+          닫기
+        </button>
+        <button onclick="updateEmail()" class="btn btn-primary">변경하기</button>
       </div>
     </div>
   </div>
@@ -360,23 +358,21 @@
       </div>
       <!-- body -->
       <div class="modal-body">
-<!--        <form action="/members/phone" class="was-validated"-->
-<!--              method="post">-->
-          <br/>
-          <div class="form-group">
-            <label for="changePhone">변경할 전화번호</label>
-            <input type="text" class="form-control" id="changePhone"
-                   placeholder="휴대폰 번호 ex) 01012345678" name="changePhone"
-                   pattern="/^01([0|1])\d{4}\d{4}$/" maxlength="11"
-                   oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
-                   required>
-            <div class="valid-feedback">완료</div>
-            <div class="invalid-feedback">전화번호 형식에 맞지않습니다.</div>
-          </div>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">닫기</button>
-<!--          <button type="submit" class="btn btn-primary">변경하기</button>-->
-          <button onclick="updatePhone()" class="btn btn-primary">변경하기</button>
-<!--        </form>-->
+        <br/>
+        <div class="form-group">
+          <label for="changePhone">변경할 전화번호</label>
+          <input type="text" class="form-control" id="changePhone"
+                 placeholder="휴대폰 번호 ex) 01012345678" name="changePhone"
+                 pattern="/^01([0|1])\d{4}\d{4}$/" maxlength="11"
+                 oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+                 required>
+          <div class="valid-feedback">완료</div>
+          <div class="invalid-feedback">전화번호 형식에 맞지않습니다.</div>
+        </div>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">
+          닫기
+        </button>
+        <button onclick="updatePhone()" class="btn btn-primary">변경하기</button>
       </div>
     </div>
   </div>
@@ -389,6 +385,7 @@
 
   // TODO: 이름 변경 메소드 추가할 것
   let changeName = document.getElementById('changeName');
+
   async function updateName() {
     let name = changeName.value;
     console.log("name : " + name);
@@ -420,9 +417,8 @@
     })
   }
 
-
-  // TODO: 전화번호 변경 메소드 추가할 것
   let changePhone = document.getElementById('changePhone');
+
   async function updatePhone() {
     let phone = changePhone.value;
     console.log("phone : " + phone);
@@ -454,8 +450,8 @@
     })
   }
 
-  // TODO: email 변경 메소드 추가할 것
   let changeEmail = document.getElementById('changeEmail');
+
   async function updateEmail() {
     let email = changeEmail.value;
     console.log("email : " + email);
@@ -487,16 +483,16 @@
     })
   }
 
-  // TODO: nickname 변경 메소드 변경할 것
   let changeNickname = document.getElementById('changeNickname');
-  async function updateNickname() {
+
+  function updateNickname() {
     let nickname = changeNickname.value;
     console.log("nickname : " + nickname);
     if (nickname === "") {
       writeContentToAlert("변경하고 싶은 닉네임을 입력하세요.");
       return;
     }
-    await fetch(`${frontUrl}/edit/members/nickname`, {
+    fetch(`${frontUrl}/edit/members/nickname`, {
       method: "POST",
       headers: {
         'Content-Type': 'application/json'
@@ -505,7 +501,7 @@
         nickname: nickname
       })
     }).then((resp) =>
-      resp.json()
+        resp.json()
     ).then((data) => {
       console.log("data : ", data);
 
@@ -519,12 +515,9 @@
     })
   }
 
-  const curPassword = document.getElementById("cur-password");
   let newPassword = document.getElementById("new-password");
   let newPasswordCheck = document.getElementById("new-password-check");
-  let updatePasswordBtn = document.getElementById("updatePasswordBtn");
 
-  // TODO: controller와 연결 후 API 서버에 해당 API 추가해야 함. (encoding 된 password를 조회한 뒤 passwordEncoder.matches()로 비교하면 됨
   function passwordCheck() {
     const curPassword = document.getElementById("cur-password").value;
     $.ajax({
@@ -532,7 +525,7 @@
       async: false,
       dataType: 'json',
       data: {curPassword: curPassword},
-      url: "/members/password-check"
+      url: "/password-check"
       , success: function (result) {
         if (result === true) {
           alert("비밀번호 확인 완료")
@@ -548,44 +541,37 @@
     })
   }
 
-  function validatePassword() {
-    if (newPassword.value !== newPasswordCheck.value) {
-      newPasswordCheck.setCustomValidity("패스워드가 일치하지 않습니다.");
-    } else {
-      newPasswordCheck.setCustomValidity('');
+  async function updatePassword() {
+    let password = newPassword.value;
+    console.log('password : ' + password);
+    if (password === '' || newPasswordCheck.value === '') {
+      writeContentToAlert("변경하고 싶은 패스워드를 입력하세요.");
+      return;
     }
-  }
 
-  // TODO: 아래는 망한 코드... 다 뜯어 고쳐야 함
-  newPassword.onchange = validatePassword;
-  newPasswordCheck = validatePassword;
-
-  function updatePassword() {
-    // const nickname = nickName.value;
-    // console.log("nickname : " + nickname);
-    // if (nickname == "") {
-    //   writeContentToAlert("변경하고 싶은 닉네임을 입력하세요.");
-    //   return;
-    // }
-    // fetch(`${frontUrl}/api/members/edit`, {
-    //   method: "PUT",
-    //   headers: {
-    //     "Content-Type": "application/json"
-    //   },
-    //   body: JSON.stringify({
-    //     nickname: nickname
-    //   })
-    // }).then((resp) => {
-    //   resp.json()
-    // }).then((data) => {
-    //   console.log("data : ", data);
-    //   if (!data) {
-    //     writeContentToAlert("회원 정보를 수정하는데 실패했습니다.");
-    //     nickName.value = [[${nickname}]];
-    //   } else {
-    //     writeContentToSuccess("회원 정보가 수정되었습니다.");
-    //   }
-    // })
+    if (newPassword.value !== newPasswordCheck.value) {
+      alert('패스워드가 일치하지 않습니다.');
+      return;
+    }
+    await fetch(`${frontUrl}/edit/members/password`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        password: password
+      })
+    }).then((resp) =>
+      resp.json()
+    ).then((data) => {
+      console.log("data : ", data);
+      if (!data.id && !data.data) {
+        writeContentToAlert("회원 정보를 수정하는데 실패했습니다.");
+      } else {
+        location.reload();
+        writeContentToSuccess("회원 정보가 수정되었습니다.");
+      }
+    })
   }
 </script>
 </html>
