@@ -91,7 +91,7 @@ public class QueryCategoryServiceImpl implements QueryCategoryService {
                         gatewayConfig.getShopUrl() + "/v1/categories")
                 .queryParam("parentId", parentId)
                 .queryParam("page", pageable.getPageNumber())
-                .queryParam("size", pageable.getPageSize() == 0 ? 10 : pageable.getPageSize())
+                .queryParam("size", 10)
                 .build();
 
         ResponseEntity<ResponseDto<PaginatedResponseDto<CategoryResponseDto>>> responseEntity = restTemplate.exchange(

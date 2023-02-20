@@ -158,12 +158,17 @@ public class QueryOrderServiceImpl implements QueryOrderService {
      * {@inheritDoc}
      */
     @Override
-    public OrderDetailsResponseDto getOrderDetailsDtoByOrderNumber(String orderNumber) {
-        URI uri = UriComponentsBuilder.fromHttpUrl(gatewayConfig.getShopUrl())
-                .path("/v1/orders/{orderNumber}")
-                .build()
-                .expand(orderNumber)
-                .toUri();
+    public OrderDetailsResponseDto getOrderDetailsDtoByOrderNumber(
+            String orderNumber,
+            String type
+    ) {
+        UriComponentsBuilder path = UriComponentsBuilder.fromHttpUrl(gatewayConfig.getShopUrl())
+                .path("/v1/orders/{orderNumber}");
+        if (Objects.equals(type, "none")) {
+            path.queryParam("type", "none");
+        }
+
+        URI uri = path.build().expand(orderNumber).toUri();
 
         ResponseEntity<ResponseDto<OrderDetailsResponseDto>> responseEntity = restTemplate.exchange(
                 uri,

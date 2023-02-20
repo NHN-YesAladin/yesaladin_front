@@ -1,5 +1,6 @@
 package shop.yesaladin.front.coupon.service.inter;
 
+import shop.yesaladin.coupon.code.TriggerTypeCode;
 import shop.yesaladin.front.coupon.dto.CouponCreateRequestDto;
 import shop.yesaladin.front.coupon.dto.CouponCreateResponseDto;
 
@@ -18,4 +19,6 @@ public interface CommandCouponService {
      * @return 생성된 쿠폰의 이름
      */
     CouponCreateResponseDto createCouponTemplate(CouponCreateRequestDto createDto);
+
+    void stopIssueCoupon(TriggerTypeCode triggerTypeCode, long couponId);
 }

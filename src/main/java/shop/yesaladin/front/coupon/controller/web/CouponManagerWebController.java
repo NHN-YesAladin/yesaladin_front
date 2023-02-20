@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import shop.yesaladin.coupon.code.CouponBoundCode;
 import shop.yesaladin.coupon.code.CouponTypeCode;
 import shop.yesaladin.coupon.code.TriggerTypeCode;
@@ -85,5 +87,14 @@ public class CouponManagerWebController {
         model.addAttribute("dataList", response.getDataList());
 
         return "manager/coupon/manager-coupon-list-view";
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.OK)
+    public void stopIssue(
+            @RequestParam(name = "trigger-type") TriggerTypeCode triggerTypeCode,
+            @RequestParam(name = "coupon-id") Long couponId
+    ) {
+        commandCouponService.stopIssueCoupon(triggerTypeCode, couponId);
     }
 }
