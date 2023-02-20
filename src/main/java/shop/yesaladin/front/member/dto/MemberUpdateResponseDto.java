@@ -24,4 +24,5 @@ public class MemberUpdateResponseDto {
     private String loginId;
     private MemberGrade memberGrade;
     private String phone;
+    private String email;
 }
