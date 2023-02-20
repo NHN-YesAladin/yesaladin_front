@@ -1,15 +1,20 @@
 package shop.yesaladin.front.payment.controller.web;
 
+import java.util.Objects;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import shop.yesaladin.common.dto.ResponseDto;
+import shop.yesaladin.front.common.utils.CookieUtils;
 import shop.yesaladin.front.order.dto.OrderPaymentRequestDto;
 import shop.yesaladin.front.order.dto.OrderStatusResponseDto;
 import shop.yesaladin.front.payment.dto.PaymentCompleteSimpleResponseDto;
@@ -30,16 +35,32 @@ import shop.yesaladin.front.payment.service.inter.PaymentService;
 @RequestMapping("/payments")
 public class PaymentMainWebController {
 
+    private static final String CART_NO = "CART_NO";
     private final PaymentService paymentService;
+    private final CookieUtils cookieUtils;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     /**
-     * 주문 이후에 결제 화면으로 넘기기 위해 사용
+     * 주문 이후에 결제 화면으로 넘기기 위해 사용, 결제 화면으로 오기위해선 주문이 완료 되어야 하므로 장바구니 삭제 플로우 추가
      *
      * @param model 모델
      * @return 결제 페이지
      */
     @GetMapping("/pay")
-    public String getPayPage(@ModelAttribute PaymentViewRequestDto request, Model model) {
+    public String getPayPage(
+            @ModelAttribute PaymentViewRequestDto request,
+            @CookieValue(value = CART_NO, required = false) Cookie cookie,
+            HttpServletResponse httpServletResponse,
+            Model model
+    ) {
+        if (Objects.nonNull(cookie)) {
+            String cartNoCookieValue = cookie.getValue();
+            redisTemplate.delete(cartNoCookieValue);
+            
+            Cookie cart = cookieUtils.createCookie(CART_NO, "", 0);
+            httpServletResponse.addCookie(cart);
+        }
+
         model.addAttribute("data", request);
         return "main/payment/pay-page";
     }
@@ -84,7 +105,7 @@ public class PaymentMainWebController {
                     .append(responseDto.getTotalAmount());
             return builder.toString();
         }
-        return "redirect:/orders/order-complete?orderNumber="+ orderNum;
+        return "redirect:/orders/order-complete?orderNumber=" + orderNum;
     }
 
 
