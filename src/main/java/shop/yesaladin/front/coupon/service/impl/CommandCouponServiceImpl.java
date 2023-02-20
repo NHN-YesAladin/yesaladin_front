@@ -64,18 +64,22 @@ public class CommandCouponServiceImpl implements CommandCouponService {
     }
 
     @Override
-    public void stopIssueCoupon(TriggerTypeCode triggerTypeCode, long couponId) {
+    public void stopIssueCoupon(TriggerTypeCode triggerType, long couponId) {
         String uriString = UriComponentsBuilder.fromHttpUrl(gatewayConfig.getCouponUrl())
                 .pathSegment("v1", "triggers")
-                .queryParam("trigger-type", triggerTypeCode)
+                .queryParam("trigger-type", triggerType)
                 .queryParam("coupon-id", couponId)
                 .toUriString();
-        restTemplate.exchange(uriString,
-                HttpMethod.DELETE,
-                null,
-                new ParameterizedTypeReference<>() {
-                }
-        );
+        log.info("요청 uri {}", uriString);
+
+        // FIXME
+//        restTemplate.exchange(uriString,
+//                HttpMethod.POST,
+//                null,
+//                new ParameterizedTypeReference<>() {
+//                }
+//        );
+        restTemplate.delete(uriString);
     }
 
     private CouponCreateResponseDto getResponseDtoWithErrorMessageList(HttpClientErrorException e) {

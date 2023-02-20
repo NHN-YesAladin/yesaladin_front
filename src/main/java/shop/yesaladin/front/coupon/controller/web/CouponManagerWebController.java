@@ -93,7 +93,7 @@ public class CouponManagerWebController {
     @ResponseStatus(HttpStatus.OK)
     public void stopIssue(
             @RequestParam(name = "trigger-type") TriggerTypeCode triggerTypeCode,
-            @RequestParam(name = "coupon-id") long couponId
+            @RequestParam(name = "coupon-id") Long couponId
     ) {
         commandCouponService.stopIssueCoupon(triggerTypeCode, couponId);
     }

@@ -85,7 +85,7 @@
                 <td th:text="${data.duration == null ? '~ ' + #temporals.format(data.expirationDate, 'yyyy-MM-dd') : '발행일로부터 ' + data.duration + '일'}"></td>
                 <td th:text="${#temporals.format(data.createdDateTime, 'yyyy-MM-dd')}"></td>
                 <td>
-                  <button class="col-4 btn btn-danger coupon-issue-stop-btn" type="submit"
+                  <button class="col-3 btn btn-danger coupon-issue-stop-btn" type="submit"
                           th:attr="data-triggerTypeCode=${data.triggerTypeCode}, data-couponId=${data.id}">
                     중단
                   </button>
@@ -116,8 +116,8 @@
   let SHOP_SERVER;
 
   window.addEventListener('DOMContentLoaded', (event) => {
-    FRONT_SERVER = document.querySelector("#frontServerUrl").textContent;
-    SHOP_SERVER = document.querySelector("#shopServerUrl").textContent;
+    FRONT_SERVER = document.querySelector("#front-server-url").textContent;
+    SHOP_SERVER = document.querySelector("#shop-server-url").textContent;
   });
 
   const stopIssueBtns = document.querySelectorAll(".coupon-issue-stop-btn");
@@ -132,6 +132,7 @@
       let triggerType = event.target.dataset.triggertypecode;
       let couponId = event.target.dataset.couponid;
       console.log(triggerType, couponId);
+      console.log(FRONT_SERVER);
       fetch(
           `${FRONT_SERVER}/manager/coupon?trigger-type=${triggerType}&coupon-id=${couponId}`,
           {
