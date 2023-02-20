@@ -46,6 +46,7 @@ public class OrderMainWebController {
     public String getOrderSheet(
             @RequestParam("isbn") List<String> isbn,
             @RequestParam("quantity") List<String> quantity,
+            @RequestParam(value = "type", required = false) String type,
             HttpServletRequest request,
             Model model
     ) {
@@ -59,6 +60,7 @@ public class OrderMainWebController {
             return "common/errors/error";
         }
         model.addAttribute("info", response.getData());
+        model.addAttribute("type", type);
 
         return (request.getServletPath().contains("subscribe")) ? "main/order/subscribe"
                 : "main/order/order";
@@ -93,21 +95,20 @@ public class OrderMainWebController {
     @PostMapping("/member")
     public String createMemberOrder(
             @ModelAttribute OrderMemberRequestDto request,
-            @CookieValue(value = "CART_NO", required = false) Cookie cookie,
-            HttpServletResponse httpServletResponse,
+            @RequestParam(value = "type", required = false) String type,
             Model model
     ) {
 
-        ResponseDto<OrderCreateResponseDto> response = commandOrderService.createMemberOrder(request.toOrderMemberCreateRequest());
+        ResponseDto<OrderCreateResponseDto> response = commandOrderService.createMemberOrder(
+                request.toOrderMemberCreateRequest(),
+                type
+        );
 
         String orderName = response.getData().getOrderName();
         String orderNumber = response.getData().getOrderNumber();
 
         PaymentViewRequestDto payRequest = request.toPaymentViewRequest(orderNumber, orderName);
         model.addAttribute("data", payRequest);
-
-        // 장바구니 flush
-        cookieUtils.deleteCart(redisTemplate, cookie, httpServletResponse);
 
         return "main/payment/pay-page";
 

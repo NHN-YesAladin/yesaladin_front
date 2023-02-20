@@ -6,6 +6,9 @@ import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -52,11 +55,13 @@ public class PaymentMainWebController {
             HttpServletResponse httpServletResponse,
             Model model
     ) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication instanceof AnonymousAuthenticationToken) {
+            // 비회원 주문만 장바구니 flush
+            cookieUtils.deleteCart(redisTemplate, cookie, httpServletResponse);
+        }
+
         model.addAttribute("data", request);
-
-        // 장바구니 flush
-        cookieUtils.deleteCart(redisTemplate, cookie, httpServletResponse);
-
         return "main/payment/pay-page";
     }
 
