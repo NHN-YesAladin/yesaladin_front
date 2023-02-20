@@ -35,7 +35,6 @@ import shop.yesaladin.front.payment.service.inter.PaymentService;
 @RequestMapping("/payments")
 public class PaymentMainWebController {
 
-    private static final String CART_NO = "CART_NO";
     private final PaymentService paymentService;
     private final CookieUtils cookieUtils;
     private final RedisTemplate<String, Object> redisTemplate;
@@ -49,21 +48,18 @@ public class PaymentMainWebController {
     @GetMapping("/pay")
     public String getPayPage(
             @ModelAttribute PaymentViewRequestDto request,
-            @CookieValue(value = CART_NO, required = false) Cookie cookie,
+            @CookieValue(value = "CART_NO", required = false) Cookie cookie,
             HttpServletResponse httpServletResponse,
             Model model
     ) {
-        if (Objects.nonNull(cookie)) {
-            String cartNoCookieValue = cookie.getValue();
-            redisTemplate.delete(cartNoCookieValue);
-            
-            Cookie cart = cookieUtils.createCookie(CART_NO, "", 0);
-            httpServletResponse.addCookie(cart);
-        }
-
         model.addAttribute("data", request);
+
+        // 장바구니 flush
+        cookieUtils.deleteCart(redisTemplate, cookie, httpServletResponse);
+
         return "main/payment/pay-page";
     }
+
 
     /**
      * 팝업창에서 다시 결제를 할때, 팝업창에서 결제창이 띄어지지 않게 새창에서 결제 시키기 위해 사용

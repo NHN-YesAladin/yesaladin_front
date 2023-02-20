@@ -1,11 +1,15 @@
 package shop.yesaladin.front.order.controller.web;
 
 import java.util.Objects;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import shop.yesaladin.common.dto.ResponseDto;
+import shop.yesaladin.front.common.utils.CookieUtils;
 import shop.yesaladin.front.order.dto.*;
 import shop.yesaladin.front.order.service.inter.CommandOrderService;
 import shop.yesaladin.front.order.service.inter.QueryOrderService;
@@ -27,6 +31,8 @@ public class OrderMainWebController {
 
     private final QueryOrderService queryOrderService;
     private final CommandOrderService commandOrderService;
+    private final RedisTemplate<String, Object> redisTemplate;
+    private final CookieUtils cookieUtils;
 
     /**
      * 주문할 상품들의 데이터를 받아 주문서 view 를 리턴합니다.
@@ -85,7 +91,13 @@ public class OrderMainWebController {
      * @since 1.0
      */
     @PostMapping("/member")
-    public String createMemberOrder(@ModelAttribute OrderMemberRequestDto request, Model model) {
+    public String createMemberOrder(
+            @ModelAttribute OrderMemberRequestDto request,
+            @CookieValue(value = "CART_NO", required = false) Cookie cookie,
+            HttpServletResponse httpServletResponse,
+            Model model
+    ) {
+
         ResponseDto<OrderCreateResponseDto> response = commandOrderService.createMemberOrder(request.toOrderMemberCreateRequest());
 
         String orderName = response.getData().getOrderName();
@@ -93,6 +105,10 @@ public class OrderMainWebController {
 
         PaymentViewRequestDto payRequest = request.toPaymentViewRequest(orderNumber, orderName);
         model.addAttribute("data", payRequest);
+
+        // 장바구니 flush
+        cookieUtils.deleteCart(redisTemplate, cookie, httpServletResponse);
+
         return "main/payment/pay-page";
 
     }
