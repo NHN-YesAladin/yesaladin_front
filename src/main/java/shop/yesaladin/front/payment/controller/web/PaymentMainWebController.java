@@ -1,15 +1,23 @@
 package shop.yesaladin.front.payment.controller.web;
 
+import java.util.Objects;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import shop.yesaladin.common.dto.ResponseDto;
+import shop.yesaladin.front.common.utils.CookieUtils;
 import shop.yesaladin.front.order.dto.OrderPaymentRequestDto;
 import shop.yesaladin.front.order.dto.OrderStatusResponseDto;
 import shop.yesaladin.front.payment.dto.PaymentCompleteSimpleResponseDto;
@@ -31,18 +39,32 @@ import shop.yesaladin.front.payment.service.inter.PaymentService;
 public class PaymentMainWebController {
 
     private final PaymentService paymentService;
+    private final CookieUtils cookieUtils;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     /**
-     * 주문 이후에 결제 화면으로 넘기기 위해 사용
+     * 주문 이후에 결제 화면으로 넘기기 위해 사용, 결제 화면으로 오기위해선 주문이 완료 되어야 하므로 장바구니 삭제 플로우 추가
      *
      * @param model 모델
      * @return 결제 페이지
      */
     @GetMapping("/pay")
-    public String getPayPage(@ModelAttribute PaymentViewRequestDto request, Model model) {
+    public String getPayPage(
+            @ModelAttribute PaymentViewRequestDto request,
+            @CookieValue(value = "CART_NO", required = false) Cookie cookie,
+            HttpServletResponse httpServletResponse,
+            Model model
+    ) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication instanceof AnonymousAuthenticationToken) {
+            // 비회원 주문만 장바구니 flush
+            cookieUtils.deleteCart(redisTemplate, cookie, httpServletResponse);
+        }
+
         model.addAttribute("data", request);
         return "main/payment/pay-page";
     }
+
 
     /**
      * 팝업창에서 다시 결제를 할때, 팝업창에서 결제창이 띄어지지 않게 새창에서 결제 시키기 위해 사용
@@ -84,7 +106,7 @@ public class PaymentMainWebController {
                     .append(responseDto.getTotalAmount());
             return builder.toString();
         }
-        return "redirect:/orders/order-complete?orderNumber="+ orderNum;
+        return "redirect:/orders/order-complete?orderNumber=" + orderNum;
     }
 
 

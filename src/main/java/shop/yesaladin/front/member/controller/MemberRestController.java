@@ -6,15 +6,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.member.dto.MemberBlockRequestDto;
 import shop.yesaladin.front.member.dto.MemberBlockResponseDto;
+import shop.yesaladin.front.member.dto.MemberEmailUpdateRequestDto;
+import shop.yesaladin.front.member.dto.MemberNameUpdateRequestDto;
+import shop.yesaladin.front.member.dto.MemberNicknameUpdateRequestDto;
+import shop.yesaladin.front.member.dto.MemberPhoneUpdateRequestDto;
 import shop.yesaladin.front.member.dto.MemberProfileExistResponseDto;
 import shop.yesaladin.front.member.dto.MemberUnblockResponseDto;
-import shop.yesaladin.front.member.dto.MemberUpdateRequestDto;
 import shop.yesaladin.front.member.dto.MemberUpdateResponseDto;
 import shop.yesaladin.front.member.dto.MemberWithdrawResponseDto;
 import shop.yesaladin.front.member.service.inter.CommandMemberService;
@@ -144,17 +146,62 @@ public class MemberRestController {
     }
 
     /**
-     * 회원의 정보를 수정합니다.
+     * 회원의 닉네임을 수정합니다.
      *
      * @param request 수정할 회원 정보
-     * @return 마이페이지 메일 화면
+     * @return 수정된 결과
      * @author 최예린
+     * @author 송학현
      * @since 1.0
      */
-    @PutMapping("/api/members/edit")
-    public boolean editMemberInfo(@RequestBody MemberUpdateRequestDto request) {
-        ResponseDto<MemberUpdateResponseDto> response = commandMemberService.edit(request);
-
-        return response.isSuccess();
+    @PostMapping("/edit/members/nickname")
+    public MemberUpdateResponseDto editMemberNickname(@RequestBody MemberNicknameUpdateRequestDto request) {
+        ResponseDto<MemberUpdateResponseDto> response = commandMemberService.editNickname(
+                request);
+        return response.getData();
     }
+
+    /**
+     * 회원의 이름을 수정합니다.
+     *
+     * @param request 수정할 회원 정보
+     * @return 수정된 결과
+     * @author 송학현
+     * @since 1.0
+     */
+    @PostMapping("/edit/members/name")
+    public MemberUpdateResponseDto editMemberName(@RequestBody MemberNameUpdateRequestDto request) {
+        ResponseDto<MemberUpdateResponseDto> response = commandMemberService.editName(request);
+        return response.getData();
+    }
+
+    /**
+     * 회원의 이름을 수정합니다.
+     *
+     * @param request 수정할 회원 정보
+     * @return 수정된 결과
+     * @author 송학현
+     * @since 1.0
+     */
+    @PostMapping("/edit/members/email")
+    public MemberUpdateResponseDto editMemberEmail(@RequestBody MemberEmailUpdateRequestDto request) {
+        ResponseDto<MemberUpdateResponseDto> response = commandMemberService.editEmail(request);
+        return response.getData();
+    }
+
+    /**
+     * 회원의 전화번호를 수정합니다.
+     *
+     * @param request 수정할 회원 정보
+     * @return 수정된 결과
+     * @author 송학현
+     * @since 1.0
+     */
+    @PostMapping("/edit/members/phone")
+    public MemberUpdateResponseDto editMemberPhone(@RequestBody MemberPhoneUpdateRequestDto request) {
+        ResponseDto<MemberUpdateResponseDto> response = commandMemberService.editPhone(request);
+        return response.getData();
+    }
+
+    // TODO: 비밀번호 조회 후 passwordEncoder.matches()로 비교하여 비밀번호 확인하는 메소드 추가
 }

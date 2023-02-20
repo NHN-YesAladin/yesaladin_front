@@ -16,7 +16,10 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.config.GatewayConfig;
-import shop.yesaladin.front.member.dto.MemberUpdateRequestDto;
+import shop.yesaladin.front.member.dto.MemberEmailUpdateRequestDto;
+import shop.yesaladin.front.member.dto.MemberNameUpdateRequestDto;
+import shop.yesaladin.front.member.dto.MemberNicknameUpdateRequestDto;
+import shop.yesaladin.front.member.dto.MemberPhoneUpdateRequestDto;
 import shop.yesaladin.front.member.dto.MemberUpdateResponseDto;
 import shop.yesaladin.front.member.dto.MemberWithdrawResponseDto;
 import shop.yesaladin.front.member.dto.SignUpRequestDto;
@@ -114,20 +117,94 @@ public class CommandMemberServiceImpl implements CommandMemberService {
 
     /**
      * {@inheritDoc}
-     *
      */
     @Override
-    public ResponseDto<MemberUpdateResponseDto> edit(MemberUpdateRequestDto request) {
+    public ResponseDto<MemberUpdateResponseDto> editNickname(MemberNicknameUpdateRequestDto request) {
         URI uri = UriComponentsBuilder
                 .fromUriString(gatewayConfig.getShopUrl())
-                .path("/v1/members")
+                .path("/v1/members/nickname")
                 .encode()
                 .build()
                 .toUri();
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<MemberUpdateRequestDto> entity = new HttpEntity<>(request, headers);
+        HttpEntity<MemberNicknameUpdateRequestDto> entity = new HttpEntity<>(request, headers);
+
+        ResponseEntity<ResponseDto<MemberUpdateResponseDto>> response = restTemplate.exchange(
+                uri,
+                HttpMethod.PUT,
+                entity,
+                new ParameterizedTypeReference<>() {}
+        );
+        return Objects.requireNonNull(response.getBody());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ResponseDto<MemberUpdateResponseDto> editName(MemberNameUpdateRequestDto request) {
+        URI uri = UriComponentsBuilder
+                .fromUriString(gatewayConfig.getShopUrl())
+                .path("/v1/members/name")
+                .encode()
+                .build()
+                .toUri();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<MemberNameUpdateRequestDto> entity = new HttpEntity<>(request, headers);
+
+        ResponseEntity<ResponseDto<MemberUpdateResponseDto>> response = restTemplate.exchange(
+                uri,
+                HttpMethod.PUT,
+                entity,
+                new ParameterizedTypeReference<>() {}
+        );
+        return Objects.requireNonNull(response.getBody());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ResponseDto<MemberUpdateResponseDto> editEmail(MemberEmailUpdateRequestDto request) {
+        URI uri = UriComponentsBuilder
+                .fromUriString(gatewayConfig.getShopUrl())
+                .path("/v1/members/email")
+                .encode()
+                .build()
+                .toUri();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<MemberEmailUpdateRequestDto> entity = new HttpEntity<>(request, headers);
+
+        ResponseEntity<ResponseDto<MemberUpdateResponseDto>> response = restTemplate.exchange(
+                uri,
+                HttpMethod.PUT,
+                entity,
+                new ParameterizedTypeReference<>() {}
+        );
+        return Objects.requireNonNull(response.getBody());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ResponseDto<MemberUpdateResponseDto> editPhone(MemberPhoneUpdateRequestDto request) {
+        URI uri = UriComponentsBuilder
+                .fromUriString(gatewayConfig.getShopUrl())
+                .path("/v1/members/phone")
+                .encode()
+                .build()
+                .toUri();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<MemberPhoneUpdateRequestDto> entity = new HttpEntity<>(request, headers);
 
         ResponseEntity<ResponseDto<MemberUpdateResponseDto>> response = restTemplate.exchange(
                 uri,

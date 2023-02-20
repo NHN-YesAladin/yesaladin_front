@@ -1,5 +1,7 @@
 package shop.yesaladin.front.common.utils;
 
+import javax.servlet.http.HttpServletResponse;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.Cookie;
@@ -69,5 +71,28 @@ public class CookieUtils {
             }
         }
         return null;
+    }
+
+    /**
+     * 쿠기에 저장된 장바구니 관련 정보를 지우고, redis의 정보도 삭제하는 메서드
+     *
+     * @param redisTemplate 레디스 템플릿
+     * @param cookie 쿠키
+     * @param httpServletResponse 쿠키 삭제를 위한 서블릿 응답 객체
+     * @author 배수한
+     * @since 1.0
+     */
+    public void deleteCart(
+            RedisTemplate<String, Object> redisTemplate,
+            Cookie cookie,
+            HttpServletResponse httpServletResponse
+    ) {
+        if (Objects.nonNull(cookie)) {
+            String cartNoCookieValue = cookie.getValue();
+            redisTemplate.delete(cartNoCookieValue);
+
+            Cookie cart = this.createCookie("CART_NO", "", 0);
+            httpServletResponse.addCookie(cart);
+        }
     }
 }

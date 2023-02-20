@@ -24,7 +24,7 @@
 <script src="https://js.tosspayments.com/v1/payment"></script>
 <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 
-<form action="/orders/member" method="post">
+<form th:action="${type == null ? '/orders/member' : '/orders/member?type=one'}" method="post">
   <div class="wrapper">
     <!-- TODO 1 : HEADER -->
     <div th:replace="~{common/fragments/header :: fragment-header}"></div>
@@ -607,6 +607,8 @@
   <input id="member-coupon-input" name="orderCoupons">
 </div>
 </body>
+<!--//TODO restController를 통한 회원 주문시, js코드에 추가해야함-->
+<div class="d-none" id="isNotEspeciallyBuy" th:data-type="${type == null} ? 'nothing' : 'one' "></div>
 <script>
   function blockEnter(event) {
     if(event.code === "Enter") {
@@ -1147,6 +1149,8 @@
   }
 
   async function memberOrder() {
+    let type = document.getElementById("isNotEspeciallyBuy").dataset["type"];
+
     const usePointDoc = document.getElementsByName("usePoint");
 
     const recipientName = recipientNameDoc.value;
@@ -1165,7 +1169,11 @@
     const usePoint = usePointDoc.value;
     const savePoint = tryGetSavePoint();
 
-    await fetch(`${frontUrl}/api/orders/member}`, {
+    let url = `${frontUrl}/api/orders/member`;
+    if (type === "one") {
+      url = `${frontUrl}/api/orders/member?type=one`;
+    }
+    await fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -1189,7 +1197,7 @@
         alert(data.e)
       }
       console.log(data);
-    })
+    });
   }
   async function nonMemberOrder() {
     const expectedShippingDate = expectedShippingDateDoc.value;

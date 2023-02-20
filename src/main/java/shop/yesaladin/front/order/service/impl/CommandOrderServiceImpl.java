@@ -1,5 +1,6 @@
 package shop.yesaladin.front.order.service.impl;
 
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
@@ -35,12 +36,18 @@ public class CommandOrderServiceImpl implements CommandOrderService {
      * {@inheritDoc}
      */
     @Override
-    public ResponseDto<OrderCreateResponseDto> createMemberOrder(OrderMemberCreateRequestDto request) {
-        URI uri = UriComponentsBuilder.fromHttpUrl(gatewayConfig.getShopUrl())
-                .path("/v1/orders/member")
-                .build()
-                .encode()
-                .toUri();
+    public ResponseDto<OrderCreateResponseDto> createMemberOrder(
+            OrderMemberCreateRequestDto request,
+            String type
+    ) {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(gatewayConfig.getShopUrl())
+                .path("/v1/orders/member");
+        if (Objects.nonNull(type)) {
+            // 단건 주문일 경우, 특별하게 처리하기 위함
+            builder.queryParam("type", "one");
+        }
+        URI uri = builder.build().encode().toUri();
+
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<OrderMemberCreateRequestDto> httpEntity = new HttpEntity<>(request, headers);
