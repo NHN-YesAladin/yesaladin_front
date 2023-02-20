@@ -4,6 +4,7 @@ import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.member.dto.MemberEmailUpdateRequestDto;
 import shop.yesaladin.front.member.dto.MemberNameUpdateRequestDto;
 import shop.yesaladin.front.member.dto.MemberNicknameUpdateRequestDto;
+import shop.yesaladin.front.member.dto.MemberPasswordUpdateRequestDto;
 import shop.yesaladin.front.member.dto.MemberPhoneUpdateRequestDto;
 import shop.yesaladin.front.member.dto.MemberUpdateResponseDto;
 import shop.yesaladin.front.member.dto.SignUpRequestDto;
@@ -81,7 +82,7 @@ public interface CommandMemberService {
     ResponseDto<MemberUpdateResponseDto> editEmail(MemberEmailUpdateRequestDto request);
 
     /**
-     * 회원의 전화번호을 수정합니다.
+     * 회원의 전화번호를 수정합니다.
      *
      * @param request 회원 전화번호 수정 정보
      * @return 수정된 회원 정보
@@ -89,4 +90,14 @@ public interface CommandMemberService {
      * @since 1.0
      */
     ResponseDto<MemberUpdateResponseDto> editPhone(MemberPhoneUpdateRequestDto request);
+
+    /**
+     * 회원의 패스워드를 수정합니다.
+     *
+     * @param request 회원 패스워드 수정 정보
+     * @return 수정된 회원 정보
+     * @author 송학현
+     * @since 1.0
+     */
+    ResponseDto<MemberUpdateResponseDto> editPassword(MemberPasswordUpdateRequestDto request);
 }
