@@ -132,7 +132,7 @@ function passwordCheckEvent() {
     console.log("ok");
     password.readOnly = true;
     passwordCheck.readOnly = true;
-    passwordCheckBtn.disabl를ed = true;
+    passwordCheckBtn.disabled = true;
   }
 }
 
