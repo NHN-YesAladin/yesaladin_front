@@ -70,15 +70,6 @@ public class CommandCouponServiceImpl implements CommandCouponService {
                 .queryParam("trigger-type", triggerType)
                 .queryParam("coupon-id", couponId)
                 .toUriString();
-        log.info("요청 uri {}", uriString);
-
-        // FIXME
-//        restTemplate.exchange(uriString,
-//                HttpMethod.POST,
-//                null,
-//                new ParameterizedTypeReference<>() {
-//                }
-//        );
         restTemplate.delete(uriString);
     }
 

@@ -109,7 +109,7 @@
 </div>
 <div class="d-none" id="shop-server-url" th:text="${shopServerUrl}"></div>
 <div class="d-none" id="front-server-url" th:text="${frontServerUrl}"></div>
-<!-- DOMContentLoaded관련 Script import -->
+<!-- DOMContentLoaded 관련 Script import -->
 <script th:src="@{/js/coupon/manager-coupon-create.js}"></script>
 <script>
   let FRONT_SERVER;
@@ -121,22 +121,18 @@
   });
 
   const stopIssueBtns = document.querySelectorAll(".coupon-issue-stop-btn");
-  console.log("시작");
 
   stopIssueBtns.forEach(btn => btn.addEventListener("click", (event) => {
-    console.log("발행 중단 버튼에 이벤트 추가");
-
     let stopConfirm = confirm("해당 쿠폰 발행이 중단됩니다.")
 
     if (stopConfirm) {
       let triggerType = event.target.dataset.triggertypecode;
       let couponId = event.target.dataset.couponid;
-      console.log(triggerType, couponId);
-      console.log(FRONT_SERVER);
       fetch(
           `${FRONT_SERVER}/manager/coupon?trigger-type=${triggerType}&coupon-id=${couponId}`,
           {
-            method: "POST"
+            method: "POST",
+            headers: {'Content-Type': 'application/json'}
           })
     }
   }));

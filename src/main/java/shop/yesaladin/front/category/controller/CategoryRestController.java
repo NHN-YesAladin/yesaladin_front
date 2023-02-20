@@ -10,7 +10,6 @@ import shop.yesaladin.front.category.dto.CategoryResponseDto;
 import shop.yesaladin.front.category.dto.SearchedCategoryResponseDto;
 import shop.yesaladin.front.category.service.inter.QueryCategoryService;
 import shop.yesaladin.front.category.service.inter.SearchCategoryService;
-import shop.yesaladin.front.common.dto.PageRequestDto;
 
 /**
  * 카테고리 관련 Rest Controller 자바스크립트 fetch 통신을 보조하는 용으로 사용
