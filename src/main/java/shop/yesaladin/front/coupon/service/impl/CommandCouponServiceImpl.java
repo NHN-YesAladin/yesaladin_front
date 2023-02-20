@@ -15,8 +15,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.coupon.code.CouponTypeCode;
+import shop.yesaladin.coupon.code.TriggerTypeCode;
 import shop.yesaladin.front.config.GatewayConfig;
 import shop.yesaladin.front.coupon.dto.AmountCouponCreateDto;
 import shop.yesaladin.front.coupon.dto.CouponCreateDto;
@@ -43,8 +45,7 @@ public class CommandCouponServiceImpl implements CommandCouponService {
         String queryParamName = getQueryParamName(createDto);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.MULTIPART_FORM_DATA);
-        HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(
-                requestDto.toMap(),
+        HttpEntity<MultiValueMap<String, Object>> httpEntity = new HttpEntity<>(requestDto.toMap(),
                 httpHeaders
         );
         try {
@@ -62,10 +63,24 @@ public class CommandCouponServiceImpl implements CommandCouponService {
         }
     }
 
+    @Override
+    public void stopIssueCoupon(TriggerTypeCode triggerTypeCode, long couponId) {
+        String uriString = UriComponentsBuilder.fromHttpUrl(gatewayConfig.getCouponUrl())
+                .pathSegment("v1", "triggers")
+                .queryParam("trigger-type", triggerTypeCode)
+                .queryParam("coupon-id", couponId)
+                .toUriString();
+        restTemplate.exchange(uriString,
+                HttpMethod.DELETE,
+                null,
+                new ParameterizedTypeReference<>() {
+                }
+        );
+    }
+
     private CouponCreateResponseDto getResponseDtoWithErrorMessageList(HttpClientErrorException e) {
         try {
-            return objectMapper.readValue(
-                    e.getResponseBodyAsString(),
+            return objectMapper.readValue(e.getResponseBodyAsString(),
                     CouponCreateResponseDto.class
             );
         } catch (JsonProcessingException ex) {
@@ -97,8 +112,7 @@ public class CommandCouponServiceImpl implements CommandCouponService {
     }
 
     private PointCouponCreateDto createRequestDtoToPointCouponCreateDto(CouponCreateRequestDto createDto) {
-        return new PointCouponCreateDto(
-                createDto.getTriggerCode(),
+        return new PointCouponCreateDto(createDto.getTriggerCode(),
                 createDto.getName(),
                 createDto.getIsUnlimited(),
                 createDto.getQuantity(),
@@ -114,8 +128,7 @@ public class CommandCouponServiceImpl implements CommandCouponService {
     }
 
     private RateCouponCreateDto createRequestDtoToRateCouponCreateDto(CouponCreateRequestDto createDto) {
-        return new RateCouponCreateDto(
-                createDto.getTriggerCode(),
+        return new RateCouponCreateDto(createDto.getTriggerCode(),
                 createDto.getName(),
                 createDto.getIsUnlimited(),
                 createDto.getQuantity(),
@@ -138,8 +151,7 @@ public class CommandCouponServiceImpl implements CommandCouponService {
     }
 
     private AmountCouponCreateDto createRequestDtoToAmountCouponCreateDto(CouponCreateRequestDto createDto) {
-        return new AmountCouponCreateDto(
-                createDto.getTriggerCode(),
+        return new AmountCouponCreateDto(createDto.getTriggerCode(),
                 createDto.getName(),
                 createDto.getIsUnlimited(),
                 createDto.getQuantity(),
