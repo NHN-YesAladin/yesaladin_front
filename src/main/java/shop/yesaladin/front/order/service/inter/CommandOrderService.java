@@ -22,7 +22,10 @@ public interface CommandOrderService {
      * @author 최예린
      * @since 1.0
      */
-    ResponseDto<OrderCreateResponseDto> createMemberOrder(OrderMemberCreateRequestDto request);
+    ResponseDto<OrderCreateResponseDto> createMemberOrder(
+            OrderMemberCreateRequestDto request,
+            String type
+    );
 
     /**
      * 회원의 주문을 숨김처리합니다.

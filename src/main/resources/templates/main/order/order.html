@@ -24,7 +24,7 @@
 <script src="https://js.tosspayments.com/v1/payment"></script>
 <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 
-<form action="/orders/member" method="post">
+<form th:action="${type == null ? '/orders/member' : '/orders/member?type=one'}" method="post">
   <div class="wrapper">
     <!-- TODO 1 : HEADER -->
     <div th:replace="~{common/fragments/header :: fragment-header}"></div>

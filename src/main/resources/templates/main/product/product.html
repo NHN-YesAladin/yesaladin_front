@@ -341,7 +341,7 @@
             } else {
                 const quantity = document.getElementById('quantity').value;
 
-                location.replace(`${FRONT_SERVER}/orders/order-sheets?isbn=${isbn}&quantity=${quantity}`);
+                location.replace(`${FRONT_SERVER}/orders/order-sheets?isbn=${isbn}&quantity=${quantity}&type=one`);
             }
         })
     }
