@@ -2,8 +2,8 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <body th:fragment="custom-alert">
-<div id="alert-box" class="alert alert-warning m-1" role="alert">
-  <span id="alert-text" class="fs-4 fw-bold">22</span>
+<div id="alert-box" class="d-none alert alert-warning m-1" role="alert">
+  <span id="alert-text" class="fs-4 fw-bold"></span>
 </div>
 <script>
   const alertBox = document.getElementById("alert-box");
@@ -16,7 +16,7 @@
   function writeContentToAlert(message) {
     alertText.innerHTML = message;
     alertBox.classList.remove("d-none");
-    setTimeout(() => alertBox.classList.add("d-none"), 3000);
+    setTimeout(() => alertBox.classList.add("d-none"), 5000);
   }
 
 </script>
