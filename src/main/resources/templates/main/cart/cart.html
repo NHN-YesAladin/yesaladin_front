@@ -463,6 +463,14 @@
       return;
     }
 
+    console.log("quantity.toString() =", quantity.toString());
+    console.log("quantity.toString().includes(\".\") =", quantity.toString().includes("."));
+    if (quantity.toString().includes(".") === true) {
+      writeContentToAlert("소수인 수량으로 변경할 수 없습니다.");
+      document.getElementById('quantity' + id).value = document.getElementById('hidden-quantity-' + id).value;
+      return;
+    }
+
     fetch(SHOP_SERVER + "/v1/products/quantity/" + id, {
       method: "GET"
     }).then(res => res.json()).then(response => {
@@ -480,7 +488,6 @@
             "quantity": quantity
           })
         }).then(() => {
-          console.log("quantity modify url = " + FRONT_SERVER + '/cart/' + id);
           window.location.reload();
         });
       }
