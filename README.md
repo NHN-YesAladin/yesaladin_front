@@ -18,6 +18,10 @@ YesAladin Front는 사용자의 웹 애플리케이션 이용에 필요한 정�
 
 ### [@이수정](https://github.com/sujeong68)
 
+- 장바구니 
+  - 장바구니 내 조회
+  - 장바구니 상품 추가/삭제 및 담은 개수 변경
+
 ### [@최예린](https://github.com/Yellin36)
 
 ### [@배수한](https://github.com/shbaeNhnacademy)
