@@ -12,9 +12,26 @@ YesAladin Front는 사용자의 웹 애플리케이션 이용에 필요한 정�
 // 이미지 추가할 것
 ![]()
 
+## CI/CD
+(무중단 배포 및 CI/CD flow 첨부할 것)
+
 ## Features
 
 ### [@송학현](https://github.com/alanhakhyeonsong)
+- **회원 관리**
+  - 일반 로그인
+  - OAuth2 소셜 로그인 (Github, Kakao)
+  - 로그아웃
+  - 회원 가입
+  - 회원 정보 수정 (Co-authored-by: [@최예린](https://github.com/Yellin36))
+  - 회원 탈퇴
+  - 회원 통계
+- **인증/인가**
+  - 인증서버에서 발급받은 JWT 토큰 관리 및 자동 재발급 요청
+  - `Interceptor`를 통해 API 호출 시 HTTP Authorization Header에 토큰 정보 추가
+  - 권한별 접근 가능 페이지 구분
+- **장바구니**
+  - 회원용 장바구니 관리 (Co-authored-by: [@이수정](https://github.com/sujeong68))
 
 ### [@이수정](https://github.com/sujeong68)
 
@@ -49,6 +66,16 @@ YesAladin Front는 사용자의 웹 애플리케이션 이용에 필요한 정�
 - 관리자 홈, 메인페이지 UI 
 
 ### [@최예린](https://github.com/Yellin36)
+- **공통**
+  - UI 공통 컴포넌트 작성 및 레이아웃 디자인
+- **주문**
+  - 주문서 작성 및 페이지 추가
+  - 
+- **회원 관리**
+  - 회원 차단
+  - 회원 배송지 관리
+  - 회원 등급 변경 내역 조회
+  - 회원 포인트 내역 조회
 
 ### [@배수한](https://github.com/shbaeNhnacademy)
 
@@ -60,9 +87,8 @@ YesAladin Front는 사용자의 웹 애플리케이션 이용에 필요한 정�
 
 ## Technical Issue
 ### Web Socket (가제)
-### Object Storage (가제)
 ### Spring Cache (가제)
-### 인증/인가 (가제)
+### 인증/인가
 
 ## Tech Stack
 
