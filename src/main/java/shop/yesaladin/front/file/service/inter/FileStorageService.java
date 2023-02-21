@@ -32,6 +32,7 @@ public interface FileStorageService {
      *
      * @param url 파일을 다운받기 위한 파일의 url
      * @author 김홍대
+     * @author 이수정
      * @since 1.0
      */
     byte[] fileDownload(String url);
