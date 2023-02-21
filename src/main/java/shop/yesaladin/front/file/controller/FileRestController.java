@@ -59,6 +59,7 @@ public class FileRestController {
      * @param url 사용자가 요청한 파일의 url
      * @throws IOException
      * @author 김홍대
+     * @author 이수정
      * @since 1.0
      */
     @ResponseStatus(HttpStatus.OK)
