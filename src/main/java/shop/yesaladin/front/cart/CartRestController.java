@@ -55,6 +55,7 @@ public class CartRestController {
         log.info("id = {}", cartDto.getId());
         log.info("isEbook = {}", cartDto.getIsEbook());
         log.info("isSubscribe = {}", cartDto.getIsSubscriptionAvailable());
+        log.info("quantity = {}", cartDto.getQuantity());
 
         // 0, 음수인 수량을 담으면 에러
         if (cartDto.getQuantity() <= 0) {
@@ -116,7 +117,6 @@ public class CartRestController {
         if (Boolean.TRUE.equals(Objects.nonNull(preQuantity) && !cartDto.getIsEbook()) && Boolean.TRUE.equals(!cartDto.getIsSubscriptionAvailable())) {
             quantity += Integer.parseInt(preQuantity.toString());
         }
-        log.info("quantity = {}", quantity);
         redisTemplate.opsForHash().put(cookie.getValue(), cartDto.getId(), quantity);
 
         if (Objects.isNull(member)) {
