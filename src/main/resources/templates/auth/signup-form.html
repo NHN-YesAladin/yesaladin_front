@@ -44,8 +44,7 @@
                                                                     height="36" alt=""></a>
       </div>
       <form class="signup-form" id="signup-form" action="/members/signup" method="post"
-            th:object="${member}"
-            autocomplete="off" novalidate="">
+            th:object="${member}" novalidate="">
         <div class="card-body">
           <h2 class="card-title text-center mb-4">YesAladin 회원 가입</h2>
           <div class="mb-3">
@@ -72,7 +71,7 @@
           </div>
           <div class="mb-3">
             <label class="form-label">Login Id</label>
-            <input type="text" class="form-control" id="loginId" th:name="loginId"
+            <input type="text" class="form-control" id="id" th:name="loginId"
                    pattern="/([a-zA-Z0-9]{8,15})/g"
                    placeholder="아이디는 영문 또는 숫자로 8자 이상 15자 이하만 가능 합니다." required autocomplete="off">
             <div class="error" th:if="${#fields.hasErrors('loginId')}" th:errors="*{loginId}">
@@ -115,7 +114,7 @@
             <div class="mb-3">
               <label class="form-label">Password</label>
               <div class="input-group input-group-flat">
-                <input type="password" class="form-control" id="password" th:name="password"
+                <input type="password" class="form-control" id="pwd" th:name="password"
                        pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$"
                        placeholder="Password"
                        autocomplete="off" required>
@@ -124,7 +123,7 @@
             <div class="mb-3">
               <label class="form-label">Password 확인</label>
               <div class="input-group input-group-flat">
-                <input type="password" class="form-control" id="passwordCheck"
+                <input type="password" class="form-control" id="pwdCheck"
                        th:name="passwordCheck" placeholder="Password 확인"
                        pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,20}$"
                        autocomplete="off" required>
