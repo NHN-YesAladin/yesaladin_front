@@ -139,79 +139,8 @@
     <div th:replace="~{common/fragments/footer :: fragment-footer}"></div>
 </div>
 </body>
-<script>
-    // const table = document.getElementById('new-product-list')
-    // window.addEventListener('load', function () {
-    //     fetch('/products/recent?page=0&size=12')
-    //     .then((res) => (res.json()))
-    //     .then(function (data){
-    //         data.dataList.forEach(function (product) {
-    //             console.log(product.thumbnailFileUrl)
-    //             const card = document.createElement('div')
-    //             card.className += 'card m-3'
-    //             card.addEventListener('click', function () {productDetail(product.id)})
-    //             table.appendChild(card)
-    //
-    //             const img = document.createElement('div')
-    //             img.className += 'img-responsive img-responsive-3x4 card-img-top'
-    //             img.style.background = 'url("' + product.thumbnailFileUrl + '")'
-    //             card.appendChild(img)
-    //
-    //             const body = document.createElement('div')
-    //             body.className += 'card-body'
-    //             card.appendChild(body)
-    //
-    //             const title = document.createElement('h3')
-    //             title.className += 'card-title mb-1'
-    //             title.innerText = product.title
-    //             body.appendChild(title)
-    //
-    //             const authorAndPublisher = document.createElement('p')
-    //             authorAndPublisher.className += 'text-muted mb-1'
-    //             authorAndPublisher.innerText = product.authorss + ' | ' + data.publisher
-    //             body.appendChild(authorAndPublisher)
-    //
-    //             const price = document.createElement('strong')
-    //             price.innerText = product.sellingPrice
-    //             body.appendChild(price)
-    //         })
-    //     })
-    //     .then( () => {
-    //         $('#new-product-list').slick({
-    //             infinite: true,
-    //             slidesToShow: 4,
-    //             slidesToScroll: 4,
-    //             dots: true,
-    //             autoplay: true,
-    //             autoplaySpeed: 5000,
-    //             draggable: true,
-    //             pauseOnHover : true
-    //             }
-    //         )
-    //     })
-    // })
-</script>
 
 <script>
-    // window.addEventListener('load', function () {
-    //     fetch('/v1/products/recentview')
-    //     .then((res) => (res.json()))
-    //     .then(function (data) {
-    //         const recentViewProductList = document.getElementById('recent-view-product-list').firstChild
-    //         data.dataList.forEach(function (product) {
-    //             const col = document.createElement('div')
-    //             col.className += 'col-4'
-    //             recentViewProductList.appendChild(col)
-    //
-    //             const img = document.createElement('div')
-    //             img.className += 'img-responsive img-responsive-3x4 card-img-top'
-    //             img.style.background = 'url("' + product.thumbnailFileUrl + '")'
-    //             img.addEventListener('click', function () {productDetail(product.id)})
-    //             col.appendChild(img)
-    //         })
-    //     })
-    // })
-
     function productDetail(id) {
         window.open('/products/'+id, '_self')
     }
