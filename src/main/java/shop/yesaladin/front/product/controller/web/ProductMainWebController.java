@@ -15,7 +15,6 @@ import shop.yesaladin.front.product.dto.ProductDetailResponseDto;
 import shop.yesaladin.front.product.dto.ProductsResponseDto;
 import shop.yesaladin.front.product.service.inter.QueryProductService;
 import shop.yesaladin.front.product.service.inter.QueryProductTypeService;
-import shop.yesaladin.front.wishlist.service.inter.CommandWishlistService;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -39,7 +38,6 @@ public class ProductMainWebController {
 
     private final QueryProductService queryProductService;
     private final QueryProductTypeService queryProductTypeService;
-    private final CommandWishlistService commandWishlistService;
     private static final String DETAIL_VIEW = "main/product/product";
     private static final String RECENT = "recent";
     private static final String WISHLIST = "isWishlist";
@@ -88,6 +86,7 @@ public class ProductMainWebController {
             @RequestParam(required = false, defaultValue = "15") Integer size,
             Model model
     ) {
+        model.addAttribute("size", size);
         PaginatedResponseDto<ProductsResponseDto> products = queryProductService.findAll(
                 new PageRequestDto(page, size),
                 typeId

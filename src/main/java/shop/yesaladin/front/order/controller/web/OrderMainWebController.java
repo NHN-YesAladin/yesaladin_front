@@ -4,6 +4,7 @@ import java.util.Objects;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,6 +25,7 @@ import java.util.List;
  * @author 최예린
  * @since 1.0
  */
+@Slf4j
 @RequiredArgsConstructor
 @Controller
 @RequestMapping("/orders")
@@ -44,12 +46,16 @@ public class OrderMainWebController {
      */
     @GetMapping(path = {"/order-sheets", "/subscribe-sheets"})
     public String getOrderSheet(
-            @RequestParam("isbn") List<String> isbn,
-            @RequestParam("quantity") List<String> quantity,
+            @RequestParam(value = "isbn", required = false) List<String> isbn,
+            @RequestParam(value = "quantity", required = false) List<String> quantity,
             @RequestParam(value = "type", required = false) String type,
             HttpServletRequest request,
             Model model
     ) {
+        if (Objects.isNull(isbn) || Objects.isNull(quantity)) {
+            return "redirect:/cart";
+        }
+
         ResponseDto<OrderSheetResponseDto> response = queryOrderService.getOrderSheetData(
                 isbn,
                 quantity
