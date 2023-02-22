@@ -116,16 +116,28 @@
   const input = document.getElementById('input')
   const select = document.getElementById('selected')
 
+  input.addEventListener('keydown', function (e) {
+    if(e.key === 'Enter') {
+      search()
+    }
+  })
+
   document.getElementById('searchButton').addEventListener('click', (e) => {
     e.preventDefault()
+    search()
+  })
+
+  function search() {
     if(input.value === ""){
       alert('빈 값은 검색할 수 없습니다.')
       return
     }
     window.open('/manage/member?'+select.options[select.selectedIndex].value + '=' + input.value, '_self')
-  })
+  }
 </script>
 <script>
+  
+
   function block(loginId) {
     const reason = document.getElementById('blockReason'+loginId.value)
     console.log(reason.value)
