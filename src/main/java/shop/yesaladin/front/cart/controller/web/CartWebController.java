@@ -77,6 +77,11 @@ public class CartWebController {
         // CART_NO 쿠키가 존재하지 않는 경우 = 장바구니에 넣은 물건이 없는 경우
         // CART_NO 쿠키가 존재하는 경우 = 장바구니에 넣은 물건이 있는 경우, 회원로그인을 한 경우
         if (Objects.nonNull(cookie)) {
+            // anonymousUser 차단
+            if (cookie.getName().equals("anonymousUser")) {
+                return "main/cart/cart";
+            }
+
             // 장바구니에 담은 데이터를 Map으로 받아옴
             Map<Object, Object> cart = redisTemplate.opsForHash().entries(cookie.getValue());
             log.info("cart = {}", cart);

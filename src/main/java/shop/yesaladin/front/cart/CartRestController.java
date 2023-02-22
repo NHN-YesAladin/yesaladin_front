@@ -93,6 +93,15 @@ public class CartRestController {
             response.addCookie(cookie);
         }
 
+        // anonymousUser 차단
+        if (cookie.getName().equals("anonymousUser")) {
+            return ResponseDto.<String>builder()
+                    .success(false)
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .data("다시 한번 시도해주십시오.")
+                    .build();
+        }
+
         // CART_NO 쿠키의 값을 Redis의 key로 사용함.
         // 만약, 이미 카트에 입력하려는 값이 존재한다면 '+'하여 저장
         // 없는 상품이라면 그대로 저장

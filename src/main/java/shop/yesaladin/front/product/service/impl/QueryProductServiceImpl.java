@@ -97,7 +97,7 @@ public class QueryProductServiceImpl implements QueryProductService {
     }
 
     /**
-     *{@inheritDoc}
+     * {@inheritDoc}
      */
     @Override
     public PaginatedResponseDto<ProductsResponseDto> findByTitleForManager(
@@ -125,7 +125,7 @@ public class QueryProductServiceImpl implements QueryProductService {
     }
 
     /**
-     *{@inheritDoc}
+     * {@inheritDoc}
      */
     @Override
     public PaginatedResponseDto<ProductsResponseDto> findByISBNForManager(
@@ -153,7 +153,7 @@ public class QueryProductServiceImpl implements QueryProductService {
     }
 
     /**
-     *{@inheritDoc}
+     * {@inheritDoc}
      */
     @Override
     public PaginatedResponseDto<ProductsResponseDto> findByContentForManager(
@@ -181,7 +181,7 @@ public class QueryProductServiceImpl implements QueryProductService {
     }
 
     /**
-     *{@inheritDoc}
+     * {@inheritDoc}
      */
     @Override
     public PaginatedResponseDto<ProductsResponseDto> findByPublisherForManager(
@@ -209,7 +209,7 @@ public class QueryProductServiceImpl implements QueryProductService {
     }
 
     /**
-     *{@inheritDoc}
+     * {@inheritDoc}
      */
     @Override
     public PaginatedResponseDto<ProductsResponseDto> findByAuthorForManager(
