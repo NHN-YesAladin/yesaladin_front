@@ -1439,7 +1439,7 @@
             processingForPay(recipientName, recipientPhoneNumber, expectedShippingDate, orderData, productTotalAmount,
                 shippingFee, wrappingFee);
           });
-      alert("쿠폰 발급 완료 및 결제 페이지로 이동")
+      // alert("쿠폰 발급 완료 및 결제 페이지로 이동")
       stompClient.send(`/shop/coupon/use/result/connect/${requestId}`, {},
           'CONNECT');
     });
