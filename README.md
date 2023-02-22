@@ -70,7 +70,6 @@ YesAladin Front는 사용자의 웹 애플리케이션 이용에 필요한 정�
   - UI 공통 컴포넌트 작성 및 레이아웃 디자인
 - **주문**
   - 주문서 작성 및 페이지 추가
-  -
 - **회원 관리**
   - 회원 차단
   - 회원 배송지 관리
@@ -94,6 +93,11 @@ YesAladin Front는 사용자의 웹 애플리케이션 이용에 필요한 정�
 ### [@김홍대](https://github.com/mongmeo-dev)
 
 ### [@서민지](https://github.com/narangd0)
+- **쿠폰**
+  - 쿠폰 조회/발행 중단
+  - `Object Storage`를 사용한 이미지 업로드 구현
+  - 선착순 쿠폰 발급
+  - 선착순 쿠폰 페이지
 
 ### [@김선홍](https://github.com/ssun4098)
 - 회원
