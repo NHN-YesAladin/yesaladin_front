@@ -95,6 +95,9 @@ public class CartRestController {
 
         // anonymousUser 차단
         if (cookie.getName().equals("anonymousUser")) {
+            cookie.setMaxAge(0);
+            response.addCookie(cookie);
+
             return ResponseDto.<String>builder()
                     .success(false)
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
