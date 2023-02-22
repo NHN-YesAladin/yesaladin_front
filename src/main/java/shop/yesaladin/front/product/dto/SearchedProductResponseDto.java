@@ -33,8 +33,9 @@ public class SearchedProductResponseDto {
     private List<String> tags;
 
     public String getAuthorLine() {
-        StringBuilder stringBuilder = new StringBuilder();
-        authors.forEach(stringBuilder::append);
-        return stringBuilder.toString();
+        if (authors.size() == 1) {
+            return authors.get(0) + " 저";
+        }
+        return authors.get(0) + "외 " + (authors.size() - 1) + "명 저";
     }
 }

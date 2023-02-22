@@ -82,9 +82,13 @@
                                height="400"></div>
                         </div>
                         <div class="col-4">
-                          <p th:text="${product.getAuthor().get(0)} + ' 저 | '+  ${product.publisher}"></p>
+                          <div th:each="author, j : ${product.getAuthor()}" style="display: inline">
+                            <p th:text="${author}" style="display: inline"></p>
+                            <p th:if="${!j.last}" style="display: inline">, </p>
+                            <p th:if="${j.last}" style="display: inline">저 |</p>
+                          </div>
                           <h3 th:text="|${product.sellingPrice}원|" style="display: inline"
-                              th:t></h3>
+                              th:t></h3><br>
                           <p class="page-pretitle" th:text="|(${product.rate}% 할인)|"
                              style="display: inline"></p><br/>
                         </div>

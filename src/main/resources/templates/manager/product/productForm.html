@@ -695,8 +695,9 @@
 
 <script>
   document.getElementById('tag-input').addEventListener('keydown', (e) =>{
-    e.preventDefault()
-    searchTag(0, 5)
+    if(e.key === 'Enter') {
+      searchTag(0, 5)
+    }
   })
   document.getElementById('tag-search').addEventListener('click', function (e) {
     e.preventDefault()
@@ -784,8 +785,9 @@
 </script>
 <script>
   document.getElementById('author-input').addEventListener('keydown', (e) =>{
-    e.preventDefault()
-    searchAuthor(0, 5)
+    if(e.key === 'Enter') {
+      searchAuthor(0, 5)
+    }
   })
   document.getElementById('author-search').addEventListener('click', (e) => {
     e.preventDefault()
@@ -900,8 +902,9 @@
 </script>
 <script>
   document.getElementById('category-input').addEventListener('keydown', (e) =>{
-    e.preventDefault()
-    searchCategories(0, 5)
+    if(e.key === 'Enter') {
+      searchCategories(0, 5)
+    }
   })
   document.getElementById('category-search').addEventListener('click', function (e){
     e.preventDefault()
@@ -1011,8 +1014,9 @@
 </script>
 <script>
   document.getElementById('publisher-input').addEventListener('keydown', (e) =>{
-    e.preventDefault()
-    searchPublisher(0, 5)
+    if(e.key === 'Enter') {
+      searchPublisher(0, 5)
+    }
   })
 
   document.getElementById('publisher-search').addEventListener('click', (e) => {
