@@ -201,7 +201,11 @@
                           <div class="img-responsive img-responsive-3x4 card-img-top" th:style="'background-image: url(' + ${product.thumbnailFileUrl} + ');'"></div>
                         </a>
                         <div class="card-body">
-                          <p class="text-muted mb-1" th:text="${product.author[0]} + ' 저 | ' + ${product.publisher}"></p>
+                          <div th:each="author, j : ${product.getAuthor()}" style="display: inline">
+                            <p th:text="${author}" style="display: inline"></p>
+                            <p th:if="${!j.last}" style="display: inline">, </p>
+                            <p th:if="${j.last}" style="display: inline">저 |</p>
+                          </div>
                           <strong th:text="${product.sellingPrice}"></strong>
                         </div>
                         <div class="card-footer">
@@ -262,7 +266,11 @@
                           <div class="img-responsive img-responsive-3x4 card-img-top" th:style="'background-image: url(' + ${product.thumbnailFileUrl} + ');'"></div>
                         </a>
                         <div class="card-body">
-                          <p class="text-muted mb-1" th:text="${product.author[0]} + ' 저 | ' + ${product.publisher}"></p>
+                          <div th:each="author, j : ${product.getAuthor()}" style="display: inline">
+                            <p th:text="${author}" style="display: inline"></p>
+                            <p th:if="${!j.last}" style="display: inline">, </p>
+                            <p th:if="${j.last}" style="display: inline">저 |</p>
+                          </div>
                           <strong th:text="${product.sellingPrice}"></strong>
                         </div>
                           <div class="card-footer">
