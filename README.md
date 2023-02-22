@@ -9,8 +9,7 @@ YesAladin Front는 사용자의 웹 애플리케이션 이용에 필요한 정�
 
 ## Project Architecture
 
-// 이미지 추가할 것
-![]()
+<img width="1055" alt="스크린샷 2023-02-22 오전 10 15 46" src="https://user-images.githubusercontent.com/60968342/220495720-140fae83-c2d4-422c-b474-0babcd37bb73.png">
 
 ## CI/CD
 (무중단 배포 및 CI/CD flow 첨부할 것)
