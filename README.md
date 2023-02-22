@@ -12,7 +12,8 @@ YesAladin Front는 사용자의 웹 애플리케이션 이용에 필요한 정�
 <img width="1055" alt="스크린샷 2023-02-22 오전 10 15 46" src="https://user-images.githubusercontent.com/60968342/220495720-140fae83-c2d4-422c-b474-0babcd37bb73.png">
 
 ## CI/CD
-(무중단 배포 및 CI/CD flow 첨부할 것)
+
+<img width="1102" alt="image" src="https://user-images.githubusercontent.com/60968342/220593018-d0face27-11ac-4329-8ec2-ddcb1bb4e222.png">
 
 ## Features
 
@@ -148,6 +149,7 @@ YesAladin Front는 사용자의 웹 애플리케이션 이용에 필요한 정�
 ![NHN Cloud](https://img.shields.io/badge/-NHN%20Cloud-blue?style=flat&logo=iCloud&logoColor=white)
 ![Jenkins](http://img.shields.io/badge/Jenkins-D24939?style=flat-square&logo=Jenkins&logoColor=white)
 ![SonarQube](https://img.shields.io/badge/SonarQube-4E98CD?style=flat&logo=SonarQube&logoColor=white)
+![Grafana](https://img.shields.io/badge/Grafana-F46800?style=flat&logo=Grafana&logoColor=white)
 
 ### Web Server
 
