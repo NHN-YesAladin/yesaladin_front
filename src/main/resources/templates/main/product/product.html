@@ -341,7 +341,7 @@
             } else {
                 const quantity = document.getElementById('quantity').value;
 
-                location.replace(`${FRONT_SERVER}/orders/order-sheets?isbn=${isbn}&quantity=${quantity}`);
+                location.replace(`${FRONT_SERVER}/orders/order-sheets?isbn=${isbn}&quantity=${quantity}&type=one`);
             }
         })
     }
@@ -349,7 +349,7 @@
         let quantityRegex = /^[+]?\d*(\.?\d*)?$/;
         const quantity = document.getElementById('quantity').value;
 
-        if (!quantityRegex.test(quantity) || quantity == 0) {
+        if (!quantityRegex.test(quantity) || quantity == 0 || quantity.toString().includes(".") === true) {
             writeContentToAlert('올바른 수량을 입력해주세요.(1 이상의 숫자)');
             return;
         }

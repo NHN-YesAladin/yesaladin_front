@@ -29,7 +29,7 @@ function nicknameCheck() {
 
 function loginIdCheck() {
   let loginIdCheckBtn = document.getElementById('loginIdCheckBtn');
-  let loginIdInput = document.getElementById('loginId');
+  let loginIdInput = document.getElementById('id');
   let loginIdVal = loginIdInput.value;
   let loginIdRegex = /^[a-zA-Z0-9]{8,15}$/;
   let emptyRegex = /\s/g;
@@ -116,10 +116,10 @@ function phoneCheck() {
 
 function passwordCheckEvent() {
   let passwordCheckBtn = document.getElementById('passwordCheckBtn');
-  let password = document.getElementById('password');
-  let passwordVal = document.getElementById('password').value;
-  let passwordCheck = document.getElementById('passwordCheck');
-  let passwordCheckVal = document.getElementById('passwordCheck').value;
+  let password = document.getElementById('pwd');
+  let passwordVal = document.getElementById('pwd').value;
+  let passwordCheck = document.getElementById('pwdCheck');
+  let passwordCheckVal = document.getElementById('pwdCheck').value;
 
   let passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,20}$/g
   let emptyRegex = /\s/g;
@@ -132,7 +132,7 @@ function passwordCheckEvent() {
     console.log("ok");
     password.readOnly = true;
     passwordCheck.readOnly = true;
-    passwordCheckBtn.disabl를ed = true;
+    passwordCheckBtn.disabled = true;
   }
 }
 
@@ -153,8 +153,8 @@ function finalCheckEvent() {
 function againInputCheckEvent() {
   let createAccountBtn = document.getElementById('createAccountBtn');
   let passwordCheckBtn = document.getElementById('passwordCheckBtn');
-  let password = document.getElementById('password');
-  let passwordCheck = document.getElementById('passwordCheck');
+  let password = document.getElementById('pwd');
+  let passwordCheck = document.getElementById('pwdCheck');
   let phoneCheckBtn = document.getElementById('phoneCheckBtn');
   let phoneInput = document.getElementById('phone');
   let emailCheckBtn = document.getElementById('emailCheckBtn');

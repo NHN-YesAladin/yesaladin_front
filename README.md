@@ -9,18 +9,86 @@ YesAladin Front는 사용자의 웹 애플리케이션 이용에 필요한 정�
 
 ## Project Architecture
 
-// 이미지 추가할 것
-![]()
+<img width="1055" alt="스크린샷 2023-02-22 오전 10 15 46" src="https://user-images.githubusercontent.com/60968342/220495720-140fae83-c2d4-422c-b474-0babcd37bb73.png">
+
+## CI/CD
+(무중단 배포 및 CI/CD flow 첨부할 것)
 
 ## Features
 
 ### [@송학현](https://github.com/alanhakhyeonsong)
+- **회원 관리**
+  - 일반 로그인
+  - OAuth2 소셜 로그인 (Github, Kakao)
+  - 로그아웃
+  - 회원 가입
+  - 회원 정보 수정 (Co-authored-by: [@최예린](https://github.com/Yellin36))
+  - 회원 탈퇴
+  - 회원 통계
+- **인증/인가**
+  - 인증서버에서 발급받은 JWT 토큰 관리 및 자동 재발급 요청
+  - `Interceptor`를 통해 API 호출 시 HTTP Authorization Header에 토큰 정보 추가
+  - 권한별 접근 가능 페이지 구분
+- **장바구니**
+  - 회원용 장바구니 관리 (Co-authored-by: [@이수정](https://github.com/sujeong68))
 
 ### [@이수정](https://github.com/sujeong68)
 
+- 장바구니
+  - 장바구니 내 조회
+  - 장바구니 상품 추가/삭제 및 담은 개수 변경
+  - 주문 완료 시 장바구니 내 상품 삭제
+- 파일
+  - 파일 업로드 요청 및 url 반환
+  - 파일 다운로드
+- 상품
+  - 상품 등록/수정/삭제
+  - `ToastUI Editor` 사용 및 `addImageBlobHook` 시 오브젝트 스토리지에 이미지 업로드
+  - 상품 상세조회
+  - 관리자용, 전체이용자용 `Paging` 조회
+  - 상품 연관관계 조회/등록/삭제
+  - 상품 수량변경, 강제품절여부, 노출여부, 판매여부 변경
+  - 상품유형 조회 / 상품 유형별 `Paging` 조회
+- 출판사, 출판
+  - 출판사 관리자용 `Paging` 조회
+  - 출판사 등록/수정
+- 태그, 태그관계
+  - 태그 관리자용 `Paging` 조회
+  - 태그 등록/수정
+- 저자, 집필
+  - 저자 관리자용 `Paging` 조회
+  - 저자 등록/수정
+- 매출 통계
+  - 지정한 기간동안의 매출 통계 집계하여 관리자 메인 홈에 노출
+- 메인페이지 베스트셀러
+  - 1년간의 베스트셀러 12권을 노출
+- 관리자 홈, 메인페이지 UI
+
 ### [@최예린](https://github.com/Yellin36)
+- **공통**
+  - UI 공통 컴포넌트 작성 및 레이아웃 디자인
+- **주문**
+  - 주문서 작성 및 페이지 추가
+  -
+- **회원 관리**
+  - 회원 차단
+  - 회원 배송지 관리
+  - 회원 등급 변경 내역 조회
+  - 회원 포인트 내역 조회
 
 ### [@배수한](https://github.com/shbaeNhnacademy)
+- 카테고리
+  - 메인 화면 카테고리 블럭 구현 및 노출
+  - 카테고리 등록/삭제/수정
+  - 카테고리 순서 변경
+- 주문
+  - 기간별 주문 조회
+  - 일자별 주문 조회
+  - 주문 상태 별 주문 조회
+  - 비회원/회원 주문 상세 내역 조회
+- 결제
+  - 토스 결제 연동
+  - 결제 내역 조회
 
 ### [@김홍대](https://github.com/mongmeo-dev)
 
@@ -29,10 +97,14 @@ YesAladin Front는 사용자의 웹 애플리케이션 이용에 필요한 정�
 ### [@김선홍](https://github.com/ssun4098)
 
 ## Technical Issue
+### 공통
+- Front server - Back server 간 통신에서 화면 및 상황마다 다른 대처를 해야함
+  - 공통 응답 객체를 구현
+    - 성공여부, HTTP code, `제네릭 타입`데이터 , 에러메세지를 공통된 포맷으로 사용
+  - 예외 발생시, 공통 응답 객체의 HTTP code를 파싱하여 ControllerAdvice에서 예외 페이지 처리
 ### Web Socket (가제)
-### Object Storage (가제)
 ### Spring Cache (가제)
-### 인증/인가 (가제)
+### 인증/인가
 
 ## Tech Stack
 

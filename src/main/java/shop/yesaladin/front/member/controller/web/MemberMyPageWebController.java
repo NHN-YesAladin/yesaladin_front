@@ -25,7 +25,8 @@ import shop.yesaladin.front.member.service.inter.QueryMemberService;
 /**
  * 마이페이지 관련 회원 Controller입니다.
  *
- * @author 최예린, 송학현
+ * @author 최예린
+ * @author 송학현
  * @since 1.0
  */
 @Slf4j
@@ -81,6 +82,7 @@ public class MemberMyPageWebController {
      * @param model 모델
      * @return 회원 정보 수정 페이지
      * @author 최예린
+     * @author 송학현
      * @since 1.0
      */
     @GetMapping("/edit")
@@ -95,6 +97,7 @@ public class MemberMyPageWebController {
                 "birthDate",
                 LocalDate.of(member.getBirthYear(), member.getBirthMonth(), member.getBirthDay())
         );
+        model.addAttribute("phone", member.getPhone());
         model.addAttribute("email", member.getEmail());
         model.addAttribute("signUpDate", member.getSignUpDate());
         model.addAttribute("grade", member.getGrade());

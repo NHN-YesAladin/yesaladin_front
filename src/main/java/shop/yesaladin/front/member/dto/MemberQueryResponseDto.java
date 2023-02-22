@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
  * 회원의 정보를 반환하는 dto 클래스 입니다.
  *
  * @author 최예린
+ * @author 송학현
  * @since 1.0
  */
 @Getter
@@ -29,4 +30,5 @@ public class MemberQueryResponseDto {
     private LocalDate signUpDate;
     private String grade;
     private String gender;
+    private String phone;
 }

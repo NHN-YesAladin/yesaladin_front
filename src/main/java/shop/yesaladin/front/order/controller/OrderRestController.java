@@ -74,6 +74,7 @@ public class OrderRestController {
     @PostMapping("/member")
     public ResponseDto<OrderCreateResponseDto> createMemberOrder(
             @Valid @RequestBody OrderMemberCreateRequestDto request,
+            @RequestParam(value = "type", required = false) String type,
             BindingResult bindingResult
     ) {
         if (bindingResult.hasErrors()) {
@@ -86,6 +87,6 @@ public class OrderRestController {
                             .collect(Collectors.toList()))
                     .build();
         }
-        return commandOrderService.createMemberOrder(request);
+        return commandOrderService.createMemberOrder(request, type);
     }
 }

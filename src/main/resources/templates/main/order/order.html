@@ -604,6 +604,16 @@
   <input id="member-coupon-input" name="orderCoupons">
 </div>
 </body>
+<!--//TODO restController를 통한 회원 주문시, js코드에 추가해야함-->
+<div class="d-none" id="isNotEspeciallyBuy" th:data-type="${type == null} ? 'nothing' : 'one' "></div>
+<script>
+  function blockEnter(event) {
+    if(event.code === "Enter") {
+      event.preventDefault();
+      event.focus(false);
+    }
+  }
+</script>
 <!--쿠폰 관련 함수-->
 <script th:inline="javascript">
   let selectProduct;
@@ -1132,6 +1142,8 @@
   }
 
   async function memberOrder() {
+    let type = document.getElementById("isNotEspeciallyBuy").dataset["type"];
+
     const usePointDoc = document.getElementsByName("usePoint");
 
     const recipientName = recipientNameDoc.value;
@@ -1153,7 +1165,11 @@
     const usePoint = usePointDoc.value;
     const savePoint = tryGetSavePoint();
 
-    await fetch(`${frontUrl}/api/orders/member}`, {
+    let url = `${frontUrl}/api/orders/member`;
+    if (type === "one") {
+      url = `${frontUrl}/api/orders/member?type=one`;
+    }
+    await fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -1200,7 +1216,7 @@
       }
       let searchParams = new URLSearchParams(params);
       window.location.href = `${frontUrl}/payments/pay?${searchParams.toString()}`;
-    })
+    });
   }
 
   async function nonMemberOrder() {
