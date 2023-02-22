@@ -1,5 +1,6 @@
 package shop.yesaladin.front.order.controller;
 
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -87,6 +88,16 @@ public class OrderRestController {
                             .collect(Collectors.toList()))
                     .build();
         }
-        return commandOrderService.createMemberOrder(request, type);
+
+        ResponseDto<OrderCreateResponseDto> responseDto = commandOrderService.createMemberOrder(
+                request,
+                type
+        );
+        return ResponseDto.<OrderCreateResponseDto>builder()
+                .status(HttpStatus.CREATED)
+                .success(responseDto.isSuccess())
+                .data(responseDto.getData())
+                .errorMessages(responseDto.getErrorMessages())
+                .build();
     }
 }

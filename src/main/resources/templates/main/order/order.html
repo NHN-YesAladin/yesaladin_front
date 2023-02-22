@@ -237,7 +237,7 @@
                           </button>
                           <button type="button" class="btn btn-outline-danger btn-sm float-end"
                                   th:id="${'member-coupon-button-cancel-' + productStat.index}"
-                                  hidden="hidden" th:onclick="|cancelCoupon(${productStat.indexZ})|">
+                                  hidden="hidden" th:onclick="|cancelCoupon(${productStat.index})|">
                             쿠폰 취소
                           </button>
                         </div>
@@ -603,9 +603,19 @@
   <small class="text-info" id="member-coupon-text"></small>
   <input id="member-coupon-input" name="orderCoupons">
 </div>
+<div
+    class="justify-content-center align-items-center"
+    id="loading"
+    style="height: 100%; width: 100%; position: absolute; left: 0; bottom: 0; background-color: #ffffff77; display: none">
+  <div class="spinner-border" role="status" style="width: 3rem; height: 3rem;">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
 </body>
 <!--//TODO restController를 통한 회원 주문시, js코드에 추가해야함-->
 <div class="d-none" id="isNotEspeciallyBuy" th:data-type="${type == null} ? 'nothing' : 'one' "></div>
+
+
 <script>
   function blockEnter(event) {
     if(event.code === "Enter") {
@@ -836,6 +846,8 @@
 <!--배송지 관련 함수-->
 <script th:inline="javascript">
   const frontUrl = [[${@environment.getProperty('yesaladin.front.url')}]];
+  const socketUrl = [[${@environment.getProperty('yesaladin.gateway.socket')}]];
+  const SOCKET_PATH = '/ws';
 
   const addressModal = document.getElementById("modal-report");
   const memberAddressForm = document.getElementById("member-address-form");
@@ -1111,7 +1123,7 @@
   const shopUrl = [[${@environment.getProperty('yesaladin.gateway.shop')}]];
 
   function tryGetOrdererAddressId() {
-    const ordererAddressIdDoc = document.getElementsByName("memberAddressId");
+    const ordererAddressIdDoc = document.getElementsByName("ordererAddressId");
 
     for (let i = 0; i < ordererAddressIdDoc.length; i++) {
       if (ordererAddressIdDoc[i].checked === true) {
@@ -1126,7 +1138,10 @@
 
     const orderCoupons = [];
     for (let i = 0; i < orderCouponsDoc.length; i++) {
-      orderCoupons.push(orderCouponsDoc.value);
+      let item = orderCouponsDoc[i].value;
+      if (!isEmpty(item)) {
+        orderCoupons.push(item);
+      }
     }
     return orderCoupons;
   }
@@ -1136,10 +1151,12 @@
 
     let savePoint = 0;
     for (let i = 0; i < savePointDoc.length; i++) {
-      savePoint += savePointDoc.value[i];
+      savePoint += savePointDoc[i].value;
     }
     return savePoint;
   }
+
+
 
   async function memberOrder() {
     let type = document.getElementById("isNotEspeciallyBuy").dataset["type"];
@@ -1153,6 +1170,7 @@
       alert("배송지를 선택해주세요.");
       return;
     }
+    console.log(ordererAddressId)
     if (!orderCheck(this)) {
       return;
     }
@@ -1164,6 +1182,8 @@
     const orderCoupons = tryGetOrderCoupons();
     const usePoint = usePointDoc.value;
     const savePoint = tryGetSavePoint();
+
+    //TODO 웹소켓 오픈
 
     let url = `${frontUrl}/api/orders/member`;
     if (type === "one") {
@@ -1182,6 +1202,7 @@
         wrappingFee: wrappingFee,
         recipientName: recipientName,
         recipientPhoneNumber: recipientPhoneNumber,
+        ordererAddressId: ordererAddressId,
         orderCoupons: orderCoupons,
         usePoint: usePoint,
         savePoint: savePoint
@@ -1189,34 +1210,52 @@
     }).then((resp) => {
       return resp.json();
     }).then((data) => {
-      if (data.success) {
-        alert(data.e)
+      const requestId = data.data.requestId;
+      if (!isEmpty(requestId)) {
+        console.log("requestId is not null")
+        showLoadingScreen();
+        openSocket(requestId, recipientName, recipientPhoneNumber, expectedShippingDate, data,
+            productTotalAmount,
+            shippingFee, wrappingFee);
+        return;
       }
-      console.log(data);
-      const ordererName = ordererNameDoc.value;
-      const ordererPhoneNumber = ordererPhoneNumberDoc.value;
-      const address = [ordererPostAddress.value, ordererRoadAddress.value,
-        ordererDetailAddress.value].join("/");
-      const productAmount = [[${info.getTotalProductAmount()}]];
-
-      const params = {
-        ordererName: ordererName,
-        ordererPhoneNumber: ordererPhoneNumber,
-        recipientName: recipientName,
-        recipientPhoneNumber: recipientPhoneNumber,
-        recipientAddress: address,
-        recipientExpectedDate: expectedShippingDate,
-        orderNumber: data.data.orderNumber,
-        productAmount: productAmount,
-        discountAmount: productAmount - productTotalAmount,
-        shippingFee: shippingFee,
-        wrappingFee: wrappingFee,
-        orderName: data.data.orderName,
-        totalAmount: productTotalAmount + shippingFee + wrappingFee
-      }
-      let searchParams = new URLSearchParams(params);
-      window.location.href = `${frontUrl}/payments/pay?${searchParams.toString()}`;
+      console.log("requestId is null")
+      processingForPay(recipientName, recipientPhoneNumber, expectedShippingDate, data, productTotalAmount,
+          shippingFee, wrappingFee);
     });
+  }
+
+  function isEmpty(str){
+    if(typeof str == "undefined" || str == null || str == "")
+      return true;
+    else
+      return false ;
+  }
+
+  function processingForPay(recipientName, recipientPhoneNumber, expectedShippingDate, data,
+      productTotalAmount, shippingFee, wrappingFee) {
+    const ordererName = ordererNameDoc.value;
+    const ordererPhoneNumber = ordererPhoneNumberDoc.value;
+    const address = [ordererPostAddress.value, ordererRoadAddress.value,
+      ordererDetailAddress.value].join("/");
+    const productAmount = [[${info.getTotalProductAmount()}]];
+    const params = {
+      ordererName: ordererName,
+      ordererPhoneNumber: ordererPhoneNumber,
+      recipientName: recipientName,
+      recipientPhoneNumber: recipientPhoneNumber,
+      recipientAddress: address,
+      recipientExpectedDate: expectedShippingDate,
+      orderNumber: data.data.orderNumber,
+      productAmount: productAmount,
+      discountAmount: productAmount - productTotalAmount,
+      shippingFee: shippingFee,
+      wrappingFee: wrappingFee,
+      orderName: data.data.orderName,
+      totalAmount: productTotalAmount + shippingFee + wrappingFee
+    }
+    let searchParams = new URLSearchParams(params);
+    window.location.href = `${frontUrl}/payments/pay?${searchParams.toString()}`;
   }
 
   async function nonMemberOrder() {
@@ -1360,6 +1399,50 @@
         document.getElementById("orderer-detail-address").focus();
       }
     }).open();
+  }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+<script th:src="@{/js/coupon/stomp.js}"></script>
+<script>
+  function showLoadingScreen() {
+    const loadingScreen = document.querySelector('#loading');
+
+    loadingScreen.style.display = 'flex';
+  }
+
+  function hideLoadingScreen() {
+    const loadingScreen = document.querySelector('#loading');
+
+    loadingScreen.style.display = 'none';
+  }
+
+  function openSocket(requestId, recipientName, recipientPhoneNumber, expectedShippingDate, orderData,
+      productTotalAmount,
+      shippingFee, wrappingFee) {
+
+    const socket = new SockJS(`${socketUrl}${SOCKET_PATH}`);
+    const stompClient = Stomp.over(socket);
+
+    stompClient.connect({}, function (frame) {
+      stompClient.subscribe(`/ws/topic/coupon/use/result/${requestId}`,
+          function (data) {
+            const parsedBody = JSON.parse(data.body);
+            const message = parsedBody.success ? parsedBody.message
+                : '이 쿠폰은 사용할 수 없습니다.'
+            if (!parsedBody.success) {
+              alert(message);
+            }
+            console.log(message);
+            hideLoadingScreen();
+            stompClient.disconnect();
+            processingForPay(recipientName, recipientPhoneNumber, expectedShippingDate, orderData, productTotalAmount,
+                shippingFee, wrappingFee);
+          });
+      alert("쿠폰 발급 완료 및 결제 페이지로 이동")
+      stompClient.send(`/shop/coupon/use/result/connect/${requestId}`, {},
+          'CONNECT');
+    });
   }
 </script>
 
