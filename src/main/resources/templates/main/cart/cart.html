@@ -672,5 +672,21 @@
     allTotalProductPay.innerText = totalAmountCartYesAladinCart.innerText;
   }
 </script>
+<script>
+  window.addEventListener('load', () => {
+    const orderForm = document.getElementById('order');
+
+    Array.prototype.filter.call(orderForm, (orderForm) => {
+      orderForm.addEventListener('submit', function (event) {
+        if (orderForm.checkValidity() === false) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+
+        console.log("order = " + orderForm.value)
+      })
+    }, false)
+  }, false)
+</script>
 </body>
 </html>
