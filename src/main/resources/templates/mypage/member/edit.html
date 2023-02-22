@@ -245,7 +245,6 @@
     }).then((resp) => {
       resp.json()
     }).then((data) => {
-      console.log("data : ", data);
       if (!data) {
         writeContentToAlert("회원 정보를 수정하는데 실패했습니다.");
         nickName.value = [[${nickname}]];
