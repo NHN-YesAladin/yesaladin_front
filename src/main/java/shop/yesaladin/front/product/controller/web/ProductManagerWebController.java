@@ -176,6 +176,7 @@ public class ProductManagerWebController {
             @RequestParam(required = false, defaultValue = "10") Integer size,
             Model model
     ) {
+        model.addAttribute("size", size);
         PaginatedResponseDto<ProductsResponseDto> products = queryProductService.findAllForManager(
                 new PageRequestDto(page, size),
                 typeId
@@ -197,9 +198,9 @@ public class ProductManagerWebController {
     /**
      * 제목으로 상품검색
      *
-     * @param title 검색할 상품의 제목
+     * @param title    검색할 상품의 제목
      * @param pageable 페이지 정보
-     * @param model 뷰에 데이터 전달
+     * @param model    뷰에 데이터 전달
      * @return 검색 결과
      * @author 김선홍
      * @since 1.0
@@ -233,9 +234,9 @@ public class ProductManagerWebController {
     /**
      * 내용으로 상품검색
      *
-     * @param content 검색할 내용
+     * @param content  검색할 내용
      * @param pageable 페이지 정보
-     * @param model 뷰에 데이터 전달
+     * @param model    뷰에 데이터 전달
      * @return 검색 결과
      * @author 김선홍
      * @since 1.0
@@ -269,8 +270,8 @@ public class ProductManagerWebController {
      * 출찬사명으로 상품검색
      *
      * @param publisher 검색할 상품의 저자
-     * @param pageable 페이지 정보
-     * @param model 뷰에 데이터 전달
+     * @param pageable  페이지 정보
+     * @param model     뷰에 데이터 전달
      * @return 검색 결과
      * @author 김선홍
      * @since 1.0
@@ -303,9 +304,9 @@ public class ProductManagerWebController {
     /**
      * 저자명으로 상품검색
      *
-     * @param author 검색할 상품의 저자
+     * @param author   검색할 상품의 저자
      * @param pageable 페이지 정보
-     * @param model 뷰에 데이터 전달
+     * @param model    뷰에 데이터 전달
      * @return 검색 결과
      * @author 김선홍
      * @since 1.0
@@ -338,9 +339,9 @@ public class ProductManagerWebController {
     /**
      * isbn으로 상품검색
      *
-     * @param isbn 검색할 상품의 isbn
+     * @param isbn     검색할 상품의 isbn
      * @param pageable 페이지 정보
-     * @param model 뷰에 데이터 전달
+     * @param model    뷰에 데이터 전달
      * @return 검색 결과
      * @author 김선홍
      * @since 1.0

@@ -7,6 +7,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.LinkedMultiValueMap;
@@ -19,9 +20,11 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 import shop.yesaladin.common.dto.ResponseDto;
 import shop.yesaladin.front.cart.dto.ViewCartDto;
+import shop.yesaladin.front.common.utils.CookieUtils;
 import shop.yesaladin.front.config.GatewayConfig;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -44,6 +47,7 @@ public class CartWebController {
     private final RedisTemplate<String, Object> redisTemplate;
     private final RestTemplate restTemplate;
     private final GatewayConfig gatewayConfig;
+    private final CookieUtils cookieUtils;
 
     /**
      * [GET /cart] 장바구니 View 를 반환합니다.
@@ -55,14 +59,29 @@ public class CartWebController {
     @GetMapping
     public String cart(
             @CookieValue(value = "CART_NO", required = false) Cookie cookie,
-            Model model
+            @CookieValue(value = "YA_AUT", required = false) Cookie member,
+            Model model,
+            HttpServletResponse httpServletResponse
     ) throws IOException, URISyntaxException {
         List<ViewCartDto> eBookCart = new ArrayList<>();
         List<ViewCartDto> deliveryCart = new ArrayList<>();
 
+        // 회원이 쿠키를 악의적으로 삭제 -> 회원일 때 생성
+        if (Objects.nonNull(member)) {
+            String loginId = SecurityContextHolder.getContext().getAuthentication().getName();
+            cookie = cookieUtils.createCookie("CART_NO", loginId, 60 * 60 * 24 * 30);
+
+            httpServletResponse.addCookie(cookie);
+        }
+
         // CART_NO 쿠키가 존재하지 않는 경우 = 장바구니에 넣은 물건이 없는 경우
         // CART_NO 쿠키가 존재하는 경우 = 장바구니에 넣은 물건이 있는 경우, 회원로그인을 한 경우
         if (Objects.nonNull(cookie)) {
+            // anonymousUser 차단
+            if (cookie.getName().equals("anonymousUser")) {
+                return "main/cart/cart";
+            }
+
             // 장바구니에 담은 데이터를 Map으로 받아옴
             Map<Object, Object> cart = redisTemplate.opsForHash().entries(cookie.getValue());
             log.info("cart = {}", cart);

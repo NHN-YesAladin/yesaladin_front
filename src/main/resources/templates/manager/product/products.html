@@ -108,7 +108,7 @@
             </thead>
             <tbody>
               <tr th:each="product, i : ${products}">
-                <td class="text-center"><span class="text-muted" th:text="${i.count}"></span></td>
+                <td class="text-center"><span class="text-muted" th:text="${currentPage * size + i.count}"></span></td>
                 <td><a class="text-dark d-inline-block" th:text="${product.title}" th:href="|/products/${product.id}|" style="overflow: hidden; text-overflow: ellipsis; max-width: 400px;"/></td>
                 <td>
                   <div th:each="author, j : ${product.authors}" style="display: inline">
