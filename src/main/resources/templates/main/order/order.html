@@ -1432,6 +1432,8 @@
                 : '이 쿠폰은 사용할 수 없습니다.'
             if (!parsedBody.success) {
               alert(message);
+              location.reload();
+              return;
             }
             console.log(message);
             hideLoadingScreen();
