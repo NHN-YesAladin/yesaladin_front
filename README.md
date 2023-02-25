@@ -15,6 +15,13 @@ YesAladin Front는 사용자의 웹 애플리케이션 이용에 필요한 정�
 
 <img width="1102" alt="image" src="https://user-images.githubusercontent.com/60968342/220593018-d0face27-11ac-4329-8ec2-ddcb1bb4e222.png">
 
+## Scheduling
+- NHN Dooray!의 칸반 활용
+  <img width="1037" alt="image" src="https://user-images.githubusercontent.com/115197142/221077112-ba7e882f-6fa8-4994-b382-6550f1d91577.png">
+
+- [@WBS(Work Breakdown Structure)](https://docs.google.com/spreadsheets/d/14DnQZrjOVgyu7F5QVFmUu2sGo3URppLTPhmdjCfbmiQ/edit#gid=537092179)를 구글 스프레드시트로 관리
+  <img width="1042" alt="image" src="https://user-images.githubusercontent.com/115197142/221077360-daaf6cdc-d0a6-4d1b-ba81-a3c2b672f87c.png">
+
 ## Features
 
 ### [@송학현](https://github.com/alanhakhyeonsong)
@@ -70,7 +77,6 @@ YesAladin Front는 사용자의 웹 애플리케이션 이용에 필요한 정�
   - UI 공통 컴포넌트 작성 및 레이아웃 디자인
 - **주문**
   - 주문서 작성 및 페이지 추가
-  -
 - **회원 관리**
   - 회원 차단
   - 회원 배송지 관리
@@ -94,6 +100,11 @@ YesAladin Front는 사용자의 웹 애플리케이션 이용에 필요한 정�
 ### [@김홍대](https://github.com/mongmeo-dev)
 
 ### [@서민지](https://github.com/narangd0)
+- **쿠폰**
+  - 쿠폰 조회/발행 중단
+  - `Object Storage`를 사용한 이미지 업로드 구현
+  - 선착순 쿠폰 발급
+  - 선착순 쿠폰 페이지
 
 ### [@김선홍](https://github.com/ssun4098)
 - 회원
@@ -112,11 +123,16 @@ YesAladin Front는 사용자의 웹 애플리케이션 이용에 필요한 정�
 ### 공통
 - Front server - Back server 간 통신에서 화면 및 상황마다 다른 대처를 해야함
   - 공통 응답 객체를 구현
-    - 성공여부, HTTP code, `제네릭 타입`데이터 , 에러메세지를 공통된 포맷으로 사용
-  - 예외 발생시, 공통 응답 객체의 HTTP code를 파싱하여 ControllerAdvice에서 예외 페이지 처리
+    - 성공 여부, HTTP code, `제네릭 타입` 데이터, 에러 메세지를 공통된 포맷으로 사용
+  - 예외 발생시, 공통 응답 객체의 HTTP code를 파싱하여 `ControllerAdvice`에서 예외 페이지 처리
 ### Web Socket (가제)
 ### Spring Cache (가제)
 ### 인증/인가
+- 분산 환경에서의 인증 인가를 위해 Spring Security Filter를 직접 Custom 하여 로그인/로그아웃 처리
+- OAuth2 flow를 `Controller`와 `RestTemplate`으로 직접 구현
+  - 기존 일반 로그인 시 사용하는 Custom Filter를 그대로 사용하는 방식을 고려함
+- 인증 서버에서 발급받은 JWT 토큰을 `RestTemplate`으로 백서버에 요청 직전 Header에 담아 요청하도록 Custom Interceptor 구현
+- Redis 내에 발급 받은 토큰의 만료 시간을 저장하여 HTTP 요청 시 사전에 유효 시간을 체크하고 인증 서버에게 자동으로 재발급 요청을 하도록 구현
 
 ## Tech Stack
 
