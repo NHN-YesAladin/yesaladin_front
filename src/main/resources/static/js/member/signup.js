@@ -136,17 +136,28 @@ function passwordCheckEvent() {
   }
 }
 
-function finalCheckEvent() {
-  let createAccountBtn = document.getElementById('createAccountBtn');
+function checkBirthAndGender() {
+  let finalCheckBtn = document.getElementById('finalCheckBtn');
   let genderVal = document.getElementById('gender').value;
   let birthVal = document.getElementById('datepicker-icon-prepend').value;
 
   let emptyRegex = /\s/g;
 
-  if (!emptyRegex.test(genderVal) && !emptyRegex.test(birthVal)) {
-    createAccountBtn.disabled = false;
+  if (!emptyRegex.test(genderVal) && !emptyRegex.test(birthVal)
+    && genderVal !== '' && birthVal !== '') {
+    finalCheckBtn.disabled = false;
   } else {
     alert('성별과 생년월일을 선택해 주세요.');
+  }
+}
+
+function finalCheckEvent() {
+  let createAccountBtn = document.getElementById('createAccountBtn');
+
+  if (inputCheck()) {
+    createAccountBtn.disabled = false;
+  } else {
+    alert('올바른 값을 모두 입력해주세요.');
   }
 }
 
@@ -160,9 +171,10 @@ function againInputCheckEvent() {
   let emailCheckBtn = document.getElementById('emailCheckBtn');
   let emailInput = document.getElementById('email');
   let loginIdCheckBtn = document.getElementById('loginIdCheckBtn');
-  let loginIdInput = document.getElementById('loginId');
+  let loginIdInput = document.getElementById('id');
   let nicknameCheckBtn = document.getElementById('nicknameCheckBtn');
   let nicknameInput = document.getElementById('nickname');
+  let finalCheckBtn = document.getElementById('finalCheckBtn');
 
   nicknameInput.readOnly = false;
   nicknameCheckBtn.disabled = false;
@@ -175,5 +187,17 @@ function againInputCheckEvent() {
   password.readOnly = false;
   passwordCheck.readOnly = false;
   passwordCheckBtn.disabled = false;
+  finalCheckBtn.disabled = true;
   createAccountBtn.disabled = true;
+}
+
+function inputCheck() {
+  let createAccountBtn = document.getElementById('createAccountBtn');
+  let passwordCheckBtn = document.getElementById('passwordCheckBtn');
+  let phoneCheckBtn = document.getElementById('phoneCheckBtn');
+  let emailCheckBtn = document.getElementById('emailCheckBtn');
+  let loginIdCheckBtn = document.getElementById('loginIdCheckBtn');
+  let nicknameCheckBtn = document.getElementById('nicknameCheckBtn');
+  return (createAccountBtn.disabled && passwordCheckBtn.disabled && phoneCheckBtn.disabled &&
+    emailCheckBtn.disabled && loginIdCheckBtn.disabled && nicknameCheckBtn.disabled)
 }
