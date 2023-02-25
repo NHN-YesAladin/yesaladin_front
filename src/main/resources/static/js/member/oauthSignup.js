@@ -85,17 +85,28 @@ function phoneCheck() {
   }
 }
 
-function finalCheckEvent() {
-  let createAccountBtn = document.getElementById('createAccountBtn');
+function checkBirthAndGender() {
+  let finalCheckBtn = document.getElementById('finalCheckBtn');
   let genderVal = document.getElementById('gender').value;
   let birthVal = document.getElementById('datepicker-icon-prepend').value;
 
   let emptyRegex = /\s/g;
 
-  if (!emptyRegex.test(genderVal) && !emptyRegex.test(birthVal)) {
-    createAccountBtn.disabled = false;
+  if (!emptyRegex.test(genderVal) && !emptyRegex.test(birthVal)
+      && genderVal !== '' && birthVal !== '') {
+    finalCheckBtn.disabled = false;
   } else {
     alert('성별과 생년월일을 선택해 주세요.');
+  }
+}
+
+function finalCheckEvent() {
+  let createAccountBtn = document.getElementById('createAccountBtn');
+
+  if (inputCheck()) {
+    createAccountBtn.disabled = false;
+  } else {
+    alert('올바른 값을 모두 입력해주세요.');
   }
 }
 
@@ -115,4 +126,13 @@ function againInputCheckEvent() {
   phoneInput.readOnly = false;
   phoneCheckBtn.disabled = false;
   createAccountBtn.disabled = true;
+}
+
+function inputCheck() {
+  let createAccountBtn = document.getElementById('createAccountBtn');
+  let phoneCheckBtn = document.getElementById('phoneCheckBtn');
+  let emailCheckBtn = document.getElementById('emailCheckBtn');
+  let nicknameCheckBtn = document.getElementById('nicknameCheckBtn');
+  return (createAccountBtn.disabled && phoneCheckBtn.disabled &&
+      emailCheckBtn.disabled && nicknameCheckBtn.disabled)
 }
