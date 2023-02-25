@@ -17,10 +17,10 @@ YesAladin Front는 사용자의 웹 애플리케이션 이용에 필요한 정�
 
 ## Scheduling
 - NHN Dooray!의 칸반 활용
-  <img width="1037" alt="image" src="https://user-images.githubusercontent.com/115197142/221077112-ba7e882f-6fa8-4994-b382-6550f1d91577.png">
+<img width="1037" alt="image" src="https://user-images.githubusercontent.com/115197142/221077112-ba7e882f-6fa8-4994-b382-6550f1d91577.png">
 
 - [@WBS(Work Breakdown Structure)](https://docs.google.com/spreadsheets/d/14DnQZrjOVgyu7F5QVFmUu2sGo3URppLTPhmdjCfbmiQ/edit#gid=537092179)를 구글 스프레드시트로 관리
-  <img width="1042" alt="image" src="https://user-images.githubusercontent.com/115197142/221077360-daaf6cdc-d0a6-4d1b-ba81-a3c2b672f87c.png">
+<img width="1042" alt="image" src="https://user-images.githubusercontent.com/115197142/221077360-daaf6cdc-d0a6-4d1b-ba81-a3c2b672f87c.png">
 
 ## Features
 
