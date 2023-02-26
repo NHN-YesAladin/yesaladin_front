@@ -79,8 +79,7 @@
                       <!-- 배송지 -->
                       <div class="col-9 m-auto">
                         <div>
-                          <div
-                              th:text="|[${address.getPostAddress()}] ${address.getRoadAddress()}|"></div>
+                          <div th:text="|[${address.getPostAddress()}] ${address.getRoadAddress()}|"></div>
                           <div th:text="${address.getDetailAddress()}"></div>
                         </div>
                       </div>
@@ -91,7 +90,7 @@
                              th:classappend="${address.isDefault ? 'active' : ''}"
                              class="switch-icon switch-icon-scale m-auto"
                              data-bs-toggle="switch-icon">
-                          <span class="switch-icon-a text-muted">
+                            <span class="switch-icon-a text-muted">
                             <svg xmlns="http://www.w3.org/2000/svg"
                                  class="icon icon-tabler icon-tabler-star" width="24"
                                  height="24" viewBox="0 0 24 24" stroke-width="2"
@@ -240,7 +239,6 @@
         location.reload();
       }
     })
-
   }
 
   function getAddress() {

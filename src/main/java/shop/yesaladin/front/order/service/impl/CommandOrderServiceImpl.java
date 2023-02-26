@@ -1,8 +1,10 @@
 package shop.yesaladin.front.order.service.impl;
 
 import java.util.Objects;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -31,6 +33,7 @@ public class CommandOrderServiceImpl implements CommandOrderService {
     };
     private final RestTemplate restTemplate;
     private final GatewayConfig gatewayConfig;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     /**
      * {@inheritDoc}
@@ -52,18 +55,23 @@ public class CommandOrderServiceImpl implements CommandOrderService {
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<OrderMemberCreateRequestDto> httpEntity = new HttpEntity<>(request, headers);
 
-        ResponseDto<OrderCreateResponseDto> response = new ResponseDto<>();
-        try {
-            response = restTemplate.exchange(
-                    uri,
-                    HttpMethod.POST,
-                    httpEntity,
-                    ORDER_CREATE
-            ).getBody();
-        } catch (ClientException ce) {
-            return response;
-        }
-        return response;
+        ResponseDto<OrderCreateResponseDto> responseDto = restTemplate.exchange(
+                uri,
+                HttpMethod.POST,
+                httpEntity,
+                ORDER_CREATE
+        ).getBody();
+        OrderCreateResponseDto data = responseDto.getData();
+        String requestId = getRequestIdForCouponsToRedis(data.getOrderNumber());
+        System.out.println("requestId = " + requestId);
+        data.setRequestId(requestId);
+        return responseDto;
+    }
+
+    private String getRequestIdForCouponsToRedis(String orderNumber) {
+        return Optional.ofNullable(redisTemplate.opsForHash().get("USE_COUPON_REQ_ID", orderNumber))
+                .orElse("")
+                .toString();
     }
 
     /**
