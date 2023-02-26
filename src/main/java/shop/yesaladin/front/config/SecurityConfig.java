@@ -1,9 +1,7 @@
 package shop.yesaladin.front.config;
 
-import javax.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Profile;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -34,40 +32,6 @@ public class SecurityConfig {
     private final CookieUtils cookieUtils;
 
     /**
-     * Spring Security의 SecurityFilterChain을 설정하고 Bean으로 등록합니다. develop 환경에서 팀원들의 개발상 편의를 위해 권한 별 접근
-     * 제어를 하지 않는 설정 입니다. (추 후 이 Bean 설정은 제거할 예정입니다.)
-     *
-     * @param http http의 filter 등록을 위한 객체 입니다.
-     * @return Bean으로 등록한 SecurityFilterChain 입니다.
-     * @throws Exception
-     * @author : 송학현
-     * @since : 1.0
-     */
-    @Profile({"dev", "test"})
-    @Bean
-    SecurityFilterChain securityFilterChainDev(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                .mvcMatchers("/mypage/**").authenticated()
-                .mvcMatchers("/coupon").authenticated()
-                .anyRequest().permitAll();
-        http.formLogin().loginPage("/members/login");
-        http.logout()
-                .logoutUrl("/logout")
-                .addLogoutHandler(customLogoutHandler())
-                .logoutSuccessUrl("/");
-
-        http.addFilterAt(
-                customLoginProcessingFilter(),
-                UsernamePasswordAuthenticationFilter.class
-        );
-
-        http.headers().defaultsDisabled().frameOptions().sameOrigin();
-        http.csrf().disable();
-        http.cors().disable();
-        return http.build();
-    }
-
-    /**
      * Spring Security의 SecurityFilterChain을 설정하고 Bean으로 등록합니다.
      *
      * @param http http의 filter 등록을 위한 객체 입니다.
@@ -76,7 +40,6 @@ public class SecurityConfig {
      * @author : 송학현
      * @since : 1.0
      */
-    @Profile({"default", "prod"})
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeRequests()
