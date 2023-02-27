@@ -32,10 +32,11 @@ public class SearchedProductResponseDto {
     private List<String> authors;
     private List<String> tags;
 
-    public String getAuthorLine() {
-        if (authors.size() == 1) {
-            return authors.get(0) + " 저";
-        }
-        return authors.get(0) + "외 " + (authors.size() - 1) + "명 저";
+    public String[] getTagsArray() {
+        return tags.get(0).split(",");
+    }
+
+    public String[] getAuthorsArray() {
+        return authors.get(0).split(",");
     }
 }
