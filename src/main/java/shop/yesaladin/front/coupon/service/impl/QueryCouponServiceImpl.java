@@ -62,7 +62,8 @@ public class QueryCouponServiceImpl implements QueryCouponService {
                 .queryParam("size", pageable.getPageSize())
                 .build();
 
-        ResponseEntity<ResponseDto<PaginatedResponseDto<CouponSummaryDto>>> responseEntity = restTemplate.exchange(uriComponents.toUri(),
+        ResponseEntity<ResponseDto<PaginatedResponseDto<CouponSummaryDto>>> responseEntity = restTemplate.exchange(
+                uriComponents.toUri(),
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<>() {
@@ -108,10 +109,11 @@ public class QueryCouponServiceImpl implements QueryCouponService {
 
     @Override
     public PaginatedResponseDto<CouponSummaryWithBoundDto> getCouponByTriggerTypeCode(
-            TriggerTypeCode triggerTypeCode, Pageable pageable
+            boolean includeExpired, TriggerTypeCode triggerTypeCode, Pageable pageable
     ) {
         String requestUrl = UriComponentsBuilder.fromUriString(gatewayConfig.getCouponUrl())
                 .pathSegment("v1", "coupons")
+                .queryParam("includeExpired", includeExpired)
                 .queryParam("triggerType", triggerTypeCode.name())
                 .queryParam("size", pageable.getPageSize())
                 .queryParam("page", pageable.getPageNumber())
@@ -129,7 +131,8 @@ public class QueryCouponServiceImpl implements QueryCouponService {
                 .stream()
                 .map(summaryDto -> {
                     String boundRequestUrl = UriComponentsBuilder.fromUriString(gatewayConfig.getCouponUrl())
-                            .pathSegment("v1",
+                            .pathSegment(
+                                    "v1",
                                     "coupons",
                                     String.valueOf(summaryDto.getId()),
                                     "bounds"
@@ -143,9 +146,11 @@ public class QueryCouponServiceImpl implements QueryCouponService {
                             }
                     ).getBody();
 
-                    return new CouponSummaryWithBoundDto(summaryDto,
+                    return new CouponSummaryWithBoundDto(
+                            summaryDto,
                             boundResponse.getData().getBoundCode(),
-                            getDisplayBound(boundResponse.getData().getBoundCode(),
+                            getDisplayBound(
+                                    boundResponse.getData().getBoundCode(),
                                     boundResponse.getData().getBound()
                             )
                     );
@@ -172,7 +177,8 @@ public class QueryCouponServiceImpl implements QueryCouponService {
             String couponId = map.get(MONTHLY_COUPON_ID_KEY).toString();
             String openDateTimeStr = map.get(MONTHLY_COUPON_OPEN_DATE_TIME_KEY).toString();
 
-            LocalDateTime openDateTime = LocalDateTime.parse(openDateTimeStr,
+            LocalDateTime openDateTime = LocalDateTime.parse(
+                    openDateTimeStr,
                     DateTimeFormatter.ISO_LOCAL_DATE_TIME
             );
 
@@ -180,7 +186,8 @@ public class QueryCouponServiceImpl implements QueryCouponService {
 
             return new MonthlyCouponPolicyDto(couponId, openDateTime.toString());
         } else {
-            throw new ClientException(ErrorCode.COUPON_NOT_FOUND,
+            throw new ClientException(
+                    ErrorCode.COUPON_NOT_FOUND,
                     "Not found any monthly coupon id on redis."
             );
         }
@@ -202,7 +209,8 @@ public class QueryCouponServiceImpl implements QueryCouponService {
         String requestUrl = UriComponentsBuilder.fromUriString(gatewayConfig.getShopUrl())
                 .pathSegment("v1", "products", "info", isbn)
                 .toUriString();
-        ResponseDto<ProductOnlyTitleDto> responseBody = restTemplate.exchange(requestUrl,
+        ResponseDto<ProductOnlyTitleDto> responseBody = restTemplate.exchange(
+                requestUrl,
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<ResponseDto<ProductOnlyTitleDto>>() {
@@ -215,7 +223,8 @@ public class QueryCouponServiceImpl implements QueryCouponService {
         String requestUrl = UriComponentsBuilder.fromUriString(gatewayConfig.getShopUrl())
                 .pathSegment("v1", "categories", categoryId)
                 .toUriString();
-        ResponseDto<CategoryResponseDto> responseBody = restTemplate.exchange(requestUrl,
+        ResponseDto<CategoryResponseDto> responseBody = restTemplate.exchange(
+                requestUrl,
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<ResponseDto<CategoryResponseDto>>() {
