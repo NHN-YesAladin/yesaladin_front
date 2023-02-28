@@ -322,7 +322,7 @@
                       <input type="hidden" id="wrapping-fee-hidden" name="wrappingFee" value="0">
                       <input class="form-check-input m-auto" id="wrapping-check" type="checkbox">
                     </label>
-                    포장비 : 3,000원
+                    포장비 : <span id="wrapping-fee">0</span>원
                   </small>
                 </div>
                 <br/>
@@ -1083,11 +1083,13 @@
   // "포장" 버튼 이벤트
   document.getElementById("wrapping-check").addEventListener('change', function () {
     const wrappingFeeHidden = document.getElementById("wrapping-fee-hidden");
-
+    const wrappingFee = document.getElementById("wrapping-fee");
     if (this.checked) {
       this.text = wrappingFeeHidden.value = 3000;
+      wrappingFee.innerText = (3000).toLocaleString();
     } else {
-      this.text = wrappingFeeHidden.value = 0;
+      wrappingFeeHidden.value = 0;
+      wrappingFee.innerText = (0).toLocaleString();
     }
     setPaymentTotalPrice();
   });
