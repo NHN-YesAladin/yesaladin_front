@@ -1109,8 +1109,8 @@
     if (curPoint > userPoint) {
       curPoint = userPoint;
     }
-    if (curPoint > expectedTotalAmount) {
-      curPoint = expectedTotalAmount;
+    if (curPoint >= expectedTotalAmount) {
+      curPoint = expectedTotalAmount - 100;
     }
     e.value = Math.floor(curPoint / 1000) * 1000;
 
