@@ -63,7 +63,6 @@ public class CommandOrderServiceImpl implements CommandOrderService {
         ).getBody();
         OrderCreateResponseDto data = responseDto.getData();
         String requestId = getRequestIdForCouponsToRedis(data.getOrderNumber());
-        System.out.println("requestId = " + requestId);
         data.setRequestId(requestId);
         return responseDto;
     }
