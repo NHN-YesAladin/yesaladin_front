@@ -322,7 +322,7 @@
                       <input type="hidden" id="wrapping-fee-hidden" name="wrappingFee" value="0">
                       <input class="form-check-input m-auto" id="wrapping-check" type="checkbox">
                     </label>
-                    포장비 : 3,000원
+                    포장비 : <span id="wrapping-fee">0</span>원
                   </small>
                 </div>
                 <br/>
@@ -998,6 +998,18 @@
     let totalPrice = parseInt(
         document.getElementById("expected-total-amount").innerText.replace(/\D/g, ''));
 
+    const shippingFeeHidden = document.getElementById("shipping-fee-hidden");
+
+    const shippingFee = document.getElementById("shipping-fee");
+    if (totalPrice >= 30000) {
+      shippingFeeHidden.value = 0;
+      shippingFee.innerText = "0";
+    } else {
+      shippingFeeHidden.value = 3000;
+      shippingFee.innerText = (3000).toLocaleString();
+      totalPrice += 3000;
+    }
+
     const pointAppliedAmount = document.getElementById("point-applied-amount");
     if (pointAppliedAmount != null) {
       let couponTotalAppliedAmount = 0;
@@ -1023,20 +1035,19 @@
     const totalProductPrice = parseInt(
         document.getElementById("total-product-amount").innerText.replace(/\D/g, ''));
 
-    const shippingFeeHidden = document.getElementById("shipping-fee-hidden");
-    const shippingFee = document.getElementById("shipping-fee");
+
     const wrappingFeeHidden = document.getElementById("wrapping-fee-hidden");
 
     var totalPrice = 0;
 
-    if (totalProductPrice >= 30000) {
-      shippingFeeHidden.value = 0;
-      shippingFee.innerText = "0";
-    } else {
-      shippingFeeHidden.value = 3000;
-      shippingFee.innerText = (3000).toLocaleString();
-      totalPrice += 3000;
-    }
+    // if (totalProductPrice >= 30000) {
+    //   shippingFeeHidden.value = 0;
+    //   shippingFee.innerText = "0";
+    // } else {
+    //   shippingFeeHidden.value = 3000;
+    //   shippingFee.innerText = (3000).toLocaleString();
+    //   totalPrice += 3000;
+    // }
     totalPrice += Number(wrappingFeeHidden.value) + totalProductPrice;
 
     totalPaymentPrice.innerText = totalPrice.toLocaleString();
@@ -1072,11 +1083,13 @@
   // "포장" 버튼 이벤트
   document.getElementById("wrapping-check").addEventListener('change', function () {
     const wrappingFeeHidden = document.getElementById("wrapping-fee-hidden");
-
+    const wrappingFee = document.getElementById("wrapping-fee");
     if (this.checked) {
       this.text = wrappingFeeHidden.value = 3000;
+      wrappingFee.innerText = (3000).toLocaleString();
     } else {
-      this.text = wrappingFeeHidden.value = 0;
+      wrappingFeeHidden.value = 0;
+      wrappingFee.innerText = (0).toLocaleString();
     }
     setPaymentTotalPrice();
   });
@@ -1096,8 +1109,8 @@
     if (curPoint > userPoint) {
       curPoint = userPoint;
     }
-    if (curPoint > expectedTotalAmount) {
-      curPoint = expectedTotalAmount;
+    if (curPoint >= expectedTotalAmount) {
+      curPoint = expectedTotalAmount - 100;
     }
     e.value = Math.floor(curPoint / 1000) * 1000;
 

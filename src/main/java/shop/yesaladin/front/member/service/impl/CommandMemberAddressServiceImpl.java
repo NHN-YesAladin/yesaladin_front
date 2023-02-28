@@ -56,12 +56,13 @@ public class CommandMemberAddressServiceImpl implements CommandMemberAddressServ
                 .build()
                 .encode().toUri();
 
-        return restTemplate.exchange(
+        ResponseDto<MemberAddressResponseDto> responseDto = restTemplate.exchange(
                 uri,
                 HttpMethod.POST,
                 entity,
                 MEMBER_ADDRESS_RESPONSE
         ).getBody();
+        return responseDto;
     }
 
     /**
