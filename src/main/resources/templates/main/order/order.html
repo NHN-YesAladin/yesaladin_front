@@ -998,6 +998,18 @@
     let totalPrice = parseInt(
         document.getElementById("expected-total-amount").innerText.replace(/\D/g, ''));
 
+    const shippingFeeHidden = document.getElementById("shipping-fee-hidden");
+
+    const shippingFee = document.getElementById("shipping-fee");
+    if (totalPrice >= 30000) {
+      shippingFeeHidden.value = 0;
+      shippingFee.innerText = "0";
+    } else {
+      shippingFeeHidden.value = 3000;
+      shippingFee.innerText = (3000).toLocaleString();
+      totalPrice += 3000;
+    }
+
     const pointAppliedAmount = document.getElementById("point-applied-amount");
     if (pointAppliedAmount != null) {
       let couponTotalAppliedAmount = 0;
@@ -1023,20 +1035,19 @@
     const totalProductPrice = parseInt(
         document.getElementById("total-product-amount").innerText.replace(/\D/g, ''));
 
-    const shippingFeeHidden = document.getElementById("shipping-fee-hidden");
-    const shippingFee = document.getElementById("shipping-fee");
+
     const wrappingFeeHidden = document.getElementById("wrapping-fee-hidden");
 
     var totalPrice = 0;
 
-    if (totalProductPrice >= 30000) {
-      shippingFeeHidden.value = 0;
-      shippingFee.innerText = "0";
-    } else {
-      shippingFeeHidden.value = 3000;
-      shippingFee.innerText = (3000).toLocaleString();
-      totalPrice += 3000;
-    }
+    // if (totalProductPrice >= 30000) {
+    //   shippingFeeHidden.value = 0;
+    //   shippingFee.innerText = "0";
+    // } else {
+    //   shippingFeeHidden.value = 3000;
+    //   shippingFee.innerText = (3000).toLocaleString();
+    //   totalPrice += 3000;
+    // }
     totalPrice += Number(wrappingFeeHidden.value) + totalProductPrice;
 
     totalPaymentPrice.innerText = totalPrice.toLocaleString();
