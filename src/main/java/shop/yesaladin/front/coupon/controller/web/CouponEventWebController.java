@@ -35,10 +35,14 @@ public class CouponEventWebController {
     private final QueryCouponService queryCouponService;
 
     @GetMapping
-    public String getCouponMainPage(Model model, Pageable pageable) {
+    public String getCouponMainPage(
+            Model model,
+            Pageable pageable
+    ) {
         String memberGrade = queryMemberService.getMemberGrade();
         String gradeCode = "MEMBER_GRADE_" + memberGrade.split("\\(")[0];
         PaginatedResponseDto<CouponSummaryWithBoundDto> couponList = queryCouponService.getCouponByTriggerTypeCode(
+                true,
                 TriggerTypeCode.valueOf(gradeCode),
                 pageable
         );

@@ -26,27 +26,26 @@ public interface QueryCouponService {
 
     /**
      * 회원이 보유한 쿠폰을 페이지네이션하여 조회합니다.
-     * @param loginId 조회할 회원의 login id
-     * @param canUse 사용 가능 여부
+     *
+     * @param loginId  조회할 회원의 login id
+     * @param canUse   사용 가능 여부
      * @param pageable 페이지네이션을 위한 pageable 객체
      * @return 회원이 보유한 쿠폰 리스트
      */
     PaginatedResponseDto<MemberCouponSummaryDto> getMemberCouponList(
-            String loginId,
-            boolean canUse,
-            Pageable pageable
+            String loginId, boolean canUse, Pageable pageable
     );
 
     /**
      * 트리거 타입 코드로 쿠폰 목록을 조회합니다.
      *
+     * @param includeExpired
      * @param triggerTypeCode 조회할 트리거 타입 코드
      * @param pageable        페이지네이션으로 위한 pageable 객체
      * @return 해당 트리거 타입 코드를 가진 쿠폰 리스트
      */
     PaginatedResponseDto<CouponSummaryWithBoundDto> getCouponByTriggerTypeCode(
-            TriggerTypeCode triggerTypeCode,
-            Pageable pageable
+            boolean includeExpired, TriggerTypeCode triggerTypeCode, Pageable pageable
     );
 
     /**
