@@ -691,11 +691,16 @@
 
     const productTotalAmount = parseInt(document.getElementById(
         "order-product-total-amount-" + index).innerText.replace(/\D/g, ''));
+
     const couponAppliedAmount = document.createElement('input');
     couponAppliedAmount.name = "couponAppliedAmount";
     couponAppliedAmount.value = productTotalAmount - parseInt(discountPrice);
     couponAppliedAmount.style.display = 'none';
 
+    if (couponName.includes('%')) {
+      couponAppliedAmount.value = parseInt(discountPrice);
+    }
+    
     newCouponTemplate.querySelector("#member-coupon-text").innerText = couponName;
     newCouponTemplate.hidden = false;
     newCouponTemplate.id = "member-coupon-applied-" + couponCode;
