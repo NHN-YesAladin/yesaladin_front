@@ -769,8 +769,13 @@
 
     const couponCodeCommon = document.getElementsByName("couponCode");
     let couponCode = "";
-    if (couponCodeCommon.length != 0 && couponCodeCommon[0].checked) {
-      couponCode = couponCodeCommon[0].value;
+
+    if (couponCodeCommon.length !== 0) {
+      for (let i = 0; i < couponCodeCommon.length; i++){
+        if (couponCodeCommon[i].checked) {
+          couponCode = couponCodeCommon[i].value;
+        }
+      }
     }
 
     const couponCodeDuplicate = document.getElementsByName("duplicateCouponCode");
@@ -783,6 +788,7 @@
         duplicateCouponCode.push(couponCodeDuplicate[i].value);
       }
     }
+
 
     if (couponCode == "" && duplicateCouponCode.length == 0) {
       writeContentToAlert("쿠폰을 선택해주세요.");
@@ -812,11 +818,11 @@
           "order-product-save-point-amount-" + selectProduct).value = data.expectedPoint;
       for (let i = 0; i < data.memberCoupons.length; i++) {
         memberCouponStatus.set(data.memberCoupons[i], true);
-
         document.getElementById("member-coupon-applied-coupon-" + selectProduct).appendChild(
             createAppliedCouponTemplate(data.memberCoupons[i], data.memberCouponNames[i],
                 data.discountPrice, selectProduct));
       }
+
       document.getElementById("member-coupon-applied-group-" + selectProduct).hidden = false;
       writeContentToSuccess("쿠폰이 적용되었습니다.");
     }).then(() => {
@@ -1014,6 +1020,7 @@
     if (pointAppliedAmount != null) {
       let couponTotalAppliedAmount = 0;
       const couponAppliedAmount = document.getElementsByName("couponAppliedAmount");
+
       for (let i = 0; i < couponAppliedAmount.length; i++) {
         couponTotalAppliedAmount += parseInt(couponAppliedAmount[i].value);
       }
