@@ -42,7 +42,7 @@ public class CouponEventWebController {
         String memberGrade = queryMemberService.getMemberGrade();
         String gradeCode = "MEMBER_GRADE_" + memberGrade.split("\\(")[0];
         PaginatedResponseDto<CouponSummaryWithBoundDto> couponList = queryCouponService.getCouponByTriggerTypeCode(
-                true,
+                false,
                 TriggerTypeCode.valueOf(gradeCode),
                 pageable
         );
