@@ -119,10 +119,10 @@
                       100,000원
                     </td>
                     <td class="fs-3 fw-bold text-orange"
-                        th:text="|-${#numbers.formatInteger(data.discountAmount, 1, 'COMMA')}원|">
+                        th:text="|${#numbers.formatInteger(data.discountAmount, 1, 'COMMA')}원|">
                       10,000원
                     </td>
-                    <td class="fs-3 fw-bold text-orange"
+                    <td class="fs-3 fw-bold"
                         th:text="|${#numbers.formatInteger(data.shippingFee, 1, 'COMMA')}원/${#numbers.formatInteger(data.wrappingFee, 1, 'COMMA')}원|">
                       90,000원
                     </td>
