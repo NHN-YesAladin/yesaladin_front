@@ -1010,17 +1010,16 @@
     let totalPrice = parseInt(
         document.getElementById("expected-total-amount").innerText.replace(/\D/g, ''));
 
-    const shippingFeeHidden = document.getElementById("shipping-fee-hidden");
-
-    const shippingFee = document.getElementById("shipping-fee");
-    if (totalPrice >= 30000) {
-      shippingFeeHidden.value = 0;
-      shippingFee.innerText = "0";
-    } else {
-      shippingFeeHidden.value = 3000;
-      shippingFee.innerText = (3000).toLocaleString();
-      totalPrice += 3000;
-    }
+    // const shippingFeeHidden = document.getElementById("shipping-fee-hidden");
+    // const shippingFee = document.getElementById("shipping-fee");
+    // if (totalPrice >= 30000) {
+    //   shippingFeeHidden.value = 0;
+    //   shippingFee.innerText = "0";
+    // } else {
+    //   shippingFeeHidden.value = 3000;
+    //   shippingFee.innerText = (3000).toLocaleString();
+    //   totalPrice += 3000;
+    // }
 
     const pointAppliedAmount = document.getElementById("point-applied-amount");
     if (pointAppliedAmount != null) {
@@ -1044,6 +1043,8 @@
 
   function setPaymentTotalPrice() {
     const totalPaymentPrice = document.getElementById("total-payment-amount");
+    let totalPriceForShippingFee = parseInt(
+        document.getElementById("expected-total-amount").innerText.replace(/\D/g, ''));
 
     const totalProductPrice = parseInt(
         document.getElementById("total-product-amount").innerText.replace(/\D/g, ''));
@@ -1053,14 +1054,16 @@
 
     var totalPrice = 0;
 
-    // if (totalProductPrice >= 30000) {
-    //   shippingFeeHidden.value = 0;
-    //   shippingFee.innerText = "0";
-    // } else {
-    //   shippingFeeHidden.value = 3000;
-    //   shippingFee.innerText = (3000).toLocaleString();
-    //   totalPrice += 3000;
-    // }
+    const shippingFeeHidden = document.getElementById("shipping-fee-hidden");
+    const shippingFee = document.getElementById("shipping-fee");
+    if (totalPriceForShippingFee >= 30000) {
+      shippingFeeHidden.value = 0;
+      shippingFee.innerText = "0";
+    } else {
+      shippingFeeHidden.value = 3000;
+      shippingFee.innerText = (3000).toLocaleString();
+      totalPrice += 3000;
+    }
     totalPrice += Number(wrappingFeeHidden.value) + totalProductPrice;
 
     totalPaymentPrice.innerText = totalPrice.toLocaleString();
